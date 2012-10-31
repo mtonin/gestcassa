@@ -6,7 +6,7 @@
 
 QT       += core gui sql
 
-TARGET = CassaTest01
+TARGET = GestCassa
 TEMPLATE = app
 
 
