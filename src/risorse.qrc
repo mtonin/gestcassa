@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/GestCassa">
+        <file>cash_register.ico</file>
+    </qresource>
+</RCC>
