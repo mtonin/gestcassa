@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+system(prebuild.cmd)
+
 QT       += core gui sql
 
 TARGET = GestCassa
@@ -37,3 +39,10 @@ FORMS    += mainwindow.ui \
     repartobutton.ui \
     dettagliorepartodlg.ui \
     comandibox.ui
+
+include(version.txt)
+
+QMAKE_TARGET_COMPANY =
+QMAKE_TARGET_PRODUCT = GestCassa
+QMAKE_TARGET_DESCRIPTION = Gestione cassa
+QMAKE_TARGET_COPYRIGHT = copyright MT 2012
