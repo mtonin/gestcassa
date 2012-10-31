@@ -49,3 +49,6 @@ QMAKE_TARGET_COPYRIGHT = copyright MT 2012
 
 RESOURCES += \
     risorse.qrc
+#RC_FILE = gestcassa.rc
+OTHER_FILES += \
+    gestcassa.rc
