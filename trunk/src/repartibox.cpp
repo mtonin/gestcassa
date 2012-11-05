@@ -12,9 +12,9 @@ RepartiBox::RepartiBox(QWidget *parent) :
   setupUi(this);
   QHBoxLayout* hbox=new QHBoxLayout(box);
   hbox->setSpacing(0);
+
   creaMenu();
 
-  caricaDaDatabase();
 }
 
 void RepartiBox::creaMenu()
@@ -23,7 +23,6 @@ void RepartiBox::creaMenu()
   addAction(newButtobAction);
   connect(newButtobAction,SIGNAL(triggered()),this,SLOT(creaNewReparto()));
 
-  setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 void RepartiBox::caricaDaDatabase()
@@ -49,6 +48,7 @@ void RepartiBox::caricaDaDatabase()
           creaRepartoBtn(idRep,repartoDescr);
         }
     }
+  setContextMenuPolicy(Qt::ActionsContextMenu);
 
 }
 

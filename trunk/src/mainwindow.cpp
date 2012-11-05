@@ -16,7 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
   QVBoxLayout* vbox=new QVBoxLayout;
   RepartiBox* repBox=new RepartiBox;
   vbox->addWidget(repBox);
-  vbox->addWidget(new AreaLavoro);
+
+  AreaLavoro* workAreaBox=new AreaLavoro;
+  vbox->addWidget(workAreaBox);
+
   ComandiBox* cmdBox=new ComandiBox;
   vbox->addWidget(cmdBox);
 
