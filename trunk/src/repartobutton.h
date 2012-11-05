@@ -9,10 +9,13 @@ class RepartoButton : public QWidget, private Ui::RepartoButton
 
 signals:
   void cancellaReparto(RepartoButton*);
+  void creaReparto(RepartoButton*);
+  void onClickReparto(RepartoButton*);
 
 public:
   explicit RepartoButton(int id, QString nome, QWidget *parent = 0);
   int getId() {return idReparto;}
+  QString getNomeReparto() {return nomeReparto;}
 
 private:
   int idReparto;
@@ -22,6 +25,8 @@ private:
 private slots:
   void dettagliShow();
   void cancella();
+  void onClick();
+  void crea();
 };
 
 #endif // REPARTOBUTTON_H

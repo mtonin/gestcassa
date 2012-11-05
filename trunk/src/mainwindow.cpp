@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(cmdBox,SIGNAL(dbCaricato()),repBox,SLOT(caricaDaDatabase()));
   connect(cmdBox,SIGNAL(cambiaModalita(int)),this,SLOT(gestioneModalita(int)));
 
+  connect(repBox,SIGNAL(onCancellazioneReparto()),this,SLOT(repartoSlot()));
+  connect(repBox,SIGNAL(onSelezioneReparto(RepartoButton*)),this,SLOT(repartoSlot(RepartoButton*)));
+
 }
 
 MainWindow::~MainWindow()
@@ -47,7 +50,13 @@ void MainWindow::gestioneModalita(const int modalita)
     } else {
       setWindowFlags(Qt::Window);
       show();
-  }
+    }
+}
+
+void MainWindow::repartoSlot(RepartoButton* btn)
+{
+  QString nomeReparto(btn->getNomeReparto());
+  QMessageBox::information(0,"SLOT",nomeReparto);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *evt) {

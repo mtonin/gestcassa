@@ -60,7 +60,8 @@ void RepartiBox::creaRepartoBtn(int id, QString nome)
 
   box->layout()->addWidget(newButton);
   connect(newButton,SIGNAL(cancellaReparto(RepartoButton*)),this,SLOT(cancellaReparto(RepartoButton*)));
-
+  connect(newButton,SIGNAL(onClickReparto(RepartoButton*)),this,SIGNAL(onSelezioneReparto(RepartoButton*)));
+  emit onNuovoReparto();
 
   /*
   QAction* cancellaButtonAction=new QAction("Cancella",this);
@@ -83,6 +84,7 @@ void RepartiBox::cancellaReparto(RepartoButton* btn)
       return;
     }
   btn->close();
+  emit onCancellazioneReparto();
 }
 
 void RepartiBox::creaNewReparto()
