@@ -15,7 +15,7 @@ void ComandiBox::creaComandi()
 
 }
 
-void ComandiBox::on_toolButton_2_clicked()
+QString ComandiBox::on_dbLoadBtn_clicked()
 {
   QString nomeFile=QFileDialog::getOpenFileName(this,"Apre database","C:\\","*.db3");
   if(!nomeFile.isEmpty()) {
@@ -23,9 +23,10 @@ void ComandiBox::on_toolButton_2_clicked()
       if(createConnection(nomeFile)) {
           db.close();
           emit dbCaricato();
+          return nomeFile;
         }
-
     }
+  return "";
 }
 
 bool ComandiBox::createConnection(const QString& nomeFile)
@@ -42,18 +43,18 @@ bool ComandiBox::createConnection(const QString& nomeFile)
     return true;
 }
 
-void ComandiBox::on_toolButton_clicked()
-{
+void ComandiBox::on_modalitaBtn_clicked(){
 
-  QString testo=toolButton->text();
-  if(0==toolButton->text().compare("CASSA")) {
+  QString testo=modalitaBtn->text();
+  if(0==testo.compare("CASSA")) {
       qApp->setOverrideCursor(Qt::BlankCursor);
-      toolButton->setText("GESTIONE");
+      modalitaBtn->setText("GESTIONE");
       emit cambiaModalita(1);
     } else {
       qApp->restoreOverrideCursor();
-      toolButton->setText("CASSA");
+      modalitaBtn->setText("CASSA");
       emit cambiaModalita(0);
     }
 
 }
+

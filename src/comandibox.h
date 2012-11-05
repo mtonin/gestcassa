@@ -14,9 +14,11 @@ signals:
 public:
   explicit ComandiBox(QWidget *parent = 0);
 
+public slots:
+  QString on_dbLoadBtn_clicked();
+
 private slots:
-  void on_toolButton_2_clicked();
-  void on_toolButton_clicked();
+  void on_modalitaBtn_clicked();
 
 private:
   void creaComandi();

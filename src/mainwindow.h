@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
+
   
 private slots:
   void gestioneModalita(const int);
