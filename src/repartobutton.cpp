@@ -44,6 +44,8 @@ RepartoButton::RepartoButton(int id, QString nome, QWidget *parent) :
   connect(dettagliAction,SIGNAL(triggered()),this,SLOT(dettagliShow()));
   connect(cancellaAction,SIGNAL(triggered()),this,SLOT(cancella()));
 
+  connect(pushButton,SIGNAL(clicked()),this,SLOT(onClick()));
+
 }
 
 void RepartoButton::dettagliShow()
@@ -82,5 +84,15 @@ void RepartoButton::dettagliShow()
 void RepartoButton::cancella()
 {
   emit cancellaReparto(this);
+}
+
+void RepartoButton::onClick()
+{
+  emit onClickReparto(this);
+}
+
+void RepartoButton::crea()
+{
+  emit creaReparto(this);
 }
 

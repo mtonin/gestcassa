@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "repartobutton.h"
 
 namespace Ui {
   class MainWindow;
@@ -18,6 +19,7 @@ public:
   
 private slots:
   void gestioneModalita(const int);
+  void repartoSlot(RepartoButton*);
 
 private:
   Ui::MainWindow *ui;

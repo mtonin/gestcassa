@@ -8,6 +8,11 @@ class RepartiBox : public QWidget, private Ui::RepartiBox
 {
   Q_OBJECT
 
+signals:
+  void onNuovoReparto();
+  void onSelezioneReparto(RepartoButton*);
+  void onCancellazioneReparto();
+
 private slots:
   void cancellaReparto(RepartoButton*);
   void creaNewReparto();
