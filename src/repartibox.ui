@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RepartiBox</class>
- <widget class="QWidget" name="RepartiBox">
+ <class>areaLavoro</class>
+ <widget class="QWidget" name="areaLavoro">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
+    <width>585</width>
     <height>100</height>
    </rect>
   </property>
@@ -31,17 +31,30 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="box">
+    <widget class="QGroupBox" name="repartiBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
+       <verstretch>1</verstretch>
       </sizepolicy>
      </property>
      <property name="title">
       <string>REPARTI</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="articoliBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>4</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string/>
      </property>
     </widget>
    </item>

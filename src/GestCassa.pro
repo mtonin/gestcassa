@@ -16,29 +16,28 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     form01.cpp \
     ordine.cpp \
-    repartibox.cpp \
-    arealavoro.cpp \
     repartobutton.cpp \
     dettagliorepartodlg.cpp \
-    comandibox.cpp
+    comandibox.cpp \
+    repartobtnwidget.cpp \
+    arealavoro.cpp
 
 HEADERS  += mainwindow.h \
     form01.h \
     ordine.h \
-    repartibox.h \
-    arealavoro.h \
     repartobutton.h \
     dettagliorepartodlg.h \
-    comandibox.h
+    comandibox.h \
+    repartobtnwidget.h \
+    arealavoro.h
 
 FORMS    += mainwindow.ui \
     form01.ui \
     ordine.ui \
-    repartibox.ui \
-    arealavoro.ui \
     repartobutton.ui \
     dettagliorepartodlg.ui \
-    comandibox.ui
+    comandibox.ui \
+    arealavoro.ui
 
 include(version.txt)
 
