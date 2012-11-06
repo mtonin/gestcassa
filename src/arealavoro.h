@@ -25,6 +25,7 @@ public slots:
 private:
   void creaMenu();
   void creaRepartoBtn(int id,QString nome);
+  QWidget* creaNuovaPagina(QString nome);
   QMap<int,QWidget*> pagineArticoli;
 };
 

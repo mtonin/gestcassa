@@ -11,8 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
   //setWindowFlags(Qt::FramelessWindowHint|Qt::CustomizeWindowHint);
+  setContentsMargins(0,0,0,0);
 
   QVBoxLayout* vbox=new QVBoxLayout;
+  //vbox->setContentsMargins(0,0,0,0);
+
   AreaLavoro* workArea=new AreaLavoro;
   vbox->addWidget(workArea);
 
@@ -20,18 +23,14 @@ MainWindow::MainWindow(QWidget *parent) :
   vbox->addWidget(cmdBox);
 
   QHBoxLayout* hbox=new QHBoxLayout;
+  //hbox->setContentsMargins(0,0,0,0);
   hbox->addWidget(new Ordine);
   hbox->addLayout(vbox);
 
   centralWidget()->setLayout(hbox);
 
   connect(cmdBox,SIGNAL(dbCaricato()),workArea,SLOT(caricaDaDatabase()));
-  /*
   connect(cmdBox,SIGNAL(cambiaModalita(int)),this,SLOT(gestioneModalita(int)));
-
-  connect(repBox,SIGNAL(onCancellazioneReparto()),this,SLOT(repartoSlot()));
-  connect(repBox,SIGNAL(onSelezioneReparto(RepartoButton*)),this,SLOT(repartoSlot(RepartoButton*)));
-  */
 
 }
 
@@ -49,12 +48,6 @@ void MainWindow::gestioneModalita(const int modalita)
       setWindowFlags(Qt::Window);
       show();
     }
-}
-
-void MainWindow::repartoSlot(RepartoButton* btn)
-{
-  QString nomeReparto(btn->getNomeReparto());
-  QMessageBox::information(0,"SLOT",nomeReparto);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *evt) {

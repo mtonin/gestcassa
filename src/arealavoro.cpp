@@ -24,7 +24,7 @@ void AreaLavoro::caricaDaDatabase()
   delete hbox;
 
   hbox=new QHBoxLayout(repartiBox);
-  hbox->setSpacing(6);
+  hbox->setSpacing(0);
   QSqlQuery query("select * from reparti");
   query.exec();
   int repartoNum=query.record().indexOf("descrizione");
@@ -48,7 +48,7 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome)
 
   repartiBox->layout()->addWidget(newButton);
 
-  QWidget* pagina=new QPushButton(nome);
+  QWidget* pagina=creaNuovaPagina(nome);
   articoliBox->addWidget(pagina);
   pagineArticoli.insert(id,pagina);
   connect(newButton,SIGNAL(cancellaReparto(RepartoBtnWidget*)),this,SLOT(cancellaReparto(RepartoBtnWidget*)));
@@ -64,6 +64,23 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome)
   newButton->setContextMenuPolicy(Qt::ActionsContextMenu);
   */
 
+}
+
+QWidget *AreaLavoro::creaNuovaPagina(QString nome)
+{
+  QGridLayout* griglia=new QGridLayout;
+  griglia->setSpacing(1);
+  for(int riga=0;riga<5;riga++) {
+      for(int col=0;col<6;col++) {
+          QString nomeBtn=QString("%1%2").arg(nome).arg(riga*6+col);
+          QPushButton* btn=new QPushButton(nomeBtn);
+          btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+          griglia->addWidget(btn,riga,col);
+        }
+    }
+  QFrame* pagina=new QFrame;
+  pagina->setLayout(griglia);
+  return pagina;
 }
 
 void AreaLavoro::creaMenu()
