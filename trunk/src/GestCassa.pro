@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     form01.cpp \
     ordine.cpp \
-    repartobutton.cpp \
     dettagliorepartodlg.cpp \
     comandibox.cpp \
     repartobtnwidget.cpp \
@@ -25,7 +24,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     form01.h \
     ordine.h \
-    repartobutton.h \
     dettagliorepartodlg.h \
     comandibox.h \
     repartobtnwidget.h \
@@ -34,7 +32,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     form01.ui \
     ordine.ui \
-    repartobutton.ui \
     dettagliorepartodlg.ui \
     comandibox.ui \
     arealavoro.ui
