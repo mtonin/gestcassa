@@ -4,7 +4,7 @@
 #include <QtSql>
 #include <QMessageBox>
 #include "repartibox.h"
-#include "repartobutton.h"
+#include "repartobtnwidget.h"
 
 RepartiBox::RepartiBox(QWidget *parent) :
   QWidget(parent)
@@ -56,11 +56,11 @@ void RepartiBox::creaRepartoBtn(int id, QString nome)
 {
   if(nome.isEmpty())
     nome="REPARTO";
-  RepartoButton* newButton=new RepartoButton(id,nome);
+  RepartoBtnWidget* newButton=new RepartoBtnWidget(id,nome);
 
   box->layout()->addWidget(newButton);
-  connect(newButton,SIGNAL(cancellaReparto(RepartoButton*)),this,SLOT(cancellaReparto(RepartoButton*)));
-  connect(newButton,SIGNAL(onClickReparto(RepartoButton*)),this,SIGNAL(onSelezioneReparto(RepartoButton*)));
+  //connect(newButton,SIGNAL(cancellaReparto(RepartoButton*)),this,SLOT(cancellaReparto(RepartoButton*)));
+  //connect(newButton,SIGNAL(onClickReparto(RepartoButton*)),this,SIGNAL(onSelezioneReparto(RepartoButton*)));
   emit onNuovoReparto();
 
   /*
@@ -72,6 +72,7 @@ void RepartiBox::creaRepartoBtn(int id, QString nome)
 
 }
 
+/*
 void RepartiBox::cancellaReparto(RepartoButton* btn)
 {
   QSqlDatabase db=QSqlDatabase::database();
@@ -86,6 +87,7 @@ void RepartiBox::cancellaReparto(RepartoButton* btn)
   btn->close();
   emit onCancellazioneReparto();
 }
+*/
 
 void RepartiBox::creaNewReparto()
 {

@@ -2,9 +2,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ordine.h"
-#include "repartibox.h"
-#include "arealavoro.h"
 #include "comandibox.h"
+#include "arealavoro.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -14,11 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
   //setWindowFlags(Qt::FramelessWindowHint|Qt::CustomizeWindowHint);
 
   QVBoxLayout* vbox=new QVBoxLayout;
-  RepartiBox* repBox=new RepartiBox;
-  vbox->addWidget(repBox);
-
-  AreaLavoro* workAreaBox=new AreaLavoro;
-  vbox->addWidget(workAreaBox);
+  AreaLavoro* workArea=new AreaLavoro;
+  vbox->addWidget(workArea);
 
   ComandiBox* cmdBox=new ComandiBox;
   vbox->addWidget(cmdBox);
@@ -29,11 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
   centralWidget()->setLayout(hbox);
 
-  connect(cmdBox,SIGNAL(dbCaricato()),repBox,SLOT(caricaDaDatabase()));
+  connect(cmdBox,SIGNAL(dbCaricato()),workArea,SLOT(caricaDaDatabase()));
+  /*
   connect(cmdBox,SIGNAL(cambiaModalita(int)),this,SLOT(gestioneModalita(int)));
 
   connect(repBox,SIGNAL(onCancellazioneReparto()),this,SLOT(repartoSlot()));
   connect(repBox,SIGNAL(onSelezioneReparto(RepartoButton*)),this,SLOT(repartoSlot(RepartoButton*)));
+  */
 
 }
 

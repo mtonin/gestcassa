@@ -2,19 +2,16 @@
 #define REPARTIBOX_H
 
 #include "ui_repartibox.h"
-#include "repartobutton.h"
 
-class RepartiBox : public QWidget, private Ui::RepartiBox
+class RepartiBox : public QWidget, private Ui::areaLavoro
 {
   Q_OBJECT
 
 signals:
   void onNuovoReparto();
-  void onSelezioneReparto(RepartoButton*);
   void onCancellazioneReparto();
 
 private slots:
-  void cancellaReparto(RepartoButton*);
   void creaNewReparto();
 
 public slots:
