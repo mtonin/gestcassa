@@ -13,6 +13,7 @@ public:
 
 signals:
   void cancellaReparto(RepartoBtnWidget*);
+  void cambiaColore(QString colore);
   
 public slots:
   

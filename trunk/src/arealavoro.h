@@ -18,13 +18,14 @@ private slots:
   void creaNewReparto();
   void cancellaReparto(RepartoBtnWidget*);
   void attivaReparto();
+  void cambiaColore(QString colore);
 
 public slots:
   void caricaDaDatabase();
 
 private:
   void creaMenu();
-  void creaRepartoBtn(int id,QString nome);
+  void creaRepartoBtn(int id,QString nome,QString colore);
   QWidget* creaNuovaPagina(QString nome);
   QMap<int,QWidget*> pagineArticoli;
 };
