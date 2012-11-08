@@ -29,18 +29,20 @@ void AreaLavoro::caricaDaDatabase()
   query.exec();
   int repartoNum=query.record().indexOf("descrizione");
   int idRepNum=query.record().indexOf("idreparto");
+  int idColore=query.record().indexOf("coloresfondo");
   if(query.isActive()) {
       while(query.next()) {
           QString repartoDescr=query.value(repartoNum).toString();
           int idRep=query.value(idRepNum).toInt();
-          creaRepartoBtn(idRep,repartoDescr);
+          QString colore=query.value(idColore).toString();
+          creaRepartoBtn(idRep,repartoDescr,colore);
         }
     }
   setContextMenuPolicy(Qt::ActionsContextMenu);
 
 }
 
-void AreaLavoro::creaRepartoBtn(int id, QString nome)
+void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)
 {
   if(nome.isEmpty())
     nome="REPARTO";
@@ -50,10 +52,13 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome)
 
   QWidget* pagina=creaNuovaPagina(nome);
   articoliBox->addWidget(pagina);
+  articoliBox->setCurrentWidget(pagina);
+  cambiaColore(colore);
   pagineArticoli.insert(id,pagina);
   connect(newButton,SIGNAL(cancellaReparto(RepartoBtnWidget*)),this,SLOT(cancellaReparto(RepartoBtnWidget*)));
   connect(newButton,SIGNAL(clicked()),this,SLOT(attivaReparto()));
 
+  connect(newButton,SIGNAL(cambiaColore(QString)),this,SLOT(cambiaColore(QString)));
   //connect(newButton,SIGNAL(onClickReparto(RepartoButton*)),this,SIGNAL(onSelezioneReparto(RepartoButton*)));
   //emit onNuovoReparto();
 
@@ -121,7 +126,7 @@ void AreaLavoro::creaNewReparto()
     }
 
 
-  creaRepartoBtn(idReparto,nome);
+  creaRepartoBtn(idReparto,nome,"");
 }
 
 void AreaLavoro::cancellaReparto(RepartoBtnWidget* reparto)
@@ -144,4 +149,10 @@ void AreaLavoro::attivaReparto()
 {
   RepartoBtnWidget* btn=qobject_cast<RepartoBtnWidget*>(sender());
   articoliBox->setCurrentWidget(pagineArticoli.value(btn->getId()));
+}
+
+void AreaLavoro::cambiaColore(QString colore)
+{
+  QString stile=QString("background-color: %1;").arg(colore);
+  articoliBox->currentWidget()->setStyleSheet(stile);
 }

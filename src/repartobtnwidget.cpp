@@ -82,6 +82,7 @@ void RepartoBtnWidget::on_dettagliAction_triggered()
 
     QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
     setStyleSheet(stile);
+    emit cambiaColore(coloreSfondo);
   }
 }
 
