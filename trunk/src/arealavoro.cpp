@@ -55,10 +55,11 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)
   articoliBox->setCurrentWidget(pagina);
   cambiaColore(colore);
   pagineArticoli.insert(id,pagina);
+
   connect(newButton,SIGNAL(cancellaReparto(RepartoBtnWidget*)),this,SLOT(cancellaReparto(RepartoBtnWidget*)));
   connect(newButton,SIGNAL(clicked()),this,SLOT(attivaReparto()));
-
   connect(newButton,SIGNAL(cambiaColore(QString)),this,SLOT(cambiaColore(QString)));
+
   //connect(newButton,SIGNAL(onClickReparto(RepartoButton*)),this,SIGNAL(onSelezioneReparto(RepartoButton*)));
   //emit onNuovoReparto();
 
@@ -77,7 +78,7 @@ QWidget *AreaLavoro::creaNuovaPagina(QString nome)
   griglia->setSpacing(1);
   for(int riga=0;riga<5;riga++) {
       for(int col=0;col<6;col++) {
-          QString nomeBtn=QString("%1%2").arg(nome).arg(riga*6+col);
+          QString nomeBtn=QString("%1").arg(riga*6+col+1);
           QPushButton* btn=new QPushButton(nomeBtn);
           btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
           griglia->addWidget(btn,riga,col);

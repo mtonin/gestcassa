@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ordine.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -22,6 +23,8 @@ private slots:
 private:
   Ui::MainWindow *ui;
   void keyPressEvent(QKeyEvent *);
+  Ordine* ordineBox;
+
 };
 
 #endif // MAINWINDOW_H

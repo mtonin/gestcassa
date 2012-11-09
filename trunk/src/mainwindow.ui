@@ -26,6 +26,9 @@
    <iconset resource="risorse.qrc">
     <normaloff>:/GestCassa/cash_register.ico</normaloff>:/GestCassa/cash_register.ico</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(19, 180, 255);</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
