@@ -24,10 +24,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
   QHBoxLayout* hbox=new QHBoxLayout;
   //hbox->setContentsMargins(0,0,0,0);
-  hbox->addWidget(new Ordine);
+  ordineBox=new Ordine;
+  hbox->addWidget(ordineBox);
   hbox->addLayout(vbox);
 
   centralWidget()->setLayout(hbox);
+
+  gestioneModalita(1);
 
   connect(cmdBox,SIGNAL(dbCaricato()),workArea,SLOT(caricaDaDatabase()));
   connect(cmdBox,SIGNAL(cambiaModalita(int)),this,SLOT(gestioneModalita(int)));
@@ -43,9 +46,11 @@ void MainWindow::gestioneModalita(const int modalita)
 {
   if(1==modalita) {
       setWindowFlags(Qt::FramelessWindowHint);
+      ordineBox->setVisible(true);
       show();
     } else {
       setWindowFlags(Qt::Window);
+      ordineBox->setVisible(false);
       show();
     }
 }
