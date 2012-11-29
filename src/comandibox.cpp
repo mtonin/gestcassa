@@ -47,7 +47,7 @@ void ComandiBox::on_modalitaBtn_clicked(){
 
   QString testo=modalitaBtn->text();
   if(0==testo.compare("CASSA")) {
-      qApp->setOverrideCursor(Qt::BlankCursor);
+      //qApp->setOverrideCursor(Qt::BlankCursor);
       modalitaBtn->setText("GESTIONE");
       emit cambiaModalita(1);
     } else {

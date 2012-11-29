@@ -7,7 +7,7 @@
 RepartoBtnWidget::RepartoBtnWidget(int id,QString nome,QWidget *parent) :
   idReparto(id),
   nomeReparto(nome),
-  QPushButton(parent)
+  QPictureButton(parent)
 {
   QSqlDatabase db=QSqlDatabase::database();
   QSqlQuery stmt;
@@ -80,6 +80,7 @@ void RepartoBtnWidget::on_dettagliAction_triggered()
     setText(dlg.getDescrizione());
     setFont(currentFont);
 
+    SetButtonColorNormal(QColor(coloreSfondo));
     QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
     setStyleSheet(stile);
     emit cambiaColore(coloreSfondo);

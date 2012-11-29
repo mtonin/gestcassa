@@ -1,9 +1,9 @@
 #ifndef REPARTOBTNWIDGET_H
 #define REPARTOBTNWIDGET_H
 
-#include <QPushButton>
+#include <QPictureButton.h>
 
-class RepartoBtnWidget : public QPushButton
+class RepartoBtnWidget : public QPictureButton
 {
   Q_OBJECT
 public:
