@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   AreaLavoro* workArea=new AreaLavoro;
   vbox->addWidget(workArea);
+  //workArea->setVisible(false);
 
   ComandiBox* cmdBox=new ComandiBox;
   vbox->addWidget(cmdBox);
@@ -30,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   centralWidget()->setLayout(hbox);
 
-  gestioneModalita(1);
+  gestioneModalita(0);
 
   connect(cmdBox,SIGNAL(dbCaricato()),workArea,SLOT(caricaDaDatabase()));
   connect(cmdBox,SIGNAL(cambiaModalita(int)),this,SLOT(gestioneModalita(int)));
@@ -44,13 +45,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::gestioneModalita(const int modalita)
 {
-  if(1==modalita) {
-      setWindowFlags(Qt::FramelessWindowHint);
-      ordineBox->setVisible(true);
-      show();
-    } else {
+  if(0==modalita) {
       setWindowFlags(Qt::Window);
       ordineBox->setVisible(false);
+      show();
+    } else {
+      setWindowFlags(Qt::FramelessWindowHint);
+      ordineBox->setVisible(true);
       show();
     }
 }

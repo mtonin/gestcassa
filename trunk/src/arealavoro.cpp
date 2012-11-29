@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include "arealavoro.h"
 #include "repartobtnwidget.h"
+#include <QPictureButton.h>
 
 AreaLavoro::AreaLavoro(QWidget *parent) :
   QWidget(parent)
@@ -47,6 +48,7 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)
   if(nome.isEmpty())
     nome="REPARTO";
   RepartoBtnWidget* newButton=new RepartoBtnWidget(id,nome);
+  newButton->SetButtonColorNormal(QColor(colore));
 
   repartiBox->layout()->addWidget(newButton);
 
@@ -79,7 +81,8 @@ QWidget *AreaLavoro::creaNuovaPagina(QString nome)
   for(int riga=0;riga<5;riga++) {
       for(int col=0;col<6;col++) {
           QString nomeBtn=QString("%1").arg(riga*6+col+1);
-          QPushButton* btn=new QPushButton(nomeBtn);
+          QPictureButton* btn=new QPictureButton;
+          btn->setText(nomeBtn);
           btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
           griglia->addWidget(btn,riga,col);
         }
@@ -127,7 +130,7 @@ void AreaLavoro::creaNewReparto()
     }
 
 
-  creaRepartoBtn(idReparto,nome,"");
+  creaRepartoBtn(idReparto,nome,"grey");
 }
 
 void AreaLavoro::cancellaReparto(RepartoBtnWidget* reparto)
@@ -155,5 +158,14 @@ void AreaLavoro::attivaReparto()
 void AreaLavoro::cambiaColore(QString colore)
 {
   QString stile=QString("background-color: %1;").arg(colore);
-  articoliBox->currentWidget()->setStyleSheet(stile);
+  //articoliBox->currentWidget()->setStyleSheet(stile);
+  QObjectList listaBtn=articoliBox->currentWidget()->children();
+  foreach (QObject* btnObj,listaBtn) {
+      QPictureButton* btn=qobject_cast<QPictureButton*>(btnObj);
+      if(btn) {
+        btn->SetButtonColorNormal(QColor(colore));
+        btn->SetButtonColorHot(QColor(colore));
+        //btn->SetButtonColorPushed(QColor(colore));
+        }
+    }
 }
