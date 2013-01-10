@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include "arealavoro.h"
 #include "repartobtnwidget.h"
+#include "elementobtnwidget.h"
 #include <QPictureButton.h>
 
 AreaLavoro::AreaLavoro(QWidget *parent) :
@@ -40,7 +41,7 @@ void AreaLavoro::caricaDaDatabase()
         }
     }
   setContextMenuPolicy(Qt::ActionsContextMenu);
-
+  articoliBox->setCurrentIndex(0);
 }
 
 void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)
@@ -81,8 +82,9 @@ QWidget *AreaLavoro::creaNuovaPagina(QString nome)
   for(int riga=0;riga<5;riga++) {
       for(int col=0;col<6;col++) {
           QString nomeBtn=QString("%1").arg(riga*6+col+1);
-          QPictureButton* btn=new QPictureButton;
-          btn->setText(nomeBtn);
+          ElementoBtnWidget* btn=new ElementoBtnWidget(riga*6+col+1,nomeBtn);
+          //btn->setText(nomeBtn);
+          btn->setText("");
           btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
           griglia->addWidget(btn,riga,col);
         }
