@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     dettagliorepartodlg.cpp \
     comandibox.cpp \
     repartobtnwidget.cpp \
-    arealavoro.cpp
+    arealavoro.cpp \
+    elementobtnwidget.cpp \
+    dettaglioelementodlg.cpp
 
 HEADERS  += mainwindow.h \
     form01.h \
@@ -27,14 +29,17 @@ HEADERS  += mainwindow.h \
     dettagliorepartodlg.h \
     comandibox.h \
     repartobtnwidget.h \
-    arealavoro.h
+    arealavoro.h \
+    elementobtnwidget.h \
+    dettaglioelementodlg.h
 
 FORMS    += mainwindow.ui \
     form01.ui \
     ordine.ui \
     dettagliorepartodlg.ui \
     comandibox.ui \
-    arealavoro.ui
+    arealavoro.ui \
+    dettaglioelementodlg.ui
 
 include(version.txt)
 

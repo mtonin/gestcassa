@@ -9,6 +9,8 @@ DettaglioRepartoDlg::DettaglioRepartoDlg(QWidget *parent) :
   QDialog(parent)
 {
   setupUi(this);
+  setWindowFlags(Qt::Tool);
+  activateWindow();
 }
 
 int DettaglioRepartoDlg::showAtMousePosition() {
