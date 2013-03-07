@@ -8,6 +8,8 @@
 
 bool createConnection(const QString& nomeFile, const QString& utente, const QString& password)
 {
+  if(nomeFile.isEmpty())
+    return false;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(nomeFile);
     db.setUserName(utente);
