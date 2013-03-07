@@ -1,6 +1,7 @@
 #ifndef COMANDIBOX_H
 #define COMANDIBOX_H
 
+#include "commons.h"
 #include "ui_comandibox.h"
 
 class ComandiBox : public QWidget, private Ui::ComandiBox
@@ -9,7 +10,7 @@ class ComandiBox : public QWidget, private Ui::ComandiBox
 
 signals:
   void dbCaricato();
-  void cambiaModalita(const int);
+  void cambiaModalita(const modalitaType);
 
 public:
   explicit ComandiBox(QWidget *parent = 0);

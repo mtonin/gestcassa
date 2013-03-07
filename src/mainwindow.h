@@ -1,6 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "commons.h"
+#include "dettaglireparto.h"
+#include "dettagliarticolo.h"
+#include "dettagliorepartodlg.h"
 #include "ordine.h"
 #include <QMainWindow>
 
@@ -18,12 +22,22 @@ public:
 
   
 private slots:
-  void gestioneModalita(const int);
+   void repartoSelezionato();
+   void articoloSelezionato();
+   void modalitaBtnClicked();
 
 private:
   Ui::MainWindow *ui;
-  void keyPressEvent(QKeyEvent *);
   Ordine* ordineBox;
+  DettaglioRepartoDlg* dettaglioBox;
+  dettagliReparto* dettagliRepartoBox;
+  DettagliArticolo* dettagliArticoloBox;
+  modalitaType currentMode;
+
+  void keyPressEvent(QKeyEvent *);
+  void creaRepartiButtons();
+  void gestioneModalita(const modalitaType);
+  void creaArticoliPerRepartoButtons(RepartoBtnWidget*);
 
 };
 
