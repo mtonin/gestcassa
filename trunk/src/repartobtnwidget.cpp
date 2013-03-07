@@ -85,7 +85,7 @@ void RepartoBtnWidget::on_dettagliAction_triggered()
     stmt.addBindValue(idReparto);
     if(!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
-                              db.lastError().text());
+                              stmt.lastError().text());
         return;
       }
 
