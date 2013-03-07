@@ -24,7 +24,9 @@ SOURCES += main.cpp\
     dettaglireparto.cpp \
     dettagliarticolo.cpp \
     articolobtnwidget.cpp \
-    dbdialog.cpp
+    dbdialog.cpp \
+    elementobtnwidget.cpp \
+    dettaglioelementodlg.cpp
 
 HEADERS  += mainwindow.h \
     form01.h \
@@ -38,7 +40,9 @@ HEADERS  += mainwindow.h \
     commons.h \
     dettagliarticolo.h \
     articolobtnwidget.h \
-    dbdialog.h
+    dbdialog.h \
+    elementobtnwidget.h \
+    dettaglioelementodlg.h
 
 FORMS    += mainwindow.ui \
     form01.ui \
@@ -48,7 +52,8 @@ FORMS    += mainwindow.ui \
     arealavoro.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
-    dbdialog.ui
+    dbdialog.ui \
+    dettaglioelementodlg.ui
 
 include(version.txt)
 
