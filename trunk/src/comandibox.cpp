@@ -1,7 +1,9 @@
+#include "commons.h"
+#include "comandibox.h"
+
 #include <QFileDialog>
 #include <QtSql>
 #include <QMessageBox>
-#include "comandibox.h"
 
 ComandiBox::ComandiBox(QWidget *parent) :
   QWidget(parent)
@@ -49,11 +51,11 @@ void ComandiBox::on_modalitaBtn_clicked(){
   if(0==testo.compare("CASSA")) {
       //qApp->setOverrideCursor(Qt::BlankCursor);
       modalitaBtn->setText("GESTIONE");
-      emit cambiaModalita(1);
+      emit cambiaModalita(CASSA);
     } else {
       qApp->restoreOverrideCursor();
       modalitaBtn->setText("CASSA");
-      emit cambiaModalita(0);
+      emit cambiaModalita(GESTIONE);
     }
 
 }

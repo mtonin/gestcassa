@@ -26,7 +26,7 @@ void AreaLavoro::caricaDaDatabase()
   delete hbox;
 
   hbox=new QHBoxLayout(repartiBox);
-  hbox->setSpacing(0);
+  hbox->setSpacing(5);
   QSqlQuery query("select * from reparti");
   query.exec();
   int repartoNum=query.record().indexOf("descrizione");
@@ -42,6 +42,8 @@ void AreaLavoro::caricaDaDatabase()
     }
   setContextMenuPolicy(Qt::ActionsContextMenu);
   articoliBox->setCurrentIndex(0);
+  articoliBox->setCurrentIndex(0);
+
 }
 
 void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)

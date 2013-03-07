@@ -20,8 +20,11 @@ SOURCES += main.cpp\
     comandibox.cpp \
     repartobtnwidget.cpp \
     arealavoro.cpp \
-    elementobtnwidget.cpp \
-    dettaglioelementodlg.cpp
+    QPictureButton.cpp \
+    dettaglireparto.cpp \
+    dettagliarticolo.cpp \
+    articolobtnwidget.cpp \
+    dbdialog.cpp
 
 HEADERS  += mainwindow.h \
     form01.h \
@@ -30,8 +33,12 @@ HEADERS  += mainwindow.h \
     comandibox.h \
     repartobtnwidget.h \
     arealavoro.h \
-    elementobtnwidget.h \
-    dettaglioelementodlg.h
+    QPictureButton.h \
+    dettaglireparto.h \
+    commons.h \
+    dettagliarticolo.h \
+    articolobtnwidget.h \
+    dbdialog.h
 
 FORMS    += mainwindow.ui \
     form01.ui \
@@ -39,7 +46,9 @@ FORMS    += mainwindow.ui \
     dettagliorepartodlg.ui \
     comandibox.ui \
     arealavoro.ui \
-    dettaglioelementodlg.ui
+    dettaglireparto.ui \
+    dettagliarticolo.ui \
+    dbdialog.ui
 
 include(version.txt)
 
@@ -53,5 +62,3 @@ RESOURCES += \
 RC_FILE = gestcassa.rc
 OTHER_FILES += \
     gestcassa.rc
-
-LIBS += -lQtPlusExtension

@@ -4,18 +4,30 @@
 #include <QMessageBox>
 #include <QAction>
 
+RepartoBtnWidget::RepartoBtnWidget(QWidget *parent):
+  QPictureButton(parent)
+   {
+   }
+
+void RepartoBtnWidget::setColore(const QColor &colore)
+   {
+      SetButtonColorNormal(colore);
+      emit cambiaColore(colore);
+   }
+
+
 RepartoBtnWidget::RepartoBtnWidget(int id,QString nome,QWidget *parent) :
   idReparto(id),
   nomeReparto(nome),
   QPictureButton(parent)
 {
-  QSqlDatabase db=QSqlDatabase::database();
+      setText(nome);
   QSqlQuery stmt;
   stmt.prepare("select * from reparti where idreparto=?");
   stmt.addBindValue(idReparto);
   if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
-                            db.lastError().text());
+                            stmt.lastError().text());
       return;
     }
   int numColDescr=stmt.record().indexOf("descrizione");
@@ -27,8 +39,9 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QString nome,QWidget *parent) :
       currentFont.fromString(stmt.value(numColFont).toString());
       setFont(currentFont);
       coloreSfondo=stmt.value(numColColoreSfondo).toString();
-      QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
-      setStyleSheet(stile);
+      SetButtonColorNormal(coloreSfondo);
+      //QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
+      //setStyleSheet(stile);
     }
   else {
       setText(nomeReparto);
@@ -58,13 +71,12 @@ void RepartoBtnWidget::on_dettagliAction_triggered()
   DettaglioRepartoDlg dlg;
   dlg.setCurrentFont(font());
   dlg.setTesto(nomeReparto);
-  dlg.setCurrentColor(coloreSfondo);
+  dlg.setCurrentColor(coloreSfondo.name());
   if(dlg.showAtMousePosition()) {
 
     QString coloreSfondo=dlg.getCurrentColor();
     QFont currentFont=dlg.getCurrentFont();
 
-    QSqlDatabase db=QSqlDatabase::database();
     QSqlQuery stmt;
     stmt.prepare("update reparti set descrizione=?,font=?,coloresfondo=? where idreparto=?");
     stmt.addBindValue(dlg.getDescrizione());
