@@ -143,9 +143,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   for(int riga=0;riga<5;riga++) {
       for(int col=0;col<6;col++) {
           QString nomeBtn=QString("%1\nART. %2").arg(repartoBtn->getNomeReparto()).arg(riga*6+col+1);
-          ArticoloBtnWidget* btn=new ArticoloBtnWidget;
-          btn->setNomeArticolo(nomeBtn);
-          btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+          ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col,nomeBtn);
           btn->SetButtonColorNormal(coloreSfondo);
           griglia->addWidget(btn,riga,col);
           connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
