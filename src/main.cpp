@@ -10,21 +10,21 @@ bool createConnection(const QString& nomeFile, const QString& utente, const QStr
 {
   if(nomeFile.isEmpty())
     return false;
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(nomeFile);
-    db.setUserName(utente);
-    db.setPassword(password);
-    if (!db.open()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
-        return false;
-    }
-    QSqlQuery query("select 1 from articoli");
-    if(!query.next()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
-        return false;
-    }
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(nomeFile);
+  db.setUserName(utente);
+  db.setPassword(password);
+  if (!db.open()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
+    return false;
+  }
+  QSqlQuery query("select 1 from articoli");
+  if(!query.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 int main(int argc, char *argv[])
@@ -35,12 +35,12 @@ int main(int argc, char *argv[])
 
   DBDialog dlg;
   while(true) {
-      if(QDialog::Accepted==dlg.exec()) {
-          if(createConnection(dlg.getDbFileName(),dlg.getUser(),dlg.getPassword()))
-            break;
-      } else {
-          return 0;
-        }
+    if(QDialog::Accepted==dlg.exec()) {
+      if(createConnection(dlg.getDbFileName(),dlg.getUser(),dlg.getPassword()))
+        break;
+    } else {
+      return 0;
+    }
   }
 
   MainWindow w;

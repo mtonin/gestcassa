@@ -12,6 +12,9 @@ public:
    int getId() {return idArticolo;}
    QString getNomeArticolo() {return nomeArticolo;}
    void setNomeArticolo(const QString nome);
+   int getIdReparto() {return idReparto;}
+   int getRiga() {return riga;}
+   int getColonna() {return colonna;}
 
 signals:
    
