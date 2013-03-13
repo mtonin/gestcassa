@@ -25,15 +25,15 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QString 
   stmt.addBindValue(riga);
   stmt.addBindValue(colonna);
   if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
-      return;
-    }
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
   int numColDescr=stmt.record().indexOf("descrizione");
   int numColprezzo=stmt.record().indexOf("prezzo");
   if(stmt.next()) {
-      nomeArticolo=stmt.value(numColDescr).toString();
-    }
+    nomeArticolo=stmt.value(numColDescr).toString();
+  }
   setText(nomeArticolo);
 
   QAction* dettagliAction=new QAction("Modifica",this);

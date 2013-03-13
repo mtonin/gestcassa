@@ -16,6 +16,7 @@ private slots:
    void testoChanged(const QString& testo);
 
 private:
+   void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
 
    };
