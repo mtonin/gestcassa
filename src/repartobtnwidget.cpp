@@ -15,43 +15,39 @@ void RepartoBtnWidget::setColore(const QColor &colore)
   emit cambiaColore(colore);
 }
 
-RepartoBtnWidget::RepartoBtnWidget(int id,QString nome,QWidget *parent) :
+void RepartoBtnWidget::setButtonFont(const QFont &font)
+{
+  //currentFont=font;
+  setFont(font);
+  emit cambiaFont(font);
+}
+
+RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   idReparto(id),
-  nomeReparto(nome),
   QPictureButton(parent)
 {
-  setText(nome);
   QSqlQuery stmt;
   stmt.prepare("select * from reparti where idreparto=?");
   stmt.addBindValue(idReparto);
   if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
-      return;
-    }
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
   int numColDescr=stmt.record().indexOf("descrizione");
   int numColFont=stmt.record().indexOf("font");
   int numColColoreSfondo=stmt.record().indexOf("coloresfondo");
   if(stmt.next()) {
-      nomeReparto=stmt.value(numColDescr).toString();
-      QFont currentFont;
-      currentFont.fromString(stmt.value(numColFont).toString());
-      setFont(currentFont);
-      coloreSfondo=stmt.value(numColColoreSfondo).toString();
-      SetButtonColorNormal(coloreSfondo);
-      //QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
-      //setStyleSheet(stile);
-    }
+    nomeReparto=stmt.value(numColDescr).toString();
+    QFont currentFont;
+    currentFont.fromString(stmt.value(numColFont).toString());
+    setFont(currentFont);
+    QString coloreSfondo=stmt.value(numColColoreSfondo).toString();
+    SetButtonColorNormal(coloreSfondo);
+  } else {
+    nomeReparto=QString("REPARTO %1").arg(idReparto);
+  }
   setText(nomeReparto);
-
-  QAction* dettagliAction=new QAction("Modifica",this);
-  dettagliAction->setObjectName("dettagliAction");
-  addAction(dettagliAction);
-
-  QAction* cancellaAction=new QAction("Cancella",this);
-  cancellaAction->setObjectName("cancellaAction");
-  addAction(cancellaAction);
-  setContextMenuPolicy(Qt::ActionsContextMenu);
 
   QSizePolicy buttonSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   buttonSizePolicy.setHorizontalStretch(0);
@@ -59,7 +55,6 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QString nome,QWidget *parent) :
   buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
   setSizePolicy(buttonSizePolicy);
 
-  QMetaObject::connectSlotsByName(this);
 }
 
 void RepartoBtnWidget::on_dettagliAction_triggered()
@@ -68,35 +63,30 @@ void RepartoBtnWidget::on_dettagliAction_triggered()
   DettaglioRepartoDlg dlg;
   dlg.setCurrentFont(font());
   dlg.setTesto(nomeReparto);
-  dlg.setCurrentColor(coloreSfondo.name());
+  //dlg.setCurrentColor(coloreSfondo.name());
   if(dlg.showAtMousePosition()) {
 
-      QString coloreSfondo=dlg.getCurrentColor();
-      QFont currentFont=dlg.getCurrentFont();
+    QString coloreSfondo=dlg.getCurrentColor();
+    QFont currentFont=dlg.getCurrentFont();
 
-      QSqlQuery stmt;
-      stmt.prepare("update reparti set descrizione=?,font=?,coloresfondo=? where idreparto=?");
-      stmt.addBindValue(dlg.getDescrizione());
-      stmt.addBindValue(currentFont.toString());
-      stmt.addBindValue(coloreSfondo);
-      stmt.addBindValue(idReparto);
-      if(!stmt.exec()) {
-          QMessageBox::critical(0, QObject::tr("Database Error"),
-                                stmt.lastError().text());
-          return;
-        }
-
-      setText(dlg.getDescrizione());
-      setFont(currentFont);
-
-      SetButtonColorNormal(QColor(coloreSfondo));
-      QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
-      setStyleSheet(stile);
-      emit cambiaColore(coloreSfondo);
+    QSqlQuery stmt;
+    stmt.prepare("update reparti set descrizione=?,font=?,coloresfondo=? where idreparto=?");
+    stmt.addBindValue(dlg.getDescrizione());
+    stmt.addBindValue(currentFont.toString());
+    stmt.addBindValue(coloreSfondo);
+    stmt.addBindValue(idReparto);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      return;
     }
-}
 
-void RepartoBtnWidget::on_cancellaAction_triggered()
-{
-  emit cancellaReparto(this);
+    setText(dlg.getDescrizione());
+    setFont(currentFont);
+
+    SetButtonColorNormal(QColor(coloreSfondo));
+    QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
+    setStyleSheet(stile);
+    emit cambiaColore(coloreSfondo);
+  }
 }

@@ -5,28 +5,25 @@
 #include "repartobtnwidget.h"
 #include <QColor>
 #include <QSqlDatabase>
+#include <QFont>
 
 class dettagliReparto : public QWidget, private Ui::dettagliReparto {
    Q_OBJECT
    
-signals:
-    void testoChanged(const QString& testo);
-    void coloreChanged(const QColor& colore);
-
 public:
    explicit dettagliReparto(QWidget *parent = 0);
-    void setColore(const QColor& colore);
 
 public slots:
    void setCurrentReparto(RepartoBtnWidget*);
+   void aggiornaReparto();
 
 private slots:
    void on_coloreBtn_clicked();
+   void on_fontBtn_clicked();
+   void on_testoReparto_textChanged(const QString &arg1);
 
 private:
-   QString currentColore;
-   QSqlQuery* query;
-
+   RepartoBtnWidget* repartoBtn;
 };
 
 #endif // DETTAGLIREPARTO_H

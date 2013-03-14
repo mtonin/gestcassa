@@ -111,19 +111,8 @@ void MainWindow::creaRepartiButtons(){
   hboxLayout->setContentsMargins(11, 11, 11, 11);
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
-  for(int i=1;i<7;i++) {
-      QString nomeReparto=QString("REPARTO %1").arg(i);
-
-      RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,nomeReparto,ui->repartiGroupBox);
-      reparto01Btn->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
-      /*
-            QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
-            sizePolicy3.setHorizontalStretch(0);
-            sizePolicy3.setVerticalStretch(0);
-            sizePolicy3.setHeightForWidth(reparto01Btn->sizePolicy().hasHeightForWidth());
-            reparto01Btn->setSizePolicy(sizePolicy3);
-            */
+  for(int i=1;i<=6;i++) {
+      RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiGroupBox);
 
       hboxLayout->addWidget(reparto01Btn);
       creaArticoliPerRepartoButtons(reparto01Btn);
@@ -138,16 +127,18 @@ void MainWindow::creaRepartiButtons(){
 void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
 
   QColor coloreSfondo=repartoBtn->buttonColorNormal();
+  QFont currentFont=repartoBtn->getFont();
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(1);
   for(int riga=0;riga<5;riga++) {
       for(int col=0;col<6;col++) {
-          QString nomeBtn=QString("%1\nART. %2").arg(repartoBtn->getNomeReparto()).arg(riga*6+col+1);
-          ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col,nomeBtn);
+          ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
           btn->SetButtonColorNormal(coloreSfondo);
+          btn->setFont(currentFont);
           griglia->addWidget(btn,riga,col);
           connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
           connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(SetButtonColorNormal(QColor)));
+          connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));
         }
     }
   QFrame* pagina=new QFrame;
@@ -163,7 +154,6 @@ void MainWindow::repartoSelezionato(){
   ui->articoliStackedWidget->setCurrentIndex(btn->getId()-1);
   dettagliRepartoBox->setCurrentReparto(btn);
   dettagliRepartoBox->disconnect();
-  connect(dettagliRepartoBox,SIGNAL(coloreChanged(QColor)),btn,SLOT(setColore(QColor)));
   dettagliRepartoBox->show();
   dettagliArticoloBox->hide();
 }

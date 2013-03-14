@@ -11,14 +11,22 @@ void ArticoloBtnWidget::setNomeArticolo(const QString nome){
   setText(nomeArticolo);
 }
 
-ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QString nome,QWidget *parent) :
+void ArticoloBtnWidget::setPrezzo(float nuovoPrezzo)
+{
+  prezzo=nuovoPrezzo;
+}
+
+void ArticoloBtnWidget::setButtonFont(const QFont &font)
+{
+  setFont(font);
+}
+
+ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent) :
   idReparto(id),
   riga(numRiga),
   colonna(numColonna),
-  nomeArticolo(nome),
   QPictureButton(parent)
 {
-  setText(nome);
   QSqlQuery stmt;
   stmt.prepare("select * from articoli where idreparto=? and riga=? and colonna=?");
   stmt.addBindValue(idReparto);
@@ -29,21 +37,22 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QString 
                           stmt.lastError().text());
     return;
   }
+  int numColIdArticolo=stmt.record().indexOf("idarticolo");
   int numColDescr=stmt.record().indexOf("descrizione");
   int numColprezzo=stmt.record().indexOf("prezzo");
+  int numColAbilitato=stmt.record().indexOf("abilitato");
   if(stmt.next()) {
+    idArticolo=stmt.value(numColIdArticolo).toInt();
     nomeArticolo=stmt.value(numColDescr).toString();
+    prezzo=stmt.value(numColprezzo).toFloat();
+    abilitato=stmt.value(numColAbilitato).toBool();
+  } else {
+    idArticolo=riga*6+colonna+1;
+    nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
+    prezzo=0;
+    abilitato=true;
   }
   setText(nomeArticolo);
-
-  QAction* dettagliAction=new QAction("Modifica",this);
-  dettagliAction->setObjectName("dettagliAction");
-  addAction(dettagliAction);
-
-  QAction* cancellaAction=new QAction("Cancella",this);
-  cancellaAction->setObjectName("cancellaAction");
-  addAction(cancellaAction);
-  setContextMenuPolicy(Qt::ActionsContextMenu);
 
   QSizePolicy buttonSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   buttonSizePolicy.setHorizontalStretch(0);
@@ -51,5 +60,4 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QString 
   buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
   setSizePolicy(buttonSizePolicy);
 
-  QMetaObject::connectSlotsByName(this);
 }
