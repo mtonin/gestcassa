@@ -1,30 +1,30 @@
 #include "dettagliarticolo.h"
 #include <QtSql>
+#include <QLocale>
 
 DettagliArticolo::DettagliArticolo(QWidget *parent) :
   QWidget(parent)
 {
   setupUi(this);
-  connect(testoArticolo,SIGNAL(textChanged(QString)),this,SLOT(testoChanged(QString)));
 }
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
   articoloBtn=(ArticoloBtnWidget*)currentArticoloBtn;
   testoArticolo->setText(articoloBtn->getNomeArticolo());
-}
-
-void DettagliArticolo::testoChanged(const QString& testo)
-{
-  articoloBtn->setNomeArticolo(testo);
-  aggiornaArticolo();
+  QLocale locale;
+  QString str=locale.toString(articoloBtn->getPrezzo());
+  prezzoArticolo->setText(str);
+  //prezzoArticolo->setText(QString::number(articoloBtn->getPrezzo(),'g',2));
+  disattivaFlag->setChecked(!articoloBtn->getAbilitato());
+  testoArticolo->setFocus();
 }
 
 void DettagliArticolo::aggiornaArticolo()
 {
-  QSqlQuery query("insert or replace into articoli (idarticolo,descrizione,prezzo,idreparto,riga,colonna,attivo) values(?,?,?,?,?,?,?)");
+  QSqlQuery query("insert or replace into articoli (idarticolo,descrizione,prezzo,idreparto,riga,colonna,abilitato) values(?,?,?,?,?,?,?)");
   query.addBindValue(articoloBtn->getId());
-  query.addBindValue(testoArticolo->text());
-  query.addBindValue(prezzoArticolo->text());
+  query.addBindValue(articoloBtn->getNomeArticolo());
+  query.addBindValue(articoloBtn->getPrezzo());
   query.addBindValue(articoloBtn->getIdReparto());
   query.addBindValue(articoloBtn->getRiga());
   query.addBindValue(articoloBtn->getColonna());
@@ -35,4 +35,25 @@ void DettagliArticolo::aggiornaArticolo()
                           query.lastError().text());
     return;
   }
+}
+
+void DettagliArticolo::on_testoArticolo_textChanged(const QString &testo)
+{
+  articoloBtn->setNomeArticolo(testo);
+  aggiornaArticolo();
+
+}
+
+void DettagliArticolo::on_prezzoArticolo_textChanged(const QString &prezzo)
+{
+  QLocale locale;
+  float val=locale.toFloat(prezzo);
+  articoloBtn->setPrezzo(val);
+  aggiornaArticolo();
+}
+
+void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
+{
+  articoloBtn->setAbilitato(!checked);
+  aggiornaArticolo();
 }

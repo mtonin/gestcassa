@@ -50,7 +50,7 @@ void AreaLavoro::creaRepartoBtn(int id, QString nome,QString colore)
 {
   if(nome.isEmpty())
     nome="REPARTO";
-  RepartoBtnWidget* newButton=new RepartoBtnWidget(id,nome);
+  RepartoBtnWidget* newButton=new RepartoBtnWidget(id);
   newButton->SetButtonColorNormal(QColor(colore));
 
   repartiBox->layout()->addWidget(newButton);

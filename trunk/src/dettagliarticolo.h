@@ -13,7 +13,11 @@ public:
    void setCurrentArticolo(const ArticoloBtnWidget*);
 
 private slots:
-   void testoChanged(const QString& testo);
+   void on_testoArticolo_textChanged(const QString &arg1);
+
+   void on_prezzoArticolo_textChanged(const QString &arg1);
+
+   void on_disattivaFlag_toggled(bool checked);
 
 private:
    void aggiornaArticolo();

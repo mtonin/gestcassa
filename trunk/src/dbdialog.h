@@ -16,7 +16,14 @@ class DBDialog : public QDialog, private Ui::DBDialog
    private slots:
       void on_toolButton_clicked();
 
+      void on_apreBtn_clicked();
+
+      void on_esceBtn_clicked();
+
+      void on_nuovoBtn_clicked();
+
 private:
+      bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
 };
 
 #endif // DBDIALOG_H
