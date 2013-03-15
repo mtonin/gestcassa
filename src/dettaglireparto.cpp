@@ -59,7 +59,7 @@ void dettagliReparto::on_fontBtn_clicked()
   aggiornaReparto();
 }
 
-void dettagliReparto::on_testoReparto_textChanged(const QString &arg1)
+void dettagliReparto::on_testoReparto_textEdited(const QString &arg1)
 {
     repartoBtn->setText(arg1);
     aggiornaReparto();

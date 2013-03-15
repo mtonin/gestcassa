@@ -6,6 +6,9 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
   QWidget(parent)
 {
   setupUi(this);
+  QDoubleValidator* validator=new QDoubleValidator(0,99.99,2,prezzoArticolo);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+  prezzoArticolo->setValidator(validator);
 }
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
