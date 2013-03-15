@@ -37,14 +37,14 @@ void DettagliArticolo::aggiornaArticolo()
   }
 }
 
-void DettagliArticolo::on_testoArticolo_textChanged(const QString &testo)
+void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
 {
   articoloBtn->setNomeArticolo(testo);
   aggiornaArticolo();
 
 }
 
-void DettagliArticolo::on_prezzoArticolo_textChanged(const QString &prezzo)
+void DettagliArticolo::on_prezzoArticolo_textEdited(const QString &prezzo)
 {
   QLocale locale;
   float val=locale.toFloat(prezzo);

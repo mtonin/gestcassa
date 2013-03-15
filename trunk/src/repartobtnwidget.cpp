@@ -1,5 +1,4 @@
 #include "repartobtnwidget.h"
-#include "dettagliorepartodlg.h"
 #include <QtSql>
 #include <QMessageBox>
 #include <QAction>
@@ -55,38 +54,4 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
   setSizePolicy(buttonSizePolicy);
 
-}
-
-void RepartoBtnWidget::on_dettagliAction_triggered()
-{
-
-  DettaglioRepartoDlg dlg;
-  dlg.setCurrentFont(font());
-  dlg.setTesto(nomeReparto);
-  //dlg.setCurrentColor(coloreSfondo.name());
-  if(dlg.showAtMousePosition()) {
-
-    QString coloreSfondo=dlg.getCurrentColor();
-    QFont currentFont=dlg.getCurrentFont();
-
-    QSqlQuery stmt;
-    stmt.prepare("update reparti set descrizione=?,font=?,coloresfondo=? where idreparto=?");
-    stmt.addBindValue(dlg.getDescrizione());
-    stmt.addBindValue(currentFont.toString());
-    stmt.addBindValue(coloreSfondo);
-    stmt.addBindValue(idReparto);
-    if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
-      return;
-    }
-
-    setText(dlg.getDescrizione());
-    setFont(currentFont);
-
-    SetButtonColorNormal(QColor(coloreSfondo));
-    QString stile=QString("QPushButton {background-color: %1;}").arg(coloreSfondo);
-    setStyleSheet(stile);
-    emit cambiaColore(coloreSfondo);
-  }
 }

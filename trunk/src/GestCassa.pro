@@ -14,46 +14,32 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    form01.cpp \
     ordine.cpp \
-    dettagliorepartodlg.cpp \
     comandibox.cpp \
     repartobtnwidget.cpp \
-    arealavoro.cpp \
     QPictureButton.cpp \
     dettaglireparto.cpp \
     dettagliarticolo.cpp \
     articolobtnwidget.cpp \
-    dbdialog.cpp \
-    elementobtnwidget.cpp \
-    dettaglioelementodlg.cpp
+    dbdialog.cpp
 
 HEADERS  += mainwindow.h \
-    form01.h \
     ordine.h \
-    dettagliorepartodlg.h \
     comandibox.h \
     repartobtnwidget.h \
-    arealavoro.h \
     QPictureButton.h \
     dettaglireparto.h \
     commons.h \
     dettagliarticolo.h \
     articolobtnwidget.h \
-    dbdialog.h \
-    elementobtnwidget.h \
-    dettaglioelementodlg.h
+    dbdialog.h
 
 FORMS    += mainwindow.ui \
-    form01.ui \
     ordine.ui \
-    dettagliorepartodlg.ui \
     comandibox.ui \
-    arealavoro.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
-    dbdialog.ui \
-    dettaglioelementodlg.ui
+    dbdialog.ui
 
 include(version.txt)
 
