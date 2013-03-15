@@ -28,7 +28,6 @@ private:
   QString nomeReparto;
 
 private slots:
-  void on_dettagliAction_triggered();
 
 };
 

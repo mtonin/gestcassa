@@ -1,4 +1,5 @@
 #include <QtGui>
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "repartobtnwidget.h"
@@ -25,45 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->latoFrame->layout()->addWidget(dettagliRepartoBox);
   ui->latoFrame->layout()->addWidget(dettagliArticoloBox);
   ui->latoFrame->layout()->addWidget(ordineBox);
-
-  /*
-  //setWindowFlags(Qt::FramelessWindowHint|Qt::CustomizeWindowHint);
-  //setContentsMargins(0,0,0,0);
-
-  QVBoxLayout* vbox=new QVBoxLayout;
-  //vbox->setContentsMargins(0,0,0,0);
-
-  AreaLavoro* workArea=new AreaLavoro;
-  vbox->addWidget(workArea);
-  //workArea->setVisible(false);
-
-  //ComandiBox* cmdBox=new ComandiBox(ui->comandiFrame);
-  //vbox->addWidget(cmdBox);
-
-  ComandiGroupBox* cmdBox=new ComandiGroupBox(ui->comandiFrame);
-
-  QHBoxLayout* hbox=new QHBoxLayout;
-  //hbox->setContentsMargins(0,0,0,0);
-  ordineBox=new Ordine;
-  dettaglioBox=new DettaglioRepartoDlg;
-  dettaglioBox->setVisible(false);
-
-  hbox->addLayout(vbox,4);
-
-  QFrame* frameLaterale=new QFrame;
-  frameLaterale->setFrameShape(QFrame::Box);
-  QVBoxLayout* frameLateraleVBox=new QVBoxLayout;
-  frameLaterale->setLayout(frameLateraleVBox);
-  frameLateraleVBox->addWidget(ordineBox);
-  frameLateraleVBox->addWidget(dettaglioBox);
-
-  hbox->addWidget(frameLaterale,1);
-  centralWidget()->setLayout(hbox);
-
-  gestioneModalita(0);
-
-  //connect(cmdBox,SIGNAL(dbCaricato()),workArea,SLOT(caricaDaDatabase()));
-  */
 
   connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
 
@@ -101,7 +63,14 @@ void MainWindow::keyPressEvent(QKeyEvent *evt) {
         else
           showMaximized();
       }
-    }
+  }
+}
+
+void MainWindow::closeEvent(QCloseEvent *evt)
+{
+  if(QMessageBox::Ok!=QMessageBox::question(0,"Uscita","Confermi l'uscita?",QMessageBox::Ok|QMessageBox::No)) {
+    evt->ignore();
+  }
 }
 
 void MainWindow::creaRepartiButtons(){

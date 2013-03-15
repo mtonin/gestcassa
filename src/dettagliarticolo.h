@@ -13,9 +13,9 @@ public:
    void setCurrentArticolo(const ArticoloBtnWidget*);
 
 private slots:
-   void on_testoArticolo_textChanged(const QString &arg1);
+   void on_testoArticolo_textEdited(const QString &arg1);
 
-   void on_prezzoArticolo_textChanged(const QString &arg1);
+   void on_prezzoArticolo_textEdited(const QString &arg1);
 
    void on_disattivaFlag_toggled(bool checked);
 

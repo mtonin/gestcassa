@@ -4,7 +4,6 @@
 #include "commons.h"
 #include "dettaglireparto.h"
 #include "dettagliarticolo.h"
-#include "dettagliorepartodlg.h"
 #include "ordine.h"
 #include <QMainWindow>
 
@@ -29,12 +28,13 @@ private slots:
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
-  DettaglioRepartoDlg* dettaglioBox;
   dettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
   modalitaType currentMode;
 
   void keyPressEvent(QKeyEvent *);
+  void closeEvent(QCloseEvent *);
+
   void creaRepartiButtons();
   void gestioneModalita(const modalitaType);
   void creaArticoliPerRepartoButtons(RepartoBtnWidget*);
