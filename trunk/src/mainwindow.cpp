@@ -16,11 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
   creaRepartiButtons();
 
   dettagliRepartoBox=new dettagliReparto;
-  dettagliRepartoBox->hide();
   dettagliArticoloBox=new DettagliArticolo;
-  dettagliArticoloBox->hide();
   ordineBox=new Ordine;
-  ordineBox->hide();
 
   ui->latoFrame->setLayout(new QVBoxLayout);
   ui->latoFrame->layout()->addWidget(dettagliRepartoBox);
@@ -28,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->latoFrame->layout()->addWidget(ordineBox);
 
   connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
-
+  connect(this,SIGNAL(aggiungeArticolo(QString,float)),ordineBox,SLOT(nuovoArticolo(QString,float)));
   gestioneModalita(GESTIONE);
 }
 
@@ -42,7 +39,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
   if(GESTIONE==nuovaModalita) {
     ui->modalitaBtn->setText("CASSA");
     setWindowFlags(Qt::Window);
-    ordineBox->setVisible(false);
+    ordineBox->hide();
+    dettagliRepartoBox->hide();
+    dettagliArticoloBox->hide();
     QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
     while(btn.hasNext()) {
       ArticoloBtnWidget* btnWidget=btn.next();
@@ -151,6 +150,8 @@ void MainWindow::articoloSelezionato(){
     dettagliArticoloBox->setCurrentArticolo(btn);
     dettagliArticoloBox->show();
     dettagliRepartoBox->hide();
+  } else {
+    emit aggiungeArticolo(btn->getNomeArticolo(),btn->getPrezzo());
   }
 }
 
