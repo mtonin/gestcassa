@@ -37,22 +37,35 @@ MainWindow::~MainWindow()
   delete ui;
 }
 
-void MainWindow::gestioneModalita(const modalitaType modalita )
+void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
-  if(GESTIONE==modalita) {
-      setWindowFlags(Qt::Window);
-
-      ordineBox->setVisible(false);
-      show();
-    } else {
-      setWindowFlags(Qt::FramelessWindowHint);
-      ordineBox->setVisible(true);
-      dettagliRepartoBox->setVisible(false);
-      dettagliArticoloBox->hide();
-      show();
+  if(GESTIONE==nuovaModalita) {
+    ui->modalitaBtn->setText("CASSA");
+    setWindowFlags(Qt::Window);
+    ordineBox->setVisible(false);
+    QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
+    while(btn.hasNext()) {
+      ArticoloBtnWidget* btnWidget=btn.next();
+      btnWidget->setEnabled(true);
     }
+    show();
+  } else {
+    ui->modalitaBtn->setText("GESTIONE");
+    setWindowFlags(Qt::FramelessWindowHint);
+    ordineBox->setVisible(true);
+    dettagliRepartoBox->hide();
+    dettagliArticoloBox->hide();
+    QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
+    while(btn.hasNext()) {
+      ArticoloBtnWidget* btnWidget=btn.next();
+      if(false==btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
+        btnWidget->setDisabled(true);
+      }
+    }
+    show();
+  }
 
-  currentMode=modalita;
+  modalitaCorrente=nuovaModalita;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *evt) {
@@ -81,13 +94,13 @@ void MainWindow::creaRepartiButtons(){
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
   for(int i=1;i<=6;i++) {
-      RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiGroupBox);
+    RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiGroupBox);
 
-      hboxLayout->addWidget(reparto01Btn);
-      creaArticoliPerRepartoButtons(reparto01Btn);
+    hboxLayout->addWidget(reparto01Btn);
+    creaArticoliPerRepartoButtons(reparto01Btn);
 
-      connect(reparto01Btn,SIGNAL(clicked()),this,SLOT(repartoSelezionato()));
-    }
+    connect(reparto01Btn,SIGNAL(clicked()),this,SLOT(repartoSelezionato()));
+  }
 
   ui->repartiGroupBox->setLayout(hboxLayout);
 }
@@ -100,16 +113,18 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(1);
   for(int riga=0;riga<5;riga++) {
-      for(int col=0;col<6;col++) {
-          ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
-          btn->SetButtonColorNormal(coloreSfondo);
-          btn->setFont(currentFont);
-          griglia->addWidget(btn,riga,col);
-          connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
-          connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(SetButtonColorNormal(QColor)));
-          connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));
-        }
+    for(int col=0;col<6;col++) {
+      ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
+      btn->SetButtonColorNormal(coloreSfondo);
+      btn->SetButtonColorHot(coloreSfondo);
+      btn->setFont(currentFont);
+      griglia->addWidget(btn,riga,col);
+      connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
+      connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(SetButtonColorNormal(QColor)));
+      connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));
+      articoliBtnList.append(btn);
     }
+  }
   QFrame* pagina=new QFrame;
   pagina->setLayout(griglia);
 
@@ -121,31 +136,32 @@ void MainWindow::repartoSelezionato(){
   RepartoBtnWidget* btn=qobject_cast<RepartoBtnWidget*>(sender());
   btn->setDown(true);
   ui->articoliStackedWidget->setCurrentIndex(btn->getId()-1);
-  dettagliRepartoBox->setCurrentReparto(btn);
-  dettagliRepartoBox->disconnect();
-  dettagliRepartoBox->show();
-  dettagliArticoloBox->hide();
+  if(GESTIONE==modalitaCorrente) {
+    dettagliRepartoBox->setCurrentReparto(btn);
+    dettagliRepartoBox->disconnect();
+    dettagliRepartoBox->show();
+    dettagliArticoloBox->hide();
+  }
 }
 
 void MainWindow::articoloSelezionato(){
   ArticoloBtnWidget* btn=qobject_cast<ArticoloBtnWidget*>(sender());
   btn->setDown(true);
-  dettagliArticoloBox->setCurrentArticolo(btn);
-  dettagliArticoloBox->show();
-  dettagliRepartoBox->hide();
+  if(GESTIONE==modalitaCorrente) {
+    dettagliArticoloBox->setCurrentArticolo(btn);
+    dettagliArticoloBox->show();
+    dettagliRepartoBox->hide();
+  }
 }
 
 void MainWindow::modalitaBtnClicked(){
-  QString testo=ui->modalitaBtn->text();
-  if(0==testo.compare("CASSA")) {
-      //qApp->setOverrideCursor(Qt::BlankCursor);
-      ui->modalitaBtn->setText("GESTIONE");
-      gestioneModalita(CASSA);
-    } else {
-      qApp->restoreOverrideCursor();
-      ui->modalitaBtn->setText("CASSA");
-      gestioneModalita(GESTIONE);
-    }
+  if(GESTIONE==modalitaCorrente) {
+    //qApp->setOverrideCursor(Qt::BlankCursor);
+    gestioneModalita(CASSA);
+  } else {
+    qApp->restoreOverrideCursor();
+    gestioneModalita(GESTIONE);
+  }
 
 }
 
