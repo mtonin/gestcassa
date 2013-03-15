@@ -14,10 +14,14 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
   articoloBtn=(ArticoloBtnWidget*)currentArticoloBtn;
   testoArticolo->setText(articoloBtn->getNomeArticolo());
+  /*
   QLocale locale;
-  QString str=locale.toString(articoloBtn->getPrezzo());
+  QString str=locale.toCurrencyString(articoloBtn->getPrezzo(),QString(" "));
   prezzoArticolo->setText(str);
   //prezzoArticolo->setText(QString::number(articoloBtn->getPrezzo(),'g',2));
+  */
+
+  prezzoArticolo->setText(QString("%1").arg(articoloBtn->getPrezzo(),4,'f',2));
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
   testoArticolo->setFocus();
 }
@@ -49,8 +53,11 @@ void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
 
 void DettagliArticolo::on_prezzoArticolo_textEdited(const QString &prezzo)
 {
+  /*
   QLocale locale;
   float val=locale.toFloat(prezzo);
+  */
+  float val=prezzo.toFloat();
   articoloBtn->setPrezzo(val);
   aggiornaArticolo();
 }

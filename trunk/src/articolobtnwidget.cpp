@@ -48,7 +48,8 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
     abilitato=stmt.value(numColAbilitato).toBool();
   } else {
     idArticolo=riga*6+colonna+1;
-    nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
+    //nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
+    nomeArticolo="";
     prezzo=0;
     abilitato=true;
   }

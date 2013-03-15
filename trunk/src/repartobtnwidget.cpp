@@ -47,7 +47,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
     nomeReparto=QString("REPARTO %1").arg(idReparto);
   }
   setText(nomeReparto);
-
+  SetButtonColorHot(buttonColorNormal());
   QSizePolicy buttonSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
   buttonSizePolicy.setHorizontalStretch(0);
   buttonSizePolicy.setVerticalStretch(0);

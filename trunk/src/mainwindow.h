@@ -6,6 +6,7 @@
 #include "dettagliarticolo.h"
 #include "ordine.h"
 #include <QMainWindow>
+#include <QList>
 
 namespace Ui {
   class MainWindow;
@@ -32,13 +33,15 @@ private:
   Ordine* ordineBox;
   dettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
-  modalitaType currentMode;
+  QList<ArticoloBtnWidget*> articoliBtnList;
+
+  modalitaType modalitaCorrente;
 
   void keyPressEvent(QKeyEvent *);
   void closeEvent(QCloseEvent *);
 
   void creaRepartiButtons();
-  void gestioneModalita(const modalitaType);
+  void gestioneModalita(const modalitaType nuovaModalita);
   void creaArticoliPerRepartoButtons(RepartoBtnWidget*);
 
 };
