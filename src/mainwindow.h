@@ -15,6 +15,9 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
+
+signals:
+  void aggiungeArticolo(const QString& nomeArticolo, float prezzo);
   
 public:
   explicit MainWindow(QWidget *parent = 0);
