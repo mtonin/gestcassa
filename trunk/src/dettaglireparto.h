@@ -20,7 +20,7 @@ public slots:
 private slots:
    void on_coloreBtn_clicked();
    void on_fontBtn_clicked();
-   void on_testoReparto_textChanged(const QString &arg1);
+   void on_testoReparto_textEdited(const QString &arg1);
 
 private:
    RepartoBtnWidget* repartoBtn;

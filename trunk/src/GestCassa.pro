@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     ordine.cpp \
-    comandibox.cpp \
     repartobtnwidget.cpp \
     QPictureButton.cpp \
     dettaglireparto.cpp \
@@ -25,7 +24,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ordine.h \
-    comandibox.h \
     repartobtnwidget.h \
     QPictureButton.h \
     dettaglireparto.h \
@@ -36,7 +34,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     ordine.ui \
-    comandibox.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
     dbdialog.ui

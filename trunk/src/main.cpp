@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
   QFont currentFont=a.font();
-  currentFont.setPointSize(12);
+  currentFont.setPointSize(10);
   a.setFont(currentFont);
 
   DBDialog dlg;

@@ -148,3 +148,11 @@ void MainWindow::modalitaBtnClicked(){
     }
 
 }
+
+void MainWindow::on_modalitaBtn_2_clicked()
+{
+  QFont font=qApp->font();
+  font.setPointSize(font.pointSize()+1);
+  qApp->setFont(font);
+
+}

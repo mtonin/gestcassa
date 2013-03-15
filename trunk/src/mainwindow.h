@@ -25,6 +25,8 @@ private slots:
    void articoloSelezionato();
    void modalitaBtnClicked();
 
+   void on_modalitaBtn_2_clicked();
+
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
