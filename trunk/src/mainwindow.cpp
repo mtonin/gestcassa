@@ -89,7 +89,6 @@ void MainWindow::creaRepartiButtons(){
 
   QHBoxLayout* hboxLayout = new QHBoxLayout(ui->repartiGroupBox);
   hboxLayout->setSpacing(2);
-  hboxLayout->setContentsMargins(11, 11, 11, 11);
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
   for(int i=1;i<=6;i++) {
@@ -110,7 +109,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   QColor coloreSfondo=repartoBtn->buttonColorNormal();
   QFont currentFont=repartoBtn->getFont();
   QGridLayout* griglia=new QGridLayout;
-  griglia->setSpacing(1);
+  griglia->setSpacing(2);
   for(int riga=0;riga<5;riga++) {
     for(int col=0;col<6;col++) {
       ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);

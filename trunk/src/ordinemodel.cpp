@@ -26,5 +26,8 @@ bool OrdineModel::aggiunge(const QString& valore)
 QVariant OrdineModel::data(const QModelIndex &index, int role) const
 {
   if(!index.isValid()) return QVariant();
+  if(role!=Qt::DisplayRole) {
+    return QVariant();
+  }
   return articoloList.at(index.row());
 }

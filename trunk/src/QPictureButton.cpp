@@ -214,7 +214,7 @@ void QPictureButton::PaintText()
     int Left   = PainterRect.left();
     int Height = PainterRect.height();
     int Width  = PainterRect.width();
-    int Align = Qt::AlignCenter;
+    int Align = Qt::AlignCenter|Qt::TextWordWrap;
 
     if(!this->icon().isNull())
     {
