@@ -43,7 +43,7 @@ void Ordine::nuovoArticolo(const QString descrizione, const float prezzo)
 
   */
   modello.aggiunge(descrizione);
-
+  articoliTab->scrollToBottom();
   float totale=totaleLine->text().toFloat();
   totale+=prezzo;
   totaleLine->setText(QString("%1").arg(totale,4,'f',2));
