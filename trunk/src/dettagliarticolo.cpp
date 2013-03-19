@@ -28,19 +28,44 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
 void DettagliArticolo::aggiornaArticolo()
 {
-  QSqlQuery query("insert or replace into articoli (idarticolo,descrizione,prezzo,idreparto,riga,colonna,abilitato) values(?,?,?,?,?,?,?)");
-  query.addBindValue(articoloBtn->getId());
+
+  QSqlQuery query;
+  if(0==articoloBtn->getId()) {
+    query.prepare("insert into articoli (descrizione,prezzo,idreparto,riga,colonna,abilitato) values(?,?,?,?,?,?)");
+  } else {
+    query.prepare("update articoli set descrizione=?,prezzo=?,idreparto=?,riga=?,colonna=?,abilitato=? where idarticolo=?");
+  }
+
+  //query.addBindValue(articoloBtn->getId());
   query.addBindValue(articoloBtn->getNomeArticolo());
   query.addBindValue(articoloBtn->getPrezzo());
   query.addBindValue(articoloBtn->getIdReparto());
   query.addBindValue(articoloBtn->getRiga());
   query.addBindValue(articoloBtn->getColonna());
   query.addBindValue(!disattivaFlag->isChecked());
+  if(articoloBtn->getId()>0) {
+    query.addBindValue(articoloBtn->getId());
+  }
   query.exec();
   if(!query.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           query.lastError().text());
     return;
+  }
+  if(0==articoloBtn->getId()) {
+    query.clear();
+    query.prepare("select idarticolo from articoli where idreparto=? and riga=? and colonna=?");
+    query.addBindValue(articoloBtn->getIdReparto());
+    query.addBindValue(articoloBtn->getRiga());
+    query.addBindValue(articoloBtn->getColonna());
+    query.exec();
+    if(!query.isActive()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            query.lastError().text());
+      return;
+    }
+    if(query.next())
+      articoloBtn->setId(query.value(0).toInt());
   }
 }
 

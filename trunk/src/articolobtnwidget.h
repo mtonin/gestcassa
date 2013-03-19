@@ -11,6 +11,7 @@ public:
   explicit ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent=0);
 
   int getId() {return idArticolo;}
+  void setId(int id) {idArticolo=id;}
   QString getNomeArticolo() {return nomeArticolo;}
   void setNomeArticolo(const QString nome);
   int getIdReparto() {return idReparto;}
