@@ -43,21 +43,24 @@ bool OrdineModel::aggiunge(const int id,const QString& descrizione,const float p
 QVariant OrdineModel::data(const QModelIndex &index, int role) const
 {
   if(!index.isValid()) return QVariant();
-  if(role!=Qt::DisplayRole) {
-    return QVariant();
-  }
+
   rigaArticoloClass rigaArticolo=articoloList.value(index.row());
   float totRiga;
   switch (index.column()) {
     case 1:
-      return rigaArticolo.descrizione;
+      if(Qt::DisplayRole==role) return rigaArticolo.descrizione;
+      if(Qt::TextAlignmentRole==role) return Qt::AlignLeft|Qt::AlignBottom;
       break;
     case 2:
-      return rigaArticolo.quantita;
+      if(Qt::DisplayRole==role) return rigaArticolo.quantita;
+      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignBottom;
       break;
     case 3:
-      totRiga=rigaArticolo.quantita*rigaArticolo.prezzo;
-      return QString("%1").arg(totRiga,4,'f',2);
+      if(Qt::DisplayRole==role) {
+        totRiga=rigaArticolo.quantita*rigaArticolo.prezzo;
+        return QString("%1").arg(totRiga,4,'f',2);
+      }
+      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignBottom;
       break;
     default:
       break;
