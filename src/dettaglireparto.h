@@ -7,11 +7,11 @@
 #include <QSqlDatabase>
 #include <QFont>
 
-class dettagliReparto : public QWidget, private Ui::dettagliReparto {
+class DettagliReparto : public QWidget, private Ui::dettagliReparto {
    Q_OBJECT
    
 public:
-   explicit dettagliReparto(QWidget *parent = 0);
+   explicit DettagliReparto(QWidget *parent = 0);
 
 public slots:
    void setCurrentReparto(RepartoBtnWidget*);

@@ -3,13 +3,13 @@
 #include <QColorDialog>
 #include <QtSql>
 
-dettagliReparto::dettagliReparto(QWidget *parent) :
+DettagliReparto::DettagliReparto(QWidget *parent) :
   QWidget(parent)
 {
   setupUi(this);
 }
 
-void dettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
+void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
 
   repartoBtn=currentRepartoBtn;
   testoReparto->setText(repartoBtn->getNomeReparto());
@@ -18,7 +18,7 @@ void dettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
   fontBtn->setFont(repartoBtn->getFont());
 }
 
-void dettagliReparto::aggiornaReparto()
+void DettagliReparto::aggiornaReparto()
 {
   QSqlQuery query("insert or replace into reparti (idreparto,descrizione,font,coloresfondo) values(?,?,?,?)");
   query.addBindValue(repartoBtn->getId());
@@ -33,7 +33,7 @@ void dettagliReparto::aggiornaReparto()
   }
 }
 
-void dettagliReparto::on_coloreBtn_clicked()
+void DettagliReparto::on_coloreBtn_clicked()
 {
   QColorDialog dlg;
   QColor colore=repartoBtn->getColore();
@@ -47,7 +47,7 @@ void dettagliReparto::on_coloreBtn_clicked()
 
 }
 
-void dettagliReparto::on_fontBtn_clicked()
+void DettagliReparto::on_fontBtn_clicked()
 {
   QFontDialog dlg;
   dlg.setCurrentFont(repartoBtn->getFont());
@@ -59,7 +59,7 @@ void dettagliReparto::on_fontBtn_clicked()
   aggiornaReparto();
 }
 
-void dettagliReparto::on_testoReparto_textEdited(const QString &arg1)
+void DettagliReparto::on_testoReparto_textEdited(const QString &arg1)
 {
     repartoBtn->setText(arg1);
     aggiornaReparto();
