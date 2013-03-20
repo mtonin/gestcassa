@@ -7,9 +7,9 @@ Ordine::Ordine(QWidget *parent) :
   setupUi(this);
 
   articoliTab->setModel(&modello);
-  //setHorizontalHeaderLabels(QString("ARTICOLO,Q.TA',PREZZO").split(","));
-
+  articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
+  articoliTab->verticalHeader()->setDefaultSectionSize(40);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
