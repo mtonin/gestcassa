@@ -7,12 +7,12 @@ Ordine::Ordine(QWidget *parent) :
   setupUi(this);
 
   articoliTab->setModel(&modello);
-  //modello.setHorizontalHeaderLabels(QString("ID,ARTICOLO,Q.TA',PREZZO").split(","));
+  //setHorizontalHeaderLabels(QString("ARTICOLO,Q.TA',PREZZO").split(","));
 
-  //articoliTab->hideColumn(0);
+  articoliTab->hideColumn(0);
 }
 
-void Ordine::nuovoArticolo(const QString descrizione, const float prezzo)
+void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
 {
   /*
   QModelIndex idx;
@@ -42,7 +42,7 @@ void Ordine::nuovoArticolo(const QString descrizione, const float prezzo)
     }
 
   */
-  modello.aggiunge(descrizione);
+  modello.aggiunge(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
   float totale=totaleLine->text().toFloat();
   totale+=prezzo;

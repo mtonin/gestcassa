@@ -16,11 +16,20 @@ public slots:
 public:
   int rowCount(const QModelIndex &parent) const;
   int columnCount(const QModelIndex &parent) const;
-  bool aggiunge(const QString& valore);
+  bool aggiunge(const int id, const QString& descrizione,const float prezzo);
   QVariant data(const QModelIndex &index, int role) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 private:
-  QList<QString> articoloList;
+  class rigaArticoloClass {
+  public:
+    int id;
+    QString descrizione;
+    int quantita;
+    float prezzo;
+  } rigaArticolo;
+
+  QList<rigaArticoloClass> articoloList;
 };
 
 #endif // ORDINEMODEL_H

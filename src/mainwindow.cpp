@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->latoFrame->layout()->addWidget(ordineBox);
 
   connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
-  connect(this,SIGNAL(aggiungeArticolo(QString,float)),ordineBox,SLOT(nuovoArticolo(QString,float)));
+  connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
   gestioneModalita(GESTIONE);
 }
 
@@ -150,7 +150,7 @@ void MainWindow::articoloSelezionato(){
     dettagliArticoloBox->show();
     dettagliRepartoBox->hide();
   } else {
-    emit aggiungeArticolo(btn->getNomeArticolo(),btn->getPrezzo());
+    emit aggiungeArticolo(btn->getId(),btn->getNomeArticolo(),btn->getPrezzo());
   }
 }
 
