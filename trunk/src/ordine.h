@@ -13,7 +13,7 @@ public:
   explicit Ordine(QWidget *parent = 0);
 
 public slots:
-  void nuovoArticolo(const QString descrizione, const float prezzo);
+  void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
 
 private slots:
   void on_pushButton_clicked();
