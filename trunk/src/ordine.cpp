@@ -9,7 +9,7 @@ Ordine::Ordine(QWidget *parent) :
   articoliTab->setModel(&modello);
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
-  articoliTab->verticalHeader()->setDefaultSectionSize(40);
+  articoliTab->verticalHeader()->setDefaultSectionSize(30);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)

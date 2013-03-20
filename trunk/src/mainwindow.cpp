@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   creaRepartiButtons();
 
-  dettagliRepartoBox=new dettagliReparto;
+  dettagliRepartoBox=new DettagliReparto;
   dettagliArticoloBox=new DettagliArticolo;
   ordineBox=new Ordine;
 
@@ -57,8 +57,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
     while(btn.hasNext()) {
       ArticoloBtnWidget* btnWidget=btn.next();
-      if(false==btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
+      if(!btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
         btnWidget->setDisabled(true);
+        //btnWidget->setVisible(false);
       }
     }
     show();

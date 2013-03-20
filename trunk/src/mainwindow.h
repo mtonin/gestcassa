@@ -34,7 +34,7 @@ private slots:
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
-  dettagliReparto* dettagliRepartoBox;
+  DettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
   QList<ArticoloBtnWidget*> articoliBtnList;
 
