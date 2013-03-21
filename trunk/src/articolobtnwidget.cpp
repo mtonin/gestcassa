@@ -1,11 +1,6 @@
 #include "articolobtnwidget.h"
 #include <QtSql>
 
-ArticoloBtnWidget::ArticoloBtnWidget(QWidget *parent) :
-  QPictureButton(parent)
-{
-}
-
 void ArticoloBtnWidget::setNomeArticolo(const QString nome){
   nomeArticolo=nome;
   setText(nomeArticolo);
@@ -27,6 +22,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
   colonna(numColonna),
   QPictureButton(parent)
 {
+
   QSqlQuery stmt;
   stmt.prepare("select * from articoli where idreparto=? and riga=? and colonna=?");
   stmt.addBindValue(idReparto);

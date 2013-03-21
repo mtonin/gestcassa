@@ -7,7 +7,6 @@ class ArticoloBtnWidget : public QPictureButton
 {
   Q_OBJECT
 public:
-  explicit ArticoloBtnWidget(QWidget *parent = 0);
   explicit ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent=0);
 
   int getId() {return idArticolo;}
