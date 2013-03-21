@@ -12,6 +12,8 @@ Ordine::Ordine(QWidget *parent) :
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
   articoliTab->verticalHeader()->setDefaultSectionSize(30);
+  connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
+  controlli=new ControlliOrdine(this);
 
 }
 
@@ -47,9 +49,12 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
   */
   modello.incrementa(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
+
+  /*
   float totale=totaleLine->text().toFloat();
   totale+=prezzo;
   totaleLine->setText(QString("%1").arg(totale,4,'f',2));
+  */
 }
 
 void Ordine::on_pushButton_clicked()
@@ -60,11 +65,22 @@ void Ordine::on_pushButton_clicked()
 void Ordine::on_articoliTab_clicked(const QModelIndex &index)
 {
   int id=index.model()->index(index.row(),0).data().toInt();
-  ControlliOrdine* controlli=new ControlliOrdine(id,this);
+  controlli->setIdArticolo(id);
   connect(&modello,SIGNAL(rigaCancellata()),controlli,SLOT(close()));
+  disconnect(controlli,0,0,0);
   connect(controlli,SIGNAL(incrementa(int)),&modello,SLOT(incrementa(int)));
   connect(controlli,SIGNAL(decrementa(int)),&modello,SLOT(decrementa(int)));
 
-  controlli->move(QCursor::pos());
+  QPoint pos=QCursor::pos();
+  controlli->move(pos);
   controlli->show();
+}
+
+void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
+{
+  float totale=0;
+  for(int i=0;i<modello.rowCount(QModelIndex());i++) {
+    totale+=modello.index(i,3).data().toFloat();
+  }
+  totaleLine->setText(QString("%1").arg(totale,4,'f',2));
 }
