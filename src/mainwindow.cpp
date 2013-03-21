@@ -42,10 +42,10 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ordineBox->hide();
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
-    QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
-    while(btn.hasNext()) {
-      ArticoloBtnWidget* btnWidget=btn.next();
-      btnWidget->setEnabled(true);
+
+    QListIterator<QStackedWidget*> it(stackedList);
+    while(it.hasNext()) {
+      it.next()->setCurrentIndex(0);
     }
     show();
   } else {
@@ -54,12 +54,12 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ordineBox->setVisible(true);
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
-    QListIterator<ArticoloBtnWidget*> btn(articoliBtnList);
-    while(btn.hasNext()) {
-      ArticoloBtnWidget* btnWidget=btn.next();
+    QListIterator<QStackedWidget*> it(stackedList);
+    while(it.hasNext()) {
+      QStackedWidget* box=it.next();
+      ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
       if(!btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
-        btnWidget->setDisabled(true);
-        //btnWidget->setVisible(false);
+        box->setCurrentIndex(1);
       }
     }
     show();
@@ -113,11 +113,18 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   griglia->setSpacing(2);
   for(int riga=0;riga<5;riga++) {
     for(int col=0;col<6;col++) {
+      QStackedWidget* stackedBox=new QStackedWidget();
+
       ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
       btn->SetButtonColorNormal(coloreSfondo);
       btn->SetButtonColorHot(coloreSfondo);
       btn->setFont(currentFont);
-      griglia->addWidget(btn,riga,col);
+      stackedBox->addWidget(btn);
+      QFrame* blankFrame=new QFrame;
+      stackedBox->addWidget(blankFrame);
+      stackedList.append(stackedBox);
+
+      griglia->addWidget(stackedBox,riga,col);
       connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
       connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(SetButtonColorNormal(QColor)));
       connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));

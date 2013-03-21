@@ -37,7 +37,7 @@ private:
   DettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
   QList<ArticoloBtnWidget*> articoliBtnList;
-
+  QList<QStackedWidget*> stackedList;
   modalitaType modalitaCorrente;
 
   void keyPressEvent(QKeyEvent *);
