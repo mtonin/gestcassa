@@ -3,6 +3,7 @@
 
 #include "ui_ordine.h"
 #include "ordinemodel.h"
+#include "controlliordine.h"
 #include <QStandardItemModel>
 
 class Ordine : public QWidget, private Ui::Ordine
@@ -17,11 +18,12 @@ public slots:
 
 private slots:
   void on_pushButton_clicked();
-
   void on_articoliTab_clicked(const QModelIndex &index);
+  void ricalcolaTotale(QModelIndex,QModelIndex);
 
 private:
   OrdineModel modello;
+  ControlliOrdine* controlli;
 
 };
 

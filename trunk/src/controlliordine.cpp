@@ -2,13 +2,13 @@
 #include "ui_controlliordine.h"
 #include <QTimer>
 
-ControlliOrdine::ControlliOrdine(const int id,QWidget *parent) :
-  idArticolo(id),
+ControlliOrdine::ControlliOrdine(QWidget *parent) :
+  idArticolo(0),
   QWidget(parent),
   ui(new Ui::ControlliOrdine)
 {
   ui->setupUi(this);
-  setWindowFlags(Qt::FramelessWindowHint);
+  setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
 }
 
 ControlliOrdine::~ControlliOrdine()
@@ -18,16 +18,26 @@ ControlliOrdine::~ControlliOrdine()
 
 void ControlliOrdine::show()
 {
-  timer.singleShot(3000,this,SLOT(close()));
+  connect(&timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
+  timer.start(3000);
   QWidget::show();
 }
 
 void ControlliOrdine::on_toolButton_clicked()
 {
-    emit incrementa(idArticolo);
+  timer.start();
+  emit incrementa(idArticolo);
 }
 
 void ControlliOrdine::on_toolButton_2_clicked()
 {
-    emit decrementa(idArticolo);
+  timer.start();
+  emit decrementa(idArticolo);
+}
+
+void ControlliOrdine::onTimerTimeout()
+{
+  timer.stop();
+  disconnect(&timer,0,0,0);
+  close();
 }

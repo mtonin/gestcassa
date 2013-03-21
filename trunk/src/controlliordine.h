@@ -17,15 +17,17 @@ signals:
   void decrementa(const int);
 
 public:
-  explicit ControlliOrdine(const int id,QWidget *parent = 0);
+  explicit ControlliOrdine(QWidget *parent = 0);
   ~ControlliOrdine();
   void show();
+  void setIdArticolo(const int id) {idArticolo=id;}
 
 public slots:
 
 private slots:
   void on_toolButton_clicked();
   void on_toolButton_2_clicked();
+  void onTimerTimeout();
 
 private:
   int idArticolo;
