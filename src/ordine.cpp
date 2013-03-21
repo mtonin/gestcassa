@@ -1,5 +1,7 @@
 #include "ordine.h"
+#include "controlliordine.h"
 #include <QMessageBox>
+#include <QTimer>
 
 Ordine::Ordine(QWidget *parent) :
   QWidget(parent)
@@ -10,6 +12,7 @@ Ordine::Ordine(QWidget *parent) :
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
   articoliTab->verticalHeader()->setDefaultSectionSize(30);
+
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -42,7 +45,7 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
     }
 
   */
-  modello.aggiunge(idArticolo,descrizione,prezzo);
+  modello.incrementa(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
   float totale=totaleLine->text().toFloat();
   totale+=prezzo;
@@ -52,4 +55,16 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
 void Ordine::on_pushButton_clicked()
 {
   QMessageBox::information(this,"MSG","click()");
+}
+
+void Ordine::on_articoliTab_clicked(const QModelIndex &index)
+{
+  int id=index.model()->index(index.row(),0).data().toInt();
+  ControlliOrdine* controlli=new ControlliOrdine(id,this);
+  connect(&modello,SIGNAL(rigaCancellata()),controlli,SLOT(close()));
+  connect(controlli,SIGNAL(incrementa(int)),&modello,SLOT(incrementa(int)));
+  connect(controlli,SIGNAL(decrementa(int)),&modello,SLOT(decrementa(int)));
+
+  controlli->move(QCursor::pos());
+  controlli->show();
 }
