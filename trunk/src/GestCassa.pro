@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     dettagliarticolo.cpp \
     articolobtnwidget.cpp \
     dbdialog.cpp \
-    ordinemodel.cpp
+    ordinemodel.cpp \
+    controlliordine.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -32,13 +33,15 @@ HEADERS  += mainwindow.h \
     dettagliarticolo.h \
     articolobtnwidget.h \
     dbdialog.h \
-    ordinemodel.h
+    ordinemodel.h \
+    controlliordine.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
-    dbdialog.ui
+    dbdialog.ui \
+    controlliordine.ui
 
 include(version.txt)
 

@@ -5,6 +5,33 @@ OrdineModel::OrdineModel(QObject *parent) :
 {
 }
 
+void OrdineModel::incrementa(const int id)
+{
+  incrementa(id,"",0);
+}
+
+void OrdineModel::decrementa(const int id)
+{
+  QMutableListIterator<rigaArticoloClass> it(articoloList);
+  while(it.hasNext()) {
+    rigaArticoloClass rigaArticolo=it.next();
+    if(rigaArticolo.id==id) {
+      rigaArticolo.quantita--;
+      if(rigaArticolo.quantita>0) {
+        it.setValue(rigaArticolo);
+        emit dataChanged(QModelIndex(),QModelIndex());
+      } else {
+        beginRemoveRows(QModelIndex(),0,articoloList.count());
+        it.remove();
+        endRemoveRows();
+        emit rigaCancellata();
+      }
+      return;
+    }
+  }
+
+}
+
 int OrdineModel::rowCount(const QModelIndex &parent) const
 {
   return articoloList.count();
@@ -15,7 +42,7 @@ int OrdineModel::columnCount(const QModelIndex &parent) const
   return 4;
 }
 
-bool OrdineModel::aggiunge(const int id,const QString& descrizione,const float prezzo)
+bool OrdineModel::incrementa(const int id,const QString& descrizione,const float prezzo)
 {
   QMutableListIterator<rigaArticoloClass> it(articoloList);
   while(it.hasNext()) {
@@ -47,9 +74,13 @@ QVariant OrdineModel::data(const QModelIndex &index, int role) const
   rigaArticoloClass rigaArticolo=articoloList.value(index.row());
   float totRiga;
   switch (index.column()) {
+    case 0:
+      if(Qt::DisplayRole==role) return rigaArticolo.id;
+      break;
     case 1:
       if(Qt::DisplayRole==role) return rigaArticolo.descrizione;
       if(Qt::TextAlignmentRole==role) return Qt::AlignLeft|Qt::AlignBottom;
+      if(Qt::ToolTipRole==role) return rigaArticolo.descrizione;
       break;
     case 2:
       if(Qt::DisplayRole==role) return rigaArticolo.quantita;
