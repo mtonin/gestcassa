@@ -1,6 +1,7 @@
 #include "controlliordine.h"
 #include "ui_controlliordine.h"
 #include <QTimer>
+#include <QPropertyAnimation>
 
 ControlliOrdine::ControlliOrdine(QWidget *parent) :
   idArticolo(0),
@@ -9,6 +10,10 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
 {
   ui->setupUi(this);
   setWindowFlags(Qt::FramelessWindowHint|Qt::Window);
+  effetto=new QPropertyAnimation(this,"windowOpacity");
+  effetto->setStartValue("1");
+  effetto->setEndValue("0");
+  effetto->setDuration(3000);
 }
 
 ControlliOrdine::~ControlliOrdine()
@@ -18,26 +23,21 @@ ControlliOrdine::~ControlliOrdine()
 
 void ControlliOrdine::show()
 {
-  connect(&timer,SIGNAL(timeout()),this,SLOT(onTimerTimeout()));
-  timer.start(3000);
   QWidget::show();
+  effetto->stop();
+  effetto->start();
 }
 
 void ControlliOrdine::on_toolButton_clicked()
 {
-  timer.start();
   emit incrementa(idArticolo);
+  effetto->stop();
+  effetto->start();
 }
 
 void ControlliOrdine::on_toolButton_2_clicked()
 {
-  timer.start();
   emit decrementa(idArticolo);
-}
-
-void ControlliOrdine::onTimerTimeout()
-{
-  timer.stop();
-  disconnect(&timer,0,0,0);
-  close();
+  effetto->stop();
+  effetto->start();
 }
