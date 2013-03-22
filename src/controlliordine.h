@@ -2,7 +2,7 @@
 #define CONTROLLIORDINE_H
 
 #include <QWidget>
-#include <QTimer>
+#include <QPropertyAnimation>
 
 namespace Ui {
   class ControlliOrdine;
@@ -27,12 +27,11 @@ public slots:
 private slots:
   void on_toolButton_clicked();
   void on_toolButton_2_clicked();
-  void onTimerTimeout();
 
 private:
   int idArticolo;
   Ui::ControlliOrdine *ui;
-  QTimer timer;
+  QPropertyAnimation* effetto;
 };
 
 #endif // CONTROLLIORDINE_H
