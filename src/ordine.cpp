@@ -2,6 +2,7 @@
 #include "controlliordine.h"
 #include <QMessageBox>
 #include <QTimer>
+#include <QtSql>
 
 Ordine::Ordine(QWidget *parent) :
   QWidget(parent)
@@ -14,7 +15,7 @@ Ordine::Ordine(QWidget *parent) :
   articoliTab->verticalHeader()->setDefaultSectionSize(30);
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
   controlli=new ControlliOrdine(this);
-
+  nuovoOrdine();
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -96,7 +97,36 @@ void Ordine::on_annullaBtn_clicked()
 
 void Ordine::on_stampaBtn_clicked()
 {
+  QSqlQuery stmt;
+  stmt.prepare("insert into ordini(numero,tsstampa) values(?,?)");
+  stmt.addBindValue(numeroLbl->text().toInt());
+  QDateTime ts=QDateTime::currentDateTime();
+  stmt.addBindValue(ts);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+
   float totale=totaleLine->text().toFloat();
   restoDlg=new RestoDlg(totale,this);
   restoDlg->exec();
+  nuovoOrdine();
+}
+
+void Ordine::nuovoOrdine()
+{
+  modello.clear();
+  QSqlQuery query("select max(numero) from ordini");
+  if(!query.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                        query.lastError().text());
+    return;
+  }
+  int numeroOrdine=0;
+  if(query.next()) {
+    numeroOrdine=query.value(0).toInt();
+  }
+  numeroOrdine++;
+  numeroLbl->setText(QString("%1").arg(numeroOrdine));
 }

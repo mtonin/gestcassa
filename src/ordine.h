@@ -30,7 +30,7 @@ private:
   OrdineModel modello;
   ControlliOrdine* controlli;
   RestoDlg* restoDlg;
-
+  void nuovoOrdine();
 };
 
 #endif // ORDINE_H
