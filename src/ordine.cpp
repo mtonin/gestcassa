@@ -93,3 +93,10 @@ void Ordine::on_annullaBtn_clicked()
     modello.clear();
   }
 }
+
+void Ordine::on_stampaBtn_clicked()
+{
+  float totale=totaleLine->text().toFloat();
+  restoDlg=new RestoDlg(totale,this);
+  restoDlg->exec();
+}
