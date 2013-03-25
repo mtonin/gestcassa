@@ -68,6 +68,12 @@ bool OrdineModel::incrementa(const int id,const QString& descrizione,const float
   return true;
 }
 
+void OrdineModel::clear()
+{
+  articoloList.clear();
+  emit dataChanged(QModelIndex(),QModelIndex());
+}
+
 QVariant OrdineModel::data(const QModelIndex &index, int role) const
 {
   if(!index.isValid()) return QVariant();

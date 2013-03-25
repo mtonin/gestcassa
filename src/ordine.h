@@ -15,11 +15,13 @@ public:
 
 public slots:
   void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
+  void hide();
 
 private slots:
-  void on_pushButton_clicked();
   void on_articoliTab_clicked(const QModelIndex &index);
   void ricalcolaTotale(QModelIndex,QModelIndex);
+
+  void on_annullaBtn_clicked();
 
 private:
   OrdineModel modello;

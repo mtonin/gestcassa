@@ -47,6 +47,7 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
     }
 
   */
+  controlli->hide();
   modello.incrementa(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
 
@@ -57,9 +58,10 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
   */
 }
 
-void Ordine::on_pushButton_clicked()
+void Ordine::hide()
 {
-  QMessageBox::information(this,"MSG","click()");
+  controlli->hide();
+  QWidget::hide();
 }
 
 void Ordine::on_articoliTab_clicked(const QModelIndex &index)
@@ -83,4 +85,11 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
     totale+=modello.index(i,3).data().toFloat();
   }
   totaleLine->setText(QString("%1").arg(totale,4,'f',2));
+}
+
+void Ordine::on_annullaBtn_clicked()
+{
+  if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine?",QMessageBox::Ok|QMessageBox::No)) {
+    modello.clear();
+  }
 }
