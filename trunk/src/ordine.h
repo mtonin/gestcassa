@@ -4,6 +4,7 @@
 #include "ui_ordine.h"
 #include "ordinemodel.h"
 #include "controlliordine.h"
+#include "restodlg.h"
 #include <QStandardItemModel>
 
 class Ordine : public QWidget, private Ui::Ordine
@@ -23,9 +24,12 @@ private slots:
 
   void on_annullaBtn_clicked();
 
+  void on_stampaBtn_clicked();
+
 private:
   OrdineModel modello;
   ControlliOrdine* controlli;
+  RestoDlg* restoDlg;
 
 };
 
