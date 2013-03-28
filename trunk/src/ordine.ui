@@ -104,7 +104,7 @@
       <enum>Qt::DotLine</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>false</bool>
