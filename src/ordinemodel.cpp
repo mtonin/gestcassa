@@ -1,4 +1,6 @@
 #include "ordinemodel.h"
+#include <QtSql>
+#include <QMessageBox>
 
 OrdineModel::OrdineModel(QObject *parent) :
   QAbstractTableModel(parent)
@@ -72,6 +74,24 @@ void OrdineModel::clear()
 {
   articoloList.clear();
   emit dataChanged(QModelIndex(),QModelIndex());
+}
+
+void OrdineModel::completaOrdine(const int numeroOrdine)
+{
+  QSqlQuery stmt;
+
+  foreach (rigaArticoloClass rigaArticolo,articoloList) {
+    stmt.prepare("insert into righeordine(numeroordine,idarticolo,quantita) values(?,?,?)");
+    stmt.addBindValue(numeroOrdine);
+    stmt.addBindValue(rigaArticolo.id);
+    stmt.addBindValue(rigaArticolo.quantita);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      return;
+    }
+  }
+
 }
 
 QVariant OrdineModel::data(const QModelIndex &index, int role) const

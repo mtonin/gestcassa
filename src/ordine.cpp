@@ -97,9 +97,11 @@ void Ordine::on_annullaBtn_clicked()
 
 void Ordine::on_stampaBtn_clicked()
 {
+  int numeroOrdine=numeroLbl->text().toInt();
+
   QSqlQuery stmt;
   stmt.prepare("insert into ordini(numero,tsstampa) values(?,?)");
-  stmt.addBindValue(numeroLbl->text().toInt());
+  stmt.addBindValue(numeroOrdine);
   QDateTime ts=QDateTime::currentDateTime();
   stmt.addBindValue(ts);
   if(!stmt.exec()) {
@@ -107,6 +109,8 @@ void Ordine::on_stampaBtn_clicked()
                           stmt.lastError().text());
     return;
   }
+
+  modello.completaOrdine(numeroOrdine);
 
   float totale=totaleLine->text().toFloat();
   restoDlg=new RestoDlg(totale,this);
