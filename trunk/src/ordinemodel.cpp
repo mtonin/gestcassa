@@ -12,7 +12,7 @@ void OrdineModel::incrementa(const int id)
   incrementa(id,"",0);
 }
 
-void OrdineModel::decrementa(const int id)
+void OrdineModel::decrementa(const int id, const QModelIndex& currIndex)
 {
   QMutableListIterator<rigaArticoloClass> it(articoloList);
   while(it.hasNext()) {
@@ -21,13 +21,13 @@ void OrdineModel::decrementa(const int id)
       rigaArticolo.quantita--;
       if(rigaArticolo.quantita>0) {
         it.setValue(rigaArticolo);
-        emit dataChanged(QModelIndex(),QModelIndex());
       } else {
-        beginRemoveRows(QModelIndex(),0,articoloList.count());
+        beginRemoveRows(QModelIndex(),currIndex.row(),currIndex.row());
         it.remove();
         endRemoveRows();
         emit rigaCancellata();
       }
+      emit dataChanged(QModelIndex(),QModelIndex());
       return;
     }
   }
