@@ -1,4 +1,5 @@
 #include "ordine.h"
+#include "restodlg.h"
 #include "controlliordine.h"
 #include <QMessageBox>
 #include <QTimer>
@@ -20,43 +21,10 @@ Ordine::Ordine(QWidget *parent) :
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
 {
-  /*
-  QModelIndex idx;
-  int riga=0;
-  for(riga=0;riga<modello.rowCount();riga++) {
-      idx=modello.index(riga,1);
-      if(idx.data()==descrizione) {
-          break;
-        }
-    }
-  if(riga<modello.rowCount()) {
-      idx=modello.index(riga,2);
-      int valore=idx.data().toInt();
-      modello.setData(idx,++valore);
-    } else {
-      QStandardItem* item=new QStandardItem();
-      modello.appendRow(item);
-      idx=modello.index(riga,1);
-      modello.setData(idx,descrizione,Qt::DisplayRole);
-      QVariant flag=Qt::AlignRight|Qt::AlignVCenter;
-      idx=modello.index(riga,2);
-      modello.setData(idx,1,Qt::DisplayRole);
-      modello.setData(idx,flag,Qt::TextAlignmentRole);
-      idx=modello.index(riga,3);
-      modello.setData(idx,prezzo,Qt::DisplayRole);
-      modello.setData(idx,flag,Qt::TextAlignmentRole);
-    }
-
-  */
   controlli->hide();
   modello.incrementa(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
 
-  /*
-  float totale=totaleLine->text().toFloat();
-  totale+=prezzo;
-  totaleLine->setText(QString("%1").arg(totale,4,'f',2));
-  */
 }
 
 void Ordine::hide()
@@ -67,14 +35,16 @@ void Ordine::hide()
 
 void Ordine::on_articoliTab_clicked(const QModelIndex &index)
 {
-  int id=index.model()->index(index.row(),0).data().toInt();
+  int id=modello.index(index.row(),0).data().toInt();
   controlli->setIdArticolo(id);
+  controlli->setModelIndex(index);
   connect(&modello,SIGNAL(rigaCancellata()),controlli,SLOT(close()));
   disconnect(controlli,0,0,0);
   connect(controlli,SIGNAL(incrementa(int)),&modello,SLOT(incrementa(int)));
-  connect(controlli,SIGNAL(decrementa(int)),&modello,SLOT(decrementa(int)));
+  connect(controlli,SIGNAL(decrementa(int,QModelIndex)),&modello,SLOT(decrementa(int,QModelIndex)));
 
   QPoint pos=QCursor::pos();
+  pos.setY(pos.y()+20);
   controlli->move(pos);
   controlli->show();
 }
@@ -97,6 +67,10 @@ void Ordine::on_annullaBtn_clicked()
 
 void Ordine::on_stampaBtn_clicked()
 {
+  if(0==modello.rowCount()) {
+    return;
+  }
+
   int numeroOrdine=numeroLbl->text().toInt();
 
   QSqlQuery stmt;
@@ -112,9 +86,9 @@ void Ordine::on_stampaBtn_clicked()
 
   modello.completaOrdine(numeroOrdine);
 
-  float totale=totaleLine->text().toFloat();
-  restoDlg=new RestoDlg(totale,this);
-  restoDlg->exec();
+  importoUltimoOrdine=totaleLine->text().toFloat();
+  RestoDlg restoDlg(importoUltimoOrdine,this);
+  restoDlg.exec();
   nuovoOrdine();
 }
 
@@ -133,4 +107,11 @@ void Ordine::nuovoOrdine()
   }
   numeroOrdine++;
   numeroLbl->setText(QString("%1").arg(numeroOrdine));
+}
+
+void Ordine::on_ultimoRestoBtn_clicked()
+{
+  RestoDlg restoDlg(importoUltimoOrdine,this);
+  restoDlg.exec();
+
 }

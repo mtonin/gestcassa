@@ -2,6 +2,7 @@
 #define RESTODLG_H
 
 #include <QDialog>
+#include <QPropertyAnimation>
 
 #include "ui_restodlg.h"
 
@@ -28,6 +29,8 @@ private slots:
   void ricalcolaResto();
 
 private:
+  QPropertyAnimation* effetto;
+
 };
 
 #endif // RESTODLG_H

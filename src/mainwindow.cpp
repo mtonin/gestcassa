@@ -111,6 +111,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   QFont currentFont=repartoBtn->getFont();
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(2);
+
   for(int riga=0;riga<5;riga++) {
     for(int col=0;col<6;col++) {
       QStackedWidget* stackedBox=new QStackedWidget();

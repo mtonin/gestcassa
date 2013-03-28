@@ -33,7 +33,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>16</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -219,7 +219,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPictureButton" name="annullaBtn_2">
+      <widget class="QPictureButton" name="ultimoRestoBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -240,7 +240,8 @@
         </font>
        </property>
        <property name="text">
-        <string/>
+        <string>ULTIMO
+RESTO</string>
        </property>
       </widget>
      </item>

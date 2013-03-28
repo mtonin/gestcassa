@@ -1,6 +1,5 @@
 #include "controlliordine.h"
 #include "ui_controlliordine.h"
-#include <QTimer>
 #include <QPropertyAnimation>
 
 ControlliOrdine::ControlliOrdine(QWidget *parent) :
@@ -37,7 +36,7 @@ void ControlliOrdine::on_toolButton_clicked()
 
 void ControlliOrdine::on_toolButton_2_clicked()
 {
-  emit decrementa(idArticolo);
+  emit decrementa(idArticolo,index);
   effetto->stop();
   effetto->start();
 }

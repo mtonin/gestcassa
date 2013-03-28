@@ -1,10 +1,20 @@
 #include "restodlg.h"
+#include <QTimer>
+#include <QPropertyAnimation>
 
 RestoDlg::RestoDlg(float valore,QWidget *parent) :
   QDialog(parent)
 {
   setupUi(this);
-  setWindowFlags(Qt::Popup);
+  setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+  activateWindow();
+  effetto=new QPropertyAnimation(this,"windowOpacity");
+  connect(effetto,SIGNAL(finished()),this,SLOT(close()));
+  effetto->setStartValue("1");
+  effetto->setEndValue("0");
+  effetto->setDuration(3000);
+  effetto->start();
+
   importoTxt->setText(QString("%1").arg(valore));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
   ricalcolaResto();
@@ -61,4 +71,7 @@ void RestoDlg::ricalcolaResto()
   float importoDaPagare=importoTxt->text().toFloat();
   float resto=totale-importoDaPagare;
   restoCalcolatoTxt->setText(QString("%1").arg(resto));
+
+  effetto->stop();
+  effetto->start();
 }
