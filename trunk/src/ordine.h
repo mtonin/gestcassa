@@ -33,6 +33,7 @@ private:
   OrdineModel modello;
   ControlliOrdine* controlli;
   void nuovoOrdine();
+  void stampaScontrino(int numeroOrdine);
 };
 
 #endif // ORDINE_H
