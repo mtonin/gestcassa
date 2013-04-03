@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QtSql>
+#include <QPrinter>
+#include <QPainter>
 
 Ordine::Ordine(QWidget *parent) :
   QWidget(parent)
@@ -86,6 +88,8 @@ void Ordine::on_stampaBtn_clicked()
 
   modello.completaOrdine(numeroOrdine);
 
+  stampaScontrino(numeroOrdine);
+
   importoUltimoOrdine=totaleLine->text().toFloat();
   RestoDlg restoDlg(importoUltimoOrdine,this);
   restoDlg.exec();
@@ -107,6 +111,57 @@ void Ordine::nuovoOrdine()
   }
   numeroOrdine++;
   numeroLbl->setText(QString("%1").arg(numeroOrdine));
+}
+
+void Ordine::stampaScontrino(int numeroOrdine)
+{
+  QPrinter printer;
+  printer.setOutputFileName(QString("c:\\temp\\%1.pdf").arg(numeroOrdine,5,10,QChar('0')));
+
+  int pageWidth=printer.pageRect().width();
+
+  QPainter painter(&printer);
+  painter.drawText(0,0,QString("Cassa %1").arg("01"));
+  painter.drawText(0,15,QString("Scontrino N. %1").arg(numeroOrdine));
+  painter.drawText(0,30,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"));
+  painter.drawLine(0,45,pageWidth,45);
+
+  QSqlQuery stmt;
+  stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.addBindValue(numeroOrdine);
+
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+  int y=45;
+  float totale=0;
+  while(stmt.next()) {
+    y+=15;
+    QString descrizione=stmt.value(2).toString();
+    int quantita=stmt.value(0).toInt();
+    QString quantitaString=QString("%1").arg(quantita);
+    float prezzo=stmt.value(1).toFloat()*quantita;
+    QString prezzoString=QString("%1").arg(prezzo,4,'f',2);
+
+    totale+=prezzo;
+    painter.drawText(0,y,quantitaString);
+    painter.drawText(40,y,descrizione);
+    painter.drawText(150,y,prezzoString);
+  }
+  y+=15;
+  painter.drawLine(0,y,pageWidth,y);
+
+  y+=15;
+  QString totaleString=QString("%1").arg(totale,4,'f',2);
+  painter.drawText(0,y,"TOTALE:");
+  painter.drawText(150,y,totaleString);
+
+  y+=15;
+  painter.drawLine(0,y,pageWidth,y);
+  painter.end();
+
 }
 
 void Ordine::on_ultimoRestoBtn_clicked()
