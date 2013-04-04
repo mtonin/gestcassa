@@ -5,6 +5,7 @@
 #include "repartobtnwidget.h"
 #include "articolobtnwidget.h"
 #include "dettaglireparto.h"
+#include "configurazionedlg.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -180,4 +181,10 @@ void MainWindow::on_modalitaBtn_2_clicked()
   font.setPointSize(font.pointSize()+1);
   qApp->setFont(font);
 
+}
+
+void MainWindow::on_configurazioneBtn_clicked()
+{
+  ConfigurazioneDlg* dlg=new ConfigurazioneDlg;
+  dlg->exec();
 }

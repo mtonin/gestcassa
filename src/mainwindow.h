@@ -31,6 +31,8 @@ private slots:
 
    void on_modalitaBtn_2_clicked();
 
+   void on_configurazioneBtn_clicked();
+
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
