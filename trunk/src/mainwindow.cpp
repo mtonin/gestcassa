@@ -1,24 +1,25 @@
-#include <QtGui>
-#include <QMessageBox>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "repartobtnwidget.h"
 #include "articolobtnwidget.h"
 #include "dettaglireparto.h"
 #include "configurazionedlg.h"
+#include <QtGui>
+#include <QMessageBox>
+#include <qalgorithms.h>
 
-MainWindow::MainWindow(QWidget *parent) :
-  QMainWindow(parent),
+MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+
   showMaximized();
 
   creaRepartiButtons();
 
   dettagliRepartoBox=new DettagliReparto;
   dettagliArticoloBox=new DettagliArticolo;
-  ordineBox=new Ordine;
+  ordineBox=new Ordine(confMap);
 
   ui->latoFrame->setLayout(new QVBoxLayout);
   ui->latoFrame->layout()->addWidget(dettagliRepartoBox);
@@ -185,6 +186,6 @@ void MainWindow::on_modalitaBtn_2_clicked()
 
 void MainWindow::on_configurazioneBtn_clicked()
 {
-  ConfigurazioneDlg* dlg=new ConfigurazioneDlg;
+  ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   dlg->exec();
 }
