@@ -129,10 +129,38 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.setFont(QFont("lucida console"));
   painter.setWindow(0,0,1000,2000);
   painter.setViewport(0,0,1000,2000);
-  painter.drawText(0,0,1000,100,Qt::AlignLeft,QString("Cassa %1").arg("01"),&textRect);
-  painter.drawText(0,15,1000,100,Qt::AlignLeft,QString("Scontrino N. %1").arg(numeroOrdine),&textRect);
-  painter.drawText(0,30,1000,100,Qt::AlignLeft,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
-  painter.drawLine(0,45,pageWidth,45);
+
+  int x=0;
+  int y=5;
+
+  QString intest1=configurazione->value("intestazione1").toString();
+  QString intest2=configurazione->value("intestazione2").toString();
+  QString intest3=configurazione->value("intestazione3").toString();
+  if(!intest1.isEmpty()) {
+    painter.drawText(x,y,200,100,Qt::AlignHCenter,intest1,&textRect);
+    y+=textRect.height();
+  }
+  if(!intest2.isEmpty()) {
+    painter.drawText(x,y,200,100,Qt::AlignHCenter,intest2,&textRect);
+    y+=textRect.height();
+  }
+  if(!intest3.isEmpty()) {
+    painter.drawText(x,y,200,100,Qt::AlignHCenter,intest3,&textRect);
+    y+=textRect.height();
+  }
+  y+=5;
+  QPen pen(Qt::black,2);
+  painter.setPen(pen);
+  painter.drawRect(0,0,200,y);
+  pen.setWidth(1);
+  painter.setPen(pen);
+  y+=5;
+  painter.drawText(x,y,100,100,Qt::AlignLeft,QString("CASSA %1").arg("01"),&textRect);
+  painter.drawText(x+110,y,100,100,Qt::AlignLeft,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
+  y+=textRect.height();
+  painter.drawText(x,y,200,100,Qt::AlignLeft,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
+  painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
+  y+=5;
 
   QSqlQuery stmt;
   stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
@@ -143,7 +171,6 @@ void Ordine::stampaScontrino(int numeroOrdine)
                           stmt.lastError().text());
     return;
   }
-  int y=60;
   float totale=0;
   while(stmt.next()) {
     y+=textRect.height()+5;
@@ -155,20 +182,18 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
     totale+=prezzo;
     QRect tmpRect;
-    painter.drawText(0,y,40,1000,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
-    painter.drawText(40,y,110,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
-    painter.drawText(150,y,150,1000,Qt::AlignLeft|Qt::AlignTop,prezzoString,&tmpRect);
+    painter.drawText(x,y,40,1000,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
+    painter.drawText(x+45,y,110,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
+    painter.drawText(x+160,y,150,1000,Qt::AlignLeft|Qt::AlignTop,prezzoString,&tmpRect);
   }
   y+=textRect.height()+5;
-  painter.drawLine(0,y,pageWidth,y);
+  painter.drawLine(x,y,pageWidth,y);
 
-  y+=15;
+  y+=5;
   QString totaleString=QString("%1 %2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
-  painter.drawText(0,y,150,100,Qt::AlignLeft,"TOTALE:",&textRect);
-  painter.drawText(150,y,150,100,Qt::AlignLeft,totaleString,&textRect);
+  painter.drawText(x,y,150,100,Qt::AlignLeft,"TOTALE:",&textRect);
+  painter.drawText(x+160,y,150,100,Qt::AlignLeft,totaleString,&textRect);
 
-  y+=15;
-  painter.drawLine(0,y,pageWidth,y);
   painter.end();
 
 }

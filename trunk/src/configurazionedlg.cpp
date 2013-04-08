@@ -26,6 +26,9 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
   foreach (QString key, nuovaConfigurazione->keys()) {
     configurazione->insert(key,nuovaConfigurazione->value(key));
   }
+  configurazione->insert("intestazione1",intestazione1Txt->text());
+  configurazione->insert("intestazione2",intestazione2Txt->text());
+  configurazione->insert("intestazione3",intestazione3Txt->text());
   return accept();
 }
 
