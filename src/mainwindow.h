@@ -7,6 +7,7 @@
 #include "ordine.h"
 #include <QMainWindow>
 #include <QList>
+#include <QMap>
 
 namespace Ui {
   class MainWindow;
@@ -20,7 +21,7 @@ signals:
   void aggiungeArticolo(const int idArticolo, const QString& nomeArticolo, float prezzo);
   
 public:
-  explicit MainWindow(QWidget *parent = 0);
+  explicit MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent = 0);
   ~MainWindow();
 
   
@@ -30,7 +31,6 @@ private slots:
    void modalitaBtnClicked();
 
    void on_modalitaBtn_2_clicked();
-
    void on_configurazioneBtn_clicked();
 
 private:
@@ -41,6 +41,7 @@ private:
   QList<ArticoloBtnWidget*> articoliBtnList;
   QList<QStackedWidget*> stackedList;
   modalitaType modalitaCorrente;
+  QMap<QString,QVariant>* confMap;
 
   void keyPressEvent(QKeyEvent *);
   void closeEvent(QCloseEvent *);

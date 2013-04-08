@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
 
   DBDialog dlg;
   if(QDialog::Accepted==dlg.exec()) {
-    MainWindow w;
+    QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;
+    MainWindow w(configurazione);
     w.show();
 
     return a.exec();

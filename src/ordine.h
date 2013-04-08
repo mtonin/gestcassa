@@ -5,13 +5,14 @@
 #include "ordinemodel.h"
 #include "controlliordine.h"
 #include <QStandardItemModel>
+#include <QMap>
 
 class Ordine : public QWidget, private Ui::Ordine
 {
   Q_OBJECT
   
 public:
-  explicit Ordine(QWidget *parent = 0);
+  explicit Ordine(QMap<QString,QVariant>* par,QWidget *parent = 0);
 
 public slots:
   void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
@@ -29,6 +30,7 @@ private slots:
 
 private:
   float importoUltimoOrdine;
+  QMap<QString,QVariant>* configurazione;
 
   OrdineModel modello;
   ControlliOrdine* controlli;

@@ -7,8 +7,7 @@
 #include <QPrinter>
 #include <QPainter>
 
-Ordine::Ordine(QWidget *parent) :
-  QWidget(parent)
+Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(par), QWidget(parent)
 {
   setupUi(this);
 
@@ -116,17 +115,23 @@ void Ordine::nuovoOrdine()
 void Ordine::stampaScontrino(int numeroOrdine)
 {
   QPrinter printer;
-  printer.setOutputFileName(QString("c:\\temp\\%1.pdf").arg(numeroOrdine,5,10,QChar('0')));
+  QString stampanteSelezionata=configurazione->value("stampante","PDF").toString();
+  if("PDF"==stampanteSelezionata) {
+    printer.setOutputFileName(QString("c:\\temp\\%1.pdf").arg(numeroOrdine,5,10,QChar('0')));
+  } else {
+    printer.setPrinterName(stampanteSelezionata);
+  }
 
   int pageWidth=printer.pageRect().width();
+  QRect textRect;
 
   QPainter painter(&printer);
   painter.setFont(QFont("lucida console"));
   painter.setWindow(0,0,1000,2000);
   painter.setViewport(0,0,1000,2000);
-  painter.drawText(0,0,QString("Cassa %1").arg("01"));
-  painter.drawText(0,15,QString("Scontrino N. %1").arg(numeroOrdine));
-  painter.drawText(0,30,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"));
+  painter.drawText(0,0,1000,100,Qt::AlignLeft,QString("Cassa %1").arg("01"),&textRect);
+  painter.drawText(0,15,1000,100,Qt::AlignLeft,QString("Scontrino N. %1").arg(numeroOrdine),&textRect);
+  painter.drawText(0,30,1000,100,Qt::AlignLeft,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
   painter.drawLine(0,45,pageWidth,45);
 
   QSqlQuery stmt;
@@ -140,7 +145,6 @@ void Ordine::stampaScontrino(int numeroOrdine)
   }
   int y=60;
   float totale=0;
-  QRect textRect;
   while(stmt.next()) {
     y+=textRect.height()+5;
     QString descrizione=stmt.value(2).toString();
@@ -150,17 +154,18 @@ void Ordine::stampaScontrino(int numeroOrdine)
     QString prezzoString=QString("%1 %2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
 
     totale+=prezzo;
-    painter.drawText(0,y,40,1000,Qt::AlignLeft|Qt::AlignTop,quantitaString);
-    painter.drawText(40,y,100,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
-    painter.drawText(150,y,100,1000,Qt::AlignLeft|Qt::AlignTop,prezzoString);
+    QRect tmpRect;
+    painter.drawText(0,y,40,1000,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
+    painter.drawText(40,y,110,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
+    painter.drawText(150,y,150,1000,Qt::AlignLeft|Qt::AlignTop,prezzoString,&tmpRect);
   }
   y+=textRect.height()+5;
   painter.drawLine(0,y,pageWidth,y);
 
   y+=15;
   QString totaleString=QString("%1 %2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
-  painter.drawText(0,y,"TOTALE:");
-  painter.drawText(150,y,totaleString);
+  painter.drawText(0,y,150,100,Qt::AlignLeft,"TOTALE:",&textRect);
+  painter.drawText(150,y,150,100,Qt::AlignLeft,totaleString,&textRect);
 
   y+=15;
   painter.drawLine(0,y,pageWidth,y);
