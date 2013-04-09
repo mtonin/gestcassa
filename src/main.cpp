@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
   currentFont.setPointSize(10);
   a.setFont(currentFont);
 
-  DBDialog dlg;
+  QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;
+  DBDialog dlg(configurazione);
   if(QDialog::Accepted==dlg.exec()) {
-    QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;
     MainWindow w(configurazione);
     w.show();
 

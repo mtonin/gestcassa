@@ -6,7 +6,6 @@
 #include "configurazionedlg.h"
 #include <QtGui>
 #include <QMessageBox>
-#include <qalgorithms.h>
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
