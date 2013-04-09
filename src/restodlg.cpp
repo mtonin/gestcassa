@@ -2,18 +2,21 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 
-RestoDlg::RestoDlg(float valore,QWidget *parent) :
-  QDialog(parent)
+RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
 {
   setupUi(this);
+  _durata=1000*durata;
   setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
   activateWindow();
   effetto=new QPropertyAnimation(this,"windowOpacity");
-  connect(effetto,SIGNAL(finished()),this,SLOT(close()));
-  effetto->setStartValue("1");
-  effetto->setEndValue("0");
-  effetto->setDuration(3000);
-  effetto->start();
+
+  if(_durata>0) {
+    connect(effetto,SIGNAL(finished()),this,SLOT(close()));
+    effetto->setStartValue("1");
+    effetto->setEndValue("0");
+    effetto->setDuration(_durata);
+    effetto->start();
+  }
 
   importoTxt->setText(QString("%1").arg(valore));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
@@ -72,6 +75,8 @@ void RestoDlg::ricalcolaResto()
   float resto=totale-importoDaPagare;
   restoCalcolatoTxt->setText(QString("%1").arg(resto));
 
-  effetto->stop();
-  effetto->start();
+  if(_durata>0) {
+    effetto->stop();
+    effetto->start();
+  }
 }

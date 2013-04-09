@@ -13,6 +13,12 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   intestazione1Txt->setText(configurazione->value("intestazione1").toString());
   intestazione2Txt->setText(configurazione->value("intestazione2").toString());
   intestazione3Txt->setText(configurazione->value("intestazione3").toString());
+  durataRestoTxt->setText(configurazione->value("durataResto",5).toString());
+  if(configurazione->value("abilitaResto",false).toBool()) {
+    attivaRestoCheck->setChecked(true);
+  }
+  nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
+  nomeCassaTxt->setFocus();
 }
 
 void ConfigurazioneDlg::on_printerSelectBtn_clicked()
@@ -34,6 +40,9 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
   configurazione->insert("intestazione1",intestazione1Txt->text());
   configurazione->insert("intestazione2",intestazione2Txt->text());
   configurazione->insert("intestazione3",intestazione3Txt->text());
+  configurazione->insert("nomeCassa",nomeCassaTxt->text());
+  configurazione->insert("abilitaResto",attivaRestoCheck->isChecked());
+  configurazione->insert("durataResto",durataRestoTxt->text());
 
   QSqlQuery stmt;
   foreach (QString key, configurazione->keys()) {
@@ -54,4 +63,15 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
 void ConfigurazioneDlg::on_buttonBox_rejected()
 {
   return reject();
+}
+
+void ConfigurazioneDlg::on_attivaRestoCheck_toggled(bool checked)
+{
+  if(checked) {
+    durataRestoLbl->setEnabled(true);
+    durataRestoTxt->setEnabled(true);
+  } else {
+    durataRestoLbl->setEnabled(false);
+    durataRestoTxt->setEnabled(false);
+  }
 }
