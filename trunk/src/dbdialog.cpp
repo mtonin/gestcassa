@@ -4,8 +4,7 @@
 #include <QtSql>
 #include <QMessageBox>
 
-DBDialog::DBDialog(QWidget *parent) :
-  QDialog(parent)
+DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
 {
   setupUi(this);
   setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
@@ -23,6 +22,16 @@ void DBDialog::on_toolButton_clicked()
 void DBDialog::on_apreBtn_clicked()
 {
   if(createConnection(dbfile->text(),utente->text(),password->text())) {
+    QSqlQuery stmt("select chiave,valore from configurazione");
+    if(!stmt.isActive()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    }
+    while(stmt.next()) {
+      QString key=stmt.value(0).toString();
+      QVariant valore=stmt.value(1).toString();
+      conf->insert(key,valore);
+    }
+
     accept();
   }
 }
