@@ -11,7 +11,7 @@ class RestoDlg : public QDialog, private Ui::RestoDlg
   Q_OBJECT
   
 public:
-  explicit RestoDlg(float valore, QWidget *parent = 0);
+  explicit RestoDlg(float valore, int durata, QWidget *parent = 0);
   ~RestoDlg();
   
 private slots:
@@ -30,6 +30,7 @@ private slots:
 
 private:
   QPropertyAnimation* effetto;
+  int _durata;
 
 };
 

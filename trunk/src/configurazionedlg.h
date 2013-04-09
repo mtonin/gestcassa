@@ -19,6 +19,8 @@ private slots:
 
   void on_buttonBox_rejected();
 
+  void on_attivaRestoCheck_toggled(bool checked);
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;

@@ -90,8 +90,12 @@ void Ordine::on_stampaBtn_clicked()
   stampaScontrino(numeroOrdine);
 
   importoUltimoOrdine=totaleLine->text().toFloat();
-  RestoDlg restoDlg(importoUltimoOrdine,this);
-  restoDlg.exec();
+
+  if(configurazione->value("abilitaResto").toBool()) {
+    int durataSecondi=configurazione->value("durataResto",5).toInt();
+    RestoDlg restoDlg(importoUltimoOrdine,durataSecondi,this);
+    restoDlg.exec();
+  }
   nuovoOrdine();
 }
 
@@ -151,6 +155,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
   QString intest1=configurazione->value("intestazione1").toString();
   QString intest2=configurazione->value("intestazione2").toString();
   QString intest3=configurazione->value("intestazione3").toString();
+  QString nomeCassa=configurazione->value("nomeCassa","000").toString();
+
   QString intestazione;
   if(!intest1.isEmpty()) {
     intestazione.append(intest1).append("\n");
@@ -172,7 +178,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.setPen(pen);
   y+=5;
   painter.setFont(fontNormale);
-  painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg("01"),&textRect);
+  painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
   painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
@@ -216,7 +222,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
 void Ordine::on_ultimoRestoBtn_clicked()
 {
-  RestoDlg restoDlg(importoUltimoOrdine,this);
+  RestoDlg restoDlg(importoUltimoOrdine,0,this);
   restoDlg.exec();
 
 }
