@@ -73,6 +73,7 @@ bool OrdineModel::incrementa(const int id,const QString& descrizione,const float
 void OrdineModel::clear()
 {
   articoloList.clear();
+  reset();
   emit dataChanged(QModelIndex(),QModelIndex());
 }
 

@@ -130,7 +130,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   QSizeF foglioSize(80,200);
   float rapportoFoglio=foglioSize.width()/foglioSize.height();
   printer.setPaperSize(foglioSize,QPrinter::Millimeter);
-  printer.setPageMargins(5,10,5,10,QPrinter::Millimeter);
+  printer.setPageMargins(5,0,5,0,QPrinter::Millimeter);
 
   QRect textRect;
 
@@ -216,6 +216,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
+  y+=textRect.height()+35;
+  painter.drawText(x,y,".");
   painter.end();
 
 }
