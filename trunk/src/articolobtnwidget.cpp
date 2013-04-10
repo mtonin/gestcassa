@@ -11,6 +11,11 @@ void ArticoloBtnWidget::setPrezzo(float nuovoPrezzo)
   prezzo=nuovoPrezzo;
 }
 
+void ArticoloBtnWidget::setRepartoStampa(const QString nome)
+{
+  repartoStampa=nome;
+}
+
 void ArticoloBtnWidget::setButtonFont(const QFont &font)
 {
   setFont(font);
@@ -37,11 +42,13 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
   int numColDescr=stmt.record().indexOf("descrizione");
   int numColprezzo=stmt.record().indexOf("prezzo");
   int numColAbilitato=stmt.record().indexOf("abilitato");
+  int numColDestStampa=stmt.record().indexOf("destinazione");
   if(stmt.next()) {
     idArticolo=stmt.value(numColIdArticolo).toInt();
     nomeArticolo=stmt.value(numColDescr).toString();
     prezzo=stmt.value(numColprezzo).toFloat();
     abilitato=stmt.value(numColAbilitato).toBool();
+    repartoStampa=stmt.value(numColDestStampa).toString();
   } else {
     //idArticolo=riga*6+colonna+1;
     idArticolo=0;
@@ -49,6 +56,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
     nomeArticolo="";
     prezzo=0;
     abilitato=true;
+    repartoStampa="";
   }
   setText(nomeArticolo);
 

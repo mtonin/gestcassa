@@ -8,9 +8,12 @@ class DestinazioneStampaDlg : public QDialog, private Ui::DestinazioneStampaDlg
   Q_OBJECT
   
 public:
-  explicit DestinazioneStampaDlg(const QString& nome, QWidget *parent = 0);
+  explicit DestinazioneStampaDlg(QWidget *parent = 0);
+  QString getDestinazione() {return box->currentText();}
+
 private slots:
   void on_buttonBox_accepted();
+  void on_buttonBox_rejected();
 };
 
 #endif // DESTINAZIONESTAMPADLG_H

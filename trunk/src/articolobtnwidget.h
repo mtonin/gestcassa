@@ -20,6 +20,8 @@ public:
   void setPrezzo(float nuovoPrezzo);
   bool getAbilitato() {return abilitato;}
   void setAbilitato(bool val) {abilitato=val;}
+  QString getRepartoStampa() {return repartoStampa;}
+  void setRepartoStampa(const QString nome);
 
 signals:
 
@@ -33,6 +35,7 @@ private:
   int riga,colonna;
   int idReparto;
   bool abilitato;
+  QString repartoStampa;
 };
 
 #endif // ARTICOLOBTNWIDGET_H
