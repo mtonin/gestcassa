@@ -1,21 +1,19 @@
 #include "dettagliarticolo.h"
+#include "destinazionestampadlg.h"
 #include <QtSql>
 #include <QLocale>
 #include <QInputDialog>
 
 DettagliArticolo::DettagliArticolo(QWidget *parent) :
-  QWidget(parent)
+  QWidget(parent),articoloBtn(NULL)
 {
   setupUi(this);
   QDoubleValidator* validator=new QDoubleValidator(0,99.99,2,prezzoArticolo);
   validator->setNotation(QDoubleValidator::StandardNotation);
   prezzoArticolo->setValidator(validator);
 
-  destModel=new QSqlTableModel;
-  destModel->setTable("destinazioniStampa");
-  destModel->removeColumn(0);
-  destModel->select();
-  destStampaCombo->setModel(destModel);
+  QSqlQuery stmt("select nome from destinazioniStampa");
+
 }
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
@@ -30,6 +28,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
   prezzoArticolo->setText(QString("%1").arg(articoloBtn->getPrezzo(),4,'f',2));
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
+  repStampaTxt->setText(articoloBtn->getRepartoStampa());
   testoArticolo->setFocus();
 }
 
@@ -38,9 +37,9 @@ void DettagliArticolo::aggiornaArticolo()
 
   QSqlQuery query;
   if(0==articoloBtn->getId()) {
-    query.prepare("insert into articoli (descrizione,prezzo,idreparto,riga,colonna,abilitato) values(?,?,?,?,?,?)");
+    query.prepare("insert into articoli (descrizione,prezzo,idreparto,riga,colonna,abilitato,destinazione) values(?,?,?,?,?,?,?)");
   } else {
-    query.prepare("update articoli set descrizione=?,prezzo=?,idreparto=?,riga=?,colonna=?,abilitato=? where idarticolo=?");
+    query.prepare("update articoli set descrizione=?,prezzo=?,idreparto=?,riga=?,colonna=?,abilitato=?,destinazione=? where idarticolo=?");
   }
 
   //query.addBindValue(articoloBtn->getId());
@@ -50,6 +49,7 @@ void DettagliArticolo::aggiornaArticolo()
   query.addBindValue(articoloBtn->getRiga());
   query.addBindValue(articoloBtn->getColonna());
   query.addBindValue(!disattivaFlag->isChecked());
+  query.addBindValue(articoloBtn->getRepartoStampa());
   if(articoloBtn->getId()>0) {
     query.addBindValue(articoloBtn->getId());
   }
@@ -100,20 +100,18 @@ void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
   aggiornaArticolo();
 }
 
-void DettagliArticolo::on_nuovaDestinazioneBtn_clicked()
+void DettagliArticolo::on_repStampaTxt_textChanged(const QString &arg1)
 {
-  QString nuovaDest=QInputDialog::getText(this,"Nuova Destinazione di stampa","Inserire il nome della nuova destinazione di stampa");
-  if(nuovaDest.isNull()) return;
+    articoloBtn->setRepartoStampa(arg1);
+    aggiornaArticolo();
+}
 
-  QSqlQuery stmt;
-  stmt.prepare("insert into destinazionistampa (nome) values(?)");
-  stmt.addBindValue(nuovaDest);
-  stmt.exec();
-  if(!stmt.isActive()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    return;
+void DettagliArticolo::on_toolButton_clicked()
+{
+  DestinazioneStampaDlg dlg;
+  dlg.setWindowFlags(Qt::Tool);
+  //dlg->move(QCursor::pos());
+  if(QDialog::Accepted==dlg.exec()) {
+    repStampaTxt->setText(dlg.getDestinazione());
   }
-
-  destModel->select();
 }

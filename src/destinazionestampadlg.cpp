@@ -2,36 +2,29 @@
 #include <QtSql>
 #include <QMessageBox>
 
-DestinazioneStampaDlg::DestinazioneStampaDlg(const QString &nome, QWidget *parent) :
+DestinazioneStampaDlg::DestinazioneStampaDlg(QWidget *parent) :
   QDialog(parent)
 {
   setupUi(this);
 
-  QSqlQuery stmt;
-
-  if(!nome.isEmpty()) {
-    stmt.prepare("select intestazione from destinazioniStampa where nome=?");
-    stmt.addBindValue(nome);
-    if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
-    }
-    if(stmt.next()) {
-      intestazioneTxt->setText(stmt.value(0).toString());
-    }
+  QSqlQuery stmt("select nome from destinazioniStampa");
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString nome=stmt.value(0).toString();
+    box->addItem(nome);
   }
 }
 
 void DestinazioneStampaDlg::on_buttonBox_accepted()
 {
-    QSqlQuery stmt;
-    stmt.prepare("insert or replace into destinazioniStampa (nome,intestazione) values(?,?)");
-    stmt.addBindValue(repartoTxt->text());
-    stmt.addBindValue(intestazioneTxt->text());
-    if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
-    }
     return accept();
+}
 
+void DestinazioneStampaDlg::on_buttonBox_rejected()
+{
+    return reject();
 }
