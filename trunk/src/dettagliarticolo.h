@@ -3,6 +3,7 @@
 
 #include "ui_dettagliarticolo.h"
 #include "articolobtnwidget.h"
+#include <QSqlTableModel>
 
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
    {
@@ -19,10 +20,13 @@ private slots:
 
    void on_disattivaFlag_toggled(bool checked);
 
+   void on_nuovaDestinazioneBtn_clicked();
+
 private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
+   QSqlTableModel* destModel;
 
-   };
+};
 
 #endif // DETTAGLIARTICOLO_H

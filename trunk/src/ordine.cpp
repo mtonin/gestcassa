@@ -119,9 +119,12 @@ void Ordine::nuovoOrdine()
 void Ordine::stampaScontrino(int numeroOrdine)
 {
   QPrinter printer;
+  bool stampantePdf=configurazione->value("stampantePdf",true).toBool();
   QString stampanteSelezionata=configurazione->value("stampante","PDF").toString();
-  if("PDF"==stampanteSelezionata) {
-    printer.setOutputFileName(QString("c:\\temp\\%1.pdf").arg(numeroOrdine,5,10,QChar('0')));
+  if(stampantePdf) {
+    QDir cartellaPdf(configurazione->value("cartellaPdf","c:/temp").toString());
+    cartellaPdf.mkpath(cartellaPdf.absolutePath());
+    printer.setOutputFileName(QString("%1/%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
   } else {
     printer.setPrinterName(stampanteSelezionata);
   }

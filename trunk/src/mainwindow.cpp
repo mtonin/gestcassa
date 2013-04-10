@@ -142,7 +142,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
 
 void MainWindow::repartoSelezionato(){
   RepartoBtnWidget* btn=qobject_cast<RepartoBtnWidget*>(sender());
-  btn->setDown(true);
+  //btn->setDown(true);
   ui->articoliStackedWidget->setCurrentIndex(btn->getId()-1);
   if(GESTIONE==modalitaCorrente) {
     dettagliRepartoBox->setCurrentReparto(btn);
@@ -154,7 +154,7 @@ void MainWindow::repartoSelezionato(){
 
 void MainWindow::articoloSelezionato(){
   ArticoloBtnWidget* btn=qobject_cast<ArticoloBtnWidget*>(sender());
-  btn->setDown(true);
+  //btn->setDown(true);
   if(GESTIONE==modalitaCorrente) {
     dettagliArticoloBox->setCurrentArticolo(btn);
     dettagliArticoloBox->show();

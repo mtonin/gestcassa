@@ -1,6 +1,7 @@
 #include "dettagliarticolo.h"
 #include <QtSql>
 #include <QLocale>
+#include <QInputDialog>
 
 DettagliArticolo::DettagliArticolo(QWidget *parent) :
   QWidget(parent)
@@ -9,6 +10,12 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
   QDoubleValidator* validator=new QDoubleValidator(0,99.99,2,prezzoArticolo);
   validator->setNotation(QDoubleValidator::StandardNotation);
   prezzoArticolo->setValidator(validator);
+
+  destModel=new QSqlTableModel;
+  destModel->setTable("destinazioniStampa");
+  destModel->removeColumn(0);
+  destModel->select();
+  destStampaCombo->setModel(destModel);
 }
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
@@ -91,4 +98,22 @@ void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
 {
   articoloBtn->setAbilitato(!checked);
   aggiornaArticolo();
+}
+
+void DettagliArticolo::on_nuovaDestinazioneBtn_clicked()
+{
+  QString nuovaDest=QInputDialog::getText(this,"Nuova Destinazione di stampa","Inserire il nome della nuova destinazione di stampa");
+  if(nuovaDest.isNull()) return;
+
+  QSqlQuery stmt;
+  stmt.prepare("insert into destinazionistampa (nome) values(?)");
+  stmt.addBindValue(nuovaDest);
+  stmt.exec();
+  if(!stmt.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+
+  destModel->select();
 }
