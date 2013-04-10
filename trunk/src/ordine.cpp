@@ -118,6 +118,22 @@ void Ordine::nuovoOrdine()
 
 void Ordine::stampaScontrino(int numeroOrdine)
 {
+  QString intest1=configurazione->value("intestazione1").toString();
+  QString intest2=configurazione->value("intestazione2").toString();
+  QString intest3=configurazione->value("intestazione3").toString();
+  QString nomeCassa=configurazione->value("nomeCassa","000").toString();
+
+  QString intestazione;
+  if(!intest1.isEmpty()) {
+    intestazione.append(intest1).append("\n");
+  }
+  if(!intest2.isEmpty()) {
+    intestazione.append(intest2).append("\n");
+  }
+  if(!intest3.isEmpty()) {
+    intestazione.append(intest3).append("\n");
+  }
+
   QPrinter printer;
   bool stampantePdf=configurazione->value("stampantePdf",true).toBool();
   QString stampanteSelezionata=configurazione->value("stampante","PDF").toString();
@@ -149,27 +165,79 @@ void Ordine::stampaScontrino(int numeroOrdine)
   fontGrassetto.setPointSize(14);
   fontGrassetto.setBold(true);
 
+  QSqlQuery stmt;
+  stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.addBindValue(numeroOrdine);
+
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+  QStringList repartiStampaList;
+  while(stmt.next()) {
+    repartiStampaList.append(stmt.value(0).toString());
+  }
+  foreach(QString reparto,repartiStampaList) {
+    int x=0;
+    int y=0;
+    painter.setFont(fontGrassetto);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,reparto,&textRect);
+    y+=textRect.height()+10;
+
+    painter.setFont(fontNormale);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
+    y+=textRect.height()+10;
+    painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
+    painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
+    painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
+    y+=10;
+
+    stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
+    stmt.addBindValue(numeroOrdine);
+    stmt.addBindValue(reparto);
+
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      return;
+    }
+    int numArticoli=0;
+    while(stmt.next()) {
+      y+=textRect.height();
+      QString descrizione=stmt.value(2).toString();
+      int quantita=stmt.value(0).toInt();
+      numArticoli+=quantita;
+      QString quantitaString=QString("%1").arg(quantita,3,10);
+      float prezzo=stmt.value(1).toFloat()*quantita;
+      QString prezzoString=QString("%1 %2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
+
+      QRect tmpRect;
+      painter.setFont(fontNormale);
+      painter.drawText(x,y,(pageWidth/10)*2-5,100,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
+      painter.drawText(x+(pageWidth/10)*2,y,(pageWidth/10)*5-5,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
+    }
+
+    y+=textRect.height()+5;
+    painter.drawLine(x,y,pageWidth,y);
+
+    y+=5;
+    QString totaleString=QString("TOTALE: %1 ARTICOLI").arg(numArticoli);
+    painter.setFont(fontGrassetto);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
+
+    y+=textRect.height()+35;
+    painter.drawText(x,y,".");
+    printer.newPage();
+  }
+
+
   int x=0;
   int y=0;
 
   painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
   y+=textRect.height()+10;
 
-  QString intest1=configurazione->value("intestazione1").toString();
-  QString intest2=configurazione->value("intestazione2").toString();
-  QString intest3=configurazione->value("intestazione3").toString();
-  QString nomeCassa=configurazione->value("nomeCassa","000").toString();
-
-  QString intestazione;
-  if(!intest1.isEmpty()) {
-    intestazione.append(intest1).append("\n");
-  }
-  if(!intest2.isEmpty()) {
-    intestazione.append(intest2).append("\n");
-  }
-  if(!intest3.isEmpty()) {
-    intestazione.append(intest3).append("\n");
-  }
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestazione,&textRect);
   y+=textRect.height();
@@ -186,7 +254,6 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  QSqlQuery stmt;
   stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
   stmt.addBindValue(numeroOrdine);
 
