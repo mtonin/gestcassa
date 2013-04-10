@@ -21,6 +21,26 @@ private slots:
 
   void on_attivaRestoCheck_toggled(bool checked);
 
+  void on_stampanteChk_toggled(bool checked);
+
+  void on_pdfChk_toggled(bool checked);
+
+  void on_cartellaPdfBtn_clicked();
+
+  void on_cartellaPdfTxt_textChanged(const QString &arg1);
+
+  void on_stampanteSelezionataTxt_textChanged(const QString &arg1);
+
+  void on_intestazione1Txt_textChanged(const QString &arg1);
+
+  void on_intestazione2Txt_textChanged(const QString &arg1);
+
+  void on_intestazione3Txt_textChanged(const QString &arg1);
+
+  void on_nomeCassaTxt_textChanged(const QString &arg1);
+
+  void on_durataRestoTxt_textChanged(const QString &arg1);
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;

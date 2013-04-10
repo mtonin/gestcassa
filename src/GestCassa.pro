@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     ordinemodel.cpp \
     controlliordine.cpp \
     restodlg.cpp \
-    configurazionedlg.cpp
+    configurazionedlg.cpp \
+    destinazionestampadlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     ordinemodel.h \
     controlliordine.h \
     restodlg.h \
-    configurazionedlg.h
+    configurazionedlg.h \
+    destinazionestampadlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -47,7 +49,8 @@ FORMS    += mainwindow.ui \
     dbdialog.ui \
     controlliordine.ui \
     restodlg.ui \
-    configurazionedlg.ui
+    configurazionedlg.ui \
+    destinazionestampadlg.ui
 
 include(version.txt)
 
