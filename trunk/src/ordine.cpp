@@ -153,17 +153,18 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
   QRect textRect;
 
-  QPainter painter(&printer);
-  painter.setFont(QFont("lucida console"));
+  QPainter painter;
+
   int pageWidth=300;
-  painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
 
   QFont fontNormale("lucida console");
   fontNormale.setPointSize(12);
-  painter.setFont(fontNormale);
   QFont fontGrassetto("lucida console");
   fontGrassetto.setPointSize(14);
   fontGrassetto.setBold(true);
+
+  painter.begin(&printer);
+  painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
 
   QSqlQuery stmt;
   stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
@@ -179,6 +180,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     repartiStampaList.append(stmt.value(0).toString());
   }
   foreach(QString reparto,repartiStampaList) {
+
     int x=0;
     int y=0;
     painter.setFont(fontGrassetto);
@@ -228,9 +230,15 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
     y+=textRect.height()+35;
     painter.drawText(x,y,".");
-    printer.newPage();
-  }
 
+    if(stampantePdf) {
+      printer.newPage();
+    } else {
+      painter.end();
+      painter.begin(&printer);
+      painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
+    }
+  }
 
   int x=0;
   int y=0;
