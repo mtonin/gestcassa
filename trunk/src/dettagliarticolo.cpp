@@ -1,5 +1,6 @@
 #include "dettagliarticolo.h"
 #include "destinazionestampadlg.h"
+#include "dettagliarticolomenu.h"
 #include <QtSql>
 #include <QLocale>
 #include <QInputDialog>
@@ -14,6 +15,8 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
 
   QSqlQuery stmt("select nome from destinazioniStampa");
 
+  DettagliArticoloMenu* menu=new DettagliArticoloMenu;
+  layout()->addWidget(menu);
 }
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
