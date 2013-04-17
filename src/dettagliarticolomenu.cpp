@@ -10,13 +10,10 @@ DettagliArticoloMenu::DettagliArticoloMenu(QWidget *parent) :
   modello=new QStandardItemModel;
 
   articoliList->setModel(modello);
+  articoliList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-  QDataWidgetMapper* mapper=new QDataWidgetMapper;
-  mapper->setModel(modello);
-  mapper->addMapping(articoloTxt,0);
-  mapper->addMapping(destinazioneTxt,1);
+  connect(articoliList,SIGNAL(),)
 
-  connect(articoliList->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
 }
 
 void DettagliArticoloMenu::on_toolButton_2_clicked()
@@ -28,19 +25,8 @@ void DettagliArticoloMenu::on_toolButton_3_clicked()
 {
   int numRighe=articoliList->model()->rowCount();
   modello->insertRow(numRighe);
-  modello->setItem(numRighe,0,new QStandardItem);
-  modello->setItem(numRighe,1,new QStandardItem);
+  modello->setItem(numRighe,0,new QStandardItem("NUOVO ARTICOLO"));
+  modello->setItem(numRighe,1,new QStandardItem("BAR"));
 
   articoliList->setCurrentIndex(modello->index(numRighe,0));
-}
-
-void DettagliArticoloMenu::on_toolButton_clicked()
-{
-  DestinazioneStampaDlg dlg;
-  dlg.setWindowFlags(Qt::Tool);
-  //dlg->move(QCursor::pos());
-  if(QDialog::Accepted==dlg.exec()) {
-    destinazioneTxt->setText(dlg.getDestinazione());
-  }
-
 }
