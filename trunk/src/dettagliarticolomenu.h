@@ -14,8 +14,6 @@ class DettagliArticoloMenu : public QWidget, private Ui::DettagliArticoloMenu
     void on_toolButton_2_clicked();
     void on_toolButton_3_clicked();
 
-    void on_toolButton_clicked();
-
   private:
     QStandardItemModel* modello;
 };
