@@ -3,6 +3,7 @@
 
 #include "ui_dettagliarticolomenu.h"
 #include <QStandardItemModel>
+#include <QComboBox>
 
 class DettagliArticoloMenu : public QWidget, private Ui::DettagliArticoloMenu
 {
@@ -11,11 +12,14 @@ class DettagliArticoloMenu : public QWidget, private Ui::DettagliArticoloMenu
   public:
     explicit DettagliArticoloMenu(QWidget *parent = 0);
   private slots:
-    void on_toolButton_2_clicked();
+    void cancella();
     void on_toolButton_3_clicked();
+
+    void on_articoliList_customContextMenuRequested(const QPoint &pos);
 
   private:
     QStandardItemModel* modello;
+    QComboBox* creaDestinazioneBox();
 };
 
 #endif // DETTAGLIARTICOLOMENU_H
