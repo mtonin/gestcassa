@@ -13,8 +13,6 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
   validator->setNotation(QDoubleValidator::StandardNotation);
   prezzoArticolo->setValidator(validator);
 
-  QSqlQuery stmt("select nome from destinazioniStampa");
-
   DettagliArticoloMenu* menu=new DettagliArticoloMenu;
   layout()->addWidget(menu);
 }
@@ -31,7 +29,24 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
   prezzoArticolo->setText(QString("%1").arg(articoloBtn->getPrezzo(),4,'f',2));
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
-  repStampaTxt->setText(articoloBtn->getRepartoStampa());
+
+  destinazioneBox->clear();
+  QSqlQuery stmt("select nome from destinazioniStampa");
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+  int i=0;
+  while(stmt.next()) {
+    QString nome=stmt.value(0).toString();
+    destinazioneBox->addItem(nome);
+    if(nome==articoloBtn->getRepartoStampa()) {
+      destinazioneBox->setCurrentIndex(i);
+    }
+    i++;
+  }
+
   testoArticolo->setFocus();
 }
 
@@ -103,18 +118,8 @@ void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
   aggiornaArticolo();
 }
 
-void DettagliArticolo::on_repStampaTxt_textChanged(const QString &arg1)
+void DettagliArticolo::on_destinazioneBox_activated(const QString &arg1)
 {
-    articoloBtn->setRepartoStampa(arg1);
-    aggiornaArticolo();
-}
-
-void DettagliArticolo::on_toolButton_clicked()
-{
-  DestinazioneStampaDlg dlg;
-  dlg.setWindowFlags(Qt::Tool);
-  //dlg->move(QCursor::pos());
-  if(QDialog::Accepted==dlg.exec()) {
-    repStampaTxt->setText(dlg.getDestinazione());
-  }
+  articoloBtn->setRepartoStampa(arg1);
+  aggiornaArticolo();
 }
