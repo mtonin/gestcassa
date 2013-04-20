@@ -106,6 +106,9 @@
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
      </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>70</number>
+     </attribute>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>false</bool>
      </attribute>
@@ -304,8 +307,8 @@ RESTO</string>
  <customwidgets>
   <customwidget>
    <class>QPictureButton</class>
-   <extends>QPushButton</extends>
-   <header>qpicturebutton.h</header>
+   <extends>QWidget</extends>
+   <header>QPictureButton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
