@@ -18,7 +18,7 @@ RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
     effetto->start();
   }
 
-  importoTxt->setText(QString("%1").arg(valore));
+  importoTxt->setText(QString("%1").arg(valore,4,'f',2));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
   ricalcolaResto();
 }
@@ -73,10 +73,61 @@ void RestoDlg::ricalcolaResto()
   float totale=importoRicevutoTxt->text().toFloat();
   float importoDaPagare=importoTxt->text().toFloat();
   float resto=totale-importoDaPagare;
-  restoCalcolatoTxt->setText(QString("%1").arg(resto));
+  restoCalcolatoTxt->setText(QString("%1").arg(resto,4,'f',2));
 
   if(_durata>0) {
     effetto->stop();
     effetto->start();
+  }
+}
+
+void RestoDlg::keyPressEvent(QKeyEvent *evt)
+{
+  switch(evt->key()) {
+    case Qt::Key_0: {
+        on_tasto0Btn_clicked();
+        break;
+      }
+    case Qt::Key_1: {
+        on_tasto1Btn_clicked();
+        break;
+      }
+    case Qt::Key_2: {
+        on_tasto2Btn_clicked();
+        break;
+      }
+    case Qt::Key_3: {
+        on_tasto3Btn_clicked();
+        break;
+      }
+    case Qt::Key_4: {
+        on_tasto4Btn_clicked();
+        break;
+      }
+    case Qt::Key_5: {
+        on_tasto5Btn_clicked();
+        break;
+      }
+    case Qt::Key_6: {
+        on_tasto6Btn_clicked();
+        break;
+      }
+    case Qt::Key_7: {
+        on_tasto7Btn_clicked();
+        break;
+      }
+    case Qt::Key_8: {
+        on_tasto8Btn_clicked();
+        break;
+      }
+    case Qt::Key_9: {
+        on_tasto9Btn_clicked();
+        break;
+      }
+    case Qt::Key_Comma:
+    case Qt::Key_Period: {
+        on_tastoVirgolaBtn_clicked();
+        break;
+      }
   }
 }

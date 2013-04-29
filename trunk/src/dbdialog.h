@@ -21,7 +21,9 @@ class DBDialog : public QDialog, private Ui::DBDialog
 
       void on_nuovoBtn_clicked();
 
-private:
+      void on_adminBox_clicked(bool checked);
+
+  private:
       bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
       QMap<QString,QVariant>* conf;
 };

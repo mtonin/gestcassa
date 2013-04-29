@@ -18,7 +18,8 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   mapper=new QDataWidgetMapper;
   mapper->setModel(modello);
   mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
-  mapper->addMapping(intestazione1Txt,1);
+  mapper->addMapping(nomeDestTxt,0);
+  mapper->addMapping(intestazioneDest1Txt,1);
 
   connect(destinazioniList->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
 

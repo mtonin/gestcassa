@@ -32,12 +32,16 @@ void DBDialog::on_apreBtn_clicked()
       conf->insert(key,valore);
     }
 
-    if(conf->value("password","12345").toString()==password->text()) {
-      conf->insert("ruolo","amministratore");
-      QMessageBox::information(this,"Accesso","Accesso eseguito come amministratore");
+    if(adminBox->isChecked()) {
+      if(conf->value("password","12345").toString()==password->text()) {
+        conf->insert("ruolo","amministratore");
+      } else {
+        QMessageBox::critical(this,"Accesso","Password errata");
+        password->setFocus();
+        return;
+      }
     } else {
       conf->insert("ruolo","operatore");
-      QMessageBox::information(this,"Accesso","Accesso eseguito come operatore");
     }
     accept();
   }
@@ -77,4 +81,11 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
   }
 
   return true;
+}
+
+void DBDialog::on_adminBox_clicked(bool checked)
+{
+    passwordLbl->setEnabled(checked);
+    password->setEnabled(checked);
+    password->setFocus();
 }

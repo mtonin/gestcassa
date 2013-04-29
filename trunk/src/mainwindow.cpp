@@ -56,13 +56,13 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     while(it.hasNext()) {
       it.next()->setCurrentIndex(0);
     }
-    show();
+    showMaximized();
   } else {
     ui->modalitaBtn->setText("GESTIONE");
     ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
-    ordineBox->setVisible(true);
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
+    ordineBox->setVisible(true);
     QListIterator<QStackedWidget*> it(stackedList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
@@ -71,7 +71,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         box->setCurrentIndex(1);
       }
     }
-    show();
+    showMaximized();
   }
 
   modalitaCorrente=nuovaModalita;

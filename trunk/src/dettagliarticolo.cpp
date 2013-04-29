@@ -1,5 +1,4 @@
 #include "dettagliarticolo.h"
-#include "destinazionestampadlg.h"
 #include "dettagliarticolomenu.h"
 #include <QtSql>
 #include <QLocale>
