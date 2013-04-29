@@ -17,6 +17,8 @@ DestinazioneStampaDlg::DestinazioneStampaDlg(QWidget *parent) :
     QString nome=stmt.value(0).toString();
     box->addItem(nome);
   }
+
+  setFocus();
 }
 
 void DestinazioneStampaDlg::on_buttonBox_accepted()

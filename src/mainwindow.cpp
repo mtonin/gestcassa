@@ -188,3 +188,8 @@ void MainWindow::on_configurazioneBtn_clicked()
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   dlg->exec();
 }
+
+void MainWindow::on_closeBtn_clicked()
+{
+    close();
+}
