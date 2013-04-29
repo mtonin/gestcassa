@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QPropertyAnimation>
+#include <QKeyEvent>
 
 #include "ui_restodlg.h"
 
@@ -32,6 +33,7 @@ private:
   QPropertyAnimation* effetto;
   int _durata;
 
+  void keyPressEvent(QKeyEvent *);
 };
 
 #endif // RESTODLG_H

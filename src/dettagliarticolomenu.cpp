@@ -1,5 +1,4 @@
 #include "dettagliarticolomenu.h"
-#include "destinazionestampadlg.h"
 #include <QDataWidgetMapper>
 #include <QtSql>
 #include <QMessageBox>
