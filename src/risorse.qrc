@@ -3,5 +3,7 @@
         <file>cash_register.ico</file>
         <file alias="spegne">resources/close_delete.png</file>
         <file alias="configurazione">resources/options.png</file>
+        <file alias="gestione">resources/pencil_edit.png</file>
+        <file alias="cassa">resources/shopping_cart_empty.png</file>
     </qresource>
 </RCC>

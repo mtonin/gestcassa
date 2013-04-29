@@ -10,6 +10,7 @@
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
+  setWindowFlags(Qt::FramelessWindowHint);
   ui->setupUi(this);
 
   showMaximized();
@@ -25,9 +26,16 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   ui->latoFrame->layout()->addWidget(dettagliArticoloBox);
   ui->latoFrame->layout()->addWidget(ordineBox);
 
-  connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
   connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
-  gestioneModalita(GESTIONE);
+
+  if("operatore"==confMap->value("ruolo","operatore")) {
+    ui->modalitaBtn->setEnabled(false);
+    ui->configurazioneBtn->setEnabled(false);
+    gestioneModalita(CASSA);
+  } else {
+    connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
+    gestioneModalita(GESTIONE);
+  }
 }
 
 MainWindow::~MainWindow()
@@ -39,7 +47,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
     ui->modalitaBtn->setText("CASSA");
-    setWindowFlags(Qt::Window);
+    ui->modalitaBtn->setIcon(QIcon(":/GestCassa/cassa"));
     ordineBox->hide();
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
@@ -51,7 +59,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     show();
   } else {
     ui->modalitaBtn->setText("GESTIONE");
-    setWindowFlags(Qt::FramelessWindowHint);
+    ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
     ordineBox->setVisible(true);
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
@@ -172,14 +180,6 @@ void MainWindow::modalitaBtnClicked(){
     qApp->restoreOverrideCursor();
     gestioneModalita(GESTIONE);
   }
-
-}
-
-void MainWindow::on_modalitaBtn_2_clicked()
-{
-  QFont font=qApp->font();
-  font.setPointSize(font.pointSize()+1);
-  qApp->setFont(font);
 
 }
 

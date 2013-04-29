@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Configurazione</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
@@ -116,7 +116,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="stampaTab">
       <attribute name="title">
        <string>Stampa</string>
       </attribute>
@@ -232,10 +232,20 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="databaseTab">
       <attribute name="title">
        <string>Database</string>
       </attribute>
+     </widget>
+     <widget class="QWidget" name="destinazioniTab">
+      <attribute name="title">
+       <string>Destinazioni</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="DestinazioniDlg" name="widget" native="true"/>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
@@ -248,9 +258,16 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DestinazioniDlg</class>
+   <extends>QWidget</extends>
+   <header>destinazionidlg.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>nomeCassaTxt</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>buttonBox</tabstop>
   <tabstop>stampanteSelezionataTxt</tabstop>
   <tabstop>printerSelectBtn</tabstop>
