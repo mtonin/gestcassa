@@ -236,6 +236,22 @@
             <property name="text">
              <string>Configurazione</string>
             </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/configurazione</normaloff>:/GestCassa/configurazione</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>48</width>
+              <height>48</height>
+             </size>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
            </widget>
           </item>
           <item>
@@ -250,6 +266,41 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QToolButton" name="closeBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Esce</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/spegne</normaloff>:/GestCassa/spegne</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>48</width>
+              <height>48</height>
+             </size>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

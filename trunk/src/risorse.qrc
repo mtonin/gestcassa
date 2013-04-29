@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/GestCassa">
         <file>cash_register.ico</file>
+        <file alias="spegne">resources/close_delete.png</file>
+        <file alias="configurazione">resources/options.png</file>
     </qresource>
 </RCC>
