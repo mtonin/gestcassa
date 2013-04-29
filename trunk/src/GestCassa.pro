@@ -25,8 +25,9 @@ SOURCES += main.cpp\
     controlliordine.cpp \
     restodlg.cpp \
     configurazionedlg.cpp \
-    destinazionestampadlg.cpp \
-    dettagliarticolomenu.cpp
+    dettagliarticolomenu.cpp \
+    destinazionidlg.cpp \
+    destinazionestampa.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -41,8 +42,9 @@ HEADERS  += mainwindow.h \
     controlliordine.h \
     restodlg.h \
     configurazionedlg.h \
-    destinazionestampadlg.h \
-    dettagliarticolomenu.h
+    dettagliarticolomenu.h \
+    destinazionidlg.h \
+    destinazionestampa.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -52,8 +54,9 @@ FORMS    += mainwindow.ui \
     controlliordine.ui \
     restodlg.ui \
     configurazionedlg.ui \
-    destinazionestampadlg.ui \
-    dettagliarticolomenu.ui
+    dettagliarticolomenu.ui \
+    destinazionidlg.ui \
+    destinazionestampa.ui
 
 include(version.txt)
 

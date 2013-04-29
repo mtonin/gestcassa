@@ -30,7 +30,6 @@ private slots:
    void articoloSelezionato();
    void modalitaBtnClicked();
 
-   void on_modalitaBtn_2_clicked();
    void on_configurazioneBtn_clicked();
 
    void on_closeBtn_clicked();

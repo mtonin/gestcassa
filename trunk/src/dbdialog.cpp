@@ -21,7 +21,7 @@ void DBDialog::on_toolButton_clicked()
 
 void DBDialog::on_apreBtn_clicked()
 {
-  if(createConnection(dbfile->text(),utente->text(),password->text())) {
+  if(createConnection(dbfile->text(),"","")) {
     QSqlQuery stmt("select chiave,valore from configurazione");
     if(!stmt.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -32,6 +32,13 @@ void DBDialog::on_apreBtn_clicked()
       conf->insert(key,valore);
     }
 
+    if(conf->value("password","12345").toString()==password->text()) {
+      conf->insert("ruolo","amministratore");
+      QMessageBox::information(this,"Accesso","Accesso eseguito come amministratore");
+    } else {
+      conf->insert("ruolo","operatore");
+      QMessageBox::information(this,"Accesso","Accesso eseguito come operatore");
+    }
     accept();
   }
 }

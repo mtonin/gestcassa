@@ -1,4 +1,6 @@
 #include "configurazionedlg.h"
+#include "destinazionidlg.h"
+
 #include <QPrintDialog>
 #include <QPageSetupDialog>
 #include <QPrinter>
