@@ -11,6 +11,9 @@
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par),QDialog(parent)
 {
   setupUi(this);
+
+  cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+
   nuovaConfigurazione=new QMap<QString,QVariant>;
   cartellaPdfTxt->setText(configurazione->value("cartellaPdf","c:\\").toString());
   if(configurazione->value("stampantePdf",true).toBool()) {
@@ -27,6 +30,8 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
     attivaRestoCheck->setChecked(true);
   }
   nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
+  descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
+  adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
 
   tabWidget->setCurrentIndex(0);
   nomeCassaTxt->setFocus();
@@ -132,4 +137,15 @@ void ConfigurazioneDlg::on_nomeCassaTxt_textChanged(const QString &arg1)
 void ConfigurazioneDlg::on_durataRestoTxt_textChanged(const QString &arg1)
 {
   configurazione->insert("durataResto",arg1);
+}
+
+void ConfigurazioneDlg::on_descrManifestazioneTxt_textChanged(const QString &arg1)
+{
+  configurazione->insert("descrManifestazione",arg1);
+}
+
+void ConfigurazioneDlg::on_adminPasswordTxt_textChanged(const QString &arg1)
+{
+  QString pwd=cifratore->encryptToString(arg1);
+  configurazione->insert("adminPassword",pwd);
 }

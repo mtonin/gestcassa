@@ -9,6 +9,9 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
   setupUi(this);
   setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
   dbfile->setFocus();
+
+  cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+
 }
 
 void DBDialog::on_toolButton_clicked()
@@ -21,6 +24,7 @@ void DBDialog::on_toolButton_clicked()
 
 void DBDialog::on_apreBtn_clicked()
 {
+
   if(createConnection(dbfile->text(),"","")) {
     QSqlQuery stmt("select chiave,valore from configurazione");
     if(!stmt.isActive()) {
@@ -32,8 +36,14 @@ void DBDialog::on_apreBtn_clicked()
       conf->insert(key,valore);
     }
 
+    QString pwdDB=conf->value("adminPassword").toString();
+    if(pwdDB.isEmpty()) {
+      pwdDB="12345";
+    } else {
+      pwdDB=cifratore->decryptToString(pwdDB);
+    }
     if(adminBox->isChecked()) {
-      if(conf->value("password","12345").toString()==password->text()) {
+      if(pwdDB==password->text()) {
         conf->insert("ruolo","amministratore");
       } else {
         QMessageBox::critical(this,"Accesso","Password errata");

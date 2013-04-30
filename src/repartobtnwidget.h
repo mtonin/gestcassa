@@ -12,8 +12,8 @@ public:
 
   const int getId() {return idReparto;}
   const QString getNomeReparto() {return nomeReparto;}
-  const QColor& getColore() {return buttonColorNormal();}
-  const QFont& getFont() {return font();}
+  const QColor getColore() {return buttonColorNormal();}
+  const QFont getFont() {return font();}
 
 signals:
   void cambiaColore(const QColor& colore);

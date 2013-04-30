@@ -1,6 +1,7 @@
 #ifndef DBDIALOG_H
 #define DBDIALOG_H
 
+#include "simplecrypt.h"
 #include "ui_dbdialog.h"
 
 class DBDialog : public QDialog, private Ui::DBDialog
@@ -26,6 +27,7 @@ class DBDialog : public QDialog, private Ui::DBDialog
   private:
       bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
       QMap<QString,QVariant>* conf;
+      SimpleCrypt* cifratore;
 };
 
 #endif // DBDIALOG_H
