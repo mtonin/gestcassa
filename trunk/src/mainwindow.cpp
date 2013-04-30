@@ -4,6 +4,8 @@
 #include "articolobtnwidget.h"
 #include "dettaglireparto.h"
 #include "configurazionedlg.h"
+#include "reportform.h"
+
 #include <QtGui>
 #include <QMessageBox>
 
@@ -192,4 +194,10 @@ void MainWindow::on_configurazioneBtn_clicked()
 void MainWindow::on_closeBtn_clicked()
 {
     close();
+}
+
+void MainWindow::on_configurazioneBtn_2_clicked()
+{
+  ReportForm* form=new ReportForm;
+  form->show();
 }
