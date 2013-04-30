@@ -1,6 +1,7 @@
 #ifndef CONFIGURAZIONEDLG_H
 #define CONFIGURAZIONEDLG_H
 
+#include "simplecrypt.h"
 #include "ui_configurazionedlg.h"
 #include <QMap>
 
@@ -41,9 +42,14 @@ private slots:
 
   void on_durataRestoTxt_textChanged(const QString &arg1);
 
+  void on_descrManifestazioneTxt_textChanged(const QString &arg1);
+
+  void on_adminPasswordTxt_textChanged(const QString &arg1);
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
+  SimpleCrypt* cifratore;
 };
 
 #endif // CONFIGURAZIONEDLG_H

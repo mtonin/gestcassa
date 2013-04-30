@@ -122,8 +122,10 @@ void Ordine::stampaScontrino(int numeroOrdine)
   QString intest2=configurazione->value("intestazione2").toString();
   QString intest3=configurazione->value("intestazione3").toString();
   QString nomeCassa=configurazione->value("nomeCassa","000").toString();
+  QString descrManifestazione=configurazione->value("descrManifestazione","NOME MANIFESTAZIONE").toString();
 
   QString intestazione;
+  intestazione.append(descrManifestazione).append("\n");
   if(!intest1.isEmpty()) {
     intestazione.append(intest1).append("\n");
   }
@@ -162,9 +164,17 @@ void Ordine::stampaScontrino(int numeroOrdine)
   QFont fontGrassetto("lucida console");
   fontGrassetto.setPointSize(14);
   fontGrassetto.setBold(true);
+  QFont fontGrassettoCorsivo("lucida console");
+  fontGrassettoCorsivo.setPointSize(14);
+  fontGrassettoCorsivo.setBold(true);
+  fontGrassettoCorsivo.setItalic(true);
+  QFont fontMini("lucida console");
+  fontMini.setPointSize(1);
 
   painter.begin(&printer);
   painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
+
+  // stampa scontrini per destinazione
 
   QSqlQuery stmt;
   stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
@@ -181,10 +191,26 @@ void Ordine::stampaScontrino(int numeroOrdine)
   }
   foreach(QString reparto,repartiStampaList) {
 
+    stmt.prepare("select coalesce(intestazione,nome) from destinazionistampa where nome=?");
+    stmt.addBindValue(reparto);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      return;
+    }
+
+    QString intestReparto=reparto;
+    if(stmt.next()) {
+      intestReparto=stmt.value(0).toString();
+    }
+
     int x=0;
     int y=0;
+    painter.setFont(fontGrassettoCorsivo);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestReparto,&textRect);
+    y+=textRect.height()+10;
     painter.setFont(fontGrassetto);
-    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,reparto,&textRect);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,descrManifestazione,&textRect);
     y+=textRect.height()+10;
 
     painter.setFont(fontNormale);
@@ -229,7 +255,9 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
     y+=textRect.height()+35;
+    painter.setFont(fontMini);
     painter.drawText(x,y,".");
+    painter.setFont(fontNormale);
 
     if(stampantePdf) {
       printer.newPage();
@@ -239,6 +267,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
       painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
     }
   }
+
+  // stampa scontrino del totale
 
   int x=0;
   int y=0;
@@ -295,6 +325,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
   y+=textRect.height()+35;
+  painter.setFont(fontMini);
   painter.drawText(x,y,".");
   painter.end();
 

@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     configurazionedlg.cpp \
     dettagliarticolomenu.cpp \
     destinazionidlg.cpp \
-    destinazionestampa.cpp
+    destinazionestampa.cpp \
+    simplecrypt.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -44,7 +45,8 @@ HEADERS  += mainwindow.h \
     configurazionedlg.h \
     dettagliarticolomenu.h \
     destinazionidlg.h \
-    destinazionestampa.h
+    destinazionestampa.h \
+    simplecrypt.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \

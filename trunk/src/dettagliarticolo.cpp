@@ -117,7 +117,7 @@ void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
   aggiornaArticolo();
 }
 
-void DettagliArticolo::on_destinazioneBox_activated(const QString &arg1)
+void DettagliArticolo::on_destinazioneBox_currentIndexChanged(const QString &arg1)
 {
   articoloBtn->setRepartoStampa(arg1);
   aggiornaArticolo();
