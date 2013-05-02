@@ -1,5 +1,4 @@
 #include "destinazionidlg.h"
-#include "destinazionestampa.h"
 
 #include <QMessageBox>
 
@@ -40,17 +39,4 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   }
   */
 
-}
-
-void DestinazioniDlg::on_nuovoBtn_clicked()
-{
-    DestinazioneStampa* dlg=new DestinazioneStampa;
-    if(QDialog::Accepted==dlg->exec()) {
-      /*
-      QList<QStandardItem*> lista;
-      lista.append(new QStandardItem(dlg->getNome()));
-      lista.append(new QStandardItem(dlg->getIntestazione()));
-      modello->appendRow(lista);
-      */
-    }
 }

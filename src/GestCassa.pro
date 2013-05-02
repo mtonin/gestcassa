@@ -27,7 +27,6 @@ SOURCES += main.cpp\
     configurazionedlg.cpp \
     dettagliarticolomenu.cpp \
     destinazionidlg.cpp \
-    destinazionestampa.cpp \
     simplecrypt.cpp \
     reportform.cpp
 
@@ -46,7 +45,6 @@ HEADERS  += mainwindow.h \
     configurazionedlg.h \
     dettagliarticolomenu.h \
     destinazionidlg.h \
-    destinazionestampa.h \
     simplecrypt.h \
     reportform.h
 
@@ -60,7 +58,6 @@ FORMS    += mainwindow.ui \
     configurazionedlg.ui \
     dettagliarticolomenu.ui \
     destinazionidlg.ui \
-    destinazionestampa.ui \
     reportform.ui
 
 include(version.txt)
