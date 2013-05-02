@@ -15,6 +15,8 @@ private slots:
 
 private:
   void stampaTutto(const QString& nomeFile);
+  void stampaPerReparti(const QString& nomeFile);
+  void stampaPerDestinazione(const QString& nomeFile);
   void putHeader(QTextCursor cursore, const QString testo);
 };
 

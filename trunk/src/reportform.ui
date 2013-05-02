@@ -19,35 +19,25 @@
      <property name="title">
       <string>Ordine</string>
      </property>
-     <widget class="QRadioButton" name="ordineAlfabeticoBox">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Alfabetico</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="ordinePrezzoBox">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Per Prezzo</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QRadioButton" name="ordineAlfabeticoBox">
+        <property name="text">
+         <string>Alfabetico</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="ordinePrezzoBox">
+        <property name="text">
+         <string>Per Prezzo</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -55,48 +45,32 @@
      <property name="title">
       <string>Suddivisione</string>
      </property>
-     <widget class="QRadioButton" name="repartiBox">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Reparti</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="destinazioneBox">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Destinazione stampa</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="noSuddivisioneBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Nessuna</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="repartiBox">
+        <property name="text">
+         <string>Reparti</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="destinazioneBox">
+        <property name="text">
+         <string>Destinazione stampa</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="noSuddivisioneBox">
+        <property name="text">
+         <string>Nessuna</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
      <zorder>destinazioneBox</zorder>
      <zorder>noSuddivisioneBox</zorder>
      <zorder>repartiBox</zorder>
