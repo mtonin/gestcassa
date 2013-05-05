@@ -18,6 +18,8 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
   controlli=new ControlliOrdine(this);
   nuovoOrdine();
+
+  importoUltimoOrdine=0;
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -333,7 +335,9 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
 void Ordine::on_ultimoRestoBtn_clicked()
 {
-  RestoDlg restoDlg(importoUltimoOrdine,0,this);
-  restoDlg.exec();
+  if(importoUltimoOrdine!=0) {
+    RestoDlg restoDlg(importoUltimoOrdine,0,this);
+    restoDlg.exec();
+  }
 
 }

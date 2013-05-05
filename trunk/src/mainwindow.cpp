@@ -33,6 +33,7 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   if("operatore"==confMap->value("ruolo","operatore")) {
     ui->modalitaBtn->setEnabled(false);
     ui->configurazioneBtn->setEnabled(false);
+    ui->reportBtn->setEnabled(false);
     gestioneModalita(CASSA);
   } else {
     connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
@@ -196,7 +197,7 @@ void MainWindow::on_closeBtn_clicked()
     close();
 }
 
-void MainWindow::on_configurazioneBtn_2_clicked()
+void MainWindow::on_reportBtn_clicked()
 {
   ReportForm* form=new ReportForm;
   form->show();

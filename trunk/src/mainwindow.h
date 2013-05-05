@@ -34,7 +34,7 @@ private slots:
 
    void on_closeBtn_clicked();
 
-   void on_configurazioneBtn_2_clicked();
+   void on_reportBtn_clicked();
 
 private:
   Ui::MainWindow *ui;
