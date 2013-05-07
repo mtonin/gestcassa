@@ -61,6 +61,6 @@ void DettagliReparto::on_fontBtn_clicked()
 
 void DettagliReparto::on_testoReparto_textEdited(const QString &arg1)
 {
-    repartoBtn->setText(arg1);
+    repartoBtn->setNomeReparto(arg1);
     aggiornaReparto();
 }

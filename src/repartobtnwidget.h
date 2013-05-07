@@ -12,6 +12,7 @@ public:
 
   const int getId() {return idReparto;}
   const QString getNomeReparto() {return nomeReparto;}
+  void setNomeReparto(const QString nuovoReparto);
   const QColor getColore() {return buttonColorNormal();}
   const QFont getFont() {return font();}
 
