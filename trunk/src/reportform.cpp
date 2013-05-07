@@ -18,7 +18,7 @@ ReportForm::ReportForm(QWidget *parent) :
 
 void ReportForm::on_stampaBtn_clicked()
 {
-  QString pdfFileName=QFileDialog::getSaveFileName(0,"Crea nuovo report","c:\\temp","*.pdf");
+  QString pdfFileName=QFileDialog::getSaveFileName(0,"Crea nuovo report","c:\\","*.pdf");
   if(pdfFileName.isEmpty()) {
     return;
   }

@@ -16,7 +16,7 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
 
 void DBDialog::on_toolButton_clicked()
 {
-  QString dbFileName=QFileDialog::getOpenFileName(0,"Apre database esistente","c:\\temp","*.db3");
+  QString dbFileName=QFileDialog::getOpenFileName(0,"Apre database esistente","c:\\","*.db3");
   if(!dbFileName.isEmpty()) {
     dbfile->setText(dbFileName);
   }

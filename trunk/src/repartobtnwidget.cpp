@@ -8,6 +8,12 @@ RepartoBtnWidget::RepartoBtnWidget(QWidget *parent):
 {
 }
 
+void RepartoBtnWidget::setNomeReparto(const QString nuovoReparto)
+{
+  nomeReparto=nuovoReparto;
+  setText(nuovoReparto);
+}
+
 void RepartoBtnWidget::setColore(const QColor &colore)
 {
   SetButtonColorNormal(colore);
