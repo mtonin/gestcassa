@@ -22,9 +22,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
     stampanteChk->setChecked(true);
   }
   stampanteSelezionataTxt->setText(configurazione->value("stampante").toString());
-  intestazione1Txt->setText(configurazione->value("intestazione1").toString());
-  intestazione2Txt->setText(configurazione->value("intestazione2").toString());
-  intestazione3Txt->setText(configurazione->value("intestazione3").toString());
+  intestazioneTxt->setPlainText(configurazione->value("intestazione").toString());
   durataRestoTxt->setText(configurazione->value("durataResto",5).toString());
   if(configurazione->value("abilitaResto",false).toBool()) {
     attivaRestoCheck->setChecked(true);
@@ -114,21 +112,6 @@ void ConfigurazioneDlg::on_stampanteSelezionataTxt_textChanged(const QString &ar
   nuovaConfigurazione->insert("stampante",arg1);
 }
 
-void ConfigurazioneDlg::on_intestazione1Txt_textChanged(const QString &arg1)
-{
-  configurazione->insert("intestazione1",arg1);
-}
-
-void ConfigurazioneDlg::on_intestazione2Txt_textChanged(const QString &arg1)
-{
-  configurazione->insert("intestazione2",arg1);
-}
-
-void ConfigurazioneDlg::on_intestazione3Txt_textChanged(const QString &arg1)
-{
-  configurazione->insert("intestazione3",arg1);
-}
-
 void ConfigurazioneDlg::on_nomeCassaTxt_textChanged(const QString &arg1)
 {
   configurazione->insert("nomeCassa",arg1);
@@ -148,4 +131,10 @@ void ConfigurazioneDlg::on_adminPasswordTxt_textChanged(const QString &arg1)
 {
   QString pwd=cifratore->encryptToString(arg1);
   configurazione->insert("adminPassword",pwd);
+}
+
+void ConfigurazioneDlg::on_intestazioneTxt_textChanged()
+{
+  configurazione->insert("intestazione",intestazioneTxt->toPlainText());
+
 }

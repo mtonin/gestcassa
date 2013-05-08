@@ -120,22 +120,14 @@ void Ordine::nuovoOrdine()
 
 void Ordine::stampaScontrino(int numeroOrdine)
 {
-  QString intest1=configurazione->value("intestazione1").toString();
-  QString intest2=configurazione->value("intestazione2").toString();
-  QString intest3=configurazione->value("intestazione3").toString();
+  QString intest=configurazione->value("intestazione").toString();
   QString nomeCassa=configurazione->value("nomeCassa","000").toString();
   QString descrManifestazione=configurazione->value("descrManifestazione","NOME MANIFESTAZIONE").toString();
 
   QString intestazione;
   intestazione.append(descrManifestazione).append("\n");
-  if(!intest1.isEmpty()) {
-    intestazione.append(intest1).append("\n");
-  }
-  if(!intest2.isEmpty()) {
-    intestazione.append(intest2).append("\n");
-  }
-  if(!intest3.isEmpty()) {
-    intestazione.append(intest3).append("\n");
+  if(!intest.isEmpty()) {
+    intestazione.append(intest).append("\n");
   }
 
   QPrinter printer;

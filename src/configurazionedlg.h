@@ -32,12 +32,6 @@ private slots:
 
   void on_stampanteSelezionataTxt_textChanged(const QString &arg1);
 
-  void on_intestazione1Txt_textChanged(const QString &arg1);
-
-  void on_intestazione2Txt_textChanged(const QString &arg1);
-
-  void on_intestazione3Txt_textChanged(const QString &arg1);
-
   void on_nomeCassaTxt_textChanged(const QString &arg1);
 
   void on_durataRestoTxt_textChanged(const QString &arg1);
@@ -46,7 +40,9 @@ private slots:
 
   void on_adminPasswordTxt_textChanged(const QString &arg1);
 
-private:
+  void on_intestazioneTxt_textChanged();
+
+  private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
   SimpleCrypt* cifratore;

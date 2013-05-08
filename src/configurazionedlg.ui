@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="generaleTab">
       <attribute name="title">
@@ -169,40 +169,15 @@
             <item>
              <widget class="QLabel" name="label_2">
               <property name="text">
-               <string>Intestazione 1</string>
+               <string>Intestazione scontrino</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="intestazione1Txt"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Intestazione 2</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="intestazione2Txt"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Intestazione 3</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="intestazione3Txt"/>
+             <widget class="QPlainTextEdit" name="intestazioneTxt"/>
             </item>
            </layout>
           </item>
@@ -327,9 +302,6 @@
   <tabstop>buttonBox</tabstop>
   <tabstop>stampanteSelezionataTxt</tabstop>
   <tabstop>printerSelectBtn</tabstop>
-  <tabstop>intestazione1Txt</tabstop>
-  <tabstop>intestazione2Txt</tabstop>
-  <tabstop>intestazione3Txt</tabstop>
  </tabstops>
  <resources/>
  <connections/>
