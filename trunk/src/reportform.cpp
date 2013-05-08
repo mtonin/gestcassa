@@ -40,7 +40,7 @@ void ReportForm::stampaTutto(const QString& nomeFile)
   QTextDocument documento;
   QTextCursor cursore(&documento);
   cursore.setPosition(QTextCursor::Start);
-  QTextTable* tabella=cursore.insertTable(2,4);
+  QTextTable* tabella=cursore.insertTable(1,4);
   QTextTableFormat formatoTabella;
   QString testo;
 
@@ -77,6 +77,7 @@ void ReportForm::stampaTutto(const QString& nomeFile)
     QString reparto=stmt.value(posReparto).toString();
 
     tabella->appendRows(1);
+    cursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,3);
     cursore.insertText(descrizione);
     cursore.movePosition(QTextCursor::NextCell);
 
@@ -86,7 +87,6 @@ void ReportForm::stampaTutto(const QString& nomeFile)
     cursore.insertText(reparto);
     cursore.movePosition(QTextCursor::NextCell);
     cursore.insertText(destinazione);
-    cursore.movePosition(QTextCursor::NextCell);
   }
 
 
@@ -141,6 +141,9 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       return;
     }
+
+    int totArticoli=0;
+
     int posDescrizione=stmt.record().indexOf("descrizione");
     int posPrezzo=stmt.record().indexOf("prezzo");
     int posDestinazione=stmt.record().indexOf("destinazione");
@@ -148,7 +151,7 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
     QTextDocument tableDocument;
     QTextCursor tableCursore(&tableDocument);
 
-    QTextTable* tabella=tableCursore.insertTable(2,3);
+    QTextTable* tabella=tableCursore.insertTable(1,3);
     foreach(testo,((QString)"ARTICOLO,PREZZO,DESTINAZIONE").split(",")) {
       putHeader(tableCursore,testo);
       tableCursore.movePosition(QTextCursor::NextCell);
@@ -158,11 +161,13 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
     rightAlignFormat.setAlignment(Qt::AlignRight);
 
     while(stmt.next()) {
+      totArticoli++;
       QString descrizione=stmt.value(posDescrizione).toString();
       QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
       QString destinazione=stmt.value(posDestinazione).toString();
 
       tabella->appendRows(1);
+      tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
       tableCursore.insertText(descrizione);
       tableCursore.movePosition(QTextCursor::NextCell);
 
@@ -170,7 +175,6 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
       tableCursore.insertText(prezzo);
       tableCursore.movePosition(QTextCursor::NextCell);
       tableCursore.insertText(destinazione);
-      tableCursore.movePosition(QTextCursor::NextCell);
     }
 
     formatoTabella.setBorder(1);
@@ -181,7 +185,13 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
     formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
 
     tabella->setFormat(formatoTabella);
-    cursore.insertFragment(QTextDocumentFragment(&tableDocument));
+
+    if(0==totArticoli){
+      cursore.insertText("\nNessun articolo in questo reparto.");
+    } else {
+      cursore.insertFragment(QTextDocumentFragment(&tableDocument));
+
+    }
     cursore.insertText("\n\n\n\n\n");
   }
 
@@ -193,6 +203,96 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
 
 void ReportForm::stampaPerDestinazione(const QString &nomeFile)
 {
+  QFile f(nomeFile);
+  QTextDocument documento;
+  QTextCursor cursore(&documento);
+  cursore.setPosition(QTextCursor::Start);
+  QTextTableFormat formatoTabella;
+  QString testo;
+
+  QString sql="select nome from destinazionistampa";
+  QSqlQuery stmtDestinazioni(sql);
+  if(!stmtDestinazioni.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmtDestinazioni.lastError().text());
+    return;
+  }
+  while(stmtDestinazioni.next()) {
+    QString nomeDestinazione=stmtDestinazioni.value(0).toString();
+    testo=QString("DESTINAZIONE DI STAMPA: %1").arg(nomeDestinazione);
+    putHeader(cursore,testo);
+    cursore.movePosition(QTextCursor::NextRow);
+
+    sql="select a.descrizione,a.prezzo,b.descrizione as reparto from articoli a,reparti b on a.idreparto=b.idreparto and a.destinazione=?";
+    if(ordineAlfabeticoBox->isChecked()) {
+      sql.append(" order by a.descrizione asc");
+    } else {
+      sql.append(" order by a.prezzo asc");
+    }
+
+    QSqlQuery stmt;
+    stmt.prepare(sql);
+    stmt.addBindValue(nomeDestinazione);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return;
+    }
+
+    int totArticoli=0;
+
+    int posDescrizione=stmt.record().indexOf("descrizione");
+    int posPrezzo=stmt.record().indexOf("prezzo");
+    int posReparto=stmt.record().indexOf("reparto");
+
+    QTextDocument tableDocument;
+    QTextCursor tableCursore(&tableDocument);
+
+    QTextTable* tabella=tableCursore.insertTable(1,3);
+    foreach(testo,((QString)"ARTICOLO,PREZZO,REPARTO").split(",")) {
+      putHeader(tableCursore,testo);
+      tableCursore.movePosition(QTextCursor::NextCell);
+    }
+
+    QTextBlockFormat rightAlignFormat;
+    rightAlignFormat.setAlignment(Qt::AlignRight);
+
+    while(stmt.next()) {
+      totArticoli++;
+      QString descrizione=stmt.value(posDescrizione).toString();
+      QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+      QString reparto=stmt.value(posReparto).toString();
+
+      tabella->appendRows(1);
+      tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
+      tableCursore.insertText(descrizione);
+      tableCursore.movePosition(QTextCursor::NextCell);
+
+      tableCursore.setBlockFormat(rightAlignFormat);
+      tableCursore.insertText(prezzo);
+      tableCursore.movePosition(QTextCursor::NextCell);
+      tableCursore.insertText(reparto);
+    }
+
+    formatoTabella.setBorder(1);
+    formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
+    formatoTabella.setHeaderRowCount(1);
+    formatoTabella.setCellSpacing(-1);
+    formatoTabella.setCellPadding(3);
+    formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
+
+    tabella->setFormat(formatoTabella);
+
+    if(0==totArticoli){
+      cursore.insertText("\nNessun articolo in questa destinazione.");
+    } else {
+      cursore.insertFragment(QTextDocumentFragment(&tableDocument));
+
+    }
+    cursore.insertText("\n\n\n\n\n");
+  }
+
+  QPrinter pdfPrinter;
+  pdfPrinter.setOutputFileName(nomeFile);
+  documento.print(&pdfPrinter);
 }
 
 void ReportForm::putHeader(QTextCursor cursore, const QString testo)
