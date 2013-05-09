@@ -28,17 +28,17 @@ private slots:
 
   void on_cartellaPdfBtn_clicked();
 
-  void on_cartellaPdfTxt_textChanged(const QString &arg1);
+  void on_cartellaPdfTxt_textEdited(const QString &arg1);
 
-  void on_stampanteSelezionataTxt_textChanged(const QString &arg1);
+  void on_stampanteSelezionataTxt_textEdited(const QString &arg1);
 
-  void on_nomeCassaTxt_textChanged(const QString &arg1);
+  void on_nomeCassaTxt_textEdited(const QString &arg1);
 
-  void on_durataRestoTxt_textChanged(const QString &arg1);
+  void on_durataRestoTxt_textEdited(const QString &arg1);
 
-  void on_descrManifestazioneTxt_textChanged(const QString &arg1);
+  void on_descrManifestazioneTxt_textEdited(const QString &arg1);
 
-  void on_adminPasswordTxt_textChanged(const QString &arg1);
+  void on_adminPasswordTxt_textEdited(const QString &arg1);
 
   void on_intestazioneTxt_textChanged();
 

@@ -13,6 +13,10 @@ public:
   explicit DestinazioniDlg(QWidget *parent = 0);
 private slots:
 
+  void on_cancellaBtn_clicked();
+
+  void on_nuovoBtn_clicked();
+
 private:
   QSqlTableModel* modello;
   QDataWidgetMapper* mapper;
