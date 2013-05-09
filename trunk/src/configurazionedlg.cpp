@@ -102,32 +102,32 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
 
 }
 
-void ConfigurazioneDlg::on_cartellaPdfTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_cartellaPdfTxt_textEdited(const QString &arg1)
 {
   configurazione->insert("cartellaPdf",arg1);
 }
 
-void ConfigurazioneDlg::on_stampanteSelezionataTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_stampanteSelezionataTxt_textEdited(const QString &arg1)
 {
   nuovaConfigurazione->insert("stampante",arg1);
 }
 
-void ConfigurazioneDlg::on_nomeCassaTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_nomeCassaTxt_textEdited(const QString &arg1)
 {
   configurazione->insert("nomeCassa",arg1);
 }
 
-void ConfigurazioneDlg::on_durataRestoTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
 {
   configurazione->insert("durataResto",arg1);
 }
 
-void ConfigurazioneDlg::on_descrManifestazioneTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
   configurazione->insert("descrManifestazione",arg1);
 }
 
-void ConfigurazioneDlg::on_adminPasswordTxt_textChanged(const QString &arg1)
+void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
 {
   QString pwd=cifratore->encryptToString(arg1);
   configurazione->insert("adminPassword",pwd);

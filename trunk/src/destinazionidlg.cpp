@@ -1,6 +1,7 @@
 #include "destinazionidlg.h"
 
 #include <QMessageBox>
+#include <QSqlRecord>
 
 DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   QWidget(parent)
@@ -20,7 +21,9 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   mapper->addMapping(nomeDestTxt,0);
   mapper->addMapping(intestazioneDestTxt,1);
 
+  mapper->toFirst();
   connect(destinazioniList->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
+  //destinazioniList->selectionModel()->setCurrentIndex(modello->index(0,0),QItemSelectionModel::SelectCurrent);
 
   /*
   QSqlQuery stmt("select nome,intestazione from destinazioniStampa");
@@ -39,4 +42,30 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   }
   */
 
+}
+
+void DestinazioniDlg::on_cancellaBtn_clicked()
+{
+    modello->removeRow(destinazioniList->currentIndex().row());
+    destinazioniList->selectionModel()->select(modello->index(0,0),QItemSelectionModel::SelectCurrent);
+}
+
+void DestinazioniDlg::on_nuovoBtn_clicked()
+{
+  /*
+  QSqlRecord riga;
+  riga.setValue("nome","DESTINAZIONE");
+  riga.setValue("intestazione","intestazione");
+  modello->insertRecord(-1,riga);
+  */
+
+  int numRighe=modello->rowCount();
+  modello->insertRow(numRighe);
+  modello->setData(modello->index(numRighe,0),"NOME DESTINAZIONE");
+  modello->setData(modello->index(numRighe,1),"INTESTAZIONE SCONTRINO");
+  modello->submitAll();
+  mapper->toLast();
+  //destinazioniList->selectionModel()->setCurrentIndex(modello->index(numRighe,0),QItemSelectionModel::SelectCurrent);
+  nomeDestTxt->selectAll();
+  nomeDestTxt->setFocus();
 }
