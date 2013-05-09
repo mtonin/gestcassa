@@ -11,13 +11,17 @@ class ReportForm : public QWidget, private Ui::ReportForm
 public:
   explicit ReportForm(QMap<QString,QVariant>* par,QWidget *parent = 0);
 private slots:
-  void on_stampaBtn_clicked();
+  void stampa(bool preview);
+
+  void on_anteprimaBtn_clicked();
+
+  void on_esportaBtn_clicked();
 
 private:
-  void stampaTutto();
-  void stampaPerReparti();
-  void stampaPerDestinazione();
-  void creaPdf(const QTextDocument* doc,const QString descrReport);
+  QTextDocument* creaDocumentTutto();
+  QTextDocument* creaDocumentPerReparti();
+  QTextDocument* creaDocumentPerDestinazione();
+  void stampa(const QTextDocument* doc,const QString descrReport,bool preview);
   void putHeader(QTextCursor cursore, const QString testo);
 
   QMap<QString,QVariant>* configurazione;

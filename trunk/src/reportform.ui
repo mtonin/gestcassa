@@ -92,7 +92,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QToolButton" name="stampaBtn">
+      <widget class="QToolButton" name="anteprimaBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -100,7 +100,20 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Stampa</string>
+        <string>Anteprima</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="esportaBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Esporta PDF</string>
        </property>
       </widget>
      </item>

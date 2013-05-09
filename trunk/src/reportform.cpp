@@ -14,21 +14,25 @@ ReportForm::ReportForm(QMap<QString,QVariant>* par,QWidget *parent) : configuraz
   setupUi(this);
 }
 
-void ReportForm::on_stampaBtn_clicked()
+void ReportForm::stampa(bool preview)
 {
+  QTextDocument* doc;
   if(noSuddivisioneBox->isChecked()) {
-    stampaTutto();
+    doc=creaDocumentTutto();
+    stampa(doc,"Inventario articoli al &date;",preview);
   }
   if(repartiBox->isChecked()) {
-    stampaPerReparti();
+    doc=creaDocumentPerReparti();
+    stampa(doc,"Inventario articoli per reparti al &date;",preview);
   }
   if(destinazioneBox->isChecked()) {
-    stampaPerDestinazione();
+    doc=creaDocumentPerDestinazione();
+    stampa(doc,"Inventario articoli per destinazione stampa al &date;",preview);
   }
 
 }
 
-void ReportForm::stampaTutto()
+QTextDocument* ReportForm::creaDocumentTutto()
 {
   QTextDocument documento;
   QTextCursor cursore(&documento);
@@ -52,7 +56,7 @@ void ReportForm::stampaTutto()
   QSqlQuery stmt(sql);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-    return;
+    return NULL;
   }
 
   int posDescrizione=stmt.record().indexOf("descrizione");
@@ -91,11 +95,11 @@ void ReportForm::stampaTutto()
 
   tabella->setFormat(formatoTabella);
 
-  creaPdf(&documento,"Inventario articoli al &date;");
+  return &documento;
 
 }
 
-void ReportForm::stampaPerReparti()
+QTextDocument* ReportForm::creaDocumentPerReparti()
 {
   QTextDocument documento;
   QTextCursor cursore(&documento);
@@ -106,7 +110,7 @@ void ReportForm::stampaPerReparti()
   QSqlQuery stmtReparti(sql);
   if(!stmtReparti.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmtReparti.lastError().text());
-    return;
+    return NULL;
   }
   while(stmtReparti.next()) {
     int idReparto=stmtReparti.value(0).toInt();
@@ -127,7 +131,7 @@ void ReportForm::stampaPerReparti()
     stmt.addBindValue(idReparto);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-      return;
+      return NULL;
     }
 
     int totArticoli=0;
@@ -183,11 +187,11 @@ void ReportForm::stampaPerReparti()
     cursore.insertText("\n\n\n\n\n");
   }
 
-  creaPdf(&documento,"Inventario articoli per reparti al &date;");
+  return &documento;
 
 }
 
-void ReportForm::stampaPerDestinazione()
+QTextDocument* ReportForm::creaDocumentPerDestinazione()
 {
   QTextDocument documento;
   QTextCursor cursore(&documento);
@@ -198,7 +202,7 @@ void ReportForm::stampaPerDestinazione()
   QSqlQuery stmtDestinazioni(sql);
   if(!stmtDestinazioni.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmtDestinazioni.lastError().text());
-    return;
+    return NULL;
   }
   while(stmtDestinazioni.next()) {
     QString nomeDestinazione=stmtDestinazioni.value(0).toString();
@@ -218,7 +222,7 @@ void ReportForm::stampaPerDestinazione()
     stmt.addBindValue(nomeDestinazione);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-      return;
+      return NULL;
     }
 
     int totArticoli=0;
@@ -274,10 +278,10 @@ void ReportForm::stampaPerDestinazione()
     cursore.insertText("\n\n\n\n\n");
   }
 
-  creaPdf(&documento,"Inventario articoli per destinazione stampa al &date;");
+  return &documento;
 }
 
-void ReportForm::creaPdf(const QTextDocument *doc, const QString descrReport)
+void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, bool preview)
 {
 
   TextPrinter* tprinter=new TextPrinter(this);
@@ -288,7 +292,10 @@ void ReportForm::creaPdf(const QTextDocument *doc, const QString descrReport)
   tprinter->setFooterSize(10);
   tprinter->setDateFormat("d MMM yyyy");
 
-  tprinter->exportPdf(doc,"Salva con nome");
+  if(preview)
+    tprinter->preview(doc);
+  else
+    tprinter->exportPdf(doc,"Salva con nome");
 
 }
 
@@ -304,4 +311,14 @@ void ReportForm::putHeader(QTextCursor cursore, const QString testo)
   cursore.setBlockFormat(format);
   cursore.setCharFormat(charFormat);
   cursore.insertText(testo);
+}
+
+void ReportForm::on_anteprimaBtn_clicked()
+{
+  stampa(true);
+}
+
+void ReportForm::on_esportaBtn_clicked()
+{
+  stampa(false);
 }
