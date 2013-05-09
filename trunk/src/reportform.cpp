@@ -1,45 +1,37 @@
 #include "reportform.h"
+#include "textprinter.h"
 
-#include <QFileDialog>
-#include <QPrinter>
 #include <QPainter>
 #include <QtSql>
-#include <QMessageBox>
 #include <QTextDocument>
 #include <QTextCursor>
 #include <QTextTable>
 #include <QTextDocumentFragment>
+#include <QMessageBox>
 
-ReportForm::ReportForm(QWidget *parent) :
-  QWidget(parent)
+ReportForm::ReportForm(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par), QWidget(parent)
 {
   setupUi(this);
 }
 
 void ReportForm::on_stampaBtn_clicked()
 {
-  QString pdfFileName=QFileDialog::getSaveFileName(0,"Crea nuovo report","c:\\","*.pdf");
-  if(pdfFileName.isEmpty()) {
-    return;
-  }
   if(noSuddivisioneBox->isChecked()) {
-    stampaTutto(pdfFileName);
+    stampaTutto();
   }
   if(repartiBox->isChecked()) {
-    stampaPerReparti(pdfFileName);
+    stampaPerReparti();
   }
   if(destinazioneBox->isChecked()) {
-    stampaPerDestinazione(pdfFileName);
+    stampaPerDestinazione();
   }
 
 }
 
-void ReportForm::stampaTutto(const QString& nomeFile)
+void ReportForm::stampaTutto()
 {
-  QFile f(nomeFile);
   QTextDocument documento;
   QTextCursor cursore(&documento);
-  cursore.setPosition(QTextCursor::Start);
   QTextTable* tabella=cursore.insertTable(1,4);
   QTextTableFormat formatoTabella;
   QString testo;
@@ -99,18 +91,14 @@ void ReportForm::stampaTutto(const QString& nomeFile)
 
   tabella->setFormat(formatoTabella);
 
-  QPrinter pdfPrinter;
-  pdfPrinter.setOutputFileName(nomeFile);
-  documento.print(&pdfPrinter);
+  creaPdf(&documento,"Inventario articoli al &date;");
 
 }
 
-void ReportForm::stampaPerReparti(const QString &nomeFile)
+void ReportForm::stampaPerReparti()
 {
-  QFile f(nomeFile);
   QTextDocument documento;
   QTextCursor cursore(&documento);
-  cursore.setPosition(QTextCursor::Start);
   QTextTableFormat formatoTabella;
   QString testo;
 
@@ -195,18 +183,14 @@ void ReportForm::stampaPerReparti(const QString &nomeFile)
     cursore.insertText("\n\n\n\n\n");
   }
 
-  QPrinter pdfPrinter;
-  pdfPrinter.setOutputFileName(nomeFile);
-  documento.print(&pdfPrinter);
+  creaPdf(&documento,"Inventario articoli per reparti al &date;");
 
 }
 
-void ReportForm::stampaPerDestinazione(const QString &nomeFile)
+void ReportForm::stampaPerDestinazione()
 {
-  QFile f(nomeFile);
   QTextDocument documento;
   QTextCursor cursore(&documento);
-  cursore.setPosition(QTextCursor::Start);
   QTextTableFormat formatoTabella;
   QString testo;
 
@@ -290,9 +274,22 @@ void ReportForm::stampaPerDestinazione(const QString &nomeFile)
     cursore.insertText("\n\n\n\n\n");
   }
 
-  QPrinter pdfPrinter;
-  pdfPrinter.setOutputFileName(nomeFile);
-  documento.print(&pdfPrinter);
+  creaPdf(&documento,"Inventario articoli per destinazione stampa al &date;");
+}
+
+void ReportForm::creaPdf(const QTextDocument *doc, const QString descrReport)
+{
+
+  TextPrinter* tprinter=new TextPrinter(this);
+  QString header=QString("<center><b>%1 - %2</b></center>").arg(configurazione->value("descrManifestazione").toString()).arg(descrReport);
+  tprinter->setHeaderText(header);
+  tprinter->setFooterText("<center><b>GESTIONE CASSA</b><br>Pag. &page;</center>");
+  tprinter->setHeaderSize(5);
+  tprinter->setFooterSize(10);
+  tprinter->setDateFormat("d MMM yyyy");
+
+  tprinter->exportPdf(doc,"Salva con nome");
+
 }
 
 void ReportForm::putHeader(QTextCursor cursore, const QString testo)

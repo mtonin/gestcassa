@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     dettagliarticolomenu.cpp \
     destinazionidlg.cpp \
     simplecrypt.cpp \
-    reportform.cpp
+    reportform.cpp \
+    textprinter.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     dettagliarticolomenu.h \
     destinazionidlg.h \
     simplecrypt.h \
-    reportform.h
+    reportform.h \
+    textprinter.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \

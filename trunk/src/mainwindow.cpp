@@ -199,6 +199,6 @@ void MainWindow::on_closeBtn_clicked()
 
 void MainWindow::on_reportBtn_clicked()
 {
-  ReportForm* form=new ReportForm;
+  ReportForm* form=new ReportForm(confMap);
   form->show();
 }
