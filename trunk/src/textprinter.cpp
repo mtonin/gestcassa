@@ -538,6 +538,7 @@ void TextPrinter::preview(const QTextDocument *document,
 
     // preview it
     tempdoc_ = document->clone();
+    dialog->setWindowFlags(Qt::Window|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint|Qt::WindowMaximizeButtonHint);
     dialog->exec();
 
     delete tempdoc_;

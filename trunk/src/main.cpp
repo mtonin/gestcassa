@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QTranslator>
 
 #include "mainwindow.h"
 #include "dbdialog.h"
@@ -6,6 +7,12 @@
 int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
+
+  QTranslator translator;
+  if(translator.load(QString("qt_it"))) {
+    a.installTranslator(&translator);
+  }
+
   QFont currentFont=a.font();
   currentFont.setPointSize(10);
   a.setFont(currentFont);

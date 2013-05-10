@@ -4,8 +4,8 @@
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,1,66
- PRODUCTVERSION 0,1,1,66
+ FILEVERSION 0,1,1,69
+ PRODUCTVERSION 0,1,1,69
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -22,12 +22,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", ""
             VALUE "FileDescription", "Gestione Cassa"
-            VALUE "FileVersion", "0, 1, 1, 66"
+            VALUE "FileVersion", "0, 1, 1, 69"
             VALUE "InternalName", "gestcassa"
             VALUE "LegalCopyright", "copyright MT 2013"
             VALUE "OriginalFilename", ""
             VALUE "ProductName", "gestcassa"
-            VALUE "ProductVersion", "0, 1, 1, 66"
+            VALUE "ProductVersion", "0, 1, 1, 69"
         END
     END
     BLOCK "VarFileInfo"
