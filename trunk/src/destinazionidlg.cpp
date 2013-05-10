@@ -13,16 +13,8 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   modello->setEditStrategy(QSqlTableModel::OnFieldChange);
   modello->select();
   destinazioniList->setModel(modello);
-  destinazioniList->hideColumn(1);
+  //destinazioniList->hideColumn(1);
 
-  mapper=new QDataWidgetMapper;
-  mapper->setModel(modello);
-  mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
-  mapper->addMapping(nomeDestTxt,0);
-  mapper->addMapping(intestazioneDestTxt,1);
-
-  mapper->toFirst();
-  connect(destinazioniList->selectionModel(),SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
   //destinazioniList->selectionModel()->setCurrentIndex(modello->index(0,0),QItemSelectionModel::SelectCurrent);
 
   /*
@@ -64,8 +56,9 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
   modello->setData(modello->index(numRighe,0),"NOME DESTINAZIONE");
   modello->setData(modello->index(numRighe,1),"INTESTAZIONE SCONTRINO");
   modello->submitAll();
-  mapper->toLast();
-  //destinazioniList->selectionModel()->setCurrentIndex(modello->index(numRighe,0),QItemSelectionModel::SelectCurrent);
-  nomeDestTxt->selectAll();
-  nomeDestTxt->setFocus();
+}
+
+void DestinazioniDlg::on_modificaBtn_clicked()
+{
+
 }
