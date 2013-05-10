@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     destinazionidlg.cpp \
     simplecrypt.cpp \
     reportform.cpp \
-    textprinter.cpp
+    textprinter.cpp \
+    destinazionesingoladlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -48,7 +49,8 @@ HEADERS  += mainwindow.h \
     destinazionidlg.h \
     simplecrypt.h \
     reportform.h \
-    textprinter.h
+    textprinter.h \
+    destinazionesingoladlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -60,7 +62,8 @@ FORMS    += mainwindow.ui \
     configurazionedlg.ui \
     dettagliarticolomenu.ui \
     destinazionidlg.ui \
-    reportform.ui
+    reportform.ui \
+    destinazionesingoladlg.ui
 
 include(version.txt)
 

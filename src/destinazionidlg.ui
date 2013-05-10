@@ -18,9 +18,6 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QTableView" name="destinazioniList">
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
@@ -54,54 +51,35 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="modificaBtn">
+         <property name="text">
+          <string>Modifica</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="cancellaBtn">
          <property name="text">
           <string>Cancella</string>
          </property>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Stampa</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Destinazione</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="nomeDestTxt"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Intestazione</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPlainTextEdit" name="intestazioneDestTxt">
-        <property name="tabChangesFocus">
-         <bool>true</bool>
-        </property>
-        <property name="overwriteMode">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
    </item>
   </layout>
  </widget>

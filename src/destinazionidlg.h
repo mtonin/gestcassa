@@ -17,6 +17,8 @@ private slots:
 
   void on_nuovoBtn_clicked();
 
+  void on_modificaBtn_clicked();
+
 private:
   QSqlTableModel* modello;
   QDataWidgetMapper* mapper;
