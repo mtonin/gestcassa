@@ -34,8 +34,8 @@ void ReportForm::stampa(bool preview)
 
 QTextDocument* ReportForm::creaDocumentTutto()
 {
-  QTextDocument documento;
-  QTextCursor cursore(&documento);
+  QTextDocument* documento=new QTextDocument(this);
+  QTextCursor cursore(documento);
   QTextTable* tabella=cursore.insertTable(1,4);
   QTextTableFormat formatoTabella;
   QString testo;
@@ -95,14 +95,14 @@ QTextDocument* ReportForm::creaDocumentTutto()
 
   tabella->setFormat(formatoTabella);
 
-  return &documento;
+  return documento;
 
 }
 
 QTextDocument* ReportForm::creaDocumentPerReparti()
 {
-  QTextDocument documento;
-  QTextCursor cursore(&documento);
+  QTextDocument* documento=new QTextDocument(this);
+  QTextCursor cursore(documento);
   QTextTableFormat formatoTabella;
   QString testo;
 
@@ -187,14 +187,14 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     cursore.insertText("\n\n\n\n\n");
   }
 
-  return &documento;
+  return documento;
 
 }
 
 QTextDocument* ReportForm::creaDocumentPerDestinazione()
 {
-  QTextDocument documento;
-  QTextCursor cursore(&documento);
+  QTextDocument* documento=new QTextDocument(this);
+  QTextCursor cursore(documento);
   QTextTableFormat formatoTabella;
   QString testo;
 
@@ -278,7 +278,7 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
     cursore.insertText("\n\n\n\n\n");
   }
 
-  return &documento;
+  return documento;
 }
 
 void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, bool preview)
@@ -292,10 +292,11 @@ void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, boo
   tprinter->setFooterSize(10);
   tprinter->setDateFormat("d MMM yyyy");
 
-  if(preview)
+  if(preview) {
     tprinter->preview(doc);
-  else
+  } else {
     tprinter->exportPdf(doc,"Salva con nome");
+  }
 
 }
 
