@@ -44,3 +44,11 @@ void infoWidget::ricominciaEffetto()
   effetto->start();
 
 }
+
+void infoWidget::setlistaTesto(const QStringList lista)
+{
+  effetto->stop();
+  listaTesto=lista;
+  currentIndex=-1;
+  ricominciaEffetto();
+}
