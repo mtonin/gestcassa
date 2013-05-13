@@ -7,10 +7,11 @@
 #include "configurazionedlg.h"
 #include "reportform.h"
 #include "infowidget.h"
+#include "QDigitalClock.h"
 
 #include <QtGui>
 #include <QMessageBox>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
@@ -34,6 +35,18 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
 
   connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
 
+  QDigitalClock* orologio=new QDigitalClock;
+  orologio->SetFormat("dd-MM-yyyy\nHH:mm:ss");
+  QFont font=orologio->font();
+  font.setBold(true);
+  font.setPointSize(14);
+  orologio->setFont(font);
+  orologio->SetTextColor(Qt::red);
+  orologio->SetAlignment(Qt::AlignHCenter);
+
+  ui->clockFrame->setLayout(new QHBoxLayout);
+  ui->clockFrame->layout()->addWidget(orologio);
+
   QStringList messaggi=QString("GESTIONE CASSA,build %1").arg(SVN_REV.c_str()).split(",");
   QString descrizione=confMap->value("descrManifestazione").toString();
   if(!descrizione.isEmpty()) {
@@ -41,10 +54,10 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   }
   infoWidget* info=new infoWidget(messaggi);
 
-  QVBoxLayout* vbox=new QVBoxLayout;
-  vbox->setContentsMargins(QMargins(0,0,0,0));
-  ui->infoFrame->setLayout(vbox);
-  ui->infoFrame->layout()->addWidget(info);
+  QHBoxLayout* infoLayout=new QHBoxLayout;
+  infoLayout->setContentsMargins(QMargins(0,0,0,0));
+  infoLayout->addWidget(info);
+  ui->infoFrame->setLayout(infoLayout);
 
   if("operatore"==confMap->value("ruolo","operatore")) {
     ui->modalitaBtn->setEnabled(false);

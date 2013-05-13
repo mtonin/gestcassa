@@ -3,6 +3,6 @@
 
 #include <string>
 
-const std::string SVN_REV("71M");
+const std::string SVN_REV("72M");
 
 #endif // SVNREV_H
