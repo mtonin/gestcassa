@@ -9,7 +9,7 @@
 #include <QTextDocumentFragment>
 #include <QMessageBox>
 
-ReportForm::ReportForm(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par), QWidget(parent)
+ReportForm::ReportForm(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par), QDialog(parent)
 {
   setupUi(this);
 }

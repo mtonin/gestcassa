@@ -1,3 +1,4 @@
+#include "svnrev.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "repartobtnwidget.h"
@@ -5,15 +6,18 @@
 #include "dettaglireparto.h"
 #include "configurazionedlg.h"
 #include "reportform.h"
+#include "infowidget.h"
 
 #include <QtGui>
 #include <QMessageBox>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
-  setWindowFlags(Qt::FramelessWindowHint);
   ui->setupUi(this);
+
+  setWindowFlags(Qt::FramelessWindowHint);
 
   showMaximized();
 
@@ -29,6 +33,18 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   ui->latoFrame->layout()->addWidget(ordineBox);
 
   connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
+
+  QStringList messaggi=QString("GESTIONE CASSA,build %1").arg(SVN_REV.c_str()).split(",");
+  QString descrizione=confMap->value("descrManifestazione").toString();
+  if(!descrizione.isEmpty()) {
+    messaggi.insert(0,descrizione);
+  }
+  infoWidget* info=new infoWidget(messaggi);
+
+  QVBoxLayout* vbox=new QVBoxLayout;
+  vbox->setContentsMargins(QMargins(0,0,0,0));
+  ui->infoFrame->setLayout(vbox);
+  ui->infoFrame->layout()->addWidget(info);
 
   if("operatore"==confMap->value("ruolo","operatore")) {
     ui->modalitaBtn->setEnabled(false);
@@ -200,5 +216,5 @@ void MainWindow::on_closeBtn_clicked()
 void MainWindow::on_reportBtn_clicked()
 {
   ReportForm* form=new ReportForm(confMap);
-  form->show();
+  form->exec();
 }

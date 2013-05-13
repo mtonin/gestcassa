@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     simplecrypt.cpp \
     reportform.cpp \
     textprinter.cpp \
-    destinazionesingoladlg.cpp
+    destinazionesingoladlg.cpp \
+    infowidget.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     simplecrypt.h \
     reportform.h \
     textprinter.h \
-    destinazionesingoladlg.h
+    destinazionesingoladlg.h \
+    infowidget.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -63,7 +65,8 @@ FORMS    += mainwindow.ui \
     dettagliarticolomenu.ui \
     destinazionidlg.ui \
     reportform.ui \
-    destinazionesingoladlg.ui
+    destinazionesingoladlg.ui \
+    infowidget.ui
 
 include(version.txt)
 
