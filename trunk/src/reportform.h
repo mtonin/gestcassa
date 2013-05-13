@@ -4,7 +4,7 @@
 #include "ui_reportform.h"
 #include <QTextCursor>
 #include <QMap>
-class ReportForm : public QWidget, private Ui::ReportForm
+class ReportForm : public QDialog, private Ui::ReportForm
 {
   Q_OBJECT
   
