@@ -153,8 +153,21 @@
           <property name="bottomMargin">
            <number>5</number>
           </property>
-          <item row="0" column="0">
-           <widget class="QToolButton" name="closeBtn">
+          <item row="0" column="5">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="4">
+           <widget class="QToolButton" name="reportBtn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -168,11 +181,11 @@
              </size>
             </property>
             <property name="text">
-             <string>Esce</string>
+             <string>Report</string>
             </property>
             <property name="icon">
              <iconset resource="risorse.qrc">
-              <normaloff>:/GestCassa/spegne</normaloff>:/GestCassa/spegne</iconset>
+              <normaloff>:/GestCassa/report</normaloff>:/GestCassa/report</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -187,19 +200,6 @@
              <enum>Qt::ToolButtonTextUnderIcon</enum>
             </property>
            </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item row="0" column="2">
            <widget class="QToolButton" name="modalitaBtn">
@@ -230,6 +230,37 @@
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="QFrame" name="infoFrame">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 255, 255);</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
             </property>
            </widget>
           </item>
@@ -268,8 +299,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
-           <widget class="QToolButton" name="reportBtn">
+          <item row="0" column="1">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="0">
+           <widget class="QToolButton" name="closeBtn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -283,11 +327,11 @@
              </size>
             </property>
             <property name="text">
-             <string>Report</string>
+             <string>Esce</string>
             </property>
             <property name="icon">
              <iconset resource="risorse.qrc">
-              <normaloff>:/GestCassa/report</normaloff>:/GestCassa/report</iconset>
+              <normaloff>:/GestCassa/spegne</normaloff>:/GestCassa/spegne</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -303,21 +347,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="5">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item row="0" column="6">
-           <widget class="QFrame" name="infoFrame">
+           <widget class="QFrame" name="clockFrame">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -335,6 +366,9 @@
               <width>500</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 255, 255);</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>

@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     reportform.cpp \
     textprinter.cpp \
     destinazionesingoladlg.cpp \
-    infowidget.cpp
+    infowidget.cpp \
+    QDigitalClock.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
     reportform.h \
     textprinter.h \
     destinazionesingoladlg.h \
-    infowidget.h
+    infowidget.h \
+    QDigitalClock.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
