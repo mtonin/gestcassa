@@ -52,7 +52,7 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   if(!descrizione.isEmpty()) {
     messaggi.insert(0,descrizione);
   }
-  infoWidget* info=new infoWidget(messaggi);
+  info=new infoWidget(messaggi);
 
   QHBoxLayout* infoLayout=new QHBoxLayout;
   infoLayout->setContentsMargins(QMargins(0,0,0,0));
@@ -180,6 +180,16 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
 
 }
 
+void MainWindow::creaInfoMessaggi()
+{
+  QStringList messaggi=QString("GESTIONE CASSA,build %1").arg(SVN_REV.c_str()).split(",");
+  QString descrizione=confMap->value("descrManifestazione").toString();
+  if(!descrizione.isEmpty()) {
+    messaggi.insert(0,descrizione);
+  }
+  info->setlistaTesto(messaggi);
+}
+
 void MainWindow::repartoSelezionato(){
   RepartoBtnWidget* btn=qobject_cast<RepartoBtnWidget*>(sender());
   //btn->setDown(true);
@@ -219,6 +229,7 @@ void MainWindow::on_configurazioneBtn_clicked()
 {
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   dlg->exec();
+  creaInfoMessaggi();
 }
 
 void MainWindow::on_closeBtn_clicked()

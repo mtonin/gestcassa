@@ -112,7 +112,12 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     QMessageBox::critical(0, QObject::tr("Database Error"),stmtReparti.lastError().text());
     return NULL;
   }
+  int totReparti=0;
   while(stmtReparti.next()) {
+    if(totReparti>0) {
+      cursore.insertText("\n\n\n\n\n");
+    }
+    totReparti++;
     int idReparto=stmtReparti.value(0).toInt();
     QString reparto=stmtReparti.value(1).toString();
     testo=QString("REPARTO: %1").arg(reparto);
@@ -184,7 +189,6 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
       cursore.insertFragment(QTextDocumentFragment(&tableDocument));
 
     }
-    cursore.insertText("\n\n\n\n\n");
   }
 
   return documento;
@@ -204,7 +208,12 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
     QMessageBox::critical(0, QObject::tr("Database Error"),stmtDestinazioni.lastError().text());
     return NULL;
   }
+  int totDestinazioni=0;
   while(stmtDestinazioni.next()) {
+    if(totDestinazioni>0) {
+      cursore.insertText("\n\n\n\n\n");
+    }
+    totDestinazioni++;
     QString nomeDestinazione=stmtDestinazioni.value(0).toString();
     testo=QString("DESTINAZIONE DI STAMPA: %1").arg(nomeDestinazione);
     putHeader(cursore,testo);
@@ -275,7 +284,6 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
       cursore.insertFragment(QTextDocumentFragment(&tableDocument));
 
     }
-    cursore.insertText("\n\n\n\n\n");
   }
 
   return documento;

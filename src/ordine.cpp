@@ -12,6 +12,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   setupUi(this);
 
   articoliTab->setModel(&modello);
+  articoliTab->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
   articoliTab->verticalHeader()->setDefaultSectionSize(30);

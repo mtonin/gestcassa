@@ -5,6 +5,7 @@
 #include "dettaglireparto.h"
 #include "dettagliarticolo.h"
 #include "ordine.h"
+#include "infowidget.h"
 #include <QMainWindow>
 #include <QList>
 #include <QMap>
@@ -41,6 +42,8 @@ private:
   Ordine* ordineBox;
   DettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
+  infoWidget* info;
+
   QList<ArticoloBtnWidget*> articoliBtnList;
   QList<QStackedWidget*> stackedList;
   modalitaType modalitaCorrente;
@@ -52,6 +55,7 @@ private:
   void creaRepartiButtons();
   void gestioneModalita(const modalitaType nuovaModalita);
   void creaArticoliPerRepartoButtons(RepartoBtnWidget*);
+  void creaInfoMessaggi();
 
 };
 
