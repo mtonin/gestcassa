@@ -38,7 +38,10 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
 
 void DestinazioniDlg::on_cancellaBtn_clicked()
 {
-    modello->removeRow(destinazioniList->currentIndex().row());
+    if(!modello->removeRow(destinazioniList->currentIndex().row())) {
+      QMessageBox::critical(this,"Errore","Impossibile cancellare la destinazione. Controllare gli articoli in cui è impostata.");
+      return;
+    }
     destinazioniList->selectionModel()->select(modello->index(0,0),QItemSelectionModel::SelectCurrent);
 }
 
