@@ -90,6 +90,12 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
     return false;
   }
 
+  query.exec("pragma foreign_keys=ON;");
+  if(!query.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+    return false;
+  }
+
   return true;
 }
 
