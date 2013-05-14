@@ -38,11 +38,12 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
 
 void DestinazioniDlg::on_cancellaBtn_clicked()
 {
-    if(!modello->removeRow(destinazioniList->currentIndex().row())) {
+  int currRiga=destinazioniList->currentIndex().row();
+    if(!modello->removeRow(currRiga)) {
       QMessageBox::critical(this,"Errore","Impossibile cancellare la destinazione. Controllare gli articoli in cui è impostata.");
       return;
     }
-    destinazioniList->selectionModel()->select(modello->index(0,0),QItemSelectionModel::SelectCurrent);
+    destinazioniList->selectionModel()->select(modello->index(currRiga-1,0),QItemSelectionModel::SelectCurrent);
 }
 
 void DestinazioniDlg::on_nuovoBtn_clicked()
@@ -59,9 +60,6 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
   modello->setData(modello->index(numRighe,0),"NOME DESTINAZIONE");
   modello->setData(modello->index(numRighe,1),"INTESTAZIONE SCONTRINO");
   modello->submitAll();
-}
-
-void DestinazioniDlg::on_modificaBtn_clicked()
-{
-
+  destinazioniList->setCurrentIndex(modello->index(numRighe,0));
+  destinazioniList->edit(modello->index(numRighe,0));
 }
