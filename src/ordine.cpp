@@ -21,7 +21,20 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   nuovoOrdine();
 
   importoUltimoOrdine=0;
-  stampaBtn->SetPictureNormal(QPixmap(":/GestCassa/stampante"));
+
+  stampaBtn->SetIconSpace(20);
+  stampaBtn->setIcon(QIcon(":/GestCassa/stampante"));
+  stampaBtn->setIconSize(QSize(48,48));
+  stampaBtn->SetIconPosition(QPictureButton::PositionTop);
+  annullaBtn->setIcon(QIcon(":/GestCassa/annulla"));
+  annullaBtn->setIconSize(QSize(32,32));
+  annullaBtn->SetIconPosition(QPictureButton::PositionTop);
+  ultimoRestoBtn->setIcon(QIcon(":/GestCassa/money"));
+  ultimoRestoBtn->setIconSize(QSize(32,32));
+  ultimoRestoBtn->SetIconPosition(QPictureButton::PositionTop);
+  stampaBtn->SetButtonColorNormal(Qt::yellow);
+  annullaBtn->SetButtonColorNormal(Qt::yellow);
+  ultimoRestoBtn->SetButtonColorNormal(Qt::yellow);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)

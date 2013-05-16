@@ -7,5 +7,7 @@
         <file alias="cassa">resources/shopping_cart_empty.png</file>
         <file alias="report">resources/copy.png</file>
         <file alias="stampante">resources/Printer.png</file>
+        <file alias="money">resources/money.png</file>
+        <file alias="annulla">resources/annulla ordine.png</file>
     </qresource>
 </RCC>
