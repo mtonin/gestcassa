@@ -40,9 +40,9 @@ private slots:
 
   void on_adminPasswordTxt_textEdited(const QString &arg1);
 
-  void on_intestazioneTxt_textChanged();
+  void on_intestazioneScontrinoTxt_textChanged();
 
-  private:
+private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
   SimpleCrypt* cifratore;
