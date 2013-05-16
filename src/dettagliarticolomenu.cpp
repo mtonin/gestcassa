@@ -16,24 +16,9 @@ DettagliArticoloMenu::DettagliArticoloMenu(QWidget *parent) :
   articoliList->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
-void DettagliArticoloMenu::cancella()
+void DettagliArticoloMenu::reset()
 {
-  articoliList->model()->removeRow(articoliList->currentIndex().row());
-}
-
-void DettagliArticoloMenu::on_toolButton_3_clicked()
-{
-  int numRighe=articoliList->model()->rowCount();
-  modello->insertRow(numRighe);
-  modello->setItem(numRighe,0,new QStandardItem("NUOVO ARTICOLO"));
-  modello->setItem(numRighe,1,new QStandardItem("BAR"));
-
-  QModelIndex idx=modello->index(numRighe,1);
-  articoliList->setIndexWidget(idx,creaDestinazioneBox());
-  articoliList->setCurrentIndex(modello->index(numRighe,0));
-  //articoliList->selectionModel()->setCurrentIndex(modello->index(numRighe,0),QItemSelectionModel::Current);
-
-  articoliList->setFocus();
+  modello->clear();
 }
 
 QComboBox *DettagliArticoloMenu::creaDestinazioneBox()
@@ -64,4 +49,26 @@ void DettagliArticoloMenu::on_articoliList_customContextMenuRequested(const QPoi
   ctxMenu->addAction(cancellaAction);
   ctxMenu->move(articoliList->mapToGlobal(pos));
   ctxMenu->exec();
+}
+
+void DettagliArticoloMenu::on_nuovoBtn_clicked()
+{
+  int numRighe=articoliList->model()->rowCount();
+  modello->insertRow(numRighe);
+  modello->setItem(numRighe,0,new QStandardItem("NUOVO ARTICOLO"));
+  modello->setItem(numRighe,1,new QStandardItem("BAR"));
+
+  QModelIndex idx=modello->index(numRighe,1);
+  articoliList->setIndexWidget(idx,creaDestinazioneBox());
+  articoliList->setCurrentIndex(modello->index(numRighe,0));
+
+  articoliList->setFocus();
+
+}
+
+void DettagliArticoloMenu::on_cancellaBtn_clicked()
+{
+  int currentRow=articoliList->currentIndex().row();
+  articoliList->model()->removeRow(currentRow);
+  articoliList->setCurrentIndex(modello->index(currentRow-1,0));
 }

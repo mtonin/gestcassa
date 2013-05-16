@@ -3,6 +3,7 @@
 
 #include "ui_dettagliarticolo.h"
 #include "articolobtnwidget.h"
+#include "dettagliarticolomenu.h"
 
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
    {
@@ -24,6 +25,7 @@ private slots:
   private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
+   DettagliArticoloMenu* menu;
 
 };
 

@@ -30,7 +30,6 @@ SOURCES += main.cpp\
     simplecrypt.cpp \
     reportform.cpp \
     textprinter.cpp \
-    destinazionesingoladlg.cpp \
     infowidget.cpp \
     QDigitalClock.cpp
 
@@ -52,7 +51,6 @@ HEADERS  += mainwindow.h \
     simplecrypt.h \
     reportform.h \
     textprinter.h \
-    destinazionesingoladlg.h \
     infowidget.h \
     QDigitalClock.h
 
@@ -67,7 +65,6 @@ FORMS    += mainwindow.ui \
     dettagliarticolomenu.ui \
     destinazionidlg.ui \
     reportform.ui \
-    destinazionesingoladlg.ui \
     infowidget.ui
 
 include(version.txt)
