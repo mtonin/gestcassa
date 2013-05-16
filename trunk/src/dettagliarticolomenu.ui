@@ -47,16 +47,16 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QToolButton" name="toolButton_3">
+           <widget class="QToolButton" name="nuovoBtn">
             <property name="text">
              <string>Nuovo</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="toolButton_2">
+           <widget class="QToolButton" name="cancellaBtn">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Elimina</string>

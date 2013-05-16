@@ -21,6 +21,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   nuovoOrdine();
 
   importoUltimoOrdine=0;
+  stampaBtn->SetPictureNormal(QPixmap(":/GestCassa/stampante"));
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -49,6 +50,11 @@ void Ordine::on_articoliTab_clicked(const QModelIndex &index)
 
   QPoint pos=QCursor::pos();
   pos.setY(pos.y()+20);
+  QDesktopWidget* desktop=QApplication::desktop();
+  int screenWidth=desktop->screenGeometry().width();
+  if(pos.x()+controlli->width()>screenWidth) {
+    pos.setX(screenWidth-controlli->width());
+  }
   controlli->move(pos);
   controlli->show();
 }

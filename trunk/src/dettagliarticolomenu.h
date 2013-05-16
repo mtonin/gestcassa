@@ -7,19 +7,22 @@
 
 class DettagliArticoloMenu : public QWidget, private Ui::DettagliArticoloMenu
 {
-    Q_OBJECT
-    
-  public:
-    explicit DettagliArticoloMenu(QWidget *parent = 0);
-  private slots:
-    void cancella();
-    void on_toolButton_3_clicked();
+  Q_OBJECT
 
-    void on_articoliList_customContextMenuRequested(const QPoint &pos);
+public:
+  explicit DettagliArticoloMenu(QWidget *parent = 0);
+  void reset();
 
-  private:
-    QStandardItemModel* modello;
-    QComboBox* creaDestinazioneBox();
+private slots:
+  void on_articoliList_customContextMenuRequested(const QPoint &pos);
+
+  void on_nuovoBtn_clicked();
+
+  void on_cancellaBtn_clicked();
+
+private:
+  QStandardItemModel* modello;
+  QComboBox* creaDestinazioneBox();
 };
 
 #endif // DETTAGLIARTICOLOMENU_H

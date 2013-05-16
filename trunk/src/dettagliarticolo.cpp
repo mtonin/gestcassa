@@ -12,7 +12,7 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
   validator->setNotation(QDoubleValidator::StandardNotation);
   prezzoArticolo->setValidator(validator);
 
-  DettagliArticoloMenu* menu=new DettagliArticoloMenu;
+  menu=new DettagliArticoloMenu;
   layout()->addWidget(menu);
 }
 
@@ -45,6 +45,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     }
     i++;
   }
+  menu->reset();
 
   if(articoloBtn->getRepartoStampa().isEmpty()) {
     articoloBtn->setRepartoStampa(destinazioneBox->currentText());

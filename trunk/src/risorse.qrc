@@ -6,5 +6,6 @@
         <file alias="gestione">resources/pencil_edit.png</file>
         <file alias="cassa">resources/shopping_cart_empty.png</file>
         <file alias="report">resources/copy.png</file>
+        <file alias="stampante">resources/Printer.png</file>
     </qresource>
 </RCC>

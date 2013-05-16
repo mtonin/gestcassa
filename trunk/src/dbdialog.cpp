@@ -47,6 +47,7 @@ void DBDialog::on_apreBtn_clicked()
         conf->insert("ruolo","amministratore");
       } else {
         QMessageBox::critical(this,"Accesso","Password errata");
+        password->selectAll();
         password->setFocus();
         return;
       }
