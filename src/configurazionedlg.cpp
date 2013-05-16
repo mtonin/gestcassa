@@ -22,7 +22,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
     stampanteChk->setChecked(true);
   }
   stampanteSelezionataTxt->setText(configurazione->value("stampante").toString());
-  intestazioneTxt->setPlainText(configurazione->value("intestazione").toString());
+  intestazioneScontrinoTxt->setPlainText(configurazione->value("intestazione").toString());
   durataRestoTxt->setText(configurazione->value("durataResto",5).toString());
   if(configurazione->value("abilitaResto",false).toBool()) {
     attivaRestoCheck->setChecked(true);
@@ -133,8 +133,8 @@ void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
   configurazione->insert("adminPassword",pwd);
 }
 
-void ConfigurazioneDlg::on_intestazioneTxt_textChanged()
+void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
-  configurazione->insert("intestazione",intestazioneTxt->toPlainText());
+  configurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
 
 }

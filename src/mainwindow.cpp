@@ -41,7 +41,7 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   font.setBold(true);
   font.setPointSize(14);
   orologio->setFont(font);
-  orologio->SetTextColor(Qt::red);
+  //orologio->SetTextColor(Qt::red);
   orologio->SetAlignment(Qt::AlignHCenter);
 
   ui->clockFrame->setLayout(new QHBoxLayout);
