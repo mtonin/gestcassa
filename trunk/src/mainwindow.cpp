@@ -153,6 +153,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(2);
 
+  bool visualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   for(int riga=0;riga<5;riga++) {
     for(int col=0;col<6;col++) {
       QStackedWidget* stackedBox=new QStackedWidget();
@@ -161,6 +162,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
       btn->SetButtonColorNormal(coloreSfondo);
       btn->SetButtonColorHot(coloreSfondo);
       btn->setFont(currentFont);
+      btn->setVisualizzaPrezzo(visualizzaPrezzo);
       stackedBox->addWidget(btn);
       QFrame* blankFrame=new QFrame;
       stackedBox->addWidget(blankFrame);
@@ -227,8 +229,20 @@ void MainWindow::modalitaBtnClicked(){
 
 void MainWindow::on_configurazioneBtn_clicked()
 {
+  bool oldVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   dlg->exec();
+
+  bool newVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
+  if(oldVisualizzaPrezzo!=newVisualizzaPrezzo) {
+    QListIterator<QStackedWidget*> it(stackedList);
+    while(it.hasNext()) {
+      QStackedWidget* box=it.next();
+      ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+      btnWidget->setVisualizzaPrezzo(newVisualizzaPrezzo);
+    }
+  }
+
   creaInfoMessaggi();
 }
 

@@ -42,6 +42,8 @@ private slots:
 
   void on_intestazioneScontrinoTxt_textChanged();
 
+  void on_visualizzaPrezzoBox_clicked(bool checked);
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
