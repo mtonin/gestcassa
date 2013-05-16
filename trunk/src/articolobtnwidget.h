@@ -39,7 +39,7 @@ private:
   QString repartoStampa;
   bool visualizzaPrezzo;
 
-  void PaintText();
+  void PaintPrezzo();
   void paintEvent(QPaintEvent *);
 };
 
