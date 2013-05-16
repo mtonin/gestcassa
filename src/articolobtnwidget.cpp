@@ -1,5 +1,6 @@
 #include "articolobtnwidget.h"
 #include <QtSql>
+#include <QPainter>
 
 void ArticoloBtnWidget::setNomeArticolo(const QString nome){
   nomeArticolo=nome;
@@ -21,10 +22,39 @@ void ArticoloBtnWidget::setButtonFont(const QFont &font)
   setFont(font);
 }
 
+void ArticoloBtnWidget::PaintText()
+{
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
+  QRect PainterRect = painter.window();
+
+  // Text position
+  int Top    = PainterRect.top()+PainterRect.height()-20;
+  int Left   = PainterRect.left()+3;
+  int Height = PainterRect.height();
+  int Width  = PainterRect.width();
+  int Align = Qt::AlignLeft|Qt::TextWordWrap;
+
+  // Paint
+  QRect FontRect(Left, Top, Width, Height);
+  painter.setBackground(QBrush(Qt::white));
+  painter.setBackgroundMode(Qt::OpaqueMode);
+  painter.drawText(FontRect, Align, QString("%1 %2 ").arg(QChar(0x20AC)).arg(this->prezzo));
+}
+
+void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
+{
+  QPictureButton::paintEvent(evt);
+  if(!nomeArticolo.isEmpty() && visualizzaPrezzo) {
+    PaintText();
+  }
+}
+
 ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent) :
   idReparto(id),
   riga(numRiga),
   colonna(numColonna),
+  visualizzaPrezzo(false),
   QPictureButton(parent)
 {
 

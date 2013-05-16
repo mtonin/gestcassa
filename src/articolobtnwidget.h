@@ -22,6 +22,7 @@ public:
   void setAbilitato(bool val) {abilitato=val;}
   QString getRepartoStampa() {return repartoStampa;}
   void setRepartoStampa(const QString nome);
+  void setVisualizzaPrezzo(const bool valore) {visualizzaPrezzo=valore;}
 
 signals:
 
@@ -36,6 +37,10 @@ private:
   int idReparto;
   bool abilitato;
   QString repartoStampa;
+  bool visualizzaPrezzo;
+
+  void PaintText();
+  void paintEvent(QPaintEvent *);
 };
 
 #endif // ARTICOLOBTNWIDGET_H

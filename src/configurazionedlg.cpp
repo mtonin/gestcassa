@@ -29,6 +29,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   }
   nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
   descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
+  visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
 
   tabWidget->setCurrentIndex(0);
@@ -137,4 +138,9 @@ void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
   configurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
 
+}
+
+void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
+{
+  configurazione->insert("visualizzazionePrezzo",checked);
 }
