@@ -22,31 +22,35 @@ void ArticoloBtnWidget::setButtonFont(const QFont &font)
   setFont(font);
 }
 
-void ArticoloBtnWidget::PaintText()
+void ArticoloBtnWidget::PaintPrezzo()
 {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing);
   QRect PainterRect = painter.window();
 
   // Text position
-  int Top    = PainterRect.top()+PainterRect.height()-20;
-  int Left   = PainterRect.left()+3;
+  int Top    = PainterRect.top();
+  int Left   = PainterRect.left();
   int Height = PainterRect.height();
   int Width  = PainterRect.width();
   int Align = Qt::AlignLeft|Qt::TextWordWrap;
 
+  QString prezzoLabel=QString("%1 %2 ").arg(QChar(0x20AC)).arg(this->prezzo,5,'f',2);
   // Paint
-  QRect FontRect(Left, Top, Width, Height);
+  QRect fontRect=painter.boundingRect(PainterRect,Align,prezzoLabel);
+  //QRect FontRect(Left, Top, Width, Height);
   painter.setBackground(QBrush(Qt::white));
   painter.setBackgroundMode(Qt::OpaqueMode);
-  painter.drawText(FontRect, Align, QString("%1 %2 ").arg(QChar(0x20AC)).arg(this->prezzo));
+  QRect bottomFontRect(Left+Width-fontRect.width()-1,Top+Height-fontRect.height()-1,fontRect.width(),fontRect.width());
+  painter.drawText(bottomFontRect, Align, prezzoLabel,&bottomFontRect);
+  painter.drawRect(bottomFontRect);
 }
 
 void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
 {
   QPictureButton::paintEvent(evt);
   if(!nomeArticolo.isEmpty() && visualizzaPrezzo) {
-    PaintText();
+    PaintPrezzo();
   }
 }
 
