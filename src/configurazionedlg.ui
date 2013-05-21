@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>514</height>
+    <width>489</width>
+    <height>333</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Configurazione</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_5">
+  <layout class="QVBoxLayout" name="verticalLayout_6">
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -29,7 +29,7 @@
          <item>
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Descrizione della manifestazione</string>
+            <string>Nome della manifestazione</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -50,7 +50,7 @@
          <item>
           <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>Descrizione della cassa</string>
+            <string>Nome della cassa</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -66,30 +66,6 @@
          </item>
          <item>
           <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <item>
-          <widget class="QCheckBox" name="visualizzaPrezzoBox">
-           <property name="text">
-            <string>Visualizzazione del prezzo sui pulsanti</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -160,6 +136,29 @@
          <zorder>durataRestoTxt</zorder>
          <zorder>attivaRestoCheck</zorder>
          <zorder>horizontalSpacer</zorder>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Opzioni del programma</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="visualizzaPrezzoBox">
+            <property name="text">
+             <string>Visualizzazione del prezzo sui pulsanti</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="gestioneMenuBox">
+            <property name="text">
+             <string>Gestione dei menù</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>

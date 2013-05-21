@@ -16,6 +16,8 @@ CREATE TABLE articoli (
     colonna      INTEGER,
     abilitato    BOOLEAN,
     destinazione TEXT    REFERENCES destinazionistampa ( nome ),
+    gestioneMenu BOOLEAN NOT NULL
+                         DEFAULT ( 'false' ),
     UNIQUE ( idreparto, riga, colonna ) 
 );
 
@@ -48,5 +50,12 @@ CREATE TABLE righeordine (
 CREATE TABLE configurazione ( 
     chiave TEXT PRIMARY KEY,
     valore TEXT 
+);
+
+
+-- Table: articolimenu
+CREATE TABLE articolimenu ( 
+    idpulsante INT,
+    idarticolo INT 
 );
 

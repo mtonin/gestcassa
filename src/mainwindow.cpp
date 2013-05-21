@@ -13,6 +13,10 @@
 #include <QMessageBox>
 #include <QHBoxLayout>
 
+const int NUM_REPARTI=6;
+const int NUM_RIGHE_ART=5;
+const int NUM_COLONNE_ART=6;
+
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
@@ -133,7 +137,7 @@ void MainWindow::creaRepartiButtons(){
   hboxLayout->setSpacing(2);
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
-  for(int i=1;i<=6;i++) {
+  for(int i=1;i<=NUM_REPARTI;i++) {
     RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiGroupBox);
 
     hboxLayout->addWidget(reparto01Btn);
@@ -154,8 +158,8 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
   griglia->setSpacing(2);
 
   bool visualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
-  for(int riga=0;riga<5;riga++) {
-    for(int col=0;col<6;col++) {
+  for(int riga=0;riga<NUM_RIGHE_ART;riga++) {
+    for(int col=0;col<NUM_COLONNE_ART;col++) {
       QStackedWidget* stackedBox=new QStackedWidget();
 
       ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);

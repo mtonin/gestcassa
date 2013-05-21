@@ -23,6 +23,8 @@ public:
   QString getRepartoStampa() {return repartoStampa;}
   void setRepartoStampa(const QString nome);
   void setVisualizzaPrezzo(const bool valore) {visualizzaPrezzo=valore;}
+  bool isGestioneMenu() {return gestioneMenu;}
+  void setGestioneMenu(bool val) {gestioneMenu=val;}
 
 signals:
 
@@ -38,6 +40,7 @@ private:
   bool abilitato;
   QString repartoStampa;
   bool visualizzaPrezzo;
+  bool gestioneMenu;
 
   void PaintPrezzo();
   void paintEvent(QPaintEvent *);

@@ -44,6 +44,8 @@ private slots:
 
   void on_visualizzaPrezzoBox_clicked(bool checked);
 
+  void on_gestioneMenuBox_clicked(bool checked);
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
