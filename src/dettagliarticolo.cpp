@@ -159,7 +159,7 @@ void DettagliArticolo::aggiornaArticolo()
 void DettagliArticolo::reset()
 {
   modello->clear();
-  creaDestinazioneBox(articoliBox);
+  creaSelezioneArticoloBox(articoliBox);
 }
 
 void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
@@ -237,7 +237,7 @@ void DettagliArticolo::on_cancellaBtn_clicked()
 }
 
 
-void DettagliArticolo::creaDestinazioneBox(QComboBox* cb)
+void DettagliArticolo::creaSelezioneArticoloBox(QComboBox* cb)
 {
   articoliMenuModello->clear();
   QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu='false' order by descrizione asc");
@@ -272,4 +272,18 @@ void DettagliArticolo::on_articoliList_customContextMenuRequested(const QPoint &
   ctxMenu->addAction(cancellaAction);
   ctxMenu->move(articoliList->mapToGlobal(pos));
   ctxMenu->exec();
+}
+
+void DettagliArticolo::on_eliminaBtn_clicked()
+{
+  if(articoloBtn->getId()>0) {
+    QSqlQuery stmt("delete from articoli where idarticolo=?");
+    stmt.addBindValue(articoloBtn->getId());
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      return;
+    }
+
+  }
 }

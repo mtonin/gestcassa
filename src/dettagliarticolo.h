@@ -33,7 +33,9 @@ private slots:
 
    void on_articoliList_customContextMenuRequested(const QPoint &pos);
 
-private:
+   void on_eliminaBtn_clicked();
+
+  private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
    DettagliArticoloMenu* menu;
@@ -41,7 +43,7 @@ private:
    QStandardItemModel* articoliMenuModello;
 
    void reset();
-   void creaDestinazioneBox(QComboBox*);
+   void creaSelezioneArticoloBox(QComboBox*);
 
 };
 
