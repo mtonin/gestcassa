@@ -5,6 +5,9 @@
 #include "articolobtnwidget.h"
 #include "dettagliarticolomenu.h"
 
+#include <QComboBox>
+#include <QStandardItemModel>
+
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
    {
    Q_OBJECT
@@ -22,10 +25,23 @@ private slots:
 
    void on_destinazioneBox_activated(const QString &arg1);
 
-  private:
+   void on_menuBox_clicked(bool checked);
+
+   void on_nuovoBtn_clicked();
+
+   void on_cancellaBtn_clicked();
+
+   void on_articoliList_customContextMenuRequested(const QPoint &pos);
+
+private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
    DettagliArticoloMenu* menu;
+   QStandardItemModel* modello;
+   QStandardItemModel* articoliMenuModello;
+
+   void reset();
+   void creaDestinazioneBox(QComboBox*);
 
 };
 

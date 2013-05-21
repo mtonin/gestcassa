@@ -77,12 +77,14 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
   int numColprezzo=stmt.record().indexOf("prezzo");
   int numColAbilitato=stmt.record().indexOf("abilitato");
   int numColDestStampa=stmt.record().indexOf("destinazione");
+  int numColGestioneMenu=stmt.record().indexOf("gestioneMenu");
   if(stmt.next()) {
     idArticolo=stmt.value(numColIdArticolo).toInt();
     nomeArticolo=stmt.value(numColDescr).toString();
     prezzo=stmt.value(numColprezzo).toFloat();
     abilitato=stmt.value(numColAbilitato).toBool();
     repartoStampa=stmt.value(numColDestStampa).toString();
+    gestioneMenu=stmt.value(numColGestioneMenu).toBool();
   } else {
     //idArticolo=riga*6+colonna+1;
     idArticolo=0;

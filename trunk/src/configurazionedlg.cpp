@@ -137,10 +137,14 @@ void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
   configurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
-
 }
 
 void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 {
   configurazione->insert("visualizzazionePrezzo",checked);
+}
+
+void ConfigurazioneDlg::on_gestioneMenuBox_clicked(bool checked)
+{
+  configurazione->insert("gestioneMenu",checked);
 }
