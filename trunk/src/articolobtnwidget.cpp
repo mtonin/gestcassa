@@ -63,7 +63,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
 {
 
   QSqlQuery stmt;
-  stmt.prepare("select * from articoli where idreparto=? and riga=? and colonna=?");
+  stmt.prepare("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo and a.idreparto=? and a.riga=? and a.colonna=?");
   stmt.addBindValue(idReparto);
   stmt.addBindValue(riga);
   stmt.addBindValue(colonna);
@@ -93,6 +93,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
     prezzo=0;
     abilitato=true;
     repartoStampa="";
+    gestioneMenu=false;
   }
   setText(nomeArticolo);
 

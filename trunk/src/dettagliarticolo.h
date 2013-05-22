@@ -5,13 +5,15 @@
 #include "articolobtnwidget.h"
 #include "dettagliarticolomenu.h"
 
-#include <QComboBox>
 #include <QStandardItemModel>
 
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
    {
    Q_OBJECT
-   
+
+signals:
+  void eliminaPulsanteCorrente(ArticoloBtnWidget*);
+
 public:
    explicit DettagliArticolo(QWidget *parent = 0);
    void setCurrentArticolo(const ArticoloBtnWidget*);
@@ -43,7 +45,7 @@ private slots:
    QStandardItemModel* articoliMenuModello;
 
    void reset();
-   void creaSelezioneArticoloBox(QComboBox*);
+   void creaSelezioneArticoloBox();
 
 };
 

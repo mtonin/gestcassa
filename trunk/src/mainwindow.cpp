@@ -38,6 +38,7 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   ui->latoFrame->layout()->addWidget(ordineBox);
 
   connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
+  connect(dettagliArticoloBox,SIGNAL(eliminaPulsanteCorrente(ArticoloBtnWidget*)),this,SLOT(eliminaPulsante(ArticoloBtnWidget*)));
 
   QDigitalClock* orologio=new QDigitalClock;
   orologio->SetFormat("dd-MM-yyyy\nHH:mm:ss");
@@ -229,6 +230,16 @@ void MainWindow::modalitaBtnClicked(){
     gestioneModalita(GESTIONE);
   }
 
+}
+
+void MainWindow::eliminaPulsante(ArticoloBtnWidget *btn)
+{
+  btn->setNomeArticolo("");
+  btn->setPrezzo(0);
+  btn->setAbilitato(true);
+  btn->setRepartoStampa("");
+  btn->setGestioneMenu(false);
+  dettagliArticoloBox->hide();
 }
 
 void MainWindow::on_configurazioneBtn_clicked()
