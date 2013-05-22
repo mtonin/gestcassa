@@ -38,6 +38,8 @@ private slots:
 
    void on_reportBtn_clicked();
 
+   void on_statsBtn_clicked();
+
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
