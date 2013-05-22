@@ -3,7 +3,6 @@
 
 #include "ui_dettagliarticolo.h"
 #include "articolobtnwidget.h"
-#include "dettagliarticolomenu.h"
 
 #include <QStandardItemModel>
 
@@ -40,7 +39,6 @@ private slots:
   private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
-   DettagliArticoloMenu* menu;
    QStandardItemModel* modello;
    QStandardItemModel* articoliMenuModello;
 
