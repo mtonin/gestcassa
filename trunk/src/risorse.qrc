@@ -9,5 +9,6 @@
         <file alias="stampante">resources/Printer.png</file>
         <file alias="money">resources/money.png</file>
         <file alias="annulla">resources/annulla ordine.png</file>
+        <file alias="stats">resources/Chart Bar.png</file>
     </qresource>
 </RCC>

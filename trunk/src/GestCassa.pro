@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     reportform.cpp \
     textprinter.cpp \
     infowidget.cpp \
-    QDigitalClock.cpp
+    QDigitalClock.cpp \
+    qcustomplot.cpp \
+    statsform.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -50,7 +52,9 @@ HEADERS  += mainwindow.h \
     reportform.h \
     textprinter.h \
     infowidget.h \
-    QDigitalClock.h
+    QDigitalClock.h \
+    qcustomplot.h \
+    statsform.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -62,7 +66,8 @@ FORMS    += mainwindow.ui \
     configurazionedlg.ui \
     destinazionidlg.ui \
     reportform.ui \
-    infowidget.ui
+    infowidget.ui \
+    statsform.ui
 
 include(version.txt)
 

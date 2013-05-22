@@ -8,6 +8,7 @@
 #include "reportform.h"
 #include "infowidget.h"
 #include "QDigitalClock.h"
+#include "statsform.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -273,5 +274,12 @@ void MainWindow::on_closeBtn_clicked()
 void MainWindow::on_reportBtn_clicked()
 {
   ReportForm* form=new ReportForm(confMap);
+  form->exec();
+}
+
+void MainWindow::on_statsBtn_clicked()
+{
+  StatsForm* form=new StatsForm;
+  //form->setWindowState(Qt::WindowMaximized);
   form->exec();
 }
