@@ -226,6 +226,10 @@ void MainWindow::modalitaBtnClicked(){
     //qApp->setOverrideCursor(Qt::BlankCursor);
     gestioneModalita(CASSA);
   } else {
+    if(ordineBox->isInComposizione()) {
+      QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
+      return;
+    }
     qApp->restoreOverrideCursor();
     gestioneModalita(GESTIONE);
   }

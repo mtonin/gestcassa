@@ -11,14 +11,9 @@ CREATE TABLE articoli (
     idarticolo   INTEGER PRIMARY KEY AUTOINCREMENT,
     descrizione  VARCHAR,
     prezzo       REAL,
-    idreparto    INTEGER,
-    riga         INTEGER,
-    colonna      INTEGER,
-    abilitato    BOOLEAN,
     destinazione TEXT    REFERENCES destinazionistampa ( nome ),
     gestioneMenu BOOLEAN NOT NULL
-                         DEFAULT ( 'false' ),
-    UNIQUE ( idreparto, riga, colonna ) 
+                         DEFAULT ( 'false' ) 
 );
 
 
@@ -53,9 +48,50 @@ CREATE TABLE configurazione (
 );
 
 
+-- Table: pulsanti
+CREATE TABLE pulsanti ( 
+    idreparto  INTEGER,
+    riga       INTEGER,
+    colonna    INTEGER,
+    idarticolo INTEGER REFERENCES articoli ( idarticolo ),
+    abilitato  BOOLEAN,
+    PRIMARY KEY ( idreparto, riga, colonna ) 
+);
+
+
 -- Table: articolimenu
 CREATE TABLE articolimenu ( 
-    idpulsante INT,
-    idarticolo INT 
+    idarticolo     INT REFERENCES articoli ( idarticolo ),
+    idarticolomenu INT REFERENCES articoli ( idarticolo ) 
 );
+
+
+-- View: dettagliordine
+--righeordine.numeroordine=142 and
+--and articoli.gestioneMenu='true'
+--righeordine.numeroordine=142 and
+CREATE VIEW dettagliordine AS
+       SELECT righeordine.numeroordine,
+              righeordine.quantita,
+              articoli.descrizione,
+              articoli.destinazione,
+              articoli.prezzo
+         FROM righeordine, 
+              articoli, 
+              articolimenu
+        WHERE righeordine.idarticolo = articolimenu.idarticolo 
+              AND
+              articolimenu.idarticolomenu = articoli.idarticolo
+       UNION ALL
+       SELECT righeordine.numeroordine,
+              righeordine.quantita,
+              articoli.descrizione,
+              articoli.destinazione,
+              articoli.prezzo
+         FROM righeordine, 
+              articoli
+        WHERE righeordine.idarticolo = articoli.idarticolo 
+              AND
+              articoli.gestioneMenu = 'false';
+;
 
