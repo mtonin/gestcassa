@@ -17,6 +17,7 @@ public:
 public slots:
   void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
   void hide();
+  bool isInComposizione() {return modello.rowCount()>0?true:false;}
 
 private slots:
   void on_articoliTab_clicked(const QModelIndex &index);

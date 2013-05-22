@@ -191,7 +191,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  //stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.prepare("select distinct(destinazione) from dettagliordine where numeroordine=?");
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
@@ -235,7 +236,12 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
     y+=10;
 
-    stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
+    //stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
+    stmt.prepare("SELECT descrizione,sum(quantita) \
+                 FROM dettagliordine \
+                 where numeroordine=? \
+                 and destinazione=? \
+                 group by numeroordine,descrizione");
     stmt.addBindValue(numeroOrdine);
     stmt.addBindValue(reparto);
 
@@ -247,12 +253,10 @@ void Ordine::stampaScontrino(int numeroOrdine)
     int numArticoli=0;
     while(stmt.next()) {
       y+=textRect.height();
-      QString descrizione=stmt.value(2).toString();
-      int quantita=stmt.value(0).toInt();
+      QString descrizione=stmt.value(0).toString();
+      int quantita=stmt.value(1).toInt();
       numArticoli+=quantita;
       QString quantitaString=QString("%1").arg(quantita,3,10);
-      float prezzo=stmt.value(1).toFloat()*quantita;
-      QString prezzoString=QString("%1 %2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
 
       QRect tmpRect;
       painter.setFont(fontNormale);
@@ -306,7 +310,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
@@ -317,10 +321,10 @@ void Ordine::stampaScontrino(int numeroOrdine)
   float totale=0;
   while(stmt.next()) {
     y+=textRect.height();
-    QString descrizione=stmt.value(2).toString();
-    int quantita=stmt.value(0).toInt();
+    QString descrizione=stmt.value(0).toString();
+    int quantita=stmt.value(1).toInt();
     QString quantitaString=QString("%1").arg(quantita,3,10);
-    float prezzo=stmt.value(1).toFloat()*quantita;
+    float prezzo=stmt.value(2).toFloat();
     QString prezzoString=QString("%1 %2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
 
     totale+=prezzo;
