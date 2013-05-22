@@ -211,8 +211,14 @@
      </item>
      <item>
       <widget class="QPushButton" name="eliminaBtn">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>40</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Elimina</string>
+        <string>Elimina pulsante</string>
        </property>
       </widget>
      </item>

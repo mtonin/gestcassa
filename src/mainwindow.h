@@ -30,6 +30,7 @@ private slots:
    void repartoSelezionato();
    void articoloSelezionato();
    void modalitaBtnClicked();
+   void eliminaPulsante(ArticoloBtnWidget*);
 
    void on_configurazioneBtn_clicked();
 

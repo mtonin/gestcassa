@@ -64,7 +64,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
   menuBox->setChecked(articoloBtn->isGestioneMenu());
   destinazioneBox->setEnabled(!articoloBtn->isGestioneMenu());
-  stmt.prepare("select a.idarticolo,b.descrizione from articolimenu a, articoli b where a.idarticolo=b.idarticolo and a.idpulsante=?");
+  stmt.prepare("select a.idarticolomenu,b.descrizione from articolimenu a, articoli b where a.idarticolomenu=b.idarticolo and a.idarticolo=?");
   stmt.addBindValue(articoloBtn->getId());
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -91,75 +91,79 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 void DettagliArticolo::aggiornaArticolo()
 {
 
-  QSqlQuery query;
+  QSqlQuery stmt1;
   if(0==articoloBtn->getId()) {
-    query.prepare("insert into articoli (descrizione,prezzo,idreparto,riga,colonna,abilitato,destinazione,gestioneMenu) values(?,?,?,?,?,?,?,?)");
+    stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu) values(?,?,?,?)");
   } else {
-    query.prepare("update articoli set descrizione=?,prezzo=?,idreparto=?,riga=?,colonna=?,abilitato=?,destinazione=?,gestioneMenu=? where idarticolo=?");
+    stmt1.prepare("update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=? where idarticolo=?");
   }
-
-  //query.addBindValue(articoloBtn->getId());
-  query.addBindValue(articoloBtn->getNomeArticolo());
-  query.addBindValue(articoloBtn->getPrezzo());
-  query.addBindValue(articoloBtn->getIdReparto());
-  query.addBindValue(articoloBtn->getRiga());
-  query.addBindValue(articoloBtn->getColonna());
-  query.addBindValue(!disattivaFlag->isChecked());
-  query.addBindValue(articoloBtn->getRepartoStampa());
-  query.addBindValue(menuBox->isChecked());
+  stmt1.addBindValue(articoloBtn->getNomeArticolo());
+  stmt1.addBindValue(articoloBtn->getPrezzo());
+  stmt1.addBindValue(articoloBtn->getRepartoStampa());
+  stmt1.addBindValue(menuBox->isChecked());
   if(articoloBtn->getId()>0) {
-    query.addBindValue(articoloBtn->getId());
+    stmt1.addBindValue(articoloBtn->getId());
   }
-  query.exec();
-  if(!query.isActive()) {
+  stmt1.exec();
+  if(!stmt1.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
-                          query.lastError().text());
+                          stmt1.lastError().text());
     return;
   }
   if(0==articoloBtn->getId()) {
-    query.clear();
-    query.prepare("select idarticolo from articoli where idreparto=? and riga=? and colonna=?");
-    query.addBindValue(articoloBtn->getIdReparto());
-    query.addBindValue(articoloBtn->getRiga());
-    query.addBindValue(articoloBtn->getColonna());
-    query.exec();
-    if(!query.isActive()) {
+    stmt1.exec("select last_insert_rowid()");
+    stmt1.exec();
+    if(!stmt1.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
-                            query.lastError().text());
+                            stmt1.lastError().text());
       return;
     }
-    if(query.next())
-      articoloBtn->setId(query.value(0).toInt());
+    if(stmt1.next())
+      articoloBtn->setId(stmt1.value(0).toInt());
+  }
+
+  stmt1.prepare("insert or replace into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)");
+  stmt1.addBindValue(articoloBtn->getIdReparto());
+  stmt1.addBindValue(articoloBtn->getRiga());
+  stmt1.addBindValue(articoloBtn->getColonna());
+  stmt1.addBindValue(!disattivaFlag->isChecked());
+  stmt1.addBindValue(articoloBtn->getId());
+  stmt1.exec();
+  if(!stmt1.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt1.lastError().text());
+    return;
   }
 
   if(articoloBtn->isGestioneMenu()) {
-    query.prepare("delete from articolimenu where idpulsante=?");
-    query.addBindValue(articoloBtn->getId());
-    query.exec();
-    if(!query.isActive()) {
+    stmt1.prepare("delete from articolimenu where idarticolo=?");
+    stmt1.addBindValue(articoloBtn->getId());
+    stmt1.exec();
+    if(!stmt1.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
-                            query.lastError().text());
+                            stmt1.lastError().text());
       return;
     }
     for(int i=0;i<modello->rowCount();i++) {
-      query.prepare("insert into articolimenu (idpulsante,idarticolo) values(?,?)");
+      stmt1.prepare("insert into articolimenu (idarticolo,idarticolomenu) values(?,?)");
       int idarticolo=modello->index(i,1).data().toInt();
-      query.addBindValue(articoloBtn->getId());
-      query.addBindValue(idarticolo);
-      query.exec();
-      if(!query.isActive()) {
+      stmt1.addBindValue(articoloBtn->getId());
+      stmt1.addBindValue(idarticolo);
+      stmt1.exec();
+      if(!stmt1.isActive()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
-                              query.lastError().text());
+                              stmt1.lastError().text());
         return;
       }
     }
   }
+
 }
 
 void DettagliArticolo::reset()
 {
   modello->clear();
-  creaSelezioneArticoloBox(articoliBox);
+  creaSelezioneArticoloBox();
 }
 
 void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
@@ -210,17 +214,6 @@ void DettagliArticolo::on_nuovoBtn_clicked()
   modello->setItem(numRighe,0,item);
   item=new QStandardItem(idarticolo);
   modello->setItem(numRighe,1,item);
-  //modello->setItem(numRighe,1,new QStandardItem);
-
-  /*
-  QModelIndex idx=modello->index(numRighe,0);
-  articoliList->setIndexWidget(idx,creaDestinazioneBox());
-  QModelIndex idx=modello->index(numRighe,1);
-  QPushButton* cancBtn=new QPushButton("Rimuove");
-  connect(cancBtn,SIGNAL(clicked()),this,SLOT(on_cancellaBtn_clicked()));
-
-  articoliList->setIndexWidget(idx,cancBtn);
-  */
   articoliList->setCurrentIndex(modello->index(numRighe,0));
   articoliList->hideColumn(1);
   aggiornaArticolo();
@@ -237,7 +230,7 @@ void DettagliArticolo::on_cancellaBtn_clicked()
 }
 
 
-void DettagliArticolo::creaSelezioneArticoloBox(QComboBox* cb)
+void DettagliArticolo::creaSelezioneArticoloBox()
 {
   articoliMenuModello->clear();
   QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu='false' order by descrizione asc");
@@ -276,14 +269,41 @@ void DettagliArticolo::on_articoliList_customContextMenuRequested(const QPoint &
 
 void DettagliArticolo::on_eliminaBtn_clicked()
 {
+  QSqlDatabase db=QSqlDatabase::database();
+  db.transaction();
+
   if(articoloBtn->getId()>0) {
-    QSqlQuery stmt("delete from articoli where idarticolo=?");
+    QSqlQuery stmt("delete from articolimenu where idarticolo=?");
     stmt.addBindValue(articoloBtn->getId());
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
                             stmt.lastError().text());
+      db.rollback();
       return;
     }
+
+    stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?");
+    stmt.addBindValue(articoloBtn->getIdReparto());
+    stmt.addBindValue(articoloBtn->getRiga());
+    stmt.addBindValue(articoloBtn->getColonna());
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+
+    stmt.prepare("delete from articoli where idarticolo=?");
+    stmt.addBindValue(articoloBtn->getId());
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+
+    db.commit();
+    emit eliminaPulsanteCorrente(articoloBtn);
 
   }
 }
