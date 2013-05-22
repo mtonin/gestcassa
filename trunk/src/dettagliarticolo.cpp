@@ -1,5 +1,4 @@
 #include "dettagliarticolo.h"
-#include "dettagliarticolomenu.h"
 #include <QtSql>
 #include <QLocale>
 #include <QInputDialog>
@@ -18,8 +17,6 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
   articoliList->setModel(modello);
   articoliList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   articoliList->setContextMenuPolicy(Qt::CustomContextMenu);
-  //menu=new DettagliArticoloMenu;
-  //layout()->addWidget(menu);
 
   articoliMenuModello=new QStandardItemModel;
   articoliBox->setModel(articoliMenuModello);

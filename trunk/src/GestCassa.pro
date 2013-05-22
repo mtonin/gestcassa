@@ -25,7 +25,6 @@ SOURCES += main.cpp\
     controlliordine.cpp \
     restodlg.cpp \
     configurazionedlg.cpp \
-    dettagliarticolomenu.cpp \
     destinazionidlg.cpp \
     simplecrypt.cpp \
     reportform.cpp \
@@ -46,7 +45,6 @@ HEADERS  += mainwindow.h \
     controlliordine.h \
     restodlg.h \
     configurazionedlg.h \
-    dettagliarticolomenu.h \
     destinazionidlg.h \
     simplecrypt.h \
     reportform.h \
@@ -62,7 +60,6 @@ FORMS    += mainwindow.ui \
     controlliordine.ui \
     restodlg.ui \
     configurazionedlg.ui \
-    dettagliarticolomenu.ui \
     destinazionidlg.ui \
     reportform.ui \
     infowidget.ui
