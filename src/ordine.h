@@ -30,6 +30,10 @@ private slots:
 
   void on_ultimoRestoBtn_clicked();
 
+  void on_pagPrevBtn_clicked();
+
+  void on_pagNextBtn_clicked();
+
 private:
   float importoUltimoOrdine;
   QMap<QString,QVariant>* configurazione;

@@ -357,3 +357,17 @@ void Ordine::on_ultimoRestoBtn_clicked()
   }
 
 }
+
+void Ordine::on_pagPrevBtn_clicked()
+{
+  int primaRiga=articoliTab->rowAt(1);
+  QModelIndex idx=modello.index(primaRiga-1,1);
+  articoliTab->scrollTo(idx,QAbstractItemView::PositionAtTop);
+}
+
+void Ordine::on_pagNextBtn_clicked()
+{
+  int primaRiga=articoliTab->rowAt(1);
+  QModelIndex idx=modello.index(primaRiga+1,1);
+  articoliTab->scrollTo(idx,QAbstractItemView::PositionAtTop);
+}
