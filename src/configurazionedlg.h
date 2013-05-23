@@ -9,6 +9,9 @@ class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
 {
   Q_OBJECT
   
+signals:
+  void resetOrdini();
+
 public:
   explicit ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent = 0);
   QMap<QString,QVariant> getConfigurazione() {return *configurazione;}
@@ -44,7 +47,7 @@ private slots:
 
   void on_visualizzaPrezzoBox_clicked(bool checked);
 
-  void on_gestioneMenuBox_clicked(bool checked);
+  void on_cancellaOrdiniBtn_clicked();
 
 private:
   QMap<QString,QVariant>* configurazione;
