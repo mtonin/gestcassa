@@ -25,6 +25,9 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
 
   connect(destinazioneTbl->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
   connect(modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
+
+  destinazioneTbl->setCurrentIndex(modello->index(0,0));
+  destinazioneTxt->setFocus();
 }
 
 void DestinazioniDlg::on_cancellaBtn_clicked()

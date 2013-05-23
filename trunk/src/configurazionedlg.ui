@@ -151,13 +151,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QCheckBox" name="gestioneMenuBox">
-            <property name="text">
-             <string>Gestione dei menù</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -271,23 +264,63 @@
       <attribute name="title">
        <string>Database</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Password di amministrazione</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Password di amministrazione</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="adminPasswordTxt">
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QLineEdit" name="adminPasswordTxt">
-         <property name="maxLength">
-          <number>10</number>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="cancellaOrdiniBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Cancella tutti gli ordini</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
          </property>
-        </widget>
+        </spacer>
        </item>
       </layout>
      </widget>

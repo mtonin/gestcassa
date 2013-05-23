@@ -146,7 +146,27 @@ void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
   configurazione->insert("visualizzazionePrezzo",checked);
 }
 
-void ConfigurazioneDlg::on_gestioneMenuBox_clicked(bool checked)
+void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 {
-  configurazione->insert("gestioneMenu",checked);
+  if(QMessageBox::Yes!=QMessageBox::question(this,"Cancellazione ordini","Cancellare tutti gli ordini?",QMessageBox::Yes|QMessageBox::No)) {
+    return;
+  }
+  QSqlDatabase db=QSqlDatabase::database();
+  db.transaction();
+
+  QSqlQuery stmt;
+  if(!stmt.exec("delete from righeordine")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+  if(!stmt.exec("delete from ordini")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+
+  db.commit();
+  emit resetOrdini();
+
 }

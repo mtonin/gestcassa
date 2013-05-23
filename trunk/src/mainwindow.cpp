@@ -251,6 +251,7 @@ void MainWindow::on_configurazioneBtn_clicked()
 {
   bool oldVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
+  connect(dlg,SIGNAL(resetOrdini()),ordineBox,SLOT(nuovoOrdine()));
   dlg->exec();
 
   bool newVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();

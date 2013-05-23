@@ -4,28 +4,21 @@
 #include <QtSql>
 #include <QMessageBox>
 
+const QString dbFile("cassadb.db3");
+
 DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
 {
   setupUi(this);
   setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
-  dbfile->setFocus();
 
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 
 }
 
-void DBDialog::on_toolButton_clicked()
-{
-  QString dbFileName=QFileDialog::getOpenFileName(0,"Apre database esistente","c:\\","*.db3");
-  if(!dbFileName.isEmpty()) {
-    dbfile->setText(dbFileName);
-  }
-}
-
 void DBDialog::on_apreBtn_clicked()
 {
 
-  if(createConnection(dbfile->text(),"","")) {
+  if(createConnection(dbFile,"","")) {
     QSqlQuery stmt("select chiave,valore from configurazione");
     if(!stmt.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -61,16 +54,6 @@ void DBDialog::on_apreBtn_clicked()
 void DBDialog::on_esceBtn_clicked()
 {
   reject();
-}
-
-void DBDialog::on_nuovoBtn_clicked()
-{
-  QString dbFileName=QFileDialog::getSaveFileName(0,"Crea nuovo database","c:\\temp","*.db3");
-  if(!dbFileName.isEmpty()) {
-    dbfile->setText(dbFileName);
-    accept();
-  }
-
 }
 
 bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, const QString &password)
