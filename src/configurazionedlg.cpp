@@ -43,6 +43,7 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
   if(QDialog::Accepted==pageSetupDlg.exec()) {
     stampanteSelezionataTxt->setText(printer.printerName());
   }
+  nuovaConfigurazione->insert("stampante",printer.printerName());
 
 }
 
@@ -100,6 +101,7 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
   if(!cartella.isEmpty()) {
     cartellaPdfTxt->setText(cartella);
   }
+  configurazione->insert("cartellaPdf",cartella);
 
 }
 
