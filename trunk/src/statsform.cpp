@@ -1,54 +1,61 @@
 #include "statsform.h"
-
 #include <QtSql>
 #include <QMessageBox>
-#include <QVector>
 
 StatsForm::StatsForm(QWidget *parent) :
   QDialog(parent)
 {
   setupUi(this);
+  setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
 
-  QCPBars* barPlot=new QCPBars(graficoPlot->xAxis,graficoPlot->yAxis);
-  graficoPlot->addPlottable(barPlot);
-  QVector<double> keyData;
-  QVector<double> valueData;
-  QVector<QString> tickLabelsData;
-  QVector<double> tickData;
-  QSqlQuery stmt("SELECT dettagliordine.descrizione,sum(dettagliordine.quantita) \
-                  FROM dettagliordine,ordini \
-                  where dettagliordine.numeroordine=ordini.numero \
-                                                    group by descrizione \
-                                                    order by 2 desc");
+  fromData->setDate(QDate::currentDate());
+  toData->setDate(QDate::currentDate());
+  statsModel=new StatsModel;
+  statsView->setModel(statsModel);
 
-  int numero=0;
+  statsView->verticalHeader()->hide();
+  statsView->horizontalHeader()->setSortIndicatorShown(true);
+
+  connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),statsView,SLOT(sortByColumn(int)));
+
+  caricaStats();
+}
+
+void StatsForm::on_filtraBtn_clicked()
+{
+  caricaStats();
+}
+
+void StatsForm::caricaStats()
+{
+  QSqlQuery stmt;
+  stmt.prepare("SELECT dettagliordine.descrizione,sum(dettagliordine.quantita), sum(dettagliordine.prezzo*dettagliordine.quantita) \
+                 FROM dettagliordine,ordini where dettagliordine.numeroordine=ordini.numero and datetime(ordini.tsstampa) between ? and ? group by descrizione order by 2 desc");
+
+  QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+  QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+  stmt.addBindValue(from);
+  stmt.addBindValue(to);
   if(!stmt.exec()) {
-     QMessageBox::critical(0, QObject::tr("Database Error"),
-     stmt.lastError().text());
-     return;
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
   }
+  statsModel->clear();
+  //statsModel->setHorizontalHeaderLabels(QString("ARTICOLO,QUANTITA',IMPORTO").split(','));
   while(stmt.next()) {
-    QString nomeArt=stmt.value(0).toString();
-    int totaleArt=stmt.value(1).toInt();
-    keyData.append(++numero);
-    valueData.append(totaleArt);
-    tickLabelsData.append(nomeArt);
-    tickData.append(numero);
+    QString nomeArticolo=stmt.value(0).toString();
+    int quantita=stmt.value(1).toInt();
+    double importo=stmt.value(2).toDouble();
+    QList<QStandardItem*> riga;
+    riga.append(new QStandardItem(nomeArticolo));
+    QStandardItem* quantitaItem=new QStandardItem;
+    quantitaItem->setData(QVariant(quantita),Qt::EditRole);
+    riga.append(quantitaItem);
+    QStandardItem* importoItem=new QStandardItem;
+    importoItem->setData(QVariant(importo),Qt::EditRole);
+    riga.append(importoItem);
+    statsModel->appendRow(riga);
   }
 
-  graficoPlot->xAxis->setAutoTicks(false);
-  graficoPlot->xAxis->setAutoTickLabels(false);
-  barPlot->setData(keyData,valueData);
-  graficoPlot->xAxis->setTickVector(tickData);
-  graficoPlot->xAxis->setTickVectorLabels(tickLabelsData);
-  graficoPlot->xAxis->setTickLabelRotation(90);
-  graficoPlot->xAxis->setSubTickCount(0);
-  graficoPlot->xAxis->setTickLength(0, 4);
-  graficoPlot->xAxis->setGrid(false);
-  graficoPlot->xAxis->setRange(0, 10);
-  graficoPlot->xAxis->setPadding(10);
-  graficoPlot->setAutoMargin(true);
-  graficoPlot->rescaleAxes();
-  graficoPlot->replot();
-
+  statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
 }
