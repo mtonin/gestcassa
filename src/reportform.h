@@ -21,8 +21,10 @@ private:
   QTextDocument* creaDocumentTutto();
   QTextDocument* creaDocumentPerReparti();
   QTextDocument* creaDocumentPerDestinazione();
+  QTextDocument* creaDocumentMenu();
   void stampa(const QTextDocument* doc,const QString descrReport,bool preview);
   void putHeader(QTextCursor cursore, const QString testo);
+  void formattaTabella(QTextTable*);
 
   QMap<QString,QVariant>* configurazione;
 

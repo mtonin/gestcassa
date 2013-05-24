@@ -32,9 +32,17 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   ultimoRestoBtn->setIcon(QIcon(":/GestCassa/money"));
   ultimoRestoBtn->setIconSize(QSize(32,32));
   ultimoRestoBtn->SetIconPosition(QPictureButton::PositionTop);
+  pagPrevBtn->setIcon(QIcon(":/GestCassa/freccia_su"));
+  pagPrevBtn->setIconSize(QSize(32,32));
+  pagPrevBtn->SetIconPosition(QPictureButton::PositionTop);
+  pagNextBtn->setIcon(QIcon(":/GestCassa/freccia_giu"));
+  pagNextBtn->setIconSize(QSize(32,32));
+  pagNextBtn->SetIconPosition(QPictureButton::PositionTop);
   stampaBtn->SetButtonColorNormal(Qt::yellow);
   annullaBtn->SetButtonColorNormal(Qt::yellow);
   ultimoRestoBtn->SetButtonColorNormal(Qt::yellow);
+  pagPrevBtn->SetButtonColorNormal(Qt::yellow);
+  pagNextBtn->SetButtonColorNormal(Qt::yellow);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -291,9 +299,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   int x=0;
   int y=0;
 
-  painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
-  y+=textRect.height()+10;
-
+  y+=5;
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestazione,&textRect);
   y+=textRect.height();
@@ -305,6 +311,9 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.setPen(pen);
   y+=5;
   painter.setFont(fontNormale);
+  painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
+  y+=textRect.height()+5;
+
   painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
   painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
