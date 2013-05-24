@@ -35,17 +35,22 @@ void ReportForm::stampa(bool preview)
 QTextDocument* ReportForm::creaDocumentTutto()
 {
   QTextDocument* documento=new QTextDocument(this);
-  QTextCursor cursore(documento);
-  QTextTable* tabella=cursore.insertTable(1,4);
-  QTextTableFormat formatoTabella;
+  QTextCursor cursoreDoc(documento);
   QString testo;
+
+  QTextDocument tableDocument;
+  QTextCursor cursore(&tableDocument);
+  QTextTable* tabella=cursore.insertTable(1,4);
 
   foreach(testo,((QString)"ARTICOLO,PREZZO,REPARTO,DESTINAZIONE").split(",")) {
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextCell);
   }
 
-  QString sql="select a.descrizione,a.prezzo,a.destinazione,b.descrizione as reparto from articoli a,reparti b on a.idreparto=b.idreparto";
+  QString sql="select a.descrizione,a.prezzo,a.destinazione,b.descrizione as reparto \
+              from articoli a,reparti b, pulsanti c \
+              where c.idarticolo=a.idarticolo \
+              and c.idreparto=b.idreparto";
 
   if(ordineAlfabeticoBox->isChecked()) {
     sql.append(" order by a.descrizione asc");
@@ -85,25 +90,23 @@ QTextDocument* ReportForm::creaDocumentTutto()
     cursore.insertText(destinazione);
   }
 
+  formattaTabella(tabella);
 
-  formatoTabella.setBorder(1);
-  formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-  formatoTabella.setHeaderRowCount(1);
-  formatoTabella.setCellSpacing(-1);
-  formatoTabella.setCellPadding(3);
-  formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
+  cursoreDoc.insertFragment(QTextDocumentFragment(&tableDocument));
+  cursoreDoc.insertText("\n\n\n");
 
-  tabella->setFormat(formatoTabella);
+  testo=QString("COMPOSIZIONE MENU'");
+  putHeader(cursoreDoc,testo);
+  cursoreDoc.movePosition(QTextCursor::NextRow);
+  cursoreDoc.insertFragment(QTextDocumentFragment(creaDocumentMenu()));
 
   return documento;
-
 }
 
 QTextDocument* ReportForm::creaDocumentPerReparti()
 {
   QTextDocument* documento=new QTextDocument(this);
   QTextCursor cursore(documento);
-  QTextTableFormat formatoTabella;
   QString testo;
 
   QString sql="select idreparto,descrizione from reparti";
@@ -115,7 +118,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
   int totReparti=0;
   while(stmtReparti.next()) {
     if(totReparti>0) {
-      cursore.insertText("\n\n\n\n\n");
+      cursore.insertText("\n\n\n\n");
     }
     totReparti++;
     int idReparto=stmtReparti.value(0).toInt();
@@ -124,7 +127,11 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextRow);
 
-    sql="select a.descrizione,a.prezzo,a.destinazione from articoli a,reparti b on a.idreparto=b.idreparto and a.idreparto=?";
+    sql="select a.descrizione,a.prezzo,a.destinazione \
+        from articoli a,reparti b, pulsanti c \
+        where c.idarticolo=a.idarticolo \
+        and c.idreparto=b.idreparto \
+        and c.idreparto=?";
     if(ordineAlfabeticoBox->isChecked()) {
       sql.append(" order by a.descrizione asc");
     } else {
@@ -174,14 +181,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
       tableCursore.insertText(destinazione);
     }
 
-    formatoTabella.setBorder(1);
-    formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-    formatoTabella.setHeaderRowCount(1);
-    formatoTabella.setCellSpacing(-1);
-    formatoTabella.setCellPadding(3);
-    formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
-
-    tabella->setFormat(formatoTabella);
+    formattaTabella(tabella);
 
     if(0==totArticoli){
       cursore.insertText("\nNessun articolo in questo reparto.");
@@ -199,7 +199,6 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
 {
   QTextDocument* documento=new QTextDocument(this);
   QTextCursor cursore(documento);
-  QTextTableFormat formatoTabella;
   QString testo;
 
   QString sql="select nome from destinazionistampa";
@@ -211,7 +210,7 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
   int totDestinazioni=0;
   while(stmtDestinazioni.next()) {
     if(totDestinazioni>0) {
-      cursore.insertText("\n\n\n\n\n");
+      cursore.insertText("\n\n\n\n");
     }
     totDestinazioni++;
     QString nomeDestinazione=stmtDestinazioni.value(0).toString();
@@ -219,7 +218,12 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextRow);
 
-    sql="select a.descrizione,a.prezzo,b.descrizione as reparto from articoli a,reparti b on a.idreparto=b.idreparto and a.destinazione=?";
+    sql="select a.descrizione,a.prezzo,b.descrizione as reparto \
+        from articoli a,reparti b, pulsanti c \
+        where c.idarticolo=a.idarticolo \
+        and c.idreparto=b.idreparto \
+        and a.gestioneMenu='false' \
+        and a.destinazione=?";
     if(ordineAlfabeticoBox->isChecked()) {
       sql.append(" order by a.descrizione asc");
     } else {
@@ -269,24 +273,96 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
       tableCursore.insertText(reparto);
     }
 
-    formatoTabella.setBorder(1);
-    formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-    formatoTabella.setHeaderRowCount(1);
-    formatoTabella.setCellSpacing(-1);
-    formatoTabella.setCellPadding(3);
-    formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
-
-    tabella->setFormat(formatoTabella);
+    formattaTabella(tabella);
 
     if(0==totArticoli){
       cursore.insertText("\nNessun articolo in questa destinazione.");
     } else {
       cursore.insertFragment(QTextDocumentFragment(&tableDocument));
-
     }
+
+}
+
+return documento;
+}
+
+QTextDocument *ReportForm::creaDocumentMenu()
+{
+  QString testo;
+
+  QTextDocument* tableDocument=new QTextDocument(this);
+  QTextCursor tableCursore(tableDocument);
+
+  QTextTable* tabella=tableCursore.insertTable(1,4);
+  foreach(testo,((QString)"ARTICOLO,PREZZO,REPARTO,CONTENUTO").split(",")) {
+    putHeader(tableCursore,testo);
+    tableCursore.movePosition(QTextCursor::NextCell);
   }
 
-  return documento;
+  QString sql="select a.idarticolo,a.descrizione,a.prezzo,a.destinazione,b.descrizione as reparto \
+              from articoli a,reparti b, pulsanti c \
+              where c.idarticolo=a.idarticolo \
+              and c.idreparto=b.idreparto \
+              and a.gestionemenu='true'";
+
+  if(ordineAlfabeticoBox->isChecked()) {
+    sql.append(" order by a.descrizione asc");
+  } else {
+    sql.append(" order by a.prezzo asc");
+  }
+
+  QSqlQuery stmt(sql);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return NULL;
+  }
+
+  int posIdArticolo=stmt.record().indexOf("idarticolo");
+  int posDescrizione=stmt.record().indexOf("descrizione");
+  int posPrezzo=stmt.record().indexOf("prezzo");
+  int posReparto=stmt.record().indexOf("reparto");
+  QTextBlockFormat rightAlignFormat;
+  rightAlignFormat.setAlignment(Qt::AlignRight);
+
+  while(stmt.next()) {
+    QString descrizione=stmt.value(posDescrizione).toString();
+    QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+    QString reparto=stmt.value(posReparto).toString();
+    int idArticolo=stmt.value(posIdArticolo).toInt();
+
+    tabella->appendRows(1);
+    tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,3);
+    tableCursore.insertText(descrizione);
+    tableCursore.movePosition(QTextCursor::NextCell);
+
+    tableCursore.setBlockFormat(rightAlignFormat);
+    tableCursore.insertText(prezzo);
+    tableCursore.movePosition(QTextCursor::NextCell);
+    tableCursore.insertText(reparto);
+    tableCursore.movePosition(QTextCursor::NextCell);
+
+    QSqlQuery stmt1;
+    stmt1.prepare("select a.descrizione \
+                  from articoli a,articolimenu b \
+                  where a.idarticolo=b.idarticolomenu \
+                  and b.idarticolo=?");
+    stmt1.addBindValue(idArticolo);
+    if(!stmt1.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return NULL;
+    }
+    QString contenutoMenu;
+    while(stmt1.next()) {
+      if(!contenutoMenu.isEmpty()) contenutoMenu.append('\n');
+      contenutoMenu.append(stmt1.value(0).toString());
+    }
+    tableCursore.insertText(contenutoMenu);
+    tableCursore.movePosition(QTextCursor::NextCell);
+  }
+
+  formattaTabella(tabella);
+
+  return tableDocument;
 }
 
 void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, bool preview)
@@ -320,6 +396,20 @@ void ReportForm::putHeader(QTextCursor cursore, const QString testo)
   cursore.setBlockFormat(format);
   cursore.setCharFormat(charFormat);
   cursore.insertText(testo);
+}
+
+void ReportForm::formattaTabella(QTextTable* tabella)
+{
+  QTextTableFormat formatoTabella;
+  formatoTabella.setBorder(1);
+  formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
+  formatoTabella.setHeaderRowCount(1);
+  formatoTabella.setCellSpacing(-1);
+  formatoTabella.setCellPadding(3);
+  formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength,100));
+
+  tabella->setFormat(formatoTabella);
+
 }
 
 void ReportForm::on_anteprimaBtn_clicked()

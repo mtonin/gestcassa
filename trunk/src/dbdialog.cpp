@@ -70,7 +70,7 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
   }
   QSqlQuery query("select 1 from articoli");
   if(!query.isActive()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+    QMessageBox::critical(0, QObject::tr("Database Error"),"Database inesistente o inutilizzabile");
     return false;
   }
 
