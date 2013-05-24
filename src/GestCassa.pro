@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     infowidget.cpp \
     QDigitalClock.cpp \
     qcustomplot.cpp \
-    statsform.cpp
+    statsform.cpp \
+    statsmodel.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -54,7 +55,8 @@ HEADERS  += mainwindow.h \
     infowidget.h \
     QDigitalClock.h \
     qcustomplot.h \
-    statsform.h
+    statsform.h \
+    statsmodel.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \

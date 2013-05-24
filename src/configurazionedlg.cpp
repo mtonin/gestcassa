@@ -11,6 +11,7 @@
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par),QDialog(parent)
 {
   setupUi(this);
+  setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
 
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 

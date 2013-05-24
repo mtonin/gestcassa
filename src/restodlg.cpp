@@ -5,8 +5,9 @@
 RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
 {
   setupUi(this);
-  _durata=1000*durata;
   setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+
+  _durata=1000*durata;
   activateWindow();
   effetto=new QPropertyAnimation(this,"windowOpacity");
 
