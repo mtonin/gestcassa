@@ -85,6 +85,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="expMenuBox">
+       <property name="text">
+        <string>Espande menù</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="filtraBtn">
        <property name="text">
         <string>Applica</string>
