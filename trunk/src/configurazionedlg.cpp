@@ -34,7 +34,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
 
   tabWidget->setCurrentIndex(0);
-  nomeCassaTxt->setFocus();
+  descrManifestazioneTxt->setFocus();
 }
 
 void ConfigurazioneDlg::on_printerSelectBtn_clicked()

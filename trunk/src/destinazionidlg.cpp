@@ -38,6 +38,7 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
       return;
     }
     destinazioneTbl->setCurrentIndex(modello->index(currRiga-1,0));
+    destinazioneTxt->setFocus();
 }
 
 void DestinazioniDlg::on_nuovoBtn_clicked()
