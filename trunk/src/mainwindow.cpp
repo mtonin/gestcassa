@@ -176,7 +176,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
 
       griglia->addWidget(stackedBox,riga,col);
       connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
-      connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(SetButtonColorNormal(QColor)));
+      connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(setColore(QColor)));
       connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));
       articoliBtnList.append(btn);
     }

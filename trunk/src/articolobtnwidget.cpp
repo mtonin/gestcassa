@@ -22,6 +22,12 @@ void ArticoloBtnWidget::setButtonFont(const QFont &font)
   setFont(font);
 }
 
+void ArticoloBtnWidget::setColore(const QColor &colore)
+{
+  SetButtonColorNormal(colore);
+  SetButtonColorHot(colore);
+}
+
 void ArticoloBtnWidget::PaintPrezzo()
 {
   QPainter painter(this);
