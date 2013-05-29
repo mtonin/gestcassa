@@ -28,6 +28,7 @@ private slots:
   void on_tasto9Btn_clicked();
   void on_tastoVirgolaBtn_clicked();
   void ricalcolaResto();
+  void cancellaUltimoCarattere();
 
 private:
   QPropertyAnimation* effetto;

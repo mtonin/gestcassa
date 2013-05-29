@@ -35,7 +35,7 @@ void ArticoloBtnWidget::PaintPrezzo()
   int Width  = PainterRect.width();
   int Align = Qt::AlignLeft|Qt::TextWordWrap;
 
-  QString prezzoLabel=QString("%1 %2 ").arg(QChar(0x20AC)).arg(this->prezzo,5,'f',2);
+  QString prezzoLabel=QString("%1 %L2 ").arg(QChar(0x20AC)).arg(this->prezzo,5,'f',2);
   // Paint
   QRect fontRect=painter.boundingRect(PainterRect,Align,prezzoLabel);
   //QRect FontRect(Left, Top, Width, Height);

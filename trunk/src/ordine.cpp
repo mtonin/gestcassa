@@ -86,7 +86,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
   for(int i=0;i<modello.rowCount(QModelIndex());i++) {
     totale+=modello.index(i,3).data().toFloat();
   }
-  totaleLine->setText(QString("%1").arg(totale,4,'f',2));
+  totaleLine->setText(QString("%L1").arg(totale,4,'f',2));
 }
 
 void Ordine::on_annullaBtn_clicked()
@@ -143,7 +143,7 @@ void Ordine::nuovoOrdine()
     numeroOrdine=query.value(0).toInt();
   }
   numeroOrdine++;
-  numeroLbl->setText(QString("%1").arg(numeroOrdine));
+  numeroLbl->setText(QString("%L1").arg(numeroOrdine));
 }
 
 void Ordine::stampaScontrino(int numeroOrdine)
@@ -240,7 +240,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
     y+=textRect.height()+10;
     painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
-    painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
+    painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %L1").arg(numeroOrdine),&textRect);
     painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
     y+=10;
 
@@ -276,7 +276,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawLine(x,y,pageWidth,y);
 
     y+=5;
-    QString totaleString=QString("TOTALE: %1 ARTICOLI").arg(numArticoli);
+    QString totaleString=QString("TOTALE: %L1 ARTICOLI").arg(numArticoli);
     painter.setFont(fontGrassetto);
     painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
@@ -315,7 +315,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   y+=textRect.height()+5;
 
   painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
-  painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %1").arg(numeroOrdine),&textRect);
+  painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %L1").arg(numeroOrdine),&textRect);
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
@@ -334,7 +334,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     int quantita=stmt.value(1).toInt();
     QString quantitaString=QString("%1").arg(quantita,3,10);
     float prezzo=stmt.value(2).toFloat();
-    QString prezzoString=QString("%1 %2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
+    QString prezzoString=QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo,6,'f',2);
 
     totale+=prezzo;
     QRect tmpRect;
@@ -347,7 +347,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y,pageWidth,y);
 
   y+=5;
-  QString totaleString=QString("TOTALE: %1 %2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
+  QString totaleString=QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale,6,'f',2);
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
