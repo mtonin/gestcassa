@@ -15,7 +15,7 @@ StatsForm::StatsForm(QWidget *parent) :
 
   statsView->verticalHeader()->hide();
   statsView->horizontalHeader()->setSortIndicatorShown(true);
-  statsView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),statsView,SLOT(sortByColumn(int)));
 
@@ -29,6 +29,15 @@ void StatsForm::on_filtraBtn_clicked()
 
 void StatsForm::caricaStats()
 {
+  graficoPlot->removePlottable(0);
+  QCPBars* barPlot=new QCPBars(graficoPlot->xAxis,graficoPlot->yAxis);
+  graficoPlot->addPlottable(barPlot);
+  QVector<double> keyData;
+  QVector<double> valueData;
+  QVector<QString> tickLabelsData;
+  QVector<double> tickData;
+  int numero=0;
+
   QSqlQuery stmt;
   if(expMenuBox->isChecked()) {
     stmt.prepare("SELECT dettagliordine.descrizione,sum(dettagliordine.quantita) \
@@ -56,7 +65,33 @@ void StatsForm::caricaStats()
     quantitaItem->setData(QVariant(quantita),Qt::EditRole);
     riga.append(quantitaItem);
     statsModel->appendRow(riga);
+
+    keyData.append(++numero);
+    valueData.append(quantita);
+    tickLabelsData.append(nomeArticolo);
+    tickData.append(numero);
   }
+
+  QFont font=graficoPlot->xAxis->tickLabelFont();
+  font.setPointSize(8);
+  graficoPlot->xAxis->setTickLabelFont(font);
+  graficoPlot->xAxis->setAutoTicks(false);
+  graficoPlot->xAxis->setAutoTickLabels(false);
+  barPlot->setData(keyData,valueData);
+  graficoPlot->xAxis->setTickVector(tickData);
+  graficoPlot->xAxis->setTickVectorLabels(tickLabelsData);
+  graficoPlot->xAxis->setTickLabelRotation(60);
+  graficoPlot->xAxis->setSubTickCount(0);
+  graficoPlot->xAxis->setTickLength(0, 4);
+  graficoPlot->xAxis->setGrid(false);
+  graficoPlot->xAxis->setRange(0, ++numero);
+  graficoPlot->xAxis->setPadding(10);
+  graficoPlot->setAutoMargin(true);
+  graficoPlot->rescaleAxes();
+  graficoPlot->replot();
+
+  graficoPlot->setRangeDrag(Qt::Horizontal|Qt::Vertical);
+  graficoPlot->setRangeZoom(Qt::Horizontal|Qt::Vertical);
 
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
 }

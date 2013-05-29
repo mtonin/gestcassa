@@ -11,7 +11,7 @@ QVariant StatsModel::data(const QModelIndex &index, int role) const
 
   switch (index.column()) {
     case 1:
-      if(Qt::TextAlignmentRole==role) return QVariant(Qt::AlignRight|Qt::AlignBottom);
+      if(Qt::TextAlignmentRole==role) return QVariant(Qt::AlignRight|Qt::AlignVCenter);
       break;
     default:
       break;
