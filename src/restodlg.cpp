@@ -19,7 +19,7 @@ RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
     effetto->start();
   }
 
-  importoTxt->setText(QString("%1").arg(valore,4,'f',2));
+  importoTxt->setText(QString("%L1").arg(valore,4,'f',2));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
   ricalcolaResto();
 }
@@ -63,9 +63,14 @@ void RestoDlg::on_tastoVirgolaBtn_clicked(){
   QString val=importoRicevutoTxt->text();
   if(val.isEmpty())
     val="0";
-  if(val.indexOf('.')>=0)
+  if(val.indexOf(',')>=0)
     return;
-  val.append(".");
+  val.append(",");
+  importoRicevutoTxt->setText(val);
+}
+void RestoDlg::cancellaUltimoCarattere(){
+  QString val=importoRicevutoTxt->text();
+  val.chop(1);
   importoRicevutoTxt->setText(val);
 }
 
@@ -74,7 +79,7 @@ void RestoDlg::ricalcolaResto()
   float totale=importoRicevutoTxt->text().toFloat();
   float importoDaPagare=importoTxt->text().toFloat();
   float resto=totale-importoDaPagare;
-  restoCalcolatoTxt->setText(QString("%1").arg(resto,4,'f',2));
+  restoCalcolatoTxt->setText(QString("%L1").arg(resto,4,'f',2));
 
   if(_durata>0) {
     effetto->stop();
@@ -130,5 +135,11 @@ void RestoDlg::keyPressEvent(QKeyEvent *evt)
         on_tastoVirgolaBtn_clicked();
         break;
       }
+    case Qt::Key_Delete:
+    case Qt::Key_Backspace: {
+        cancellaUltimoCarattere();
+        break;
+      }
+
   }
 }

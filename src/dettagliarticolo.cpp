@@ -35,7 +35,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
   //prezzoArticolo->setText(QString::number(articoloBtn->getPrezzo(),'g',2));
   */
 
-  prezzoArticolo->setText(QString("%1").arg(articoloBtn->getPrezzo(),4,'f',2));
+  prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(),4,'f',2));
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
 
   destinazioneBox->clear();

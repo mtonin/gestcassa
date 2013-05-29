@@ -74,7 +74,7 @@ QTextDocument* ReportForm::creaDocumentTutto()
 
   while(stmt.next()) {
     QString descrizione=stmt.value(posDescrizione).toString();
-    QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+    QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
     QString destinazione=stmt.value(posDestinazione).toString();
     QString reparto=stmt.value(posReparto).toString();
 
@@ -168,7 +168,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     while(stmt.next()) {
       totArticoli++;
       QString descrizione=stmt.value(posDescrizione).toString();
-      QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+      QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
       QString destinazione=stmt.value(posDestinazione).toString();
 
       tabella->appendRows(1);
@@ -260,7 +260,7 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
     while(stmt.next()) {
       totArticoli++;
       QString descrizione=stmt.value(posDescrizione).toString();
-      QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+      QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
       QString reparto=stmt.value(posReparto).toString();
 
       tabella->appendRows(1);
@@ -327,7 +327,7 @@ QTextDocument *ReportForm::creaDocumentMenu()
 
   while(stmt.next()) {
     QString descrizione=stmt.value(posDescrizione).toString();
-    QString prezzo=QString("%1 %2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+    QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
     QString reparto=stmt.value(posReparto).toString();
     int idArticolo=stmt.value(posIdArticolo).toInt();
 
