@@ -17,6 +17,7 @@ void RepartoBtnWidget::setNomeReparto(const QString nuovoReparto)
 void RepartoBtnWidget::setColore(const QColor &colore)
 {
   SetButtonColorNormal(colore);
+  SetButtonColorHot(colore);
   emit cambiaColore(colore);
 }
 
