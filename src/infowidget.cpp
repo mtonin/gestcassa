@@ -41,11 +41,12 @@ void infoWidget::ricominciaEffetto()
   }
 
   infoLbl->setText(listaTesto.at(currentIndex));
+  qDebug(QString("width=%1").arg(frameGeometry().width()).toUtf8());
   effetto->start();
 
 }
 
-void infoWidget::setlistaTesto(const QStringList lista)
+void infoWidget::setListaTesto(const QStringList lista)
 {
   effetto->stop();
   listaTesto=lista;

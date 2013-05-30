@@ -29,7 +29,6 @@ public:
 private slots:
    void repartoSelezionato();
    void articoloSelezionato();
-   void modalitaBtnClicked();
    void eliminaPulsante(ArticoloBtnWidget*);
 
    void on_configurazioneBtn_clicked();
@@ -39,6 +38,10 @@ private slots:
    void on_reportBtn_clicked();
 
    void on_statsBtn_clicked();
+
+   void on_cassaBtn_clicked();
+
+   void on_gestioneBtn_clicked();
 
 private:
   Ui::MainWindow *ui;
