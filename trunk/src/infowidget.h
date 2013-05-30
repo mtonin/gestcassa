@@ -13,7 +13,7 @@ private slots:
 
 public:
   explicit infoWidget(const QStringList lista,QWidget *parent = 0);
-  void setlistaTesto(const QStringList lista);
+  void setListaTesto(const QStringList lista);
 
 private:
   QStringList listaTesto;

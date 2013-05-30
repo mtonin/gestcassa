@@ -23,35 +23,41 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
 {
   ui->setupUi(this);
 
-  setWindowFlags(Qt::FramelessWindowHint);
-
-  showMaximized();
-
   creaRepartiButtons();
 
   dettagliRepartoBox=new DettagliReparto;
   dettagliArticoloBox=new DettagliArticolo;
   ordineBox=new Ordine(confMap);
 
+  //ui->latoStackedWidget->setLayout(new QVBoxLayout);
+  ui->latoStackedWidget->addWidget(new QFrame);
+  ui->latoStackedWidget->addWidget(dettagliRepartoBox);
+  ui->latoStackedWidget->addWidget(dettagliArticoloBox);
+  ui->latoStackedWidget->addWidget(ordineBox);
+
+  /*
   ui->latoFrame->setLayout(new QVBoxLayout);
   ui->latoFrame->layout()->addWidget(dettagliRepartoBox);
   ui->latoFrame->layout()->addWidget(dettagliArticoloBox);
   ui->latoFrame->layout()->addWidget(ordineBox);
+  */
 
   connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
   connect(dettagliArticoloBox,SIGNAL(eliminaPulsanteCorrente(ArticoloBtnWidget*)),this,SLOT(eliminaPulsante(ArticoloBtnWidget*)));
 
   QDigitalClock* orologio=new QDigitalClock;
-  orologio->SetFormat("dd-MM-yyyy\nHH:mm:ss");
+  orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
   QFont font=orologio->font();
   font.setBold(true);
-  font.setPointSize(14);
+  font.setPointSize(10);
   orologio->setFont(font);
   //orologio->SetTextColor(Qt::red);
-  orologio->SetAlignment(Qt::AlignHCenter);
+  orologio->SetAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-  ui->clockFrame->setLayout(new QHBoxLayout);
-  ui->clockFrame->layout()->addWidget(orologio);
+  QHBoxLayout* clockLayout=new QHBoxLayout;
+  clockLayout->setContentsMargins(QMargins(0,0,0,0));
+  clockLayout->addWidget(orologio);
+  ui->clockFrame->setLayout(clockLayout);
 
   QStringList messaggi=QString("GESTIONE CASSA,build %1").arg(SVN_REV.c_str()).split(",");
   QString descrizione=confMap->value("descrManifestazione").toString();
@@ -61,19 +67,23 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   info=new infoWidget(messaggi);
 
   QHBoxLayout* infoLayout=new QHBoxLayout;
-  infoLayout->setContentsMargins(QMargins(0,0,0,0));
+  infoLayout->setContentsMargins(QMargins(1,1,1,1));
   infoLayout->addWidget(info);
   ui->infoFrame->setLayout(infoLayout);
 
   if("operatore"==confMap->value("ruolo","operatore")) {
-    ui->modalitaBtn->setEnabled(false);
     ui->configurazioneBtn->setEnabled(false);
     ui->reportBtn->setEnabled(false);
+    ui->gestioneBtn->setEnabled(false);
+    ui->cassaBtn->setEnabled(false);
     gestioneModalita(CASSA);
   } else {
-    connect(ui->modalitaBtn,SIGNAL(clicked()),this,SLOT(modalitaBtnClicked()));
     gestioneModalita(GESTIONE);
   }
+
+  setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
+  showMaximized();
+
 }
 
 MainWindow::~MainWindow()
@@ -84,23 +94,34 @@ MainWindow::~MainWindow()
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
-    ui->modalitaBtn->setText("CASSA");
-    ui->modalitaBtn->setIcon(QIcon(":/GestCassa/cassa"));
+    ui->cassaBtn->setEnabled(true);
+    ui->gestioneBtn->setEnabled(false);
+    /*
     ordineBox->hide();
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
+    */
+    ui->latoStackedWidget->setCurrentIndex(0);
 
     QListIterator<QStackedWidget*> it(stackedList);
     while(it.hasNext()) {
       it.next()->setCurrentIndex(0);
     }
-    showMaximized();
   } else {
-    ui->modalitaBtn->setText("GESTIONE");
-    ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
+    if("amministratore"==confMap->value("ruolo","operatore")) {
+      ui->cassaBtn->setEnabled(false);
+      ui->gestioneBtn->setEnabled(true);
+    }
+
+    //ui->modalitaBtn->setText("GESTIONE");
+    //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
+    /*
     dettagliRepartoBox->hide();
     dettagliArticoloBox->hide();
     ordineBox->setVisible(true);
+    */
+    ui->latoStackedWidget->setCurrentWidget(ordineBox);
+
     QListIterator<QStackedWidget*> it(stackedList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
@@ -118,10 +139,13 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 void MainWindow::keyPressEvent(QKeyEvent *evt) {
   switch(evt->key()) {
     case Qt::Key_F11: {
-        if(isMaximized())
+        if(isMaximized()) {
+          //setWindowFlags(Qt::Window);
           showNormal();
-        else
+        } else {
+          //setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
           showMaximized();
+        }
       }
   }
 }
@@ -195,7 +219,7 @@ void MainWindow::creaInfoMessaggi()
   if(!descrizione.isEmpty()) {
     messaggi.insert(0,descrizione);
   }
-  info->setlistaTesto(messaggi);
+  info->setListaTesto(messaggi);
 }
 
 void MainWindow::repartoSelezionato(){
@@ -205,8 +229,11 @@ void MainWindow::repartoSelezionato(){
   if(GESTIONE==modalitaCorrente) {
     dettagliRepartoBox->setCurrentReparto(btn);
     dettagliRepartoBox->disconnect();
+    /*
     dettagliRepartoBox->show();
     dettagliArticoloBox->hide();
+    */
+    ui->latoStackedWidget->setCurrentWidget(dettagliRepartoBox);
   }
 }
 
@@ -215,26 +242,14 @@ void MainWindow::articoloSelezionato(){
   //btn->setDown(true);
   if(GESTIONE==modalitaCorrente) {
     dettagliArticoloBox->setCurrentArticolo(btn);
+    /*
     dettagliArticoloBox->show();
     dettagliRepartoBox->hide();
+    */
+    ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
   } else {
     emit aggiungeArticolo(btn->getId(),btn->getNomeArticolo(),btn->getPrezzo());
   }
-}
-
-void MainWindow::modalitaBtnClicked(){
-  if(GESTIONE==modalitaCorrente) {
-    //qApp->setOverrideCursor(Qt::BlankCursor);
-    gestioneModalita(CASSA);
-  } else {
-    if(ordineBox->isInComposizione()) {
-      QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
-      return;
-    }
-    qApp->restoreOverrideCursor();
-    gestioneModalita(GESTIONE);
-  }
-
 }
 
 void MainWindow::eliminaPulsante(ArticoloBtnWidget *btn)
@@ -283,4 +298,20 @@ void MainWindow::on_statsBtn_clicked()
   StatsForm* form=new StatsForm;
   //form->setWindowState(Qt::WindowMaximized);
   form->exec();
+}
+
+void MainWindow::on_cassaBtn_clicked()
+{
+  //qApp->setOverrideCursor(Qt::BlankCursor);
+  gestioneModalita(CASSA);
+}
+
+void MainWindow::on_gestioneBtn_clicked()
+{
+  if(ordineBox->isInComposizione()) {
+    QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
+    return;
+  }
+  qApp->restoreOverrideCursor();
+  gestioneModalita(GESTIONE);
 }
