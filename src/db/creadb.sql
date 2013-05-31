@@ -33,14 +33,6 @@ CREATE TABLE ordini (
 );
 
 
--- Table: righeordine
-CREATE TABLE righeordine ( 
-    numeroordine INTEGER REFERENCES ordini ( numero ),
-    idarticolo   INTEGER REFERENCES articoli ( idarticolo ),
-    quantita     INTEGER 
-);
-
-
 -- Table: configurazione
 CREATE TABLE configurazione ( 
     chiave TEXT PRIMARY KEY,
@@ -66,31 +58,40 @@ CREATE TABLE articolimenu (
 );
 
 
+-- Table: ordinirighe
+CREATE TABLE ordinirighe ( 
+    numeroordine        INTEGER REFERENCES ordinirighe ( numero ),
+    idarticolo          INTEGER REFERENCES articoli ( idarticolo ),
+    quantita            INTEGER,
+    descrizioneArticolo VARCHAR 
+);
+
+
 -- View: dettagliordine
 --righeordine.numeroordine=142 and
 --and articoli.gestioneMenu='true'
 --righeordine.numeroordine=142 and
 CREATE VIEW dettagliordine AS
-       SELECT righeordine.numeroordine,
-              righeordine.quantita,
+       SELECT ordinirighe.numeroordine,
+              ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
               articoli.prezzo
-         FROM righeordine, 
+         FROM ordinirighe, 
               articoli, 
               articolimenu
-        WHERE righeordine.idarticolo = articolimenu.idarticolo 
+        WHERE ordinirighe.idarticolo = articolimenu.idarticolo 
               AND
               articolimenu.idarticolomenu = articoli.idarticolo
        UNION ALL
-       SELECT righeordine.numeroordine,
-              righeordine.quantita,
+       SELECT ordinirighe.numeroordine,
+              ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
               articoli.prezzo
-         FROM righeordine, 
+         FROM ordinirighe, 
               articoli
-        WHERE righeordine.idarticolo = articoli.idarticolo 
+        WHERE ordinirighe.idarticolo = articoli.idarticolo 
               AND
               articoli.gestioneMenu = 'false';
 ;

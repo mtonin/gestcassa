@@ -43,8 +43,8 @@ void StatsForm::caricaStats()
     stmt.prepare("SELECT dettagliordine.descrizione,sum(dettagliordine.quantita) \
                  FROM dettagliordine,ordini where dettagliordine.numeroordine=ordini.numero and datetime(ordini.tsstampa) between ? and ? group by descrizione order by 2 desc");
   } else {
-    stmt.prepare("SELECT articoli.descrizione,sum(righeordine.quantita) \
-       FROM righeordine,ordini,articoli where righeordine.numeroordine=ordini.numero and righeordine.idarticolo=articoli.idarticolo and datetime(ordini.tsstampa) between ? and ? group by articoli.descrizione");
+    stmt.prepare("SELECT articoli.descrizione,sum(ordinirighe.quantita) \
+       FROM ordinirighe,ordini,articoli where ordinirighe.numeroordine=ordini.numero and ordinirighe.idarticolo=articoli.idarticolo and datetime(ordini.tsstampa) between ? and ? group by articoli.descrizione");
   }
 
   QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));

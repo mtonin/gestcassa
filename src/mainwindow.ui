@@ -242,7 +242,7 @@
                </size>
               </property>
               <property name="text">
-               <string>GESTIONE</string>
+               <string>Gestione</string>
               </property>
               <property name="icon">
                <iconset resource="risorse.qrc">
@@ -277,7 +277,7 @@
                </size>
               </property>
               <property name="text">
-               <string>CASSA</string>
+               <string>Cassa</string>
               </property>
               <property name="icon">
                <iconset resource="risorse.qrc">

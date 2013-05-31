@@ -199,7 +199,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  //stmt.prepare("select distinct(destinazione) from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  //stmt.prepare("select distinct(destinazione) from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
   stmt.prepare("select distinct(destinazione) from dettagliordine where numeroordine=?");
   stmt.addBindValue(numeroOrdine);
 
@@ -244,7 +244,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
     y+=10;
 
-    //stmt.prepare("select quantita,prezzo,descrizione from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
+    //stmt.prepare("select quantita,prezzo,descrizione from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
     stmt.prepare("SELECT descrizione,sum(quantita) \
                  FROM dettagliordine \
                  where numeroordine=? \
@@ -319,7 +319,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select descrizione,quantita,prezzo*quantita from righeordine a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
