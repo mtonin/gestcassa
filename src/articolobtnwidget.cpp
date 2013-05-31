@@ -28,6 +28,11 @@ void ArticoloBtnWidget::setColore(const QColor &colore)
   SetButtonColorHot(colore);
 }
 
+void ArticoloBtnWidget::setColoreText(const QColor &colore)
+{
+  SetTextColorEnabled(colore);
+}
+
 void ArticoloBtnWidget::PaintPrezzo()
 {
   QPainter painter(this);

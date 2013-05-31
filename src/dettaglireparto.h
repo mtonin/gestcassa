@@ -18,7 +18,8 @@ public slots:
    void aggiornaReparto();
 
 private slots:
-   void on_coloreBtn_clicked();
+   void on_sfondoBtn_clicked();
+   void on_carattereBtn_clicked();
    void on_fontBtn_clicked();
    void on_testoReparto_textEdited(const QString &arg1);
 
