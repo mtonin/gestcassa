@@ -16,7 +16,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 
   nuovaConfigurazione=new QMap<QString,QVariant>;
-  cartellaPdfTxt->setText(configurazione->value("cartellaPdf","c:\\").toString());
+  cartellaPdfTxt->setText(configurazione->value("cartellaPdf","").toString());
   if(configurazione->value("stampantePdf",true).toBool()) {
     pdfChk->setChecked(true);
   } else {
