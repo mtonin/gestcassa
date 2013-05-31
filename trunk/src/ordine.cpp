@@ -162,7 +162,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   bool stampantePdf=configurazione->value("stampantePdf",true).toBool();
   QString stampanteSelezionata=configurazione->value("stampante","PDF").toString();
   if(stampantePdf) {
-    QDir cartellaPdf(configurazione->value("cartellaPdf","c:/temp").toString());
+    QDir cartellaPdf(configurazione->value("cartellaPdf","ticket").toString());
     cartellaPdf.mkpath(cartellaPdf.absolutePath());
     printer.setOutputFileName(QString("%1/%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
   } else {

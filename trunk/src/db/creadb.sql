@@ -60,17 +60,13 @@ CREATE TABLE articolimenu (
 
 -- Table: ordinirighe
 CREATE TABLE ordinirighe ( 
-    numeroordine        INTEGER REFERENCES ordinirighe ( numero ),
-    idarticolo          INTEGER REFERENCES articoli ( idarticolo ),
-    quantita            INTEGER,
-    descrizioneArticolo VARCHAR 
+    numeroordine INTEGER REFERENCES ordini ( numero ),
+    idarticolo   INTEGER REFERENCES articoli ( idarticolo ),
+    quantita     INTEGER 
 );
 
 
 -- View: dettagliordine
---righeordine.numeroordine=142 and
---and articoli.gestioneMenu='true'
---righeordine.numeroordine=142 and
 CREATE VIEW dettagliordine AS
        SELECT ordinirighe.numeroordine,
               ordinirighe.quantita,
