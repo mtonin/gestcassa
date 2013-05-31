@@ -432,7 +432,7 @@
             <item>
              <widget class="QFrame" name="clockFrame">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -449,31 +449,18 @@
                 <height>16777215</height>
                </size>
               </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(255, 255, 255);</string>
               </property>
-              <property name="frameShadow">
-               <enum>QFrame::Plain</enum>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <widget class="QFrame" name="infoFrame">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -490,17 +477,17 @@
               <property name="maximumSize">
                <size>
                 <width>150</width>
-                <height>16777215</height>
+                <height>71</height>
                </size>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
               </property>
               <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
+               <enum>QFrame::Box</enum>
               </property>
-              <property name="frameShadow">
-               <enum>QFrame::Plain</enum>
+              <property name="lineWidth">
+               <number>1</number>
               </property>
              </widget>
             </item>
