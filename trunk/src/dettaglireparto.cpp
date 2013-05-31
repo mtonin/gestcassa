@@ -14,17 +14,20 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
   repartoBtn=currentRepartoBtn;
   testoReparto->setText(repartoBtn->getNomeReparto());
   QColor colore=repartoBtn->getColore();
-  coloreBtn->SetButtonColorNormal(colore);
+  sfondoBtn->SetButtonColorNormal(colore);
+  colore=repartoBtn->getColoreText();
+  carattereBtn->SetButtonColorNormal(colore);
   fontBtn->setFont(repartoBtn->getFont());
 }
 
 void DettagliReparto::aggiornaReparto()
 {
-  QSqlQuery query("insert or replace into reparti (idreparto,descrizione,font,coloresfondo) values(?,?,?,?)");
+  QSqlQuery query("insert or replace into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere) values(?,?,?,?,?)");
   query.addBindValue(repartoBtn->getId());
   query.addBindValue(testoReparto->text());
   query.addBindValue(repartoBtn->getFont());
   query.addBindValue(repartoBtn->getColore().toRgb());
+  query.addBindValue(repartoBtn->getColoreText().toRgb());
   query.exec();
   if(!query.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -33,7 +36,7 @@ void DettagliReparto::aggiornaReparto()
   }
 }
 
-void DettagliReparto::on_coloreBtn_clicked()
+void DettagliReparto::on_sfondoBtn_clicked()
 {
   QColorDialog dlg;
   QColor colore=repartoBtn->getColore();
@@ -41,7 +44,21 @@ void DettagliReparto::on_coloreBtn_clicked()
   if(dlg.exec()) {
     colore=dlg.currentColor();
     repartoBtn->setColore(colore);
-    coloreBtn->SetButtonColorNormal(colore);
+    sfondoBtn->SetButtonColorNormal(colore);
+  }
+  aggiornaReparto();
+
+}
+
+void DettagliReparto::on_carattereBtn_clicked()
+{
+  QColorDialog dlg;
+  QColor colore=repartoBtn->getColore();
+  dlg.setCurrentColor(colore);
+  if(dlg.exec()) {
+    colore=dlg.currentColor();
+    repartoBtn->setColoreText(colore);
+    carattereBtn->SetButtonColorNormal(colore);
   }
   aggiornaReparto();
 

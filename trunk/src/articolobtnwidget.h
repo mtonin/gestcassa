@@ -31,6 +31,7 @@ signals:
 public slots:
   void setButtonFont(const QFont& font);
   void setColore(const QColor &colore);
+  void setColoreText(const QColor &colore);
 
 private:
   int idArticolo;

@@ -21,6 +21,12 @@ void RepartoBtnWidget::setColore(const QColor &colore)
   emit cambiaColore(colore);
 }
 
+void RepartoBtnWidget::setColoreText(const QColor &colore)
+{
+  SetTextColorEnabled(colore);
+  emit cambiaColoreText(colore);
+}
+
 void RepartoBtnWidget::setButtonFont(const QFont &font)
 {
   //currentFont=font;
@@ -43,6 +49,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   int numColDescr=stmt.record().indexOf("descrizione");
   int numColFont=stmt.record().indexOf("font");
   int numColColoreSfondo=stmt.record().indexOf("coloresfondo");
+  int numColColoreCarattere=stmt.record().indexOf("colorecarattere");
   if(stmt.next()) {
     nomeReparto=stmt.value(numColDescr).toString();
     QFont currentFont;
@@ -50,6 +57,8 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
     setFont(currentFont);
     QString coloreSfondo=stmt.value(numColColoreSfondo).toString();
     SetButtonColorNormal(coloreSfondo);
+    QString coloreCarattere=stmt.value(numColColoreCarattere).toString();
+    SetTextColorEnabled(coloreCarattere);
   } else {
     nomeReparto=QString("REPARTO %1").arg(idReparto);
   }

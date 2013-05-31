@@ -17,15 +17,6 @@ CREATE TABLE articoli (
 );
 
 
--- Table: reparti
-CREATE TABLE reparti ( 
-    idreparto    INTEGER         PRIMARY KEY AUTOINCREMENT,
-    descrizione  VARCHAR( 50 )   NOT NULL,
-    font         VARCHAR( 100 ),
-    coloresfondo VARCHAR( 50 ) 
-);
-
-
 -- Table: ordini
 CREATE TABLE ordini ( 
     numero   INTEGER  PRIMARY KEY,
@@ -63,6 +54,16 @@ CREATE TABLE ordinirighe (
     numeroordine INTEGER REFERENCES ordini ( numero ),
     idarticolo   INTEGER REFERENCES articoli ( idarticolo ),
     quantita     INTEGER 
+);
+
+
+-- Table: reparti
+CREATE TABLE reparti ( 
+    idreparto       INTEGER         PRIMARY KEY AUTOINCREMENT,
+    descrizione     VARCHAR( 50 )   NOT NULL,
+    font            VARCHAR( 100 ),
+    coloresfondo    VARCHAR( 50 ),
+    coloreCarattere VARCHAR( 50 ) 
 );
 
 

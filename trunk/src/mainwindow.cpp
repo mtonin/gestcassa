@@ -179,6 +179,7 @@ void MainWindow::creaRepartiButtons(){
 void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
 
   QColor coloreSfondo=repartoBtn->buttonColorNormal();
+  QColor coloreCarattere=repartoBtn->textColorEnabled();
   QFont currentFont=repartoBtn->getFont();
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(2);
@@ -191,6 +192,7 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
       ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
       btn->SetButtonColorNormal(coloreSfondo);
       btn->SetButtonColorHot(coloreSfondo);
+      btn->SetTextColorEnabled(coloreCarattere);
       btn->setFont(currentFont);
       btn->setVisualizzaPrezzo(visualizzaPrezzo);
       stackedBox->addWidget(btn);
@@ -202,6 +204,8 @@ void MainWindow::creaArticoliPerRepartoButtons(RepartoBtnWidget* repartoBtn)   {
       connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
       connect(repartoBtn,SIGNAL(cambiaColore(QColor)),btn,SLOT(setColore(QColor)));
       connect(repartoBtn,SIGNAL(cambiaFont(QFont)),btn,SLOT(setButtonFont(QFont)));
+      connect(repartoBtn,SIGNAL(cambiaColoreText(QColor)),btn,SLOT(setColoreText(QColor)));
+
       articoliBtnList.append(btn);
     }
   }
