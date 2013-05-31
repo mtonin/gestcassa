@@ -156,7 +156,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
   db.transaction();
 
   QSqlQuery stmt;
-  if(!stmt.exec("delete from righeordine")) {
+  if(!stmt.exec("delete from ordinirighe")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     db.rollback();
     return;

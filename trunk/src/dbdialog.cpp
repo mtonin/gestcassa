@@ -1,6 +1,6 @@
 #include "dbdialog.h"
 
-#include <QFileDialog>
+#include <QFile>
 #include <QtSql>
 #include <QMessageBox>
 
@@ -60,6 +60,11 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
 {
   if(nomeFile.isEmpty())
     return false;
+  QFile dbFile(nomeFile);
+  if(!dbFile.exists()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),QString("Il file %1 non esiste").arg(nomeFile));
+    return false;
+  }
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
   db.setDatabaseName(nomeFile);
   db.setUserName(utente);

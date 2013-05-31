@@ -82,7 +82,7 @@ void OrdineModel::completaOrdine(const int numeroOrdine)
   QSqlQuery stmt;
 
   foreach (rigaArticoloClass rigaArticolo,articoloList) {
-    stmt.prepare("insert into righeordine(numeroordine,idarticolo,quantita) values(?,?,?)");
+    stmt.prepare("insert into ordinirighe(numeroordine,idarticolo,quantita) values(?,?,?)");
     stmt.addBindValue(numeroOrdine);
     stmt.addBindValue(rigaArticolo.id);
     stmt.addBindValue(rigaArticolo.quantita);
