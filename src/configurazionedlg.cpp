@@ -40,10 +40,18 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
 void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 {
   QPrinter printer;
+
+  /*
+  QPrintDialog printDlg(&printer);
+  if(QDialog::Accepted==printDlg.exec()) {
+    stampanteSelezionataTxt->setText(printer.printerName());
+  }
+  */
   QPageSetupDialog pageSetupDlg(&printer);
   if(QDialog::Accepted==pageSetupDlg.exec()) {
     stampanteSelezionataTxt->setText(printer.printerName());
   }
+
   nuovaConfigurazione->insert("stampante",printer.printerName());
 
 }
