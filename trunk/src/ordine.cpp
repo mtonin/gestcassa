@@ -182,7 +182,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   int pageWidth=300;
 
   QFont fontNormale("lucida console");
-  fontNormale.setPointSize(12);
+  fontNormale.setPointSize(10);
   QFont fontGrassetto("lucida console");
   fontGrassetto.setPointSize(14);
   fontGrassetto.setBold(true);
@@ -190,6 +190,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   fontGrassettoCorsivo.setPointSize(14);
   fontGrassettoCorsivo.setBold(true);
   fontGrassettoCorsivo.setItalic(true);
+  fontGrassettoCorsivo.setUnderline(true);
   QFont fontMini("lucida console");
   fontMini.setPointSize(1);
 
@@ -269,7 +270,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
       QRect tmpRect;
       painter.setFont(fontNormale);
       painter.drawText(x,y,(pageWidth/10)*2-5,100,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
-      painter.drawText(x+(pageWidth/10)*2,y,(pageWidth/10)*5-5,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
+      painter.drawText(x+(pageWidth/10)*2,y,(pageWidth/10)*7-5,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
     }
 
     y+=textRect.height()+5;
@@ -334,7 +335,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
     int quantita=stmt.value(1).toInt();
     QString quantitaString=QString("%1").arg(quantita,3,10);
     float prezzo=stmt.value(2).toFloat();
-    QString prezzoString=QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo,6,'f',2);
+    QString prezzoString=QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo,5,'f',2);
 
     totale+=prezzo;
     QRect tmpRect;
@@ -347,7 +348,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y,pageWidth,y);
 
   y+=5;
-  QString totaleString=QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale,6,'f',2);
+  QString totaleString=QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
 
