@@ -183,13 +183,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QToolButton" name="cancellaBtn">
-          <property name="text">
-           <string>Elimina</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
      </layout>
