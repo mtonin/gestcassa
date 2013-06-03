@@ -251,19 +251,6 @@ void DettagliArticolo::creaSelezioneArticoloBox()
   articoliBox->setCurrentIndex(0);
 }
 
-void DettagliArticolo::on_articoliList_customContextMenuRequested(const QPoint &pos)
-{
-  if(!articoliList->selectionModel()->currentIndex().isValid()) {
-    return;
-  }
-  QMenu* ctxMenu=new QMenu;
-  QAction* cancellaAction=new QAction("Cancella riga",this);
-  connect(cancellaAction,SIGNAL(triggered()),this,SLOT(on_cancellaBtn_clicked()));
-  ctxMenu->addAction(cancellaAction);
-  ctxMenu->move(articoliList->mapToGlobal(pos));
-  ctxMenu->exec();
-}
-
 void DettagliArticolo::on_eliminaBtn_clicked()
 {
   QSqlDatabase db=QSqlDatabase::database();
@@ -303,4 +290,16 @@ void DettagliArticolo::on_eliminaBtn_clicked()
     emit eliminaPulsanteCorrente(articoloBtn);
 
   }
+}
+
+void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
+{
+  QMenu* ctxMenu=new QMenu;
+  QAction* cancellaAction=new QAction("Rimuove articolo",this);
+  connect(cancellaAction,SIGNAL(triggered()),this,SLOT(on_cancellaBtn_clicked()));
+  ctxMenu->addAction(cancellaAction);
+  QPoint pos=QCursor::pos();
+  ctxMenu->move(pos);
+  ctxMenu->exec();
+
 }

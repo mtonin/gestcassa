@@ -32,11 +32,11 @@ private slots:
 
    void on_cancellaBtn_clicked();
 
-   void on_articoliList_customContextMenuRequested(const QPoint &pos);
-
    void on_eliminaBtn_clicked();
 
-  private:
+   void on_articoliList_clicked(const QModelIndex &index);
+
+private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;
    QStandardItemModel* modello;
