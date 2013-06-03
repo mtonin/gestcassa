@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="generaleTab">
       <attribute name="title">
@@ -215,20 +215,13 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="stampanteSelezionataTxt">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
+            <item row="0" column="3">
              <widget class="QToolButton" name="printerSelectBtn">
               <property name="enabled">
                <bool>false</bool>
               </property>
               <property name="text">
-               <string>Cambia</string>
+               <string>Impostazioni</string>
               </property>
              </widget>
             </item>
@@ -245,10 +238,17 @@
             <item row="1" column="1">
              <widget class="QLineEdit" name="cartellaPdfTxt"/>
             </item>
-            <item row="1" column="2">
+            <item row="1" column="3">
              <widget class="QToolButton" name="cartellaPdfBtn">
               <property name="text">
                <string>Cambia</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="stampanteBox">
+              <property name="enabled">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -356,7 +356,6 @@
  <tabstops>
   <tabstop>nomeCassaTxt</tabstop>
   <tabstop>buttonBox</tabstop>
-  <tabstop>stampanteSelezionataTxt</tabstop>
   <tabstop>printerSelectBtn</tabstop>
  </tabstops>
  <resources/>
