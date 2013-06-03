@@ -203,29 +203,28 @@ void DettagliArticolo::on_menuBox_clicked(bool checked)
 
 void DettagliArticolo::on_nuovoBtn_clicked()
 {
-  int numRighe=articoliList->model()->rowCount();
-  modello->insertRow(numRighe);
+  //int numRighe=articoliList->model()->rowCount();
+  //modello->insertRow(numRighe);
   QString nome=articoliMenuModello->index(articoliBox->currentIndex(),0).data().toString();
   QString idarticolo=articoliMenuModello->index(articoliBox->currentIndex(),1).data().toString();
-  QStandardItem* item=new QStandardItem(nome);
-  modello->setItem(numRighe,0,item);
-  item=new QStandardItem(idarticolo);
-  modello->setItem(numRighe,1,item);
-  articoliList->setCurrentIndex(modello->index(numRighe,0));
-  articoliList->hideColumn(1);
-  aggiornaArticolo();
+
+  QList<QStandardItem*> listaItems=modello->findItems(idarticolo,Qt::MatchExactly,1);
+  QStandardItem* item;
+  if(0==listaItems.size()) {
+    item=new QStandardItem(nome);
+    listaItems.append(item);
+    item=new QStandardItem(idarticolo);
+    listaItems.append(item);
+    modello->appendRow(listaItems);
+    articoliList->hideColumn(1);
+    aggiornaArticolo();
+  } else {
+    item=listaItems.at(0);
+  }
+  articoliList->setCurrentIndex(modello->indexFromItem(item));
   articoliList->setFocus();
 
 }
-
-void DettagliArticolo::on_cancellaBtn_clicked()
-{
-  int currentRow=articoliList->currentIndex().row();
-  articoliList->model()->removeRow(currentRow);
-  articoliList->setCurrentIndex(modello->index(currentRow-1,0));
-  aggiornaArticolo();
-}
-
 
 void DettagliArticolo::creaSelezioneArticoloBox()
 {
@@ -292,11 +291,19 @@ void DettagliArticolo::on_eliminaBtn_clicked()
   }
 }
 
+void DettagliArticolo::rimuoveArticolo()
+{
+  int currentRow=articoliList->currentIndex().row();
+  articoliList->model()->removeRow(currentRow);
+  articoliList->setCurrentIndex(modello->index(currentRow-1,0));
+  aggiornaArticolo();
+}
+
 void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
 {
   QMenu* ctxMenu=new QMenu;
   QAction* cancellaAction=new QAction("Rimuove articolo",this);
-  connect(cancellaAction,SIGNAL(triggered()),this,SLOT(on_cancellaBtn_clicked()));
+  connect(cancellaAction,SIGNAL(triggered()),this,SLOT(rimuoveArticolo()));
   ctxMenu->addAction(cancellaAction);
   QPoint pos=QCursor::pos();
   ctxMenu->move(pos);

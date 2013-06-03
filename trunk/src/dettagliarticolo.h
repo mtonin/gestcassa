@@ -30,11 +30,10 @@ private slots:
 
    void on_nuovoBtn_clicked();
 
-   void on_cancellaBtn_clicked();
-
    void on_eliminaBtn_clicked();
 
    void on_articoliList_clicked(const QModelIndex &index);
+   void rimuoveArticolo();
 
 private:
    void aggiornaArticolo();
@@ -44,7 +43,6 @@ private:
 
    void reset();
    void creaSelezioneArticoloBox();
-
 };
 
 #endif // DETTAGLIARTICOLO_H
