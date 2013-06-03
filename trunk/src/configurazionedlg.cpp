@@ -1,9 +1,10 @@
 #include "configurazionedlg.h"
 #include "destinazionidlg.h"
 
-#include <QPrintDialog>
 #include <QPageSetupDialog>
+#include <QPrintDialog>
 #include <QPrinter>
+#include <QPrinterInfo>
 #include <QtSql>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -22,7 +23,17 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   } else {
     stampanteChk->setChecked(true);
   }
-  stampanteSelezionataTxt->setText(configurazione->value("stampante").toString());
+
+  QString stampanteSelezionata=configurazione->value("stampante").toString();
+  QList<QPrinterInfo> listaStampanti=QPrinterInfo::availablePrinters();
+  int idx=0;
+  foreach (QPrinterInfo stampante, listaStampanti) {
+    stampanteBox->addItem(stampante.printerName());
+    if(stampante.printerName()==stampanteSelezionata) {
+      stampanteBox->setCurrentIndex(idx);
+    }
+    idx++;
+  }
   intestazioneScontrinoTxt->setPlainText(configurazione->value("intestazione").toString());
   durataRestoTxt->setText(configurazione->value("durataResto",5).toString());
   if(configurazione->value("abilitaResto",false).toBool()) {
@@ -41,18 +52,16 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 {
   QPrinter printer;
 
-  /*
   QPrintDialog printDlg(&printer);
   if(QDialog::Accepted==printDlg.exec()) {
-    stampanteSelezionataTxt->setText(printer.printerName());
   }
-  */
+  /*
   QPageSetupDialog pageSetupDlg(&printer);
   if(QDialog::Accepted==pageSetupDlg.exec()) {
-    stampanteSelezionataTxt->setText(printer.printerName());
   }
+  */
 
-  nuovaConfigurazione->insert("stampante",printer.printerName());
+  //nuovaConfigurazione->insert("stampante",printer.printerName());
 
 }
 
@@ -91,9 +100,9 @@ void ConfigurazioneDlg::on_attivaRestoCheck_toggled(bool checked)
 
 void ConfigurazioneDlg::on_stampanteChk_toggled(bool checked)
 {
-    stampanteSelezionataTxt->setEnabled(checked);
-    printerSelectBtn->setEnabled(checked);
-    configurazione->insert("stampantePdf",!checked);
+  stampanteBox->setEnabled(checked);
+  printerSelectBtn->setEnabled(checked);
+  configurazione->insert("stampantePdf",!checked);
 }
 
 void ConfigurazioneDlg::on_pdfChk_toggled(bool checked)
@@ -117,11 +126,6 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
 void ConfigurazioneDlg::on_cartellaPdfTxt_textEdited(const QString &arg1)
 {
   configurazione->insert("cartellaPdf",arg1);
-}
-
-void ConfigurazioneDlg::on_stampanteSelezionataTxt_textEdited(const QString &arg1)
-{
-  nuovaConfigurazione->insert("stampante",arg1);
 }
 
 void ConfigurazioneDlg::on_nomeCassaTxt_textEdited(const QString &arg1)
@@ -178,4 +182,9 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
   db.commit();
   emit resetOrdini();
 
+}
+
+void ConfigurazioneDlg::on_stampanteBox_activated(const QString &arg1)
+{
+  nuovaConfigurazione->insert("stampante",arg1);
 }

@@ -33,8 +33,6 @@ private slots:
 
   void on_cartellaPdfTxt_textEdited(const QString &arg1);
 
-  void on_stampanteSelezionataTxt_textEdited(const QString &arg1);
-
   void on_nomeCassaTxt_textEdited(const QString &arg1);
 
   void on_durataRestoTxt_textEdited(const QString &arg1);
@@ -48,6 +46,8 @@ private slots:
   void on_visualizzaPrezzoBox_clicked(bool checked);
 
   void on_cancellaOrdiniBtn_clicked();
+
+  void on_stampanteBox_activated(const QString &arg1);
 
 private:
   QMap<QString,QVariant>* configurazione;
