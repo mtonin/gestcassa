@@ -10,6 +10,7 @@ void ArticoloBtnWidget::setNomeArticolo(const QString nome){
 void ArticoloBtnWidget::setPrezzo(float nuovoPrezzo)
 {
   prezzo=nuovoPrezzo;
+  update();
 }
 
 void ArticoloBtnWidget::setRepartoStampa(const QString nome)
