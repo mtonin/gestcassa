@@ -11,7 +11,6 @@ class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
    Q_OBJECT
 
 signals:
-  void eliminaPulsanteCorrente(ArticoloBtnWidget*);
 
 public:
    explicit DettagliArticolo(QWidget *parent = 0);

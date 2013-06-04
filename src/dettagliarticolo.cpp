@@ -286,7 +286,15 @@ void DettagliArticolo::on_eliminaBtn_clicked()
     }
 
     db.commit();
-    emit eliminaPulsanteCorrente(articoloBtn);
+
+    articoloBtn->setNomeArticolo("");
+    articoloBtn->setPrezzo(0);
+    articoloBtn->setAbilitato(true);
+    articoloBtn->setRepartoStampa("");
+    articoloBtn->setGestioneMenu(false);
+    articoloBtn->setId(0);
+    setCurrentArticolo(articoloBtn);
+    //emit eliminaPulsanteCorrente(articoloBtn);
 
   }
 }
