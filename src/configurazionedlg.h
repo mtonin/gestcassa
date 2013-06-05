@@ -49,6 +49,8 @@ private slots:
 
   void on_stampanteBox_activated(const QString &arg1);
 
+  void on_exportOrdiniBtn_clicked();
+
 private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
