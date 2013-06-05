@@ -11,6 +11,7 @@ class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
   
 signals:
   void resetOrdini();
+  void resetArticoli();
 
 public:
   explicit ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent = 0);
@@ -51,7 +52,13 @@ private slots:
 
   void on_exportOrdiniBtn_clicked();
 
+  void on_exportArticoliBtn_clicked();
+
+  void on_importArticoliBtn_clicked();
+
 private:
+  void esportaInFile(const QString&);
+
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
   SimpleCrypt* cifratore;

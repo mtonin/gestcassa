@@ -8,6 +8,8 @@
 #include <QtSql>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent) : configurazione(par),QDialog(parent)
 {
@@ -95,21 +97,21 @@ void ConfigurazioneDlg::on_attivaRestoCheck_toggled(bool checked)
 {
     durataRestoLbl->setEnabled(checked);
     durataRestoTxt->setEnabled(checked);
-    configurazione->insert("abilitaResto",checked);
+    nuovaConfigurazione->insert("abilitaResto",checked);
 }
 
 void ConfigurazioneDlg::on_stampanteChk_toggled(bool checked)
 {
   stampanteBox->setEnabled(checked);
   printerSelectBtn->setEnabled(checked);
-  configurazione->insert("stampantePdf",!checked);
+  nuovaConfigurazione->insert("stampantePdf",!checked);
 }
 
 void ConfigurazioneDlg::on_pdfChk_toggled(bool checked)
 {
     cartellaPdfBtn->setEnabled(checked);
     cartellaPdfTxt->setEnabled(checked);
-    configurazione->insert("stampantePdf",checked);
+    nuovaConfigurazione->insert("stampantePdf",checked);
 }
 
 void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
@@ -119,44 +121,44 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
   if(!cartella.isEmpty()) {
     cartellaPdfTxt->setText(cartella);
   }
-  configurazione->insert("cartellaPdf",cartella);
+  nuovaConfigurazione->insert("cartellaPdf",cartella);
 
 }
 
 void ConfigurazioneDlg::on_cartellaPdfTxt_textEdited(const QString &arg1)
 {
-  configurazione->insert("cartellaPdf",arg1);
+  nuovaConfigurazione->insert("cartellaPdf",arg1);
 }
 
 void ConfigurazioneDlg::on_nomeCassaTxt_textEdited(const QString &arg1)
 {
-  configurazione->insert("nomeCassa",arg1);
+  nuovaConfigurazione->insert("nomeCassa",arg1);
 }
 
 void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
 {
-  configurazione->insert("durataResto",arg1);
+  nuovaConfigurazione->insert("durataResto",arg1);
 }
 
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
-  configurazione->insert("descrManifestazione",arg1);
+  nuovaConfigurazione->insert("descrManifestazione",arg1);
 }
 
 void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
 {
   QString pwd=cifratore->encryptToString(arg1);
-  configurazione->insert("adminPassword",pwd);
+  nuovaConfigurazione->insert("adminPassword",pwd);
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
-  configurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
+  nuovaConfigurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
 }
 
 void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 {
-  configurazione->insert("visualizzazionePrezzo",checked);
+  nuovaConfigurazione->insert("visualizzazionePrezzo",checked);
 }
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
@@ -191,6 +193,9 @@ void ConfigurazioneDlg::on_stampanteBox_activated(const QString &arg1)
 
 void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 {
+
+  QStringList listaSql;
+
   QSqlQuery stmt("select a.numero,a.tsstampa, a.importo,b.quantita,c.descrizione \
                from ordini a,ordinirighe b, articoli c \
                where a.numero=b.numeroordine \
@@ -211,7 +216,182 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
                  .arg(importoOrdine)
                  .arg(quantitaArticoloOrdine)
                  .arg(descrizioneArticoloOrdine);
-    qDebug(riga.toUtf8());
+    listaSql.append(riga);
   }
 
+  esportaInFile(listaSql.join("\n"));
+
+}
+
+void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
+{
+  QStringList listaSql;
+  QSqlQuery stmt;
+
+  if(!stmt.exec("select nome,intestazione from destinazionistampa")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString nomeDest=stmt.value(0).toString();
+    QString intestazioneDest=stmt.value(1).toString();
+    QString riga=QString("INSERT INTO DESTINAZIONISTAMPA VALUES (\"%1\",\"%2\");")
+                 .arg(nomeDest)
+                 .arg(intestazioneDest);
+    listaSql.append(riga);
+  }
+
+  if(!stmt.exec("select idreparto,descrizione,font,coloresfondo,colorecarattere from reparti")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString idreparto=stmt.value(0).toString();
+    QString descrizioneReparto=stmt.value(1).toString();
+    QString font=stmt.value(2).toString();
+    QString coloreSfondo=stmt.value(3).toString();
+    QString coloreCarattere=stmt.value(4).toString();
+    QString riga=QString("INSERT INTO REPARTI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+                 .arg(idreparto)
+                 .arg(descrizioneReparto)
+                 .arg(font)
+                 .arg(coloreSfondo)
+                 .arg(coloreCarattere);
+    listaSql.append(riga);
+  }
+
+  if(!stmt.exec("select idarticolo,descrizione,prezzo,destinazione,gestioneMenu from articoli")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString idArticolo=stmt.value(0).toString();
+    QString descrizioneArticolo=stmt.value(1).toString();
+    QString prezzo=stmt.value(2).toString();
+    QString destinazioneStampa=stmt.value(3).toString();
+    QString gestioneMenu=stmt.value(4).toString();
+    QString riga=QString("INSERT INTO ARTICOLI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+                 .arg(idArticolo)
+                 .arg(descrizioneArticolo)
+                 .arg(prezzo)
+                 .arg(destinazioneStampa)
+                 .arg(gestioneMenu);
+    listaSql.append(riga);
+  }
+
+  if(!stmt.exec("select idarticolo,idarticolomenu from articolimenu")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString idArticolo=stmt.value(0).toString();
+    QString idArticoloMenu=stmt.value(1).toString();
+    QString riga=QString("INSERT INTO ARTICOLIMENU VALUES (\"%1\",\"%2\");")
+                 .arg(idArticolo)
+                 .arg(idArticoloMenu);
+    listaSql.append(riga);
+  }
+
+  if(!stmt.exec("select idreparto,riga,colonna,idarticolo,abilitato from pulsanti")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString idReparto=stmt.value(0).toString();
+    QString rigaPulsante=stmt.value(1).toString();
+    QString colonnaPulsante=stmt.value(2).toString();
+    QString idArticolo=stmt.value(3).toString();
+    QString flagAbilitato=stmt.value(4).toString();
+    QString riga=QString("INSERT INTO PULSANTI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+                 .arg(idReparto)
+                 .arg(rigaPulsante)
+                 .arg(colonnaPulsante)
+                 .arg(idArticolo)
+                 .arg(flagAbilitato);
+    listaSql.append(riga);
+  }
+
+  QString riga=QString("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES (\"descrManifestazione\",\"%1\");")
+               .arg(configurazione->value("descrManifestazione").toString());
+  listaSql.append(riga);
+  riga=QString("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES (\"intestazione\",\"%1\");")
+               .arg(configurazione->value("intestazione").toString());
+  listaSql.append(riga);
+
+  esportaInFile(listaSql.join("\n"));
+}
+
+void ConfigurazioneDlg::esportaInFile(const QString &testo)
+{
+  QString nomeFile;
+  nomeFile=QFileDialog::getSaveFileName(0,"Esporta in");
+  if(nomeFile.isEmpty()) {
+    return;
+  }
+  QFile exportFile(nomeFile);
+  exportFile.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate);
+  QTextStream exportStream(&exportFile);
+
+  exportStream << testo;
+  exportFile.close();
+}
+
+void ConfigurazioneDlg::on_importArticoliBtn_clicked()
+{
+  QString nomeFile;
+  nomeFile=QFileDialog::getOpenFileName(0,"Importa da");
+  if(nomeFile.isEmpty()) {
+    return;
+  }
+  QFile importFile(nomeFile);
+  importFile.open(QIODevice::ReadOnly|QIODevice::Text);
+
+  QSqlDatabase db=QSqlDatabase::database();
+  db.transaction();
+
+  QSqlQuery stmt;
+  if(!stmt.exec("delete from pulsanti") ||
+     !stmt.exec("delete from articolimenu") ||
+     !stmt.exec("delete from articoli") ||
+     !stmt.exec("delete from destinazionistampa") ||
+     !stmt.exec("delete from reparti")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+
+  QString sqlString=importFile.readAll();
+  foreach (QString sql,sqlString.split(";")) {
+    if(sql.isEmpty()) continue;
+    qDebug(sql.toUtf8());
+    if(!stmt.exec(sql)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+
+  }
+
+  db.commit();
+  emit resetArticoli();
+
+  if(!stmt.exec("select valore from configurazione where chiave='descrManifestazione'")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+  if(stmt.next()) {
+    nuovaConfigurazione->insert("descrManifestazione",stmt.value(0).toString());
+  }
+
+  if(!stmt.exec("select valore from configurazione where chiave='intestazione'")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+  if(stmt.next()) {
+    nuovaConfigurazione->insert("intestazione",stmt.value(0).toString());
+  }
+
+  on_buttonBox_accepted();
 }
