@@ -19,8 +19,10 @@ class DBDialog : public QDialog, private Ui::DBDialog
 
       void on_adminBox_clicked(bool checked);
 
-  private:
+private:
       bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
+      void creaDb();
+
       QMap<QString,QVariant>* conf;
       SimpleCrypt* cifratore;
 };
