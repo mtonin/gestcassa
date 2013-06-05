@@ -71,10 +71,6 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   ui->infoFrame->setLayout(infoLayout);
 
   if("operatore"==confMap->value("ruolo","operatore")) {
-    ui->configurazioneBtn->setEnabled(false);
-    ui->reportBtn->setEnabled(false);
-    ui->gestioneBtn->setEnabled(false);
-    ui->cassaBtn->setEnabled(false);
     gestioneModalita(CASSA);
   } else {
     gestioneModalita(GESTIONE);
@@ -93,6 +89,8 @@ MainWindow::~MainWindow()
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
+    ui->configurazioneBtn->setEnabled(true);
+    ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
     /*
@@ -107,8 +105,12 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       it.next()->setCurrentIndex(0);
     }
   } else {
+    ui->configurazioneBtn->setEnabled(false);
+    ui->reportBtn->setEnabled(false);
+    ui->gestioneBtn->setEnabled(false);
+    ui->cassaBtn->setEnabled(false);
+
     if("amministratore"==confMap->value("ruolo","operatore")) {
-      ui->cassaBtn->setEnabled(false);
       ui->gestioneBtn->setEnabled(true);
     }
 

@@ -26,6 +26,8 @@ private slots:
 
   void on_annullaBtn_clicked();
 
+  void on_ristampaBtn_clicked();
+
   void on_stampaBtn_clicked();
 
   void on_ultimoRestoBtn_clicked();
