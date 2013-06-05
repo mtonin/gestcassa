@@ -27,6 +27,7 @@ public:
 
   
 private slots:
+  void creaRepartiButtons();
    void repartoSelezionato();
    void articoloSelezionato();
    void on_configurazioneBtn_clicked();
@@ -48,7 +49,7 @@ private:
   DettagliArticolo* dettagliArticoloBox;
   infoWidget* info;
 
-  QList<ArticoloBtnWidget*> articoliBtnList;
+  //QList<ArticoloBtnWidget*> articoliBtnList;
   QList<QStackedWidget*> stackedList;
   modalitaType modalitaCorrente;
   QMap<QString,QVariant>* confMap;
@@ -56,9 +57,8 @@ private:
   void keyPressEvent(QKeyEvent *);
   void closeEvent(QCloseEvent *);
 
-  void creaRepartiButtons();
   void gestioneModalita(const modalitaType nuovaModalita);
-  void creaArticoliPerRepartoButtons(RepartoBtnWidget*);
+  void creaArticoliPerRepartoButtons(int, RepartoBtnWidget*);
   void creaInfoMessaggi();
 
 };
