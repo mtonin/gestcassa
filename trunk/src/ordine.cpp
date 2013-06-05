@@ -38,11 +38,15 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagNextBtn->setIcon(QIcon(":/GestCassa/freccia_giu"));
   pagNextBtn->setIconSize(QSize(32,32));
   pagNextBtn->SetIconPosition(QPictureButton::PositionTop);
+  ristampaBtn->setIcon(QIcon(":/GestCassa/printer-1"));
+  ristampaBtn->setIconSize(QSize(32,32));
+  ristampaBtn->SetIconPosition(QPictureButton::PositionTop);
   stampaBtn->SetButtonColorNormal(Qt::yellow);
   annullaBtn->SetButtonColorNormal(Qt::yellow);
   ultimoRestoBtn->SetButtonColorNormal(Qt::yellow);
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
+  ristampaBtn->SetButtonColorNormal(Qt::yellow);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -96,13 +100,19 @@ void Ordine::on_annullaBtn_clicked()
   }
 }
 
+void Ordine::on_ristampaBtn_clicked()
+{
+  int numeroOrdine=numeroOrdineTxt->text().toInt()-1;
+  stampaScontrino(numeroOrdine);
+}
+
 void Ordine::on_stampaBtn_clicked()
 {
   if(0==modello.rowCount()) {
     return;
   }
 
-  int numeroOrdine=numeroLbl->text().toInt();
+  int numeroOrdine=numeroOrdineTxt->text().toInt();
   importoUltimoOrdine=totaleLine->text().toFloat();
 
   QSqlQuery stmt;
@@ -143,7 +153,7 @@ void Ordine::nuovoOrdine()
     numeroOrdine=query.value(0).toInt();
   }
   numeroOrdine++;
-  numeroLbl->setText(QString("%L1").arg(numeroOrdine));
+  numeroOrdineTxt->setText(QString("%L1").arg(numeroOrdine));
 }
 
 void Ordine::stampaScontrino(int numeroOrdine)

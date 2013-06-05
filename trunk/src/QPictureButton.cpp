@@ -222,7 +222,7 @@ void QPictureButton::PaintText()
         {
             case PositionTop:
                 Top += (this->iconSize().height() + m_IconSpace + m_TextSpace);
-                Align = Qt::AlignHCenter | Qt::AlignTop;
+                Align = Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap;
                 break;
             case PositionBottom:
                 Top -= (this->iconSize().height() + m_IconSpace + m_TextSpace);
