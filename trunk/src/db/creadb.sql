@@ -1,4 +1,12 @@
 
+-- Table: ordini
+CREATE TABLE ordini ( 
+    numero   INTEGER  PRIMARY KEY,
+    tsstampa DATETIME,
+    importo  REAL     DEFAULT ( 0 ) 
+);
+
+
 -- Table: destinazionistampa
 CREATE TABLE destinazionistampa ( 
     nome         TEXT PRIMARY KEY,
@@ -14,13 +22,6 @@ CREATE TABLE articoli (
     destinazione TEXT    REFERENCES destinazionistampa ( nome ),
     gestioneMenu BOOLEAN NOT NULL
                          DEFAULT ( 'false' ) 
-);
-
-
--- Table: ordini
-CREATE TABLE ordini ( 
-    numero   INTEGER  PRIMARY KEY,
-    tsstampa DATETIME 
 );
 
 
@@ -42,13 +43,6 @@ CREATE TABLE pulsanti (
 );
 
 
--- Table: articolimenu
-CREATE TABLE articolimenu ( 
-    idarticolo     INT REFERENCES articoli ( idarticolo ),
-    idarticolomenu INT REFERENCES articoli ( idarticolo ) 
-);
-
-
 -- Table: ordinirighe
 CREATE TABLE ordinirighe ( 
     numeroordine INTEGER REFERENCES ordini ( numero ),
@@ -64,6 +58,14 @@ CREATE TABLE reparti (
     font            VARCHAR( 100 ),
     coloresfondo    VARCHAR( 50 ),
     coloreCarattere VARCHAR( 50 ) 
+);
+
+
+-- Table: articolimenu
+CREATE TABLE articolimenu ( 
+    idarticolo     INT REFERENCES articoli ( idarticolo ),
+    idarticolomenu INT REFERENCES articoli ( idarticolo ),
+    PRIMARY KEY ( idarticolo, idarticolomenu ) 
 );
 
 

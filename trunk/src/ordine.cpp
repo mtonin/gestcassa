@@ -103,12 +103,14 @@ void Ordine::on_stampaBtn_clicked()
   }
 
   int numeroOrdine=numeroLbl->text().toInt();
+  importoUltimoOrdine=totaleLine->text().toFloat();
 
   QSqlQuery stmt;
-  stmt.prepare("insert into ordini(numero,tsstampa) values(?,?)");
+  stmt.prepare("insert into ordini(numero,tsstampa,importo) values(?,?,?)");
   stmt.addBindValue(numeroOrdine);
   QDateTime ts=QDateTime::currentDateTime();
   stmt.addBindValue(ts);
+  stmt.addBindValue(importoUltimoOrdine);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());
@@ -118,8 +120,6 @@ void Ordine::on_stampaBtn_clicked()
   modello.completaOrdine(numeroOrdine);
 
   stampaScontrino(numeroOrdine);
-
-  importoUltimoOrdine=totaleLine->text().toFloat();
 
   if(configurazione->value("abilitaResto").toBool()) {
     int durataSecondi=configurazione->value("durataResto",5).toInt();

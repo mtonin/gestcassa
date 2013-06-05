@@ -188,3 +188,30 @@ void ConfigurazioneDlg::on_stampanteBox_activated(const QString &arg1)
 {
   nuovaConfigurazione->insert("stampante",arg1);
 }
+
+void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
+{
+  QSqlQuery stmt("select a.numero,a.tsstampa, a.importo,b.quantita,c.descrizione \
+               from ordini a,ordinirighe b, articoli c \
+               where a.numero=b.numeroordine \
+               and b.idarticolo=c.idarticolo");
+  if(!stmt.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    QString numeroOrdine=stmt.value(0).toString();
+    QString tsStampaOrdine=stmt.value(1).toString();
+    QString importoOrdine=stmt.value(2).toString();
+    QString quantitaArticoloOrdine=stmt.value(3).toString();
+    QString descrizioneArticoloOrdine=stmt.value(4).toString();
+    QString riga=QString("%1,%2,%3,%4,%5")
+                 .arg(numeroOrdine)
+                 .arg(tsStampaOrdine)
+                 .arg(importoOrdine)
+                 .arg(quantitaArticoloOrdine)
+                 .arg(descrizioneArticoloOrdine);
+    qDebug(riga.toUtf8());
+  }
+
+}
