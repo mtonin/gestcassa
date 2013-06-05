@@ -4,7 +4,7 @@
 #include <QtSql>
 #include <QMessageBox>
 
-const QString dbFile("cassadb.db3");
+const QString dbFileName("cassadb.db3");
 
 DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
 {
@@ -18,7 +18,7 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
 void DBDialog::on_apreBtn_clicked()
 {
 
-  if(createConnection(dbFile,"","")) {
+  if(createConnection(dbFileName,"","")) {
     QSqlQuery stmt("select chiave,valore from configurazione");
     if(!stmt.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -62,8 +62,7 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
     return false;
   QFile dbFile(nomeFile);
   if(!dbFile.exists()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),QString("Il file %1 non esiste").arg(nomeFile));
-    return false;
+    creaDb();
   }
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
   db.setDatabaseName(nomeFile);
@@ -93,4 +92,39 @@ void DBDialog::on_adminBox_clicked(bool checked)
     passwordLbl->setEnabled(checked);
     password->setEnabled(checked);
     password->setFocus();
+}
+
+void DBDialog::creaDb()
+{
+  QFile dbFile(dbFileName);
+  if(dbFile.exists()) {
+    if(QMessageBox::No==QMessageBox::question(this, QObject::tr("Nuovo Database"),QString("Il file %1 esiste già. Lo cancello?").arg(dbFileName),QMessageBox::Yes|QMessageBox::No))
+      return;
+    else dbFile.remove();
+  }
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(dbFileName);
+  //db.setUserName(utente);
+  //db.setPassword(password);
+  if (!db.open()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
+    return;
+  }
+
+  QFile sqlFile(":/GestCassa/creadb");
+  if(!sqlFile.open(QIODevice::ReadOnly)) {
+    QMessageBox::critical(0,QObject::tr("Database Error"),tr("Errore nella lettura della risorsa creadb"));
+    return;
+  }
+  QSqlQuery stmt;
+  QString sqlString=sqlFile.readAll();
+  foreach (QString sql,sqlString.split(";")) {
+    if(sql.isEmpty()) continue;
+    if(!stmt.exec(sql)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return;
+    }
+
+  }
+
 }
