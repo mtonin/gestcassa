@@ -47,6 +47,12 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
   ristampaBtn->SetButtonColorNormal(Qt::yellow);
+  stampaBtn->SetButtonColorHot(Qt::red);
+  annullaBtn->SetButtonColorHot(Qt::red);
+  ultimoRestoBtn->SetButtonColorHot(Qt::red);
+  pagPrevBtn->SetButtonColorHot(Qt::red);
+  pagNextBtn->SetButtonColorHot(Qt::red);
+  ristampaBtn->SetButtonColorHot(Qt::red);
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -95,6 +101,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 
 void Ordine::on_annullaBtn_clicked()
 {
+  if(!isInComposizione()) return;
   if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine?",QMessageBox::Ok|QMessageBox::No)) {
     modello.clear();
   }

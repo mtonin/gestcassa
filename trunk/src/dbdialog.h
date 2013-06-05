@@ -25,6 +25,7 @@ private:
 
       QMap<QString,QVariant>* conf;
       SimpleCrypt* cifratore;
+      QString dbFilePath;
 };
 
 #endif // DBDIALOG_H
