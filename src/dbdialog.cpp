@@ -1,10 +1,13 @@
 #include "dbdialog.h"
 
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
 #include <QtSql>
 #include <QMessageBox>
+#include <QDesktopServices>
 
-const QString dbFileName("cassadb.db3");
+const QString dbFileName("GestioneCassa/cassadb.db3");
 
 DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
 {
@@ -12,13 +15,18 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
   setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
 
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-
+  QFileInfo dbFileInfo(QString("%1/%2")
+             .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
+             .arg(dbFileName));
+  dbFilePath=dbFileInfo.absoluteFilePath();
+  QDir dbParentDir(dbFileInfo.absolutePath());
+  dbParentDir.mkpath(dbFileInfo.absolutePath());
 }
 
 void DBDialog::on_apreBtn_clicked()
 {
 
-  if(createConnection(dbFileName,"","")) {
+  if(createConnection(dbFilePath,"","")) {
     QSqlQuery stmt("select chiave,valore from configurazione");
     if(!stmt.isActive()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -28,6 +36,7 @@ void DBDialog::on_apreBtn_clicked()
       QVariant valore=stmt.value(1).toString();
       conf->insert(key,valore);
     }
+    conf->insert("dbFilePath",dbFilePath);
 
     QString pwdDB=conf->value("adminPassword").toString();
     if(pwdDB.isEmpty()) {
@@ -96,14 +105,15 @@ void DBDialog::on_adminBox_clicked(bool checked)
 
 void DBDialog::creaDb()
 {
-  QFile dbFile(dbFileName);
+  QFile dbFile(dbFilePath);
   if(dbFile.exists()) {
-    if(QMessageBox::No==QMessageBox::question(this, QObject::tr("Nuovo Database"),QString("Il file %1 esiste già. Lo cancello?").arg(dbFileName),QMessageBox::Yes|QMessageBox::No))
+    if(QMessageBox::No==QMessageBox::question(this, QObject::tr("Nuovo Database"),QString("Il file %1 esiste già. Lo cancello?")
+                                              .arg(dbFilePath),QMessageBox::Yes|QMessageBox::No))
       return;
     else dbFile.remove();
   }
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(dbFileName);
+  db.setDatabaseName(dbFilePath);
   //db.setUserName(utente);
   //db.setPassword(password);
   if (!db.open()) {
