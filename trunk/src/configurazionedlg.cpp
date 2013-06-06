@@ -251,7 +251,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString font=stmt.value(2).toString();
     QString coloreSfondo=stmt.value(3).toString();
     QString coloreCarattere=stmt.value(4).toString();
-    QString riga=QString("REPARTI§§%1§%2§%3§%4§%5")
+    QString riga=QString("REPARTI§%1§%2§%3§%4§%5")
                  .arg(idreparto)
                  .arg(descrizioneReparto)
                  .arg(font)
@@ -408,7 +408,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
           stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
       }
       if(0==tabella.compare("articolimenu",Qt::CaseInsensitive)) {
-          stmt.prepare("INSERT INTO ARTICOLIMENU (idArticolo,articoloMenu) VALUES(?,?)");
+          stmt.prepare("INSERT INTO ARTICOLIMENU (idArticolo,idArticoloMenu) VALUES(?,?)");
           stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
           stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
       }
