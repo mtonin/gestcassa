@@ -56,7 +56,8 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
   }
 
   if(articoloBtn->getRepartoStampa().isEmpty()) {
-    articoloBtn->setRepartoStampa(destinazioneBox->currentText());
+    destinazioneBox->setCurrentIndex(-1);
+    articoloBtn->setRepartoStampa(NULL);
   }
 
   menuBox->setChecked(articoloBtn->isGestioneMenu());
