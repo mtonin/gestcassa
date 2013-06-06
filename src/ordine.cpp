@@ -110,7 +110,16 @@ void Ordine::on_annullaBtn_clicked()
 void Ordine::on_ristampaBtn_clicked()
 {
   int numeroOrdine=numeroOrdineTxt->text().toInt()-1;
-  stampaScontrino(numeroOrdine);
+  QSqlQuery stmt;
+  stmt.prepare("select 1 from ordinicontenuto where numeroordine=?");
+  stmt.addBindValue(numeroOrdine);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  if(stmt.next()) {
+      stampaScontrino(numeroOrdine);
+  }
 }
 
 void Ordine::on_stampaBtn_clicked()
@@ -122,28 +131,17 @@ void Ordine::on_stampaBtn_clicked()
   int numeroOrdine=numeroOrdineTxt->text().toInt();
   importoUltimoOrdine=totaleLine->text().toFloat();
 
-  QSqlQuery stmt;
-  stmt.prepare("insert into ordini(numero,tsstampa,importo) values(?,?,?)");
-  stmt.addBindValue(numeroOrdine);
-  QDateTime ts=QDateTime::currentDateTime();
-  stmt.addBindValue(ts);
-  stmt.addBindValue(importoUltimoOrdine);
-  if(!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    return;
+  if(modello.completaOrdine(numeroOrdine,importoUltimoOrdine)) {
+
+      stampaScontrino(numeroOrdine);
+
+      if(configurazione->value("abilitaResto").toBool()) {
+        int durataSecondi=configurazione->value("durataResto",5).toInt();
+        RestoDlg restoDlg(importoUltimoOrdine,durataSecondi,this);
+        restoDlg.exec();
+      }
+      nuovoOrdine();
   }
-
-  modello.completaOrdine(numeroOrdine);
-
-  stampaScontrino(numeroOrdine);
-
-  if(configurazione->value("abilitaResto").toBool()) {
-    int durataSecondi=configurazione->value("durataResto",5).toInt();
-    RestoDlg restoDlg(importoUltimoOrdine,durataSecondi,this);
-    restoDlg.exec();
-  }
-  nuovoOrdine();
 }
 
 void Ordine::nuovoOrdine()
@@ -217,8 +215,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  //stmt.prepare("select distinct(destinazione) from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
-  stmt.prepare("select distinct(destinazione) from dettagliordine where numeroordine=?");
+  stmt.prepare("select distinct(destinazione) from ordinicontenuto where numeroordine=? and tipoArticolo <> 'M'");
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
@@ -262,9 +259,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
     painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
     y+=10;
 
-    //stmt.prepare("select quantita,prezzo,descrizione from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=? and destinazione=?");
     stmt.prepare("SELECT descrizione,sum(quantita) \
-                 FROM dettagliordine \
+                 FROM ordinicontenuto \
                  where numeroordine=? \
                  and destinazione=? \
                  group by numeroordine,descrizione");
@@ -337,7 +333,7 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinirighe a,articoli b on a.idarticolo=b.idarticolo where numeroordine=?");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinicontenuto where numeroordine=? and tipoArticolo <> 'C'");
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {

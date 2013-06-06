@@ -130,6 +130,7 @@ void DBDialog::creaDb()
   QString sqlString=sqlFile.readAll();
   foreach (QString sql,sqlString.split(";")) {
     if(sql.isEmpty()) continue;
+    qDebug(sql.toUtf8());
     if(!stmt.exec(sql)) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       return;

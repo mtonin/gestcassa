@@ -197,6 +197,10 @@ void DettagliArticolo::on_menuBox_clicked(bool checked)
 {
   articoloBtn->setGestioneMenu(checked);
   destinazioneBox->setEnabled(!checked);
+  if(checked) {
+      destinazioneBox->setCurrentIndex(-1);
+      articoloBtn->setRepartoStampa(NULL);
+  }
   aggiornaArticolo();
 
 }

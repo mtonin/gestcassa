@@ -197,10 +197,9 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 
   QStringList listaSql;
 
-  QSqlQuery stmt("select a.numero,a.tsstampa, a.importo,b.quantita,c.descrizione \
-               from ordini a,ordinirighe b, articoli c \
-               where a.numero=b.numeroordine \
-               and b.idarticolo=c.idarticolo");
+  QSqlQuery stmt("select a.numero,a.tsstampa, a.importo,b.descrizione,b.quantita,b.destinazione,b.prezzo,b.tipoArticolo \
+               from ordini a,ordinirighe b \
+               where a.numero=b.numeroordine");
   if(!stmt.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
@@ -209,14 +208,20 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     QString numeroOrdine=stmt.value(0).toString();
     QString tsStampaOrdine=stmt.value(1).toString();
     QString importoOrdine=stmt.value(2).toString();
-    QString quantitaArticoloOrdine=stmt.value(3).toString();
-    QString descrizioneArticoloOrdine=stmt.value(4).toString();
-    QString riga=QString("ORDINI§%1§%2§%3§%4§%5")
+    QString descrizioneArticoloOrdine=stmt.value(3).toString();
+    QString quantitaArticoloOrdine=stmt.value(4).toString();
+    QString destinazioneArticoloOrdine=stmt.value(5).toString();
+    QString prezzoArticoloOrdine=stmt.value(6).toString();
+    QString tipoArticoloOrdine=stmt.value(7).toString();
+    QString riga=QString("ORDINI§%1§%2§%3§%4§%5§%6§%7§%8")
                  .arg(numeroOrdine)
                  .arg(tsStampaOrdine)
                  .arg(importoOrdine)
+                 .arg(descrizioneArticoloOrdine)
                  .arg(quantitaArticoloOrdine)
-                 .arg(descrizioneArticoloOrdine);
+                 .arg(destinazioneArticoloOrdine)
+                 .arg(prezzoArticoloOrdine)
+                 .arg(tipoArticoloOrdine);
     listaSql.append(riga);
   }
 

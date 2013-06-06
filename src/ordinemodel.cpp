@@ -77,9 +77,23 @@ void OrdineModel::clear()
   emit dataChanged(QModelIndex(),QModelIndex());
 }
 
-void OrdineModel::completaOrdine(const int numeroOrdine)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo)
 {
-  QSqlQuery stmt;
+    QSqlDatabase db(QSqlDatabase::database());
+    db.transaction();
+
+    QSqlQuery stmt;
+    stmt.prepare("insert into ordini(numero,tsstampa,importo) values(?,?,?)");
+    stmt.addBindValue(numeroOrdine);
+    QDateTime ts=QDateTime::currentDateTime();
+    stmt.addBindValue(ts);
+    stmt.addBindValue(importo);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt.lastError().text());
+      db.rollback();
+      return false;
+    }
 
   foreach (rigaArticoloClass rigaArticolo,articoloList) {
     stmt.prepare("insert into ordinirighe(numeroordine,idarticolo,quantita) values(?,?,?)");
@@ -89,10 +103,24 @@ void OrdineModel::completaOrdine(const int numeroOrdine)
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
                             stmt.lastError().text());
-      return;
+      db.rollback();
+      return false;
     }
   }
 
+  stmt.prepare("insert into ordinicontenuto select numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+  stmt.addBindValue(ts);
+  stmt.addBindValue(importo);
+  stmt.addBindValue(numeroOrdine);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    db.rollback();
+    return false;
+  }
+
+  db.commit();
+  return true;
 }
 
 QVariant OrdineModel::data(const QModelIndex &index, int role) const
