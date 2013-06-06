@@ -76,10 +76,10 @@ include(version.txt)
 QMAKE_TARGET_COMPANY =
 QMAKE_TARGET_PRODUCT = GestCassa
 QMAKE_TARGET_DESCRIPTION = Gestione cassa
-QMAKE_TARGET_COPYRIGHT = copyright MT 2012
+QMAKE_TARGET_COPYRIGHT = copyright MT 2013
 
 RESOURCES += \
     risorse.qrc
 RC_FILE = gestcassa.rc
 OTHER_FILES += \
-    gestcassa.rc
+    gestcassa.rc version.rc2.tmpl

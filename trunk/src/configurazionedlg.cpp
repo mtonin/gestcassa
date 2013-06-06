@@ -228,20 +228,20 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   QStringList listaSql;
   QSqlQuery stmt;
 
-  if(!stmt.exec("select nome,intestazione from destinazionistampa")) {
+  if(!stmt.exec("select nome,coalesce(intestazione,'NULL') from destinazionistampa")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
   }
   while(stmt.next()) {
     QString nomeDest=stmt.value(0).toString();
     QString intestazioneDest=stmt.value(1).toString();
-    QString riga=QString("INSERT INTO DESTINAZIONISTAMPA VALUES (\"%1\",\"%2\");")
+    QString riga=QString("DESTINAZIONISTAMPA§%1§%2")
                  .arg(nomeDest)
                  .arg(intestazioneDest);
     listaSql.append(riga);
   }
 
-  if(!stmt.exec("select idreparto,descrizione,font,coloresfondo,colorecarattere from reparti")) {
+  if(!stmt.exec("select idreparto,descrizione,coalesce(font,'NULL'),coalesce(coloresfondo,'NULL'),coalesce(colorecarattere,'NULL') from reparti")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
   }
@@ -251,7 +251,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString font=stmt.value(2).toString();
     QString coloreSfondo=stmt.value(3).toString();
     QString coloreCarattere=stmt.value(4).toString();
-    QString riga=QString("INSERT INTO REPARTI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+    QString riga=QString("REPARTI§§%1§%2§%3§%4§%5")
                  .arg(idreparto)
                  .arg(descrizioneReparto)
                  .arg(font)
@@ -260,7 +260,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     listaSql.append(riga);
   }
 
-  if(!stmt.exec("select idarticolo,descrizione,prezzo,destinazione,gestioneMenu from articoli")) {
+  if(!stmt.exec("select idarticolo,descrizione,prezzo,coalesce(destinazione,'NULL'),gestioneMenu from articoli")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
   }
@@ -270,7 +270,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString prezzo=stmt.value(2).toString();
     QString destinazioneStampa=stmt.value(3).toString();
     QString gestioneMenu=stmt.value(4).toString();
-    QString riga=QString("INSERT INTO ARTICOLI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+    QString riga=QString("ARTICOLI§%1§%2§%3§%4§%5")
                  .arg(idArticolo)
                  .arg(descrizioneArticolo)
                  .arg(prezzo)
@@ -286,7 +286,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   while(stmt.next()) {
     QString idArticolo=stmt.value(0).toString();
     QString idArticoloMenu=stmt.value(1).toString();
-    QString riga=QString("INSERT INTO ARTICOLIMENU VALUES (\"%1\",\"%2\");")
+    QString riga=QString("ARTICOLIMENU§%1§%2")
                  .arg(idArticolo)
                  .arg(idArticoloMenu);
     listaSql.append(riga);
@@ -302,7 +302,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString colonnaPulsante=stmt.value(2).toString();
     QString idArticolo=stmt.value(3).toString();
     QString flagAbilitato=stmt.value(4).toString();
-    QString riga=QString("INSERT INTO PULSANTI VALUES (\"%1\",\"%2\",\"%3\",\"%4\",\"%5\");")
+    QString riga=QString("PULSANTI§%1§%2§%3§%4§%5")
                  .arg(idReparto)
                  .arg(rigaPulsante)
                  .arg(colonnaPulsante)
@@ -311,14 +311,17 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     listaSql.append(riga);
   }
 
-  QString riga=QString("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES (\"descrManifestazione\",\"%1\");")
-               .arg(configurazione->value("descrManifestazione").toString());
-  listaSql.append(riga);
-  riga=QString("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES (\"intestazione\",\"%1\");")
-               .arg(configurazione->value("intestazione").toString());
+  QString str=configurazione->value("descrManifestazione").toString();
+  QString riga=QString("CONFIGURAZIONE§descrManifestazione§%1")
+          .arg(str.isEmpty()?"NULL":str);
   listaSql.append(riga);
 
-  esportaInFile(listaSql.join("\n"));
+  str=configurazione->value("intestazione").toString();
+  riga=QString("CONFIGURAZIONE§intestazione§%1")
+          .arg(str.isEmpty()?"NULL":str);
+  listaSql.append(riga);
+
+  esportaInFile(listaSql.join("§"));
 }
 
 void ConfigurazioneDlg::esportaInFile(const QString &testo)
@@ -334,6 +337,15 @@ void ConfigurazioneDlg::esportaInFile(const QString &testo)
 
   exportStream << testo;
   exportFile.close();
+}
+
+QVariant ConfigurazioneDlg::valutaStringa(const QString &str)
+{
+    if(0==str.compare("null",Qt::CaseInsensitive)) {
+        return QVariant(QVariant::String);
+    } else {
+        return QVariant(str);
+    }
 }
 
 void ConfigurazioneDlg::on_importArticoliBtn_clicked()
@@ -360,16 +372,58 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     return;
   }
 
-  QString sqlString=importFile.readAll();
-  foreach (QString sql,sqlString.split(";")) {
-    if(sql.isEmpty()) continue;
-    qDebug(sql.toUtf8());
-    if(!stmt.exec(sql)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-      db.rollback();
-      return;
-    }
+  QString righeInput=importFile.readAll();
+  QStringList campiInput=righeInput.split("§");
+  int idx=0;
+  while(idx<campiInput.size()) {
+      QString tabella=campiInput.at(idx);
+      QString sql;
+      if(0==tabella.compare("destinazionistampa",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione) VALUES(?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
+      if(0==tabella.compare("pulsanti",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
+      if(0==tabella.compare("reparti",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere) VALUES(?,?,?,?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
+      if(0==tabella.compare("articoli",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT INTO ARTICOLI (idArticolo,descrizione,prezzo,destinazione,gestioneMenu) VALUES(?,?,?,?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
+      if(0==tabella.compare("articolimenu",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT INTO ARTICOLIMENU (idArticolo,articoloMenu) VALUES(?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
+      if(0==tabella.compare("configurazione",Qt::CaseInsensitive)) {
+          stmt.prepare("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES(?,?)");
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+          stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+      }
 
+      if(!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        db.rollback();
+        return;
+      }
+      idx++;
   }
 
   db.commit();

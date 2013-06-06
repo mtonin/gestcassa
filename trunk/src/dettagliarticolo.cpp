@@ -318,3 +318,8 @@ void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
   ctxMenu->exec();
 
 }
+
+void DettagliArticolo::on_prezzoArticolo_editingFinished()
+{
+    prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(),4,'f',2));
+}

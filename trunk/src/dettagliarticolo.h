@@ -34,6 +34,8 @@ private slots:
    void on_articoliList_clicked(const QModelIndex &index);
    void rimuoveArticolo();
 
+   void on_prezzoArticolo_editingFinished();
+
 private:
    void aggiornaArticolo();
    ArticoloBtnWidget* articoloBtn;

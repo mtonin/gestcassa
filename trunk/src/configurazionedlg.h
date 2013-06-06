@@ -58,6 +58,7 @@ private slots:
 
 private:
   void esportaInFile(const QString&);
+  QVariant valutaStringa(const QString&);
 
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
