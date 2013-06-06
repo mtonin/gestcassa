@@ -177,6 +177,8 @@ void MainWindow::creaRepartiButtons(){
   }
 
   ui->repartiGroupBox->setLayout(hboxLayout);
+  ui->latoStackedWidget->setCurrentIndex(0);
+
 }
 
 
