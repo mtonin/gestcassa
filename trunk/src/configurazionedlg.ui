@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>489</width>
-    <height>333</height>
+    <width>505</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -135,7 +135,6 @@
          <zorder>durataRestoLbl</zorder>
          <zorder>durataRestoTxt</zorder>
          <zorder>attivaRestoCheck</zorder>
-         <zorder>horizontalSpacer</zorder>
         </widget>
        </item>
        <item>
@@ -255,7 +254,6 @@
            </layout>
           </item>
          </layout>
-         <zorder></zorder>
         </widget>
        </item>
       </layout>
@@ -276,6 +274,18 @@
          </item>
          <item>
           <widget class="QPlainTextEdit" name="dbPathTxt">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>75</height>
+            </size>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -318,108 +328,117 @@
         </layout>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="groupBox_1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>150</height>
+          </size>
+         </property>
          <property name="title">
           <string>Operazioni sul database</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="exportArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="sizeHint" stdset="0">
+            <property name="text">
+             <string>Esporta Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>32</width>
+              <height>32</height>
              </size>
             </property>
-           </spacer>
+           </widget>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_8">
-            <item>
-             <widget class="QPushButton" name="cancellaOrdiniBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Cancella tutti gli ordini</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="exportOrdiniBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Esporta storico ordini</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="exportArticoliBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Esporta Reparti ed Articoli</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="importArticoliBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Importa Reparti ed Articoli</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="exportOrdiniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="sizeHint" stdset="0">
+            <property name="text">
+             <string>Esporta storico ordini</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>32</width>
+              <height>32</height>
              </size>
             </property>
-           </spacer>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="importArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Importa Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_in</normaloff>:/GestCassa/db_in</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="cancellaOrdiniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Cancella tutti gli ordini</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_reset</normaloff>:/GestCassa/db_reset</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>101</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -457,6 +476,8 @@
   <tabstop>buttonBox</tabstop>
   <tabstop>printerSelectBtn</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="risorse.qrc"/>
+ </resources>
  <connections/>
 </ui>
