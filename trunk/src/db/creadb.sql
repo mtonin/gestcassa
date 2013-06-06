@@ -69,13 +69,27 @@ CREATE TABLE articolimenu (
 );
 
 
+-- Table: ordinicontenuto
+CREATE TABLE ordinicontenuto ( 
+    numeroordine INTEGER,
+    tsstampa     DATETIME,
+    importo      REAL,
+    descrizione  VARCHAR,
+    quantita     INTEGER,
+    destinazione VARCHAR,
+    prezzo       REAL,
+    tipoArticolo CHAR     NOT NULL 
+);
+
+
 -- View: dettagliordine
 CREATE VIEW dettagliordine AS
        SELECT ordinirighe.numeroordine,
               ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
-              articoli.prezzo
+              0 AS prezzo,
+              'C' AS tipoArticolo
          FROM ordinirighe, 
               articoli, 
               articolimenu
@@ -87,9 +101,24 @@ CREATE VIEW dettagliordine AS
               ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
-              articoli.prezzo
+              articoli.prezzo,
+              'S'
          FROM ordinirighe, 
               articoli
         WHERE ordinirighe.idarticolo = articoli.idarticolo 
               AND
-              articoli.gestioneMenu = 'false';
+              articoli.gestioneMenu = 'false'
+       UNION ALL
+       SELECT ordinirighe.numeroordine,
+              ordinirighe.quantita,
+              articoli.descrizione,
+              articoli.destinazione,
+              articoli.prezzo,
+              'M'
+         FROM ordinirighe, 
+              articoli
+        WHERE ordinirighe.idarticolo = articoli.idarticolo 
+              AND
+              articoli.gestioneMenu = 'true';
+;
+

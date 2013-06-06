@@ -40,11 +40,21 @@ void StatsForm::caricaStats()
 
   QSqlQuery stmt;
   if(expMenuBox->isChecked()) {
-    stmt.prepare("SELECT dettagliordine.descrizione,sum(dettagliordine.quantita) \
-                 FROM dettagliordine,ordini where dettagliordine.numeroordine=ordini.numero and datetime(ordini.tsstampa) between ? and ? group by descrizione order by 2 desc");
+      stmt.prepare("SELECT d.descrizione,sum(d.quantita) \
+                   FROM dettagliordine d,ordini o \
+                   where d.numeroordine=o.numero \
+                   and datetime(o.tsstampa) between ? and ? \
+                   and d.tipoArticolo <> 'M' \
+                   group by d.descrizione \
+                   order by 2 desc");
   } else {
-    stmt.prepare("SELECT articoli.descrizione,sum(ordinirighe.quantita) \
-       FROM ordinirighe,ordini,articoli where ordinirighe.numeroordine=ordini.numero and ordinirighe.idarticolo=articoli.idarticolo and datetime(ordini.tsstampa) between ? and ? group by articoli.descrizione");
+      stmt.prepare("SELECT d.descrizione,sum(d.quantita) \
+                   FROM dettagliordine d,ordini o \
+                   where d.numeroordine=o.numero \
+                   and datetime(o.tsstampa) between ? and ? \
+                   and d.tipoArticolo <> 'C' \
+                   group by d.descrizione \
+                   order by 2 desc");
   }
 
   QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
