@@ -164,7 +164,7 @@ void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 {
-  if(QMessageBox::Yes!=QMessageBox::question(this,"Cancellazione ordini","Cancellare tutti gli ordini?",QMessageBox::Yes|QMessageBox::No)) {
+  if(QMessageBox::Yes!=QMessageBox::question(this,"Cancellazione ordini","Questa operazione cancella tutti gli ordini memorizzati.\nProseguire?",QMessageBox::Yes|QMessageBox::No)) {
     return;
   }
   QSqlDatabase db=QSqlDatabase::database();
@@ -211,7 +211,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     QString importoOrdine=stmt.value(2).toString();
     QString quantitaArticoloOrdine=stmt.value(3).toString();
     QString descrizioneArticoloOrdine=stmt.value(4).toString();
-    QString riga=QString("%1,%2,%3,%4,%5")
+    QString riga=QString("ORDINI§%1§%2§%3§%4§%5")
                  .arg(numeroOrdine)
                  .arg(tsStampaOrdine)
                  .arg(importoOrdine)
@@ -220,7 +220,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     listaSql.append(riga);
   }
 
-  esportaInFile(listaSql.join("\n"));
+  esportaInFile(listaSql.join("§"));
 
 }
 
