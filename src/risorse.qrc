@@ -14,5 +14,8 @@
         <file alias="freccia_su">resources/arrow_up_32.png</file>
         <file alias="creadb">db/creadb.sql</file>
         <file alias="printer-1">resources/Printer-1.png</file>
+        <file alias="db_out">resources/db_out.png</file>
+        <file alias="db_in">resources/db_in.png</file>
+        <file alias="db_reset">resources/db_reset.png</file>
     </qresource>
 </RCC>

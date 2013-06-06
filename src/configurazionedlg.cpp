@@ -46,6 +46,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
   dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
+
   tabWidget->setCurrentIndex(0);
   descrManifestazioneTxt->setFocus();
 }
