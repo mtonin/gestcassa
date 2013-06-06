@@ -120,5 +120,3 @@ CREATE VIEW dettagliordine AS
         WHERE ordinirighe.idarticolo = articoli.idarticolo 
               AND
               articoli.gestioneMenu = 'true';
-;
-
