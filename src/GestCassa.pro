@@ -71,7 +71,7 @@ FORMS    += mainwindow.ui \
     infowidget.ui \
     statsform.ui
 
-include(version.txt)
+#include(version.txt)
 
 QMAKE_TARGET_COMPANY =
 QMAKE_TARGET_PRODUCT = GestCassa
