@@ -60,6 +60,8 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   infoLayout->addWidget(info);
   ui->infoFrame->setLayout(infoLayout);
 
+  creaRepartiButtons();
+
   if("operatore"==confMap->value("ruolo","operatore")) {
     gestioneModalita(CASSA);
   } else {
@@ -68,8 +70,6 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
 
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
   showMaximized();
-
-  creaRepartiButtons();
 
 }
 
