@@ -265,8 +265,7 @@ void DettagliArticolo::on_eliminaBtn_clicked()
     QSqlQuery stmt("delete from articolimenu where idarticolo=?");
     stmt.addBindValue(articoloBtn->getId());
     if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
       return;
     }
@@ -276,8 +275,7 @@ void DettagliArticolo::on_eliminaBtn_clicked()
     stmt.addBindValue(articoloBtn->getRiga());
     stmt.addBindValue(articoloBtn->getColonna());
     if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
       return;
     }
@@ -285,8 +283,7 @@ void DettagliArticolo::on_eliminaBtn_clicked()
     stmt.prepare("delete from articoli where idarticolo=?");
     stmt.addBindValue(articoloBtn->getId());
     if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),
-                            stmt.lastError().text());
+      QMessageBox::critical(this,"Errore","Impossibile cancellare l'articolo. Verificare se è inserito in un menù.");
       db.rollback();
       return;
     }
