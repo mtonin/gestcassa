@@ -69,8 +69,16 @@ CREATE TABLE articolimenu (
 );
 
 
+-- Table: sessione
+CREATE TABLE sessione ( 
+    idsessione INTEGER,
+    tsinizio   DATETIME 
+);
+
+
 -- Table: ordinicontenuto
 CREATE TABLE ordinicontenuto ( 
+    idsessione   INTEGER,
     numeroordine INTEGER,
     tsstampa     DATETIME,
     importo      REAL,
@@ -78,7 +86,8 @@ CREATE TABLE ordinicontenuto (
     quantita     INTEGER,
     destinazione VARCHAR,
     prezzo       REAL,
-    tipoArticolo CHAR     NOT NULL 
+    tipoArticolo CHAR     NOT NULL,
+    PRIMARY KEY ( idsessione, numeroordine ) 
 );
 
 

@@ -10,7 +10,7 @@ class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
   Q_OBJECT
   
 signals:
-  void resetOrdini();
+  void resetOrdini(const int);
   void resetArticoli();
 
 public:
