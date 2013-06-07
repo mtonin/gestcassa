@@ -18,9 +18,10 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   articoliTab->verticalHeader()->setDefaultSectionSize(30);
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
   controlli=new ControlliOrdine(this);
-  nuovoOrdine();
 
   importoUltimoOrdine=0;
+  idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
+  nuovoOrdine(idSessioneCorrente);
 
   stampaBtn->SetIconSpace(20);
   stampaBtn->setIcon(QIcon(":/GestCassa/stampante"));
@@ -112,7 +113,8 @@ void Ordine::on_ristampaBtn_clicked()
 {
   int numeroOrdine=numeroOrdineTxt->text().toInt()-1;
   QSqlQuery stmt;
-  stmt.prepare("select 1 from ordinicontenuto where numeroordine=?");
+  stmt.prepare("select 1 from ordinicontenuto where idsessione=? and numeroordine=?");
+  stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -132,7 +134,7 @@ void Ordine::on_stampaBtn_clicked()
   int numeroOrdine=numeroOrdineTxt->text().toInt();
   importoUltimoOrdine=totaleLine->text().toFloat();
 
-  if(modello.completaOrdine(numeroOrdine,importoUltimoOrdine)) {
+  if(modello.completaOrdine(numeroOrdine,importoUltimoOrdine,idSessioneCorrente)) {
 
       stampaScontrino(numeroOrdine);
 
@@ -141,12 +143,13 @@ void Ordine::on_stampaBtn_clicked()
         RestoDlg restoDlg(importoUltimoOrdine,durataSecondi,this);
         restoDlg.exec();
       }
-      nuovoOrdine();
+      nuovoOrdine(idSessioneCorrente);
   }
 }
 
-void Ordine::nuovoOrdine()
+void Ordine::nuovoOrdine(const int idSessione)
 {
+  idSessioneCorrente=idSessione;
   modello.clear();
   QSqlQuery query("select max(numero) from ordini");
   if(!query.isActive()) {
@@ -162,7 +165,7 @@ void Ordine::nuovoOrdine()
   numeroOrdineTxt->setText(QString("%L1").arg(numeroOrdine));
 }
 
-void Ordine::stampaScontrino(int numeroOrdine)
+void Ordine::stampaScontrino(const int numeroOrdine)
 {
   QString intest=configurazione->value("intestazione").toString();
   QString nomeCassa=configurazione->value("nomeCassa","000").toString();
@@ -216,7 +219,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  stmt.prepare("select distinct(destinazione) from ordinicontenuto where numeroordine=? and tipoArticolo <> 'M'");
+  stmt.prepare("select distinct(destinazione) from ordinicontenuto where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
+  stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
@@ -262,9 +266,11 @@ void Ordine::stampaScontrino(int numeroOrdine)
 
     stmt.prepare("SELECT descrizione,sum(quantita) \
                  FROM ordinicontenuto \
-                 where numeroordine=? \
+                 where idsessione=? \
+                 and numeroordine=? \
                  and destinazione=? \
                  group by numeroordine,descrizione");
+    stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(numeroOrdine);
     stmt.addBindValue(reparto);
 
@@ -334,7 +340,8 @@ void Ordine::stampaScontrino(int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinicontenuto where numeroordine=? and tipoArticolo <> 'C'");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinicontenuto where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
+  stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {

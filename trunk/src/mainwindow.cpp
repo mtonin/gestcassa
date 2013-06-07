@@ -270,7 +270,7 @@ void MainWindow::on_configurazioneBtn_clicked()
 {
   bool oldVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
-  connect(dlg,SIGNAL(resetOrdini()),ordineBox,SLOT(nuovoOrdine()));
+  connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
   connect(dlg,SIGNAL(resetArticoli()),this,SLOT(creaRepartiButtons()));
   dlg->exec();
 

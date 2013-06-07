@@ -36,6 +36,15 @@ void DBDialog::on_apreBtn_clicked()
       QVariant valore=stmt.value(1).toString();
       conf->insert(key,valore);
     }
+
+    if(!stmt.exec("select max(idsessione) from sessione")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    }
+    while(stmt.next()) {
+      QVariant valore=stmt.value(0).toString();
+      conf->insert("sessioneCorrente",valore);
+    }
+
     conf->insert("dbFilePath",dbFilePath);
 
     QString pwdDB=conf->value("adminPassword").toString();
@@ -136,6 +145,11 @@ void DBDialog::creaDb()
       return;
     }
 
+  }
+
+  if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',datetime('now'))")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
   }
 
 }

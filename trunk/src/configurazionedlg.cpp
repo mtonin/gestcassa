@@ -182,8 +182,22 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     return;
   }
 
+  int idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
+  idSessioneCorrente++;
+
+  stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,datetime('now'))");
+  stmt.addBindValue(idSessioneCorrente);
+
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    db.rollback();
+    return;
+  }
+
+  configurazione->insert("sessioneCorrente",idSessioneCorrente);
+
   db.commit();
-  emit resetOrdini();
+  emit resetOrdini(idSessioneCorrente);
 
 }
 

@@ -77,7 +77,7 @@ void OrdineModel::clear()
   emit dataChanged(QModelIndex(),QModelIndex());
 }
 
-bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,const int idSessione)
 {
     QSqlDatabase db(QSqlDatabase::database());
     db.transaction();
@@ -108,7 +108,8 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo)
     }
   }
 
-  stmt.prepare("insert into ordinicontenuto select numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+  stmt.prepare("insert into ordinicontenuto select ?,numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+  stmt.addBindValue(idSessione);
   stmt.addBindValue(ts);
   stmt.addBindValue(importo);
   stmt.addBindValue(numeroOrdine);
