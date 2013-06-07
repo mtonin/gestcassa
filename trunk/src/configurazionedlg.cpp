@@ -197,9 +197,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 
   QStringList listaSql;
 
-  QSqlQuery stmt("select a.numero,a.tsstampa, a.importo,b.descrizione,b.quantita,b.destinazione,b.prezzo,b.tipoArticolo \
-               from ordini a,ordinirighe b \
-               where a.numero=b.numeroordine");
+  QSqlQuery stmt("select numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from ordinicontenuto");
   if(!stmt.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;

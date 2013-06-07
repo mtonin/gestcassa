@@ -39,7 +39,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
 
   destinazioneBox->clear();
-  QSqlQuery stmt("select nome from destinazioniStampa");
+  QSqlQuery stmt("select nome from destinazioniStampa order by nome");
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());
@@ -83,6 +83,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
   }
   articoliList->hideColumn(1);
 
+  testoArticolo->selectAll();
   testoArticolo->setFocus();
 }
 

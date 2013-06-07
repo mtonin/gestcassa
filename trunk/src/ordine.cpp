@@ -47,12 +47,13 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
   ristampaBtn->SetButtonColorNormal(Qt::yellow);
-  stampaBtn->SetButtonColorHot(Qt::red);
-  annullaBtn->SetButtonColorHot(Qt::red);
-  ultimoRestoBtn->SetButtonColorHot(Qt::red);
-  pagPrevBtn->SetButtonColorHot(Qt::red);
-  pagNextBtn->SetButtonColorHot(Qt::red);
-  ristampaBtn->SetButtonColorHot(Qt::red);
+  stampaBtn->SetButtonColorHot(Qt::magenta);
+  annullaBtn->SetButtonColorHot(Qt::magenta);
+  ultimoRestoBtn->SetButtonColorHot(Qt::magenta);
+  pagPrevBtn->SetButtonColorHot(Qt::magenta);
+  pagNextBtn->SetButtonColorHot(Qt::magenta);
+  ristampaBtn->SetButtonColorHot(Qt::magenta);
+
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)

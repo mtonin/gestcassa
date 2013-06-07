@@ -18,6 +18,9 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
   colore=repartoBtn->getColoreText();
   carattereBtn->SetButtonColorNormal(colore);
   fontBtn->setFont(repartoBtn->getFont());
+
+  testoReparto->selectAll();
+  testoReparto->setFocus();
 }
 
 void DettagliReparto::aggiornaReparto()
