@@ -86,8 +86,7 @@ CREATE TABLE ordinicontenuto (
     quantita     INTEGER,
     destinazione VARCHAR,
     prezzo       REAL,
-    tipoArticolo CHAR     NOT NULL,
-    PRIMARY KEY ( idsessione, numeroordine ) 
+    tipoArticolo CHAR     NOT NULL 
 );
 
 
