@@ -2,8 +2,7 @@
 #include <QtSql>
 #include <QMessageBox>
 
-StatsForm::StatsForm(QWidget *parent) :
-  QDialog(parent)
+StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente(idSessione), QDialog(parent)
 {
   setupUi(this);
   setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
@@ -38,29 +37,32 @@ void StatsForm::caricaStats()
   QVector<double> tickData;
   int numero=0;
 
-  QSqlQuery stmt;
-  if(expMenuBox->isChecked()) {
-      stmt.prepare("SELECT d.descrizione,sum(d.quantita) \
-                   FROM dettagliordine d,ordini o \
-                   where d.numeroordine=o.numero \
-                   and datetime(o.tsstampa) between ? and ? \
-                   and d.tipoArticolo <> 'M' \
-                   group by d.descrizione \
-                   order by 2 desc");
-  } else {
-      stmt.prepare("SELECT d.descrizione,sum(d.quantita) \
-                   FROM dettagliordine d,ordini o \
-                   where d.numeroordine=o.numero \
-                   and datetime(o.tsstampa) between ? and ? \
-                   and d.tipoArticolo <> 'C' \
-                   group by d.descrizione \
-                   order by 2 desc");
+  QString sql("SELECT descrizione,sum(quantita) \
+              FROM ordinicontenuto \
+              where datetime(tsstampa) between ? and ? \
+              and tipoArticolo <> ? \
+              %1 \
+              group by descrizione \
+              order by 2 desc");
+  QString condSessione;
+  if(ultimaSessioneBox->isChecked()) {
+    condSessione=QString("and idsessione=%1").arg(idSessioneCorrente);
   }
+  sql=sql.arg(condSessione);
+  QString tipoArticolo;
+  if(expMenuBox->isChecked()) {
+      tipoArticolo="M";
+  } else {
+      tipoArticolo="C";
+  }
+  QSqlQuery stmt;
+  stmt.prepare(sql);
 
   QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
   QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
   stmt.addBindValue(from);
   stmt.addBindValue(to);
+  stmt.addBindValue(tipoArticolo);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;

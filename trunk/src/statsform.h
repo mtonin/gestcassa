@@ -9,7 +9,7 @@ class StatsForm : public QDialog, private Ui::StatsForm
   Q_OBJECT
   
 public:
-  explicit StatsForm(QWidget *parent = 0);
+  explicit StatsForm(const int, QWidget *parent = 0);
 
 private slots:
   void on_filtraBtn_clicked();
@@ -17,6 +17,9 @@ private slots:
 private:
   StatsModel* statsModel;
   void caricaStats();
+
+  int idSessioneCorrente;
+
 };
 
 #endif // STATSFORM_H
