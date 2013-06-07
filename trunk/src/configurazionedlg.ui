@@ -423,7 +423,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Cancella tutti gli ordini</string>
+             <string>Inizializza contatore ordini</string>
             </property>
             <property name="icon">
              <iconset resource="risorse.qrc">

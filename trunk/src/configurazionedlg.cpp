@@ -164,7 +164,7 @@ void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 {
-  if(QMessageBox::Yes!=QMessageBox::question(this,"Cancellazione ordini","Questa operazione cancella tutti gli ordini memorizzati.\nProseguire?",QMessageBox::Yes|QMessageBox::No)) {
+  if(QMessageBox::Yes!=QMessageBox::question(this,"Inizializzazione Ordini","Questa operazione azzera in contatore degli ordini.\nProseguire?",QMessageBox::Yes|QMessageBox::No)) {
     return;
   }
   QSqlDatabase db=QSqlDatabase::database();
