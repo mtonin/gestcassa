@@ -92,7 +92,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     */
     ui->latoStackedWidget->setCurrentIndex(0);
 
-    QListIterator<QStackedWidget*> it(stackedList);
+    QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       it.next()->setCurrentIndex(0);
     }
@@ -115,7 +115,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     */
     ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
-    QListIterator<QStackedWidget*> it(stackedList);
+    QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
@@ -152,23 +152,21 @@ void MainWindow::closeEvent(QCloseEvent *evt)
 
 void MainWindow::creaRepartiButtons(){
 
-  stackedList.clear();
-  QLayout* hboxLayout = ui->repartiGroupBox->layout();
+  pulsantiList.clear();
+  QLayout* hboxLayout = ui->repartiBox->layout();
   if(hboxLayout) delete hboxLayout;
-  /*
-  for(int i=0;i<ui->articoliStackedWidget->count();i++) {
-    QWidget* w=ui->articoliStackedWidget->widget(i);
-    ui->articoliStackedWidget->removeWidget(w);
-    delete w;
-  }
-  */
 
-  hboxLayout = new QHBoxLayout(ui->repartiGroupBox);
+  while(ui->articoliStackedWidget->count()>0) {
+    QWidget* w=ui->articoliStackedWidget->widget(0);
+    ui->articoliStackedWidget->removeWidget(w);
+  }
+
+  hboxLayout = new QHBoxLayout(ui->repartiBox);
   hboxLayout->setSpacing(2);
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
   for(int i=1;i<=NUM_REPARTI;i++) {
-    RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiGroupBox);
+    RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiBox);
 
     hboxLayout->addWidget(reparto01Btn);
     creaArticoliPerRepartoButtons(i,reparto01Btn);
@@ -176,7 +174,7 @@ void MainWindow::creaRepartiButtons(){
     connect(reparto01Btn,SIGNAL(clicked()),this,SLOT(repartoSelezionato()));
   }
 
-  ui->repartiGroupBox->setLayout(hboxLayout);
+  ui->repartiBox->setLayout(hboxLayout);
   ui->latoStackedWidget->setCurrentIndex(0);
 
 }
@@ -190,13 +188,8 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* 
   QGridLayout* griglia=new QGridLayout;
   griglia->setSpacing(2);
 
-  QFrame* pagina=(QFrame*)ui->articoliStackedWidget->widget(numReparto-1);
-  if(pagina){
-    delete pagina->layout();
-  } else {
-    pagina=new QFrame;
-    ui->articoliStackedWidget->addWidget(pagina);
-  }
+  QFrame* pagina=new QFrame;
+  ui->articoliStackedWidget->addWidget(pagina);
   pagina->setLayout(griglia);
 
   bool visualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
@@ -213,7 +206,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* 
       stackedBox->addWidget(btn);
       QFrame* blankFrame=new QFrame;
       stackedBox->addWidget(blankFrame);
-      stackedList.append(stackedBox);
+      pulsantiList.append(stackedBox);
 
       griglia->addWidget(stackedBox,riga,col);
       connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
@@ -276,7 +269,7 @@ void MainWindow::on_configurazioneBtn_clicked()
 
   bool newVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   if(oldVisualizzaPrezzo!=newVisualizzaPrezzo) {
-    QListIterator<QStackedWidget*> it(stackedList);
+    QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
