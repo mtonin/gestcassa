@@ -348,7 +348,7 @@
               </property>
               <property name="icon">
                <iconset resource="risorse.qrc">
-                <normaloff>:/GestCassa/report</normaloff>:/GestCassa/report</iconset>
+                <normaloff>:/GestCassa/report 2</normaloff>:/GestCassa/report 2</iconset>
               </property>
               <property name="iconSize">
                <size>

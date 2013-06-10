@@ -124,7 +124,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     totReparti++;
     int idReparto=stmtReparti.value(0).toInt();
     QString reparto=stmtReparti.value(1).toString();
-    testo=QString("REPARTO: %1").arg(reparto);
+    testo=QString("REPARTO %1: %2").arg(totReparti).arg(reparto);
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextRow);
 
