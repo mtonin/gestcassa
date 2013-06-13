@@ -136,19 +136,19 @@ QVariant OrdineModel::data(const QModelIndex &index, int role) const
       break;
     case 1:
       if(Qt::DisplayRole==role) return rigaArticolo.descrizione;
-      if(Qt::TextAlignmentRole==role) return Qt::AlignLeft|Qt::AlignBottom;
+      if(Qt::TextAlignmentRole==role) return Qt::AlignLeft|Qt::AlignVCenter;
       if(Qt::ToolTipRole==role) return rigaArticolo.descrizione;
       break;
     case 2:
       if(Qt::DisplayRole==role) return rigaArticolo.quantita;
-      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignBottom;
+      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
     case 3:
       if(Qt::DisplayRole==role) {
         totRiga=rigaArticolo.quantita*rigaArticolo.prezzo;
         return QString("%L1").arg(totRiga,4,'f',2);
       }
-      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignBottom;
+      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
     default:
       break;
