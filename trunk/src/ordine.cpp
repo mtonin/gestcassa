@@ -183,6 +183,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   if(stampantePdf) {
     QDir cartellaPdf(configurazione->value("cartellaPdf","ticket").toString());
     cartellaPdf.mkpath(cartellaPdf.absolutePath());
+    QString pdfString=QString("Cartella pdf: %1").arg(cartellaPdf.absolutePath());
+    qDebug(pdfString.toAscii());
     printer.setOutputFileName(QString("%1/%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
   } else {
     printer.setPrinterName(stampanteSelezionata);
@@ -234,7 +236,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   }
   foreach(QString reparto,repartiStampaList) {
 
-    stmt.prepare("select coalesce(intestazione,nome) from destinazionistampa where nome=?");
+    stmt.prepare("select coalesce(intestazione,nome),stampaflag from destinazionistampa where nome=?");
     stmt.addBindValue(reparto);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -244,6 +246,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     QString intestReparto=reparto;
     if(stmt.next()) {
+      bool stampaFlag=stmt.value(1).toBool();
+      if(!stampaFlag) continue;
       intestReparto=stmt.value(0).toString();
     }
 

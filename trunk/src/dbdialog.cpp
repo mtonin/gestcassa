@@ -26,47 +26,77 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
 void DBDialog::on_apreBtn_clicked()
 {
 
-  if(createConnection(dbFilePath,"","")) {
-    QSqlQuery stmt("select chiave,valore from configurazione");
-    if(!stmt.isActive()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-    }
-    while(stmt.next()) {
-      QString key=stmt.value(0).toString();
-      QVariant valore=stmt.value(1).toString();
-      conf->insert(key,valore);
-    }
-
-    if(!stmt.exec("select max(idsessione) from sessione")) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-    }
-    while(stmt.next()) {
-      QVariant valore=stmt.value(0).toString();
-      conf->insert("sessioneCorrente",valore);
-    }
-
-    conf->insert("dbFilePath",dbFilePath);
-
-    QString pwdDB=conf->value("adminPassword").toString();
-    if(pwdDB.isEmpty()) {
-      pwdDB="12345";
-    } else {
-      pwdDB=cifratore->decryptToString(pwdDB);
-    }
-    if(adminBox->isChecked()) {
-      if(pwdDB==password->text()) {
-        conf->insert("ruolo","amministratore");
-      } else {
-        QMessageBox::critical(this,"Accesso","Password errata");
-        password->selectAll();
-        password->setFocus();
-        return;
-      }
-    } else {
-      conf->insert("ruolo","operatore");
-    }
-    accept();
+  if(!createConnection(dbFilePath,"","")) {
+    return;
   }
+
+  QSqlQuery stmt("select chiave,valore from configurazione");
+  if(!stmt.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+  }
+  while(stmt.next()) {
+    QString key=stmt.value(0).toString();
+    QVariant valore=stmt.value(1).toString();
+    conf->insert(key,valore);
+  }
+
+  if(!stmt.exec("select max(idsessione) from sessione")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+  }
+  while(stmt.next()) {
+    QVariant valore=stmt.value(0).toString();
+    conf->insert("sessioneCorrente",valore);
+  }
+
+  conf->insert("dbFilePath",dbFilePath);
+
+  QString pwdDB=conf->value("adminPassword").toString();
+  if(pwdDB.isEmpty()) {
+    pwdDB="12345";
+  } else {
+    pwdDB=cifratore->decryptToString(pwdDB);
+  }
+  if(adminBox->isChecked()) {
+    if(pwdDB==password->text()) {
+      conf->insert("ruolo","amministratore");
+    } else {
+      QMessageBox::critical(this,"Accesso","Password errata");
+      password->selectAll();
+      password->setFocus();
+      return;
+    }
+  } else {
+    conf->insert("ruolo","operatore");
+  }
+
+  int versioneDB=conf->value("versione",1).toInt();
+  int nuovaVersioneDB=versioneDB;
+
+  QSqlDatabase db=QSqlDatabase::database();
+  db.transaction();
+  if(versioneDB<2) {
+    if(!stmt.exec("alter table destinazionistampa add column stampaflag   BOOLEAN NOT NULL DEFAULT ( 'true' ) ")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=2;
+
+  }
+  if(versioneDB!=nuovaVersioneDB) {
+    versioneDB=nuovaVersioneDB;
+    stmt.prepare("insert or replace into configurazione (chiave,valore) values('versione',?)");
+    stmt.addBindValue(nuovaVersioneDB);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+
+  }
+
+  db.commit();
+  accept();
 }
 
 void DBDialog::on_esceBtn_clicked()
