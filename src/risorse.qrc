@@ -16,7 +16,7 @@
         <file alias="db_out">resources/db_out.png</file>
         <file alias="db_in">resources/db_in.png</file>
         <file alias="db_reset">resources/db_reset.png</file>
-        <file alias="creadb">db/creadb.sql</file>
         <file alias="report 2">resources/Document 2.png</file>
+        <file alias="creadb">db/creadb.sql</file>
     </qresource>
 </RCC>

@@ -1,16 +1,18 @@
 
+-- Table: destinazionistampa
+CREATE TABLE destinazionistampa ( 
+    nome         TEXT    PRIMARY KEY,
+    intestazione TEXT,
+    stampaflag   BOOLEAN NOT NULL
+                         DEFAULT ( 'true' ) 
+);
+
+
 -- Table: ordini
 CREATE TABLE ordini ( 
     numero   INTEGER  PRIMARY KEY,
     tsstampa DATETIME,
     importo  REAL     DEFAULT ( 0 ) 
-);
-
-
--- Table: destinazionistampa
-CREATE TABLE destinazionistampa ( 
-    nome         TEXT PRIMARY KEY,
-    intestazione TEXT 
 );
 
 
@@ -77,7 +79,7 @@ CREATE TABLE sessione (
 
 
 -- Table: ordinicontenuto
-CREATE TABLE ordinicontenuto ( 
+CREATE TABLE ordinicoontenuto ( 
     idsessione   INTEGER,
     numeroordine INTEGER,
     tsstampa     DATETIME,
@@ -128,3 +130,5 @@ CREATE VIEW dettagliordine AS
         WHERE ordinirighe.idarticolo = articoli.idarticolo 
               AND
               articoli.gestioneMenu = 'true';
+
+insert into configurazione (chiave,valore) values ('versione','2');
