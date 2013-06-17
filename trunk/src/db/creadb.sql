@@ -79,7 +79,7 @@ CREATE TABLE sessione (
 
 
 -- Table: ordinicontenuto
-CREATE TABLE ordinicoontenuto ( 
+CREATE TABLE ordinicontenuto ( 
     idsessione   INTEGER,
     numeroordine INTEGER,
     tsstampa     DATETIME,
