@@ -49,6 +49,9 @@ void ArticoloBtnWidget::PaintPrezzo()
 
   QString prezzoLabel=QString("%1 %L2 ").arg(QChar(0x20AC)).arg(this->prezzo,5,'f',2);
   // Paint
+  QFont font=painter.font();
+  font.setPointSize(font.pointSize()-2);
+  painter.setFont(font);
   QRect fontRect=painter.boundingRect(PainterRect,Align,prezzoLabel);
   //QRect FontRect(Left, Top, Width, Height);
   painter.setBackground(QBrush(Qt::white));
