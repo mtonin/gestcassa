@@ -16,9 +16,11 @@ RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
     effetto->setStartValue("1");
     effetto->setEndValue("0");
     effetto->setDuration(_durata);
+    effetto->setEasingCurve(QEasingCurve::InQuint);
     effetto->start();
   }
 
+  setFocus();
   importoTxt->setText(QString("%L1").arg(valore,4,'f',2));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
   ricalcolaResto();

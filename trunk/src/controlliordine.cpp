@@ -13,6 +13,8 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
   effetto->setStartValue("1");
   effetto->setEndValue("0");
   effetto->setDuration(3000);
+  effetto->setEasingCurve(QEasingCurve::InCubic);
+
 }
 
 ControlliOrdine::~ControlliOrdine()

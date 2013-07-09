@@ -418,6 +418,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tasto1Btn</tabstop>
+  <tabstop>tasto2Btn</tabstop>
+  <tabstop>tasto3Btn</tabstop>
+  <tabstop>tasto4Btn</tabstop>
+  <tabstop>tasto5Btn</tabstop>
+  <tabstop>tasto6Btn</tabstop>
+  <tabstop>tasto7Btn</tabstop>
+  <tabstop>tasto8Btn</tabstop>
+  <tabstop>tasto9Btn</tabstop>
+  <tabstop>tasto0Btn</tabstop>
+  <tabstop>tastoVirgolaBtn</tabstop>
+  <tabstop>cancellaBtn</tabstop>
+  <tabstop>chiudeBtn</tabstop>
+  <tabstop>importoTxt</tabstop>
+  <tabstop>importoRicevutoTxt</tabstop>
+  <tabstop>restoCalcolatoTxt</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
