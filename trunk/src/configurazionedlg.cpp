@@ -53,16 +53,20 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
 
 void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 {
-  QPrinter printer;
 
+  /*
   QPrintDialog printDlg(&printer);
+  printDlg.setOption(QPrintDialog::PrintSelection,false);
+  printDlg.setOption(QPrintDialog::PrintCollateCopies,false);
+  printDlg.setOption(QPrintDialog::PrintPageRange,false);
+  printDlg.setOption(QPrintDialog::PrintToFile,false);
+
   if(QDialog::Accepted==printDlg.exec()) {
   }
-  /*
+  */
   QPageSetupDialog pageSetupDlg(&printer);
   if(QDialog::Accepted==pageSetupDlg.exec()) {
   }
-  */
 
   //nuovaConfigurazione->insert("stampante",printer.printerName());
 

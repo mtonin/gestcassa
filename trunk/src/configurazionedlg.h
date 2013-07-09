@@ -4,6 +4,7 @@
 #include "simplecrypt.h"
 #include "ui_configurazionedlg.h"
 #include <QMap>
+#include <QPrinter>
 
 class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
 {
@@ -63,6 +64,8 @@ private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
   SimpleCrypt* cifratore;
+
+  QPrinter printer;
 };
 
 #endif // CONFIGURAZIONEDLG_H
