@@ -21,7 +21,7 @@ private slots:
 
    void on_prezzoArticolo_textEdited(const QString &arg1);
 
-   void on_disattivaFlag_toggled(bool checked);
+   void on_disattivaFlag_stateChanged(int checked);
 
    void on_destinazioneBox_activated(const QString &arg1);
 

@@ -81,8 +81,21 @@ void DBDialog::on_apreBtn_clicked()
       return;
     }
     nuovaVersioneDB=2;
-
   }
+  if(versioneDB<3) {
+    if(!stmt.exec("alter table ordinirighe rename to ordinirighe_old") ||
+       !stmt.exec("CREATE TABLE ordinirighe (numeroordine INTEGER REFERENCES ordini ( numero ), \
+                  idarticolo   INTEGER,   \
+                  quantita     INTEGER );") ||
+       !stmt.exec("insert into ordinirighe select numeroordine,idarticolo,quantita from ordinirighe_old") ||
+       !stmt.exec("drop table ordinirighe_old")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=3;
+  }
+
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     stmt.prepare("insert or replace into configurazione (chiave,valore) values('versione',?)");
