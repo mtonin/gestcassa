@@ -179,7 +179,6 @@ void MainWindow::creaRepartiButtons(){
 
 }
 
-
 void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* repartoBtn)   {
 
   QColor coloreSfondo=repartoBtn->buttonColorNormal();
