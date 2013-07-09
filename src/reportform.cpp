@@ -54,7 +54,7 @@ QTextDocument* ReportForm::creaDocumentTutto()
               and c.idreparto=b.idreparto";
 
   if(ordineAlfabeticoBox->isChecked()) {
-    sql.append(" order by a.descrizione asc");
+    sql.append(" order by lower(a.descrizione) asc");
   } else {
     sql.append(" order by a.prezzo asc");
   }
@@ -226,7 +226,7 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
         and a.gestioneMenu='false' \
         and a.destinazione=?";
     if(ordineAlfabeticoBox->isChecked()) {
-      sql.append(" order by a.descrizione asc");
+      sql.append(" order by lower(a.descrizione) asc");
     } else {
       sql.append(" order by a.prezzo asc");
     }
@@ -307,7 +307,7 @@ QTextDocument *ReportForm::creaDocumentMenu()
               and a.gestionemenu='true'";
 
   if(ordineAlfabeticoBox->isChecked()) {
-    sql.append(" order by a.descrizione asc");
+    sql.append(" order by lower(a.descrizione) asc");
   } else {
     sql.append(" order by a.prezzo asc");
   }

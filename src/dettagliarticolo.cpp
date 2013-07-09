@@ -25,9 +25,27 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
 
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
 
+  disattivaFlag->disconnect();
+
   reset();
   articoloBtn=(ArticoloBtnWidget*)currentArticoloBtn;
   testoArticolo->setText(articoloBtn->getNomeArticolo());
+  QSqlQuery stmt;
+  stmt.prepare("select 1 from articolimenu where idarticolomenu=?");
+  stmt.addBindValue(articoloBtn->getId());
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  if(stmt.next()) {
+    testoArticolo->setEnabled(false);
+    testoArticolo->setToolTip("Questo articolo è inserito in un menù.\nPer modificare la descrizione, rimuoverlo dal menù.");
+  } else {
+    testoArticolo->setEnabled(true);
+    testoArticolo->setToolTip("");
+  }
+
+
   /*
   QLocale locale;
   QString str=locale.toCurrencyString(articoloBtn->getPrezzo(),QString(" "));
@@ -39,8 +57,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
   disattivaFlag->setChecked(!articoloBtn->getAbilitato());
 
   destinazioneBox->clear();
-  QSqlQuery stmt("select nome from destinazioniStampa order by nome");
-  if(!stmt.exec()) {
+  if(!stmt.exec("select nome from destinazioniStampa order by lower(nome)")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());
     return;
@@ -85,6 +102,8 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
   testoArticolo->selectAll();
   testoArticolo->setFocus();
+
+  connect(disattivaFlag,SIGNAL(stateChanged(int)),this,SLOT(on_disattivaFlag_stateChanged(int)));
 }
 
 void DettagliArticolo::aggiornaArticolo()
@@ -183,7 +202,7 @@ void DettagliArticolo::on_prezzoArticolo_textEdited(const QString &prezzo)
   aggiornaArticolo();
 }
 
-void DettagliArticolo::on_disattivaFlag_toggled(bool checked)
+void DettagliArticolo::on_disattivaFlag_stateChanged(int checked)
 {
   articoloBtn->setAbilitato(!checked);
   aggiornaArticolo();
@@ -235,7 +254,7 @@ void DettagliArticolo::on_nuovoBtn_clicked()
 void DettagliArticolo::creaSelezioneArticoloBox()
 {
   articoliMenuModello->clear();
-  QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu='false' order by descrizione asc");
+  QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu='false' order by lower(descrizione) asc");
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());

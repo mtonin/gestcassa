@@ -45,14 +45,6 @@ CREATE TABLE pulsanti (
 );
 
 
--- Table: ordinirighe
-CREATE TABLE ordinirighe ( 
-    numeroordine INTEGER REFERENCES ordini ( numero ),
-    idarticolo   INTEGER REFERENCES articoli ( idarticolo ),
-    quantita     INTEGER 
-);
-
-
 -- Table: reparti
 CREATE TABLE reparti ( 
     idreparto       INTEGER         PRIMARY KEY AUTOINCREMENT,
@@ -89,6 +81,14 @@ CREATE TABLE ordinicontenuto (
     destinazione VARCHAR,
     prezzo       REAL,
     tipoArticolo CHAR     NOT NULL 
+);
+
+
+-- Table: ordinirighe
+CREATE TABLE ordinirighe ( 
+    numeroordine INTEGER REFERENCES ordini ( numero ),
+    idarticolo   INTEGER,
+    quantita     INTEGER 
 );
 
 
@@ -131,4 +131,4 @@ CREATE VIEW dettagliordine AS
               AND
               articoli.gestioneMenu = 'true';
 
-insert into configurazione (chiave,valore) values ('versione','2');
+insert into configurazione (chiave,valore) values ('versione','3');
