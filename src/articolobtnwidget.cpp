@@ -63,11 +63,8 @@ void ArticoloBtnWidget::PaintPrezzo()
 
 void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
 {
-  if(0==idArticolo) {
-    SetButtonColorNormal(Qt::lightGray);
-  }
   QPictureButton::paintEvent(evt);
-  if(!nomeArticolo.isEmpty() && visualizzaPrezzo) {
+  if(idArticolo>0 && visualizzaPrezzo) {
     PaintPrezzo();
   }
 }
