@@ -14,16 +14,29 @@ StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente
 
   statsView->verticalHeader()->hide();
   statsView->horizontalHeader()->setSortIndicatorShown(true);
-  statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
-  connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),statsView,SLOT(sortByColumn(int)));
+  statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  statsView->horizontalHeader()->setStretchLastSection(true);
+
+  connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
 
   caricaStats();
+
+  //statsView->horizontalHeader()->resize(sizeHint());
+  statsView->hideColumn(2);
 }
 
 void StatsForm::on_filtraBtn_clicked()
 {
   caricaStats();
+}
+
+void StatsForm::ordinaByColumn(int column)
+{
+  if(column==0) {
+    column=2;
+  }
+  statsView->sortByColumn(column);
 }
 
 void StatsForm::caricaStats()
@@ -76,6 +89,7 @@ void StatsForm::caricaStats()
     QStandardItem* quantitaItem=new QStandardItem;
     quantitaItem->setData(QVariant(quantita),Qt::EditRole);
     riga.append(quantitaItem);
+    riga.append(new QStandardItem(nomeArticolo.toUpper()));
     statsModel->appendRow(riga);
 
     keyData.append(++numero);
