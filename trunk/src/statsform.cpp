@@ -22,7 +22,6 @@ StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente
 
   caricaStats();
 
-  //statsView->horizontalHeader()->resize(sizeHint());
   statsView->hideColumn(2);
 }
 
