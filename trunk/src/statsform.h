@@ -13,6 +13,8 @@ public:
 
 private slots:
   void on_filtraBtn_clicked();
+  void ordinaByColumn(int column);
+
 
 private:
   StatsModel* statsModel;
