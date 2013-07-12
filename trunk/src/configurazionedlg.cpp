@@ -229,7 +229,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     QString destinazioneArticoloOrdine=stmt.value(5).toString();
     QString prezzoArticoloOrdine=stmt.value(6).toString();
     QString tipoArticoloOrdine=stmt.value(7).toString();
-    QString riga=QString("ORDINIÂ§%1Â§%2Â§%3Â§%4Â§%5Â§%6Â§%7Â§%8")
+    QString riga=QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8")
                  .arg(numeroOrdine)
                  .arg(tsStampaOrdine)
                  .arg(importoOrdine)
@@ -241,7 +241,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     listaSql.append(riga);
   }
 
-  esportaInFile(listaSql.join("Â§"));
+  esportaInFile(listaSql.join("#§"));
 
 }
 
@@ -257,7 +257,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   while(stmt.next()) {
     QString nomeDest=stmt.value(0).toString();
     QString intestazioneDest=stmt.value(1).toString();
-    QString riga=QString("DESTINAZIONISTAMPAÂ§%1Â§%2")
+    QString riga=QString("DESTINAZIONISTAMPA#§%1#§%2")
                  .arg(nomeDest)
                  .arg(intestazioneDest);
     listaSql.append(riga);
@@ -273,7 +273,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString font=stmt.value(2).toString();
     QString coloreSfondo=stmt.value(3).toString();
     QString coloreCarattere=stmt.value(4).toString();
-    QString riga=QString("REPARTIÂ§%1Â§%2Â§%3Â§%4Â§%5")
+    QString riga=QString("REPARTI#§%1#§%2#§%3#§%4#§%5")
                  .arg(idreparto)
                  .arg(descrizioneReparto)
                  .arg(font)
@@ -292,7 +292,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString prezzo=stmt.value(2).toString();
     QString destinazioneStampa=stmt.value(3).toString();
     QString gestioneMenu=stmt.value(4).toString();
-    QString riga=QString("ARTICOLIÂ§%1Â§%2Â§%3Â§%4Â§%5")
+    QString riga=QString("ARTICOLI#§%1#§%2#§%3#§%4#§%5")
                  .arg(idArticolo)
                  .arg(descrizioneArticolo)
                  .arg(prezzo)
@@ -308,7 +308,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   while(stmt.next()) {
     QString idArticolo=stmt.value(0).toString();
     QString idArticoloMenu=stmt.value(1).toString();
-    QString riga=QString("ARTICOLIMENUÂ§%1Â§%2")
+    QString riga=QString("ARTICOLIMENU#§%1#§%2")
                  .arg(idArticolo)
                  .arg(idArticoloMenu);
     listaSql.append(riga);
@@ -324,7 +324,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QString colonnaPulsante=stmt.value(2).toString();
     QString idArticolo=stmt.value(3).toString();
     QString flagAbilitato=stmt.value(4).toString();
-    QString riga=QString("PULSANTIÂ§%1Â§%2Â§%3Â§%4Â§%5")
+    QString riga=QString("PULSANTI#§%1#§%2#§%3#§%4#§%5")
                  .arg(idReparto)
                  .arg(rigaPulsante)
                  .arg(colonnaPulsante)
@@ -334,16 +334,16 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   }
 
   QString str=configurazione->value("descrManifestazione").toString();
-  QString riga=QString("CONFIGURAZIONEÂ§descrManifestazioneÂ§%1")
+  QString riga=QString("CONFIGURAZIONE#§descrManifestazione#§%1")
           .arg(str.isEmpty()?"NULL":str);
   listaSql.append(riga);
 
   str=configurazione->value("intestazione").toString();
-  riga=QString("CONFIGURAZIONEÂ§intestazioneÂ§%1")
+  riga=QString("CONFIGURAZIONE#§intestazione#§%1")
           .arg(str.isEmpty()?"NULL":str);
   listaSql.append(riga);
 
-  esportaInFile(listaSql.join("Â§"));
+  esportaInFile(listaSql.join("#§"));
 }
 
 void ConfigurazioneDlg::esportaInFile(const QString &testo)
@@ -395,7 +395,11 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
   }
 
   QString righeInput=importFile.readAll();
-  QStringList campiInput=righeInput.split("Â§");
+  QString separatore="#§";
+  if(righeInput.indexOf("Â§")>0) {
+    separatore="Â§";
+  }
+  QStringList campiInput=righeInput.split(separatore);
   int idx=0;
   while(idx<campiInput.size()) {
       QString tabella=campiInput.at(idx);
