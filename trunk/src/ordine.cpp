@@ -42,7 +42,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   ristampaBtn->setIcon(QIcon(":/GestCassa/printer-1"));
   ristampaBtn->setIconSize(QSize(32,32));
   ristampaBtn->SetIconPosition(QPictureButton::PositionTop);
-  stampaBtn->SetButtonColorNormal(Qt::yellow);
+  stampaBtn->SetButtonColorNormal(Qt::green);
   annullaBtn->SetButtonColorNormal(Qt::yellow);
   ultimoRestoBtn->SetButtonColorNormal(Qt::yellow);
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);

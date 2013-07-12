@@ -5,7 +5,8 @@
 RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
 {
   setupUi(this);
-  setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+  //setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+  setWindowFlags(Qt::Tool);
 
   _durata=1000*durata;
   activateWindow();
