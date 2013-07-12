@@ -5,7 +5,8 @@
 StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente(idSessione), QDialog(parent)
 {
   setupUi(this);
-  setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
+  setWindowFlags(Qt::Tool);
+  activateWindow();
 
   fromData->setDate(QDate::currentDate());
   toData->setDate(QDate::currentDate());
@@ -51,16 +52,18 @@ void StatsForm::caricaStats()
 
   QString sql("SELECT descrizione,sum(quantita) \
               FROM ordinicontenuto \
-              where datetime(tsstampa) between ? and ? \
-              and tipoArticolo <> ? \
+              where \
               %1 \
+              and tipoArticolo <> ? \
               group by descrizione \
               order by 2 desc");
-  QString condSessione;
+  QString condizione;
   if(ultimaSessioneBox->isChecked()) {
-    condSessione=QString("and idsessione=%1").arg(idSessioneCorrente);
+    condizione="idsessione=?";
+  } else {
+    condizione="datetime(tsstampa) between ? and ?";
   }
-  sql=sql.arg(condSessione);
+  sql=sql.arg(condizione);
   QString tipoArticolo;
   if(expMenuBox->isChecked()) {
       tipoArticolo="M";
@@ -70,10 +73,15 @@ void StatsForm::caricaStats()
   QSqlQuery stmt;
   stmt.prepare(sql);
 
-  QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
-  QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
-  stmt.addBindValue(from);
-  stmt.addBindValue(to);
+  if(ultimaSessioneBox->isChecked()) {
+    stmt.addBindValue(idSessioneCorrente);
+  } else {
+    QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+    QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+    stmt.addBindValue(from);
+    stmt.addBindValue(to);
+  }
+
   stmt.addBindValue(tipoArticolo);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
@@ -129,21 +137,29 @@ void StatsForm::calcolaTotali()
 {
   QString sql("SELECT count(distinct(numeroordine)),sum(prezzo) \
               FROM ordinicontenuto \
-              where datetime(tsstampa) between ? and ? \
+              where \
               %1 ");
-  QString condSessione;
+  QString condizione;
   if(ultimaSessioneBox->isChecked()) {
-    condSessione=QString("and idsessione=%1").arg(idSessioneCorrente);
+    condizione="idsessione=?";
+  } else {
+    condizione="datetime(tsstampa) between ? and ?";
   }
-  sql=sql.arg(condSessione);
+
+  sql=sql.arg(condizione);
 
   QSqlQuery stmt;
   stmt.prepare(sql);
 
-  QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
-  QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
-  stmt.addBindValue(from);
-  stmt.addBindValue(to);
+  if(ultimaSessioneBox->isChecked()) {
+    stmt.addBindValue(idSessioneCorrente);
+  } else {
+    QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+    QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+    stmt.addBindValue(from);
+    stmt.addBindValue(to);
+  }
+
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
