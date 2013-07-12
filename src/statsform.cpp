@@ -121,4 +121,37 @@ void StatsForm::caricaStats()
   graficoPlot->setRangeZoom(Qt::Horizontal|Qt::Vertical);
 
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
+
+  calcolaTotali();
+}
+
+void StatsForm::calcolaTotali()
+{
+  QString sql("SELECT count(distinct(numeroordine)),sum(prezzo) \
+              FROM ordinicontenuto \
+              where datetime(tsstampa) between ? and ? \
+              %1 ");
+  QString condSessione;
+  if(ultimaSessioneBox->isChecked()) {
+    condSessione=QString("and idsessione=%1").arg(idSessioneCorrente);
+  }
+  sql=sql.arg(condSessione);
+
+  QSqlQuery stmt;
+  stmt.prepare(sql);
+
+  QString from=QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+  QString to=QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+  stmt.addBindValue(from);
+  stmt.addBindValue(to);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  stmt.next();
+  int totOrdini=stmt.value(0).toInt();
+  float totImporto=stmt.value(1).toFloat();
+
+  totaleOrdiniTxt->setText(QString("%1").arg(totOrdini));
+  totaleImportoTxt->setText(QString("%1 %L2").arg(QChar(0x20AC)).arg(totImporto,4,'f',2));
 }
