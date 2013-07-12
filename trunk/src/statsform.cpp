@@ -15,14 +15,14 @@ StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente
   statsView->verticalHeader()->hide();
   statsView->horizontalHeader()->setSortIndicatorShown(true);
 
+  statsView->setWordWrap(true);
+  statsView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   statsView->horizontalHeader()->setStretchLastSection(true);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
 
   caricaStats();
-
-  statsView->hideColumn(2);
 }
 
 void StatsForm::on_filtraBtn_clicked()
@@ -96,6 +96,8 @@ void StatsForm::caricaStats()
     tickLabelsData.append(nomeArticolo);
     tickData.append(numero);
   }
+
+  statsView->hideColumn(2);
 
   QFont font=graficoPlot->xAxis->tickLabelFont();
   font.setPointSize(8);
