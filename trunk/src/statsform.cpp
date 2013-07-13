@@ -135,7 +135,7 @@ void StatsForm::caricaStats()
 
 void StatsForm::calcolaTotali()
 {
-  QString sql("SELECT count(distinct(numeroordine)),sum(prezzo) \
+  QString sql("SELECT count(distinct idsessione||numeroordine),sum(prezzo) \
               FROM ordinicontenuto \
               where \
               %1 ");
