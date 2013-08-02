@@ -12,7 +12,9 @@ const QString dbFileName("GestioneCassa/cassadb.db3");
 DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
 {
   setupUi(this);
-  setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
+  //setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
+  setWindowFlags(Qt::Tool);
+  activateWindow();
 
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
   QFileInfo dbFileInfo(QString("%1/%2")
@@ -21,6 +23,7 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
   dbFilePath=dbFileInfo.absoluteFilePath();
   QDir dbParentDir(dbFileInfo.absolutePath());
   dbParentDir.mkpath(dbFileInfo.absolutePath());
+  leggeConfigurazione();
 }
 
 void DBDialog::on_esceBtn_clicked()
@@ -57,13 +60,6 @@ bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, 
   }
 
   return true;
-}
-
-void DBDialog::on_adminBox_clicked(bool checked)
-{
-    passwordLbl->setEnabled(checked);
-    password->setEnabled(checked);
-    password->setFocus();
 }
 
 void DBDialog::creaDb()
@@ -110,6 +106,23 @@ void DBDialog::creaDb()
 
 void DBDialog::on_apreBtn_clicked()
 {
+  QString pwdDB=conf->value("adminPassword").toString();
+  if(pwdDB.isEmpty()) {
+    pwdDB="12345";
+  } else {
+    pwdDB=cifratore->decryptToString(pwdDB);
+  }
+  if(pwdDB!=password->text()) {
+    QMessageBox::critical(this,"Accesso","Password errata");
+    password->selectAll();
+    password->setFocus();
+    return;
+  }
+  accept();
+
+}
+
+void DBDialog::leggeConfigurazione() {
 
   if(!createConnection(dbFilePath,"","")) {
     return;
@@ -134,25 +147,6 @@ void DBDialog::on_apreBtn_clicked()
   }
 
   conf->insert("dbFilePath",dbFilePath);
-
-  QString pwdDB=conf->value("adminPassword").toString();
-  if(pwdDB.isEmpty()) {
-    pwdDB="12345";
-  } else {
-    pwdDB=cifratore->decryptToString(pwdDB);
-  }
-  if(adminBox->isChecked()) {
-    if(pwdDB==password->text()) {
-      conf->insert("ruolo","amministratore");
-    } else {
-      QMessageBox::critical(this,"Accesso","Password errata");
-      password->selectAll();
-      password->setFocus();
-      return;
-    }
-  } else {
-    conf->insert("ruolo","operatore");
-  }
 
   int versioneDB=conf->value("versione",1).toInt();
   int nuovaVersioneDB=versioneDB;
@@ -212,6 +206,5 @@ void DBDialog::on_apreBtn_clicked()
   }
 
   db.commit();
-  accept();
 }
 
