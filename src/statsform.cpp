@@ -51,7 +51,7 @@ void StatsForm::caricaStats()
   int numero=0;
 
   QString sql("SELECT descrizione,sum(quantita) \
-              FROM ordinicontenuto \
+              FROM storicoordini \
               where \
               %1 \
               and tipoArticolo <> ? \
@@ -136,7 +136,7 @@ void StatsForm::caricaStats()
 void StatsForm::calcolaTotali()
 {
   QString sql("SELECT count(distinct idsessione||numeroordine),sum(prezzo) \
-              FROM ordinicontenuto \
+              FROM storicoordini \
               where \
               %1 ");
   QString condizione;

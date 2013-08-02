@@ -256,7 +256,7 @@
       <number>1</number>
      </property>
      <item row="0" column="3">
-      <widget class="QPictureButton" name="pagPrevBtn">
+      <widget class="QPictureButton" name="pagPrevBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -279,13 +279,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>SCORRE SU'</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0" rowspan="2">
-      <widget class="QPictureButton" name="stampaBtn">
+      <widget class="QPictureButton" name="stampaBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>3</horstretch>
@@ -305,13 +305,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>STAMPA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPictureButton" name="ultimoRestoBtn">
+      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -331,13 +331,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>ULTIMO RESTO</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPictureButton" name="annullaBtn">
+      <widget class="QPictureButton" name="annullaBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -357,13 +357,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>ANNULLA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPictureButton" name="pagNextBtn">
+      <widget class="QPictureButton" name="pagNextBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -386,42 +386,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>SCORRE GIU'</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPictureButton" name="pagNextBtn_2">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>1</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>75</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPictureButton" name="ristampaBtn">
+      <widget class="QPictureButton" name="duplicaBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -444,7 +415,36 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
+        <string>DUPLICA ULTIMO ORDINE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPictureButton" name="ristampaBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
         <string>RISTAMPA ULTIMO ORDINE</string>
        </property>
       </widget>

@@ -85,16 +85,13 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
-    /*
-    ordineBox->hide();
-    dettagliRepartoBox->hide();
-    dettagliArticoloBox->hide();
-    */
     ui->latoStackedWidget->setCurrentIndex(0);
 
+    // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
-      itReparti.next()->setEnabled(true);
+      itReparti.next()->setVisible(true);
+      //itReparti.next()->setEnabled(true);
     }
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
@@ -112,21 +109,20 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     //ui->modalitaBtn->setText("GESTIONE");
     //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
-    /*
-    dettagliRepartoBox->hide();
-    dettagliArticoloBox->hide();
-    ordineBox->setVisible(true);
-    */
     ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
     int primoRepartoAttivo=-1;
+
+    // nasconde i pulsanti dei reparti disabilitati
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
       RepartoBtnWidget* reparto=itReparti.next();
-      reparto->setEnabled(reparto->getAbilitato());
+      reparto->setVisible(reparto->getAbilitato());
+      //reparto->setEnabled(reparto->getAbilitato());
       if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId()-1;
     }
 
+    // nasconde i pulsanti degli articoli disabilitati
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();

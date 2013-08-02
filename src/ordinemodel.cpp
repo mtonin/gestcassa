@@ -108,7 +108,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,con
     }
   }
 
-  stmt.prepare("insert into ordinicontenuto select ?,numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+  stmt.prepare("insert into storicoordini select ?,numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
   stmt.addBindValue(idSessione);
   stmt.addBindValue(ts);
   stmt.addBindValue(importo);

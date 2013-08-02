@@ -71,5 +71,6 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   buttonSizePolicy.setVerticalStretch(0);
   buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
   setSizePolicy(buttonSizePolicy);
+  setMaximumWidth(200);
 
 }
