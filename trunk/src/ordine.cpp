@@ -31,6 +31,9 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   annullaBtn->setIcon(QIcon(":/GestCassa/annulla"));
   annullaBtn->setIconSize(QSize(32,32));
   annullaBtn->SetIconPosition(QPictureButton::PositionTop);
+  duplicaBtn->setIcon(QIcon(":/GestCassa/duplica"));
+  duplicaBtn->setIconSize(QSize(32,32));
+  duplicaBtn->SetIconPosition(QPictureButton::PositionTop);
   ultimoRestoBtn->setIcon(QIcon(":/GestCassa/money"));
   ultimoRestoBtn->setIconSize(QSize(32,32));
   ultimoRestoBtn->SetIconPosition(QPictureButton::PositionTop);
@@ -43,14 +46,17 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   ristampaBtn->setIcon(QIcon(":/GestCassa/printer-1"));
   ristampaBtn->setIconSize(QSize(32,32));
   ristampaBtn->SetIconPosition(QPictureButton::PositionTop);
+
   stampaBtn->SetButtonColorNormal(Qt::green);
   annullaBtn->SetButtonColorNormal(Qt::yellow);
+  duplicaBtn->SetButtonColorNormal(Qt::yellow);
   ultimoRestoBtn->SetButtonColorNormal(Qt::yellow);
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
   ristampaBtn->SetButtonColorNormal(Qt::yellow);
   stampaBtn->SetButtonColorHot(Qt::magenta);
   annullaBtn->SetButtonColorHot(Qt::magenta);
+  duplicaBtn->SetButtonColorHot(Qt::magenta);
   ultimoRestoBtn->SetButtonColorHot(Qt::magenta);
   pagPrevBtn->SetButtonColorHot(Qt::magenta);
   pagNextBtn->SetButtonColorHot(Qt::magenta);
@@ -105,7 +111,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 void Ordine::on_annullaBtn_clicked()
 {
   if(!isInComposizione()) return;
-  if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine?",QMessageBox::Ok|QMessageBox::No)) {
+  if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine corrente?",QMessageBox::Ok|QMessageBox::No)) {
     modello.clear();
   }
 }
@@ -114,7 +120,7 @@ void Ordine::on_ristampaBtn_clicked()
 {
   int numeroOrdine=numOrdineCorrente-1;
   QSqlQuery stmt;
-  stmt.prepare("select 1 from ordinicontenuto where idsessione=? and numeroordine=?");
+  stmt.prepare("select 1 from storicoordini where idsessione=? and numeroordine=?");
   stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
   if(!stmt.exec()) {
@@ -222,7 +228,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  stmt.prepare("select distinct(destinazione) from ordinicontenuto where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
+  stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
   stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
 
@@ -270,7 +276,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     y+=10;
 
     stmt.prepare("SELECT descrizione,sum(quantita) \
-                 FROM ordinicontenuto \
+                 FROM storicoordini \
                  where idsessione=? \
                  and numeroordine=? \
                  and destinazione=? \
@@ -345,7 +351,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select descrizione,quantita,prezzo*quantita from ordinicontenuto where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
   stmt.addBindValue(idSessioneCorrente);
   stmt.addBindValue(numeroOrdine);
 
@@ -406,4 +412,31 @@ void Ordine::on_pagNextBtn_clicked()
   int primaRiga=articoliTab->rowAt(1);
   QModelIndex idx=modello.index(primaRiga+1,1);
   articoliTab->scrollTo(idx,QAbstractItemView::PositionAtTop);
+}
+
+void Ordine::on_duplicaBtn_clicked()
+{
+  if(isInComposizione()) {
+    if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine corrente?",QMessageBox::Ok|QMessageBox::No)) {
+      modello.clear();
+    } else {
+      return;
+    }
+  }
+  int numeroOrdine=numOrdineCorrente-1;
+  QSqlQuery stmt;
+  stmt.prepare("select a.idarticolo,a.quantita,b.descrizione,b.prezzo from ordinirighe a,articoli b where a.numeroordine=? and a.idarticolo=b.idarticolo");
+  stmt.addBindValue(numeroOrdine);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  while(stmt.next()) {
+    int idArticolo=stmt.value(0).toInt();
+    int quantita=stmt.value(1).toInt();
+    QString descrizione=stmt.value(2).toString();
+    float prezzo=stmt.value(3).toFloat();
+    while(quantita-->0)
+      nuovoArticolo(idArticolo,descrizione,prezzo);
+  }
 }

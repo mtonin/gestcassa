@@ -190,6 +190,15 @@ void DBDialog::on_apreBtn_clicked()
     nuovaVersioneDB=4;
   }
 
+  if(versioneDB<5) {
+    if(!stmt.exec("alter table ordinicontenuto rename to storicoordini")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=5;
+  }
+
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     stmt.prepare("insert or replace into configurazione (chiave,valore) values('versione',?)");

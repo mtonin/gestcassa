@@ -221,19 +221,23 @@ void QPictureButton::PaintText()
         switch(m_IconPosition)
         {
             case PositionTop:
-                Top += (this->iconSize().height() + m_IconSpace + m_TextSpace);
+                //Top += (this->iconSize().height() + m_IconSpace + m_TextSpace);
+                Top += (this->iconSize().height() + m_IconSpace);
                 Align = Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap;
                 break;
             case PositionBottom:
-                Top -= (this->iconSize().height() + m_IconSpace + m_TextSpace);
+                //Top -= (this->iconSize().height() + m_IconSpace + m_TextSpace);
+                Top -= (this->iconSize().height() + m_IconSpace);
                 Align = Qt::AlignHCenter | Qt::AlignBottom;
                 break;
             case PositionLeft:
-                Left += (this->iconSize().width() + m_IconSpace + m_TextSpace);
+                //Left += (this->iconSize().width() + m_IconSpace + m_TextSpace);
+                Left += (this->iconSize().width() + m_IconSpace);
                 Align = Qt::AlignLeft | Qt::AlignVCenter;
                 break;
             case PositionRight:
-                Left -= (this->iconSize().width() + m_IconSpace + m_TextSpace);
+                //Left -= (this->iconSize().width() + m_IconSpace + m_TextSpace);
+                Left -= (this->iconSize().width() + m_IconSpace);
                 Align = Qt::AlignRight | Qt::AlignVCenter;
                 break;
         }
@@ -256,6 +260,10 @@ void QPictureButton::PaintText()
     }
 
     // Paint
+    Left+=m_TextSpace;
+    Top+=m_TextSpace;
+    Width-=2*m_TextSpace;
+    Height-=2*m_TextSpace;
     QRect FontRect(Left, Top, Width, Height);
     painter.drawText(FontRect, Align, this->text());
 }
