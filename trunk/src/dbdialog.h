@@ -17,11 +17,10 @@ class DBDialog : public QDialog, private Ui::DBDialog
 
       void on_esceBtn_clicked();
 
-      void on_adminBox_clicked(bool checked);
-
 private:
       bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
       void creaDb();
+      void leggeConfigurazione();
 
       QMap<QString,QVariant>* conf;
       SimpleCrypt* cifratore;

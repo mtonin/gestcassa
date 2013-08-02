@@ -9,6 +9,7 @@
 #include "infowidget.h"
 #include "QDigitalClock.h"
 #include "statsform.h"
+#include "dbdialog.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -62,11 +63,7 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
 
   creaRepartiButtons();
 
-  if("operatore"==confMap->value("ruolo","operatore")) {
-    gestioneModalita(CASSA);
-  } else {
-    gestioneModalita(GESTIONE);
-  }
+  gestioneModalita(CASSA);
 
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
   showMaximized();
@@ -81,6 +78,8 @@ MainWindow::~MainWindow()
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
+    DBDialog* dlg=new DBDialog(confMap);
+    if(QDialog::Accepted!=dlg->exec()) return;
     ui->configurazioneBtn->setEnabled(true);
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
@@ -90,8 +89,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
-      itReparti.next()->setVisible(true);
-      //itReparti.next()->setEnabled(true);
+      //itReparti.next()->setVisible(true);
+      itReparti.next()->setEnabled(true);
     }
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
@@ -102,10 +101,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->reportBtn->setEnabled(false);
     ui->gestioneBtn->setEnabled(false);
     ui->cassaBtn->setEnabled(false);
-
-    if("amministratore"==confMap->value("ruolo","operatore")) {
-      ui->gestioneBtn->setEnabled(true);
-    }
+    ui->gestioneBtn->setEnabled(true);
 
     //ui->modalitaBtn->setText("GESTIONE");
     //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
@@ -117,8 +113,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
       RepartoBtnWidget* reparto=itReparti.next();
-      reparto->setVisible(reparto->getAbilitato());
-      //reparto->setEnabled(reparto->getAbilitato());
+      //reparto->setVisible(reparto->getAbilitato());
+      reparto->setEnabled(reparto->getAbilitato());
       if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId()-1;
     }
 
