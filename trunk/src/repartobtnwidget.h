@@ -16,6 +16,8 @@ public:
   const QColor getColore() {return buttonColorNormal();}
   const QColor getColoreText() {return textColorEnabled();}
   const QFont getFont() {return font();}
+  bool getAbilitato() {return abilitato;}
+  void setAbilitato(bool val) {abilitato=val;}
 
 signals:
   void cambiaColore(const QColor& colore);
@@ -30,6 +32,7 @@ public slots:
 private:
   int idReparto;
   QString nomeReparto;
+  bool abilitato;
 
 private slots:
 

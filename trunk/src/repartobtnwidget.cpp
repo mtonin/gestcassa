@@ -39,7 +39,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   QPictureButton(parent)
 {
   QSqlQuery stmt;
-  stmt.prepare("select * from reparti where idreparto=?");
+  stmt.prepare("select descrizione,font,coloreSfondo,coloreCarattere,abilitato from reparti where idreparto=?");
   stmt.addBindValue(idReparto);
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -50,6 +50,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
   int numColFont=stmt.record().indexOf("font");
   int numColColoreSfondo=stmt.record().indexOf("coloresfondo");
   int numColColoreCarattere=stmt.record().indexOf("colorecarattere");
+  int numColAbilitato=stmt.record().indexOf("abilitato");
   if(stmt.next()) {
     nomeReparto=stmt.value(numColDescr).toString();
     QFont currentFont;
@@ -59,6 +60,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
     SetButtonColorNormal(coloreSfondo);
     QString coloreCarattere=stmt.value(numColColoreCarattere).toString();
     SetTextColorEnabled(coloreCarattere);
+    setAbilitato(stmt.value(numColAbilitato).toBool());
   } else {
     nomeReparto=QString("REPARTO %1").arg(idReparto);
   }

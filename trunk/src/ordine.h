@@ -40,6 +40,8 @@ private:
   float importoUltimoOrdine;
   QMap<QString,QVariant>* configurazione;
   int idSessioneCorrente;
+  int numOrdineCorrente;
+  float importoOrdineCorrente;
 
   OrdineModel modello;
   ControlliOrdine* controlli;

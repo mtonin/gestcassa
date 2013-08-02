@@ -8,6 +8,7 @@ RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
   //setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
   setWindowFlags(Qt::Tool);
 
+  importoOrdine=valore;
   _durata=1000*durata;
   activateWindow();
   effetto=new QPropertyAnimation(this,"windowOpacity");
@@ -22,7 +23,7 @@ RestoDlg::RestoDlg(float valore,int durata,QWidget *parent) :QDialog(parent)
   }
 
   setFocus();
-  importoTxt->setText(QString("%L1").arg(valore,4,'f',2));
+  importoTxt->setText(QString("%L1").arg(importoOrdine,4,'f',2));
   connect(importoRicevutoTxt,SIGNAL(textChanged(QString)),this,SLOT(ricalcolaResto()));
   ricalcolaResto();
 }
@@ -80,8 +81,7 @@ void RestoDlg::cancellaUltimoCarattere(){
 void RestoDlg::ricalcolaResto()
 {
   float totale=importoRicevutoTxt->text().toFloat();
-  float importoDaPagare=importoTxt->text().toFloat();
-  float resto=totale-importoDaPagare;
+  float resto=totale-importoOrdine;
   restoCalcolatoTxt->setText(QString("%L1").arg(resto,4,'f',2));
 
   if(_durata>0) {

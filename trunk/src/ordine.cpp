@@ -20,6 +20,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   controlli=new ControlliOrdine(this);
 
   importoUltimoOrdine=0;
+  importoOrdineCorrente=0;
   idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
   nuovoOrdine(idSessioneCorrente);
 
@@ -94,11 +95,11 @@ void Ordine::on_articoliTab_clicked(const QModelIndex &index)
 
 void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 {
-  float totale=0;
+  importoOrdineCorrente=0;
   for(int i=0;i<modello.rowCount(QModelIndex());i++) {
-    totale+=modello.index(i,3).data().toFloat();
+    importoOrdineCorrente+=modello.index(i,3).data().toFloat();
   }
-  totaleLine->setText(QString("%L1").arg(totale,4,'f',2));
+  totaleLine->setText(QString("%L1").arg(importoOrdineCorrente,4,'f',2));
 }
 
 void Ordine::on_annullaBtn_clicked()
@@ -111,7 +112,7 @@ void Ordine::on_annullaBtn_clicked()
 
 void Ordine::on_ristampaBtn_clicked()
 {
-  int numeroOrdine=numeroOrdineTxt->text().toInt()-1;
+  int numeroOrdine=numOrdineCorrente-1;
   QSqlQuery stmt;
   stmt.prepare("select 1 from ordinicontenuto where idsessione=? and numeroordine=?");
   stmt.addBindValue(idSessioneCorrente);
@@ -131,16 +132,13 @@ void Ordine::on_stampaBtn_clicked()
     return;
   }
 
-  int numeroOrdine=numeroOrdineTxt->text().toInt();
-  importoUltimoOrdine=totaleLine->text().toFloat();
+  if(modello.completaOrdine(numOrdineCorrente,importoOrdineCorrente,idSessioneCorrente)) {
 
-  if(modello.completaOrdine(numeroOrdine,importoUltimoOrdine,idSessioneCorrente)) {
-
-      stampaScontrino(numeroOrdine);
+      stampaScontrino(numOrdineCorrente);
 
       if(configurazione->value("abilitaResto").toBool()) {
         int durataSecondi=configurazione->value("durataResto",5).toInt();
-        RestoDlg restoDlg(importoUltimoOrdine,durataSecondi,this);
+        RestoDlg restoDlg(importoOrdineCorrente,durataSecondi,this);
         restoDlg.exec();
       }
       nuovoOrdine(idSessioneCorrente);
@@ -150,6 +148,7 @@ void Ordine::on_stampaBtn_clicked()
 void Ordine::nuovoOrdine(const int idSessione)
 {
   idSessioneCorrente=idSessione;
+  importoUltimoOrdine=importoOrdineCorrente;
   modello.clear();
   QSqlQuery query("select max(numero) from ordini");
   if(!query.isActive()) {
@@ -157,12 +156,14 @@ void Ordine::nuovoOrdine(const int idSessione)
                         query.lastError().text());
     return;
   }
-  int numeroOrdine=0;
+  numOrdineCorrente=0;
   if(query.next()) {
-    numeroOrdine=query.value(0).toInt();
+    numOrdineCorrente=query.value(0).toInt();
   }
-  numeroOrdine++;
-  numeroOrdineTxt->setText(QString("%L1").arg(numeroOrdine));
+  numOrdineCorrente++;
+  numeroOrdineTxt->setText(QString("%L1").arg(numOrdineCorrente));
+  totaleLine->setText(QString("%L1").arg(importoOrdineCorrente,4,'f',2));
+  importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine,4,'f',2));
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)

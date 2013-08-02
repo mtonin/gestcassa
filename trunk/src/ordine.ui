@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>201</width>
+    <width>439</width>
     <height>467</height>
    </rect>
   </property>
@@ -53,7 +53,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Numero:</string>
+        <string>Numero</string>
        </property>
       </widget>
      </item>
@@ -67,7 +67,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>100</width>
+         <width>80</width>
          <height>16777215</height>
         </size>
        </property>
@@ -77,7 +77,7 @@
         </font>
        </property>
        <property name="maxLength">
-        <number>5</number>
+        <number>10</number>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -99,6 +99,48 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="numeroLbl_3">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Importo ultimo ordine €</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="importoUltimoOrdineText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="maxLength">
+        <number>10</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -214,7 +256,7 @@
       <number>1</number>
      </property>
      <item row="0" column="3">
-      <widget class="QPictureButton" name="pagPrevBtn" native="true">
+      <widget class="QPictureButton" name="pagPrevBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -237,13 +279,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>SCORRE SU'</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0" rowspan="2">
-      <widget class="QPictureButton" name="stampaBtn" native="true">
+      <widget class="QPictureButton" name="stampaBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>3</horstretch>
@@ -263,13 +305,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>STAMPA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
+      <widget class="QPictureButton" name="ultimoRestoBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -289,13 +331,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>ULTIMO RESTO</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPictureButton" name="annullaBtn" native="true">
+      <widget class="QPictureButton" name="annullaBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -315,13 +357,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>ANNULLA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPictureButton" name="pagNextBtn" native="true">
+      <widget class="QPictureButton" name="pagNextBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -344,13 +386,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>SCORRE GIU'</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPictureButton" name="pagNextBtn_2" native="true">
+      <widget class="QPictureButton" name="pagNextBtn_2">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -373,13 +415,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string/>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPictureButton" name="ristampaBtn" native="true">
+      <widget class="QPictureButton" name="ristampaBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -402,7 +444,7 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>RISTAMPA ULTIMO ORDINE</string>
        </property>
       </widget>

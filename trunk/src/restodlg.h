@@ -34,6 +34,8 @@ private:
   QPropertyAnimation* effetto;
   int _durata;
 
+  float importoOrdine;
+
   void keyPressEvent(QKeyEvent *);
 };
 

@@ -14,7 +14,7 @@
 #include <QMessageBox>
 #include <QHBoxLayout>
 
-const int NUM_REPARTI=6;
+const int NUM_REPARTI=8;
 const int NUM_RIGHE_ART=5;
 const int NUM_COLONNE_ART=6;
 
@@ -92,6 +92,10 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     */
     ui->latoStackedWidget->setCurrentIndex(0);
 
+    QListIterator<RepartoBtnWidget*> itReparti(repartiList);
+    while(itReparti.hasNext()) {
+      itReparti.next()->setEnabled(true);
+    }
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       it.next()->setCurrentIndex(0);
@@ -115,6 +119,14 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     */
     ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
+    int primoRepartoAttivo=-1;
+    QListIterator<RepartoBtnWidget*> itReparti(repartiList);
+    while(itReparti.hasNext()) {
+      RepartoBtnWidget* reparto=itReparti.next();
+      reparto->setEnabled(reparto->getAbilitato());
+      if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId()-1;
+    }
+
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
@@ -123,6 +135,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         box->setCurrentIndex(1);
       }
     }
+
+    ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
     showMaximized();
   }
 
@@ -168,6 +182,7 @@ void MainWindow::creaRepartiButtons(){
   for(int i=1;i<=NUM_REPARTI;i++) {
     RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiBox);
 
+    repartiList.append(reparto01Btn);
     hboxLayout->addWidget(reparto01Btn);
     creaArticoliPerRepartoButtons(i,reparto01Btn);
 
