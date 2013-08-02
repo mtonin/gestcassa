@@ -50,6 +50,7 @@ private:
   infoWidget* info;
 
   //QList<ArticoloBtnWidget*> articoliBtnList;
+  QList<RepartoBtnWidget*> repartiList;
   QList<QStackedWidget*> pulsantiList;
   modalitaType modalitaCorrente;
   QMap<QString,QVariant>* confMap;
