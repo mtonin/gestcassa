@@ -37,6 +37,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
     idx++;
   }
   intestazioneScontrinoTxt->setPlainText(configurazione->value("intestazione").toString());
+  fondoScontrinoTxt->setPlainText(configurazione->value("fondo").toString());
   durataRestoTxt->setText(configurazione->value("durataResto",5).toString());
   if(configurazione->value("abilitaResto",false).toBool()) {
     attivaRestoCheck->setChecked(true);
@@ -159,6 +160,11 @@ void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
   nuovaConfigurazione->insert("intestazione",intestazioneScontrinoTxt->toPlainText());
+}
+
+void ConfigurazioneDlg::on_fondoScontrinoTxt_textChanged()
+{
+  nuovaConfigurazione->insert("fondo",fondoScontrinoTxt->toPlainText());
 }
 
 void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)

@@ -175,6 +175,7 @@ void Ordine::nuovoOrdine(const int idSessione)
 void Ordine::stampaScontrino(const int numeroOrdine)
 {
   QString intest=configurazione->value("intestazione").toString();
+  QString fondo=configurazione->value("fondo").toString();
   QString nomeCassa=configurazione->value("nomeCassa","000").toString();
   QString descrManifestazione=configurazione->value("descrManifestazione","NOME MANIFESTAZIONE").toString();
 
@@ -383,6 +384,12 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   QString totaleString=QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
+
+  if(!fondo.isEmpty()) {
+    y+=textRect.height()+20;
+    painter.setFont(fontNormale);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,fondo,&textRect);
+  }
 
   y+=textRect.height()+35;
   painter.setFont(fontMini);
