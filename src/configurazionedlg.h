@@ -45,6 +45,8 @@ private slots:
 
   void on_intestazioneScontrinoTxt_textChanged();
 
+  void on_fondoScontrinoTxt_textChanged();
+
   void on_visualizzaPrezzoBox_clicked(bool checked);
 
   void on_cancellaOrdiniBtn_clicked();

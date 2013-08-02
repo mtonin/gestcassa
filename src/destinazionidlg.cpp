@@ -48,7 +48,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
   int numRighe=modello->rowCount();
   modello->insertRow(numRighe);
   modello->setData(modello->index(numRighe,0),"NOME DESTINAZIONE");
-  modello->setData(modello->index(numRighe,1),"INTESTAZIONE SCONTRINO");
+  modello->setData(modello->index(numRighe,1),"INTESTAZIONE TAGLIANDO");
   modello->setData(modello->index(numRighe,2),true);
   modello->submitAll();
   destinazioneTbl->setCurrentIndex(modello->index(numRighe,0));
