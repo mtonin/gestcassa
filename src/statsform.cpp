@@ -135,10 +135,14 @@ void StatsForm::caricaStats()
 
 void StatsForm::calcolaTotali()
 {
-  QString sql("SELECT count(distinct idsessione||numeroordine),sum(prezzo) \
-              FROM storicoordini \
-              where \
-              %1 ");
+
+  QString sql("select count(*),sum(importoordine) \
+              from (SELECT idsessione||numeroordine,importo as importoordine \
+                            FROM storicoordini \
+                            where \
+                            %1 \
+                            group by idsessione,numeroordine)");
+
   QString condizione;
   if(ultimaSessioneBox->isChecked()) {
     condizione="idsessione=?";
