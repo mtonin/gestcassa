@@ -172,6 +172,6 @@ void StatsForm::calcolaTotali()
   int totOrdini=stmt.value(0).toInt();
   float totImporto=stmt.value(1).toFloat();
 
-  totaleOrdiniTxt->setText(QString("%1").arg(totOrdini));
+  totaleOrdiniTxt->setText(QString("%L1").arg(totOrdini));
   totaleImportoTxt->setText(QString("%1 %L2").arg(QChar(0x20AC)).arg(totImporto,4,'f',2));
 }
