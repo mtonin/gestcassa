@@ -2,7 +2,7 @@
 #include <QTranslator>
 
 #include "mainwindow.h"
-#include "dbdialog.h"
+#include "dbmanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,19 +18,12 @@ int main(int argc, char *argv[])
   a.setFont(currentFont);
 
   QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;
-  DBDialog dlg(configurazione);
+  DBManager dbman(configurazione);
 
-  //if(QDialog::Accepted==dlg.exec()) {
-    MainWindow w(configurazione);
-    w.show();
+  MainWindow w(configurazione);
+  w.show();
 
-    return a.exec();
-  /*
-  } else {
-    return 0;
-  }
-  */
-
+  return a.exec();
 
 }
 

@@ -33,7 +33,9 @@ SOURCES += main.cpp\
     QDigitalClock.cpp \
     qcustomplot.cpp \
     statsform.cpp \
-    statsmodel.cpp
+    statsmodel.cpp \
+    confermadlg.cpp \
+    dbmanager.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -56,7 +58,9 @@ HEADERS  += mainwindow.h \
     QDigitalClock.h \
     qcustomplot.h \
     statsform.h \
-    statsmodel.h
+    statsmodel.h \
+    confermadlg.h \
+    dbmanager.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -69,7 +73,8 @@ FORMS    += mainwindow.ui \
     destinazionidlg.ui \
     reportform.ui \
     infowidget.ui \
-    statsform.ui
+    statsform.ui \
+    confermadlg.ui
 
 #include(version.txt)
 

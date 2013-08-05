@@ -9,7 +9,8 @@
 #include "infowidget.h"
 #include "QDigitalClock.h"
 #include "statsform.h"
-#include "dbdialog.h"
+#include "confermadlg.h"
+#include "simplecrypt.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -22,6 +23,15 @@ const int NUM_COLONNE_ART=6;
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
+  adminPassword=confMap->value("password").toString();
+  if(adminPassword.isEmpty()) {
+    adminPassword="12345";
+  } else {
+    SimpleCrypt* cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    adminPassword=cifratore->decryptToString(adminPassword);
+    delete cifratore;
+  }
+
   ui->setupUi(this);
 
   dettagliRepartoBox=new DettagliReparto;
@@ -78,8 +88,15 @@ MainWindow::~MainWindow()
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
-    DBDialog* dlg=new DBDialog(confMap);
-    if(QDialog::Accepted!=dlg->exec()) return;
+    ConfermaDlg* dlg=new ConfermaDlg("Inserire la password per accedere alla modalità amministrativa.","Password",true,this);
+    while(true) {
+      if(QDialog::Accepted!=dlg->visualizza()) return;
+      if(adminPassword==dlg->getValore()) {
+        break;
+      }
+      QMessageBox::critical(this,"Accesso","Password errata");
+    }
+
     ui->configurazioneBtn->setEnabled(true);
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
@@ -151,9 +168,8 @@ void MainWindow::keyPressEvent(QKeyEvent *evt) {
 
 void MainWindow::closeEvent(QCloseEvent *evt)
 {
-  if(QMessageBox::Ok!=QMessageBox::question(0,"Uscita","Confermi l'uscita?",QMessageBox::Ok|QMessageBox::No)) {
-    evt->ignore();
-  }
+  ConfermaDlg* dlg=new ConfermaDlg("Confermi l'uscita?");
+  if(QDialog::Accepted!=dlg->visualizza()) evt->ignore();
 }
 
 void MainWindow::creaRepartiButtons(){

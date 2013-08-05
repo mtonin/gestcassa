@@ -1,7 +1,6 @@
 #ifndef DBDIALOG_H
 #define DBDIALOG_H
 
-#include "simplecrypt.h"
 #include "ui_dbdialog.h"
 
 class DBDialog : public QDialog, private Ui::DBDialog
@@ -23,7 +22,6 @@ private:
       void leggeConfigurazione();
 
       QMap<QString,QVariant>* conf;
-      SimpleCrypt* cifratore;
       QString dbFilePath;
 };
 

@@ -1,6 +1,8 @@
 #include "ordine.h"
 #include "restodlg.h"
 #include "controlliordine.h"
+#include "confermadlg.h"
+
 #include <QMessageBox>
 #include <QTimer>
 #include <QtSql>
@@ -111,9 +113,9 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 void Ordine::on_annullaBtn_clicked()
 {
   if(!isInComposizione()) return;
-  if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine corrente?",QMessageBox::Ok|QMessageBox::No)) {
-    modello.clear();
-  }
+  ConfermaDlg* dlg=new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?","",false,this);
+  if(QDialog::Accepted!=dlg->visualizza()) return;
+  modello.clear();
 }
 
 void Ordine::on_ristampaBtn_clicked()
@@ -424,11 +426,9 @@ void Ordine::on_pagNextBtn_clicked()
 void Ordine::on_duplicaBtn_clicked()
 {
   if(isInComposizione()) {
-    if(QMessageBox::Ok==QMessageBox::question(0,"Annulla ordine","Confermi l'annullamento dell'ordine corrente?",QMessageBox::Ok|QMessageBox::No)) {
-      modello.clear();
-    } else {
-      return;
-    }
+    ConfermaDlg* dlg=new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?","",false,this);
+    if(QDialog::Accepted!=dlg->visualizza()) return;
+    modello.clear();
   }
   int numeroOrdine=numOrdineCorrente-1;
   QSqlQuery stmt;

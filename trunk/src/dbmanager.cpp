@@ -1,21 +1,19 @@
-#include "dbdialog.h"
+#include "dbmanager.h"
 #include "confermadlg.h"
 
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <QtSql>
-#include <QMessageBox>
 #include <QDesktopServices>
+#include <QMessageBox>
 
 const QString dbFileName("GestioneCassa/cassadb.db3");
 
-DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):conf(configurazione),QDialog(parent)
-{
-  setupUi(this);
-  //setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
-  setWindowFlags(Qt::Tool);
-  activateWindow();
+DBManager::DBManager(QObject *parent) :QObject(parent) {
+}
+
+DBManager::DBManager(QMap<QString, QVariant> *configurazione):conf(configurazione) {
 
   QFileInfo dbFileInfo(QString("%1/%2")
              .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
@@ -26,91 +24,7 @@ DBDialog::DBDialog(QMap<QString, QVariant> *configurazione, QWidget *parent):con
   leggeConfigurazione();
 }
 
-void DBDialog::on_esceBtn_clicked()
-{
-  reject();
-}
-
-bool DBDialog::createConnection(const QString &nomeFile, const QString &utente, const QString &password)
-{
-  if(nomeFile.isEmpty())
-    return false;
-  QFile dbFile(nomeFile);
-  if(!dbFile.exists()) {
-    creaDb();
-  }
-  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(nomeFile);
-  db.setUserName(utente);
-  db.setPassword(password);
-  if (!db.open()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
-    return false;
-  }
-  QSqlQuery query("select 1 from articoli");
-  if(!query.isActive()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),"Database inesistente o inutilizzabile");
-    return false;
-  }
-
-  query.exec("pragma foreign_keys=ON;");
-  if(!query.isActive()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
-    return false;
-  }
-
-  return true;
-}
-
-void DBDialog::creaDb()
-{
-  QFile dbFile(dbFilePath);
-  if(dbFile.exists()) {
-    QString descrizione=QString("Il file %1 esiste già. Lo cancello?").arg(dbFilePath);
-    ConfermaDlg* dlg=new ConfermaDlg(descrizione,"",false,this);
-    if(QDialog::Accepted!=dlg->visualizza()) return;
-    dbFile.remove();
-  }
-  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(dbFilePath);
-  //db.setUserName(utente);
-  //db.setPassword(password);
-  if (!db.open()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
-    return;
-  }
-
-  QFile sqlFile(":/GestCassa/creadb");
-  if(!sqlFile.open(QIODevice::ReadOnly)) {
-    QMessageBox::critical(0,QObject::tr("Database Error"),tr("Errore nella lettura della risorsa creadb"));
-    return;
-  }
-  QSqlQuery stmt;
-  QString sqlString=sqlFile.readAll();
-  foreach (QString sql,sqlString.split(";")) {
-    if(sql.isEmpty()) continue;
-    qDebug(sql.toUtf8());
-    if(!stmt.exec(sql)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-      return;
-    }
-
-  }
-
-  if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',datetime('now'))")) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-    return;
-  }
-
-}
-
-void DBDialog::on_apreBtn_clicked()
-{
-  accept();
-
-}
-
-void DBDialog::leggeConfigurazione() {
+void DBManager::leggeConfigurazione() {
 
   if(!createConnection(dbFilePath,"","")) {
     return;
@@ -196,3 +110,75 @@ void DBDialog::leggeConfigurazione() {
   db.commit();
 }
 
+bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password)
+{
+  if(nomeFile.isEmpty())
+    return false;
+  QFile dbFile(nomeFile);
+  if(!dbFile.exists()) {
+    creaDb();
+  }
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(nomeFile);
+  db.setUserName(utente);
+  db.setPassword(password);
+  if (!db.open()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
+    return false;
+  }
+  QSqlQuery query("select 1 from articoli");
+  if(!query.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),"Database inesistente o inutilizzabile");
+    return false;
+  }
+
+  query.exec("pragma foreign_keys=ON;");
+  if(!query.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+    return false;
+  }
+
+  return true;
+}
+
+void DBManager::creaDb()
+{
+  QFile dbFile(dbFilePath);
+  if(dbFile.exists()) {
+    QString descrizione=QString("Il file %1 esiste già. Lo cancello?").arg(dbFilePath);
+    ConfermaDlg* dlg=new ConfermaDlg(descrizione,"",false,0);
+    if(QDialog::Accepted!=dlg->visualizza()) return;
+    dbFile.remove();
+  }
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  db.setDatabaseName(dbFilePath);
+  //db.setUserName(utente);
+  //db.setPassword(password);
+  if (!db.open()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
+    return;
+  }
+
+  QFile sqlFile(":/GestCassa/creadb");
+  if(!sqlFile.open(QIODevice::ReadOnly)) {
+    QMessageBox::critical(0,QObject::tr("Database Error"),tr("Errore nella lettura della risorsa creadb"));
+    return;
+  }
+  QSqlQuery stmt;
+  QString sqlString=sqlFile.readAll();
+  foreach (QString sql,sqlString.split(";")) {
+    if(sql.isEmpty()) continue;
+    qDebug(sql.toUtf8());
+    if(!stmt.exec(sql)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return;
+    }
+
+  }
+
+  if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',datetime('now'))")) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+
+}

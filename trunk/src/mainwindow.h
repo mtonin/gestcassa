@@ -6,6 +6,7 @@
 #include "dettagliarticolo.h"
 #include "ordine.h"
 #include "infowidget.h"
+
 #include <QMainWindow>
 #include <QList>
 #include <QMap>
@@ -48,6 +49,7 @@ private:
   DettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
   infoWidget* info;
+  QString adminPassword;
 
   //QList<ArticoloBtnWidget*> articoliBtnList;
   QList<RepartoBtnWidget*> repartiList;
