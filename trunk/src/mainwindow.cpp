@@ -10,7 +10,6 @@
 #include "QDigitalClock.h"
 #include "statsform.h"
 #include "confermadlg.h"
-#include "simplecrypt.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -23,14 +22,8 @@ const int NUM_COLONNE_ART=6;
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
-  adminPassword=confMap->value("password").toString();
-  if(adminPassword.isEmpty()) {
-    adminPassword="12345";
-  } else {
-    SimpleCrypt* cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-    adminPassword=cifratore->decryptToString(adminPassword);
-    delete cifratore;
-  }
+  cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+  decodificaPassword();
 
   ui->setupUi(this);
 
@@ -106,8 +99,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
-      //itReparti.next()->setVisible(true);
-      itReparti.next()->setEnabled(true);
+      itReparti.next()->setVisible(true);
+      //itReparti.next()->setEnabled(true);
     }
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
@@ -130,8 +123,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
       RepartoBtnWidget* reparto=itReparti.next();
-      //reparto->setVisible(reparto->getAbilitato());
-      reparto->setEnabled(reparto->getAbilitato());
+      reparto->setVisible(reparto->getAbilitato());
+      //reparto->setEnabled(reparto->getAbilitato());
       if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId()-1;
     }
 
@@ -287,6 +280,7 @@ void MainWindow::on_configurazioneBtn_clicked()
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
   connect(dlg,SIGNAL(resetArticoli()),this,SLOT(creaRepartiButtons()));
+  connect(dlg,SIGNAL(passwordCambiata()),this,SLOT(decodificaPassword()));
   dlg->exec();
 
   bool newVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
@@ -334,4 +328,14 @@ void MainWindow::on_gestioneBtn_clicked()
   }
   qApp->restoreOverrideCursor();
   gestioneModalita(GESTIONE);
+}
+
+void MainWindow::decodificaPassword()
+{
+  adminPassword=confMap->value("adminPassword").toString();
+  if(adminPassword.isEmpty()) {
+    adminPassword="12345";
+  } else {
+    adminPassword=cifratore->decryptToString(adminPassword);
+  }
 }

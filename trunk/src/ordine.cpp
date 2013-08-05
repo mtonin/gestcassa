@@ -105,7 +105,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 {
   importoOrdineCorrente=0;
   for(int i=0;i<modello.rowCount(QModelIndex());i++) {
-    importoOrdineCorrente+=modello.index(i,3).data().toFloat();
+    importoOrdineCorrente+=modello.index(i,3).data(Qt::UserRole).toFloat();
   }
   totaleLine->setText(QString("%L1").arg(importoOrdineCorrente,4,'f',2));
 }

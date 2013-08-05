@@ -148,6 +148,9 @@ QVariant OrdineModel::data(const QModelIndex &index, int role) const
         totRiga=rigaArticolo.quantita*rigaArticolo.prezzo;
         return QString("%L1").arg(totRiga,4,'f',2);
       }
+      if(Qt::UserRole==role) {
+        return totRiga=rigaArticolo.quantita*rigaArticolo.prezzo;
+      }
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
     default:
