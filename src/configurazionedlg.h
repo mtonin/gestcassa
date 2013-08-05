@@ -13,6 +13,7 @@ class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
 signals:
   void resetOrdini(const int);
   void resetArticoli();
+  void passwordCambiata();
 
 public:
   explicit ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent = 0);

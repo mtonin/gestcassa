@@ -6,6 +6,7 @@
 #include "dettagliarticolo.h"
 #include "ordine.h"
 #include "infowidget.h"
+#include "simplecrypt.h"
 
 #include <QMainWindow>
 #include <QList>
@@ -29,19 +30,15 @@ public:
   
 private slots:
   void creaRepartiButtons();
-   void repartoSelezionato();
-   void articoloSelezionato();
-   void on_configurazioneBtn_clicked();
-
-   void on_closeBtn_clicked();
-
-   void on_reportBtn_clicked();
-
-   void on_statsBtn_clicked();
-
-   void on_cassaBtn_clicked();
-
-   void on_gestioneBtn_clicked();
+  void repartoSelezionato();
+  void articoloSelezionato();
+  void on_configurazioneBtn_clicked();
+  void on_closeBtn_clicked();
+  void on_reportBtn_clicked();
+  void on_statsBtn_clicked();
+  void on_cassaBtn_clicked();
+  void on_gestioneBtn_clicked();
+  void decodificaPassword();
 
 private:
   Ui::MainWindow *ui;
@@ -49,6 +46,7 @@ private:
   DettagliReparto* dettagliRepartoBox;
   DettagliArticolo* dettagliArticoloBox;
   infoWidget* info;
+  SimpleCrypt* cifratore;
   QString adminPassword;
 
   //QList<ArticoloBtnWidget*> articoliBtnList;

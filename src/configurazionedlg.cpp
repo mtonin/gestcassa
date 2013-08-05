@@ -76,6 +76,12 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 
 void ConfigurazioneDlg::on_buttonBox_accepted()
 {
+  if(configurazione->value("adminPassword").toString()!=adminPasswordTxt->text()) {
+    QString pwd=cifratore->encryptToString(adminPasswordTxt->text());
+    configurazione->insert("adminPassword",pwd);
+    emit passwordCambiata();
+  }
+
   foreach (QString key, nuovaConfigurazione->keys()) {
     configurazione->insert(key,nuovaConfigurazione->value(key));
   }
@@ -154,8 +160,6 @@ void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1
 
 void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
 {
-  QString pwd=cifratore->encryptToString(arg1);
-  nuovaConfigurazione->insert("adminPassword",pwd);
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
