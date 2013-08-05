@@ -1,5 +1,6 @@
 #include "configurazionedlg.h"
 #include "destinazionidlg.h"
+#include "confermadlg.h"
 
 #include <QPageSetupDialog>
 #include <QPrintDialog>
@@ -174,9 +175,9 @@ void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 {
-  if(QMessageBox::Yes!=QMessageBox::question(this,"Inizializzazione Ordini","Questa operazione azzera in contatore degli ordini.\nProseguire?",QMessageBox::Yes|QMessageBox::No)) {
-    return;
-  }
+  ConfermaDlg* dlg=new ConfermaDlg("Questa operazione azzera il contatore degli ordini.\nProseguire?","",false,this);
+  if(QDialog::Accepted!=dlg->visualizza()) return;
+
   QSqlDatabase db=QSqlDatabase::database();
   db.transaction();
 
@@ -421,7 +422,6 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     separatoreCampi="§";
   }
   QStringList righeInput=inputText.split(separatoreRighe);
-  int idxRiga=0;
   foreach (QString rigaSingola,righeInput) {
     QStringList campiInput=rigaSingola.split(separatoreCampi);
     int idx=0;
