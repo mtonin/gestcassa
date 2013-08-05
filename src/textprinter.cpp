@@ -728,9 +728,9 @@ void TextPrinter::paintPage(QPainter *painter,
         QString header = headertext_;
         header.replace("&page;", QString::number(pagenum));
         if (dateformat_.isEmpty()) {
-            header.replace("&date;", QDate::currentDate().toString());
+            header.replace("&date;", QDateTime::currentDateTime().toString());
         } else {
-            header.replace("&date;", QDate::currentDate().toString(dateformat_));
+            header.replace("&date;", QDateTime::currentDateTime().toString(dateformat_));
         }
 
         painter->save();

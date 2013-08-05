@@ -375,7 +375,7 @@ void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, boo
   tprinter->setFooterText("<center><b>GESTIONE CASSA</b><br>Pag. &page;</center>");
   tprinter->setHeaderSize(5);
   tprinter->setFooterSize(10);
-  tprinter->setDateFormat("d MMM yyyy");
+  tprinter->setDateFormat("d MMM yyyy - h:mm:ss");
 
   if(preview) {
     tprinter->preview(doc);
