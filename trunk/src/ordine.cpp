@@ -17,7 +17,6 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   articoliTab->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
-  articoliTab->verticalHeader()->setDefaultSectionSize(30);
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
   controlli=new ControlliOrdine(this);
 
@@ -171,7 +170,11 @@ void Ordine::nuovoOrdine(const int idSessione)
   numOrdineCorrente++;
   numeroOrdineTxt->setText(QString("%L1").arg(numOrdineCorrente));
   totaleLine->setText(QString("%L1").arg(importoOrdineCorrente,4,'f',2));
-  importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine,4,'f',2));
+  if(0==importoUltimoOrdine) {
+    importoUltimoOrdineText->setText("--");
+  } else {
+    importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine,4,'f',2));
+  }
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
