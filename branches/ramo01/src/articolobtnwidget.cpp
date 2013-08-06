@@ -22,6 +22,7 @@ void ArticoloBtnWidget::setPos(int r, int c)
 {
   riga=r;
   colonna=c;
+  if(0==idArticolo) return;
   QSqlQuery stmt;
   stmt.prepare("update pulsanti set idarticolo=? where idreparto=? and riga=? and colonna=?");
   stmt.addBindValue(idArticolo);
