@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Ordine</class>
+ <widget class="QWidget" name="Ordine">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>373</width>
+    <height>526</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
+   <property name="margin">
+    <number>2</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>ORDINE NUMERO</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="numeroOrdineTxt">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="maxLength">
+        <number>10</number>
+       </property>
+       <property name="frame">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableView" name="articoliTab">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::DotLine</enum>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>90</number>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>30</number>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>30</number>
+     </attribute>
+     <attribute name="verticalHeaderMinimumSectionSize">
+      <number>30</number>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>TOTALE €</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="totaleLine">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="maxLength">
+        <number>10</number>
+       </property>
+       <property name="frame">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="numeroLbl_3">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>IMPORTO ULTIMO ORDINE €</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="importoUltimoOrdineText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="maxLength">
+        <number>10</number>
+       </property>
+       <property name="frame">
+        <bool>false</bool>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="spacing">
+      <number>1</number>
+     </property>
+     <item row="0" column="3">
+      <widget class="QPictureButton" name="pagPrevBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>SCORRE SU'</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="2">
+      <widget class="QPictureButton" name="stampaBtn" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>3</horstretch>
+         <verstretch>2</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>STAMPA</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>ULTIMO RESTO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPictureButton" name="annullaBtn" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>ANNULLA</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPictureButton" name="pagNextBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>SCORRE GIU'</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPictureButton" name="duplicaBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>DUPLICA ULTIMO ORDINE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPictureButton" name="ristampaBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>RISTAMPA ULTIMO ORDINE</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QPictureButton</class>
+   <extends>QWidget</extends>
+   <header>QPictureButton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

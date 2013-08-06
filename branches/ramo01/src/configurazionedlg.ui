@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigurazioneDlg</class>
+ <widget class="QDialog" name="ConfigurazioneDlg">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>406</width>
+    <height>345</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Configurazione</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_6">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="generaleTab">
+      <attribute name="title">
+       <string>Generale</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Nome della manifestazione</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="descrManifestazioneTxt">
+           <property name="maxLength">
+            <number>100</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Nome della cassa</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="nomeCassaTxt">
+           <property name="maxLength">
+            <number>8</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Visualizzazione automatica del resto</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QCheckBox" name="attivaRestoCheck">
+            <property name="text">
+             <string>Attiva</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="durataRestoLbl">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Secondi</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="durataRestoTxt">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="maxLength">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+         <zorder>durataRestoLbl</zorder>
+         <zorder>durataRestoTxt</zorder>
+         <zorder>attivaRestoCheck</zorder>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Opzioni del programma</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QCheckBox" name="visualizzaPrezzoBox">
+            <property name="text">
+             <string>Visualizzazione del prezzo sui pulsanti</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="stampaTab">
+      <attribute name="title">
+       <string>Stampa</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Scontrino</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Intestazione</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Fondo
+pagina</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Destinazione Scontrino</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QRadioButton" name="stampanteChk">
+              <property name="text">
+               <string>Stampante</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QToolButton" name="printerSelectBtn">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Impostazioni</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QRadioButton" name="pdfChk">
+              <property name="text">
+               <string>Pdf</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="cartellaPdfTxt"/>
+            </item>
+            <item row="1" column="3">
+             <widget class="QToolButton" name="cartellaPdfBtn">
+              <property name="text">
+               <string>Cambia</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="stampanteBox">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="databaseTab">
+      <attribute name="title">
+       <string>Database</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Path del database</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="dbPathTxt">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>75</height>
+            </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Password di amministrazione</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="adminPasswordTxt">
+           <property name="maxLength">
+            <number>10</number>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Password</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>150</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Operazioni sul database</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="exportArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Esporta Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="exportOrdiniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Esporta storico ordini</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="importArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Importa Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_in</normaloff>:/GestCassa/db_in</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="cancellaOrdiniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Inizializza contatore ordini</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_reset</normaloff>:/GestCassa/db_reset</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="destinazioniTab">
+      <attribute name="title">
+       <string>Destinazioni</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="DestinazioniDlg" name="widget" native="true">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DestinazioniDlg</class>
+   <extends>QWidget</extends>
+   <header>destinazionidlg.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>nomeCassaTxt</tabstop>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>printerSelectBtn</tabstop>
+ </tabstops>
+ <resources>
+  <include location="risorse.qrc"/>
+ </resources>
+ <connections/>
+</ui>
