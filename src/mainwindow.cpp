@@ -22,6 +22,8 @@ const int NUM_COLONNE_ART=6;
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
+  setAcceptDrops(true);
+
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
   decodificaPassword();
 
@@ -104,8 +106,19 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     }
     QListIterator<QStackedWidget*> it(pulsantiList);
     while(it.hasNext()) {
-      it.next()->setCurrentIndex(0);
+      QStackedWidget* box=it.next();
+      box->setCurrentIndex(0);
+      ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+      btnWidget->setAcceptDrops(true);
     }
+
+    /*
+    for(int idx=0;idx<ui->articoliStackedWidget->count();idx++) {
+      QWidget* w=ui->articoliStackedWidget->widget(idx);
+      w->setAcceptDrops(true);
+    }
+    */
+
   } else {
     ui->configurazioneBtn->setEnabled(false);
     ui->reportBtn->setEnabled(false);
@@ -125,7 +138,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       RepartoBtnWidget* reparto=itReparti.next();
       reparto->setVisible(reparto->getAbilitato());
       //reparto->setEnabled(reparto->getAbilitato());
-      if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId()-1;
+      if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId();
     }
 
     // nasconde i pulsanti degli articoli disabilitati
@@ -133,10 +146,18 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+      btnWidget->setAcceptDrops(false);
       if(!btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
         box->setCurrentIndex(1);
       }
     }
+
+    /*
+    for(int idx=0;idx<ui->articoliStackedWidget->count();idx++) {
+      QWidget* w=ui->articoliStackedWidget->widget(idx);
+      w->setAcceptDrops(false);
+    }
+    */
 
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
     showMaximized();
@@ -180,7 +201,7 @@ void MainWindow::creaRepartiButtons(){
   hboxLayout->setSpacing(2);
   hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
   hboxLayout->setContentsMargins(-1, 5, -1, 5);
-  for(int i=1;i<=NUM_REPARTI;i++) {
+  for(int i=0;i<NUM_REPARTI;i++) {
     RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiBox);
 
     repartiList.append(reparto01Btn);
@@ -210,14 +231,17 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* 
   bool visualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   for(int riga=0;riga<NUM_RIGHE_ART;riga++) {
     for(int col=0;col<NUM_COLONNE_ART;col++) {
-      QStackedWidget* stackedBox=new QStackedWidget();
 
-      ArticoloBtnWidget* btn=new ArticoloBtnWidget(repartoBtn->getId(),riga,col);
+      QStackedWidget* stackedBox=new QStackedWidget;
+      int idPulsante=numReparto*NUM_RIGHE_ART*NUM_COLONNE_ART+riga*NUM_COLONNE_ART+col;
+
+      ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
       btn->SetButtonColorNormal(coloreSfondo);
       btn->SetButtonColorHot(coloreSfondo);
       btn->SetTextColorEnabled(coloreCarattere);
       btn->setFont(currentFont);
       btn->setVisualizzaPrezzo(visualizzaPrezzo);
+      connect(btn,SIGNAL(swapSignal(int,int)),this,SLOT(scambia(int,int)));
       stackedBox->addWidget(btn);
       QFrame* blankFrame=new QFrame;
       stackedBox->addWidget(blankFrame);
@@ -247,14 +271,10 @@ void MainWindow::creaInfoMessaggi()
 void MainWindow::repartoSelezionato(){
   RepartoBtnWidget* btn=qobject_cast<RepartoBtnWidget*>(sender());
   //btn->setDown(true);
-  ui->articoliStackedWidget->setCurrentIndex(btn->getId()-1);
+  ui->articoliStackedWidget->setCurrentIndex(btn->getId());
   if(GESTIONE==modalitaCorrente) {
     dettagliRepartoBox->setCurrentReparto(btn);
     dettagliRepartoBox->disconnect();
-    /*
-    dettagliRepartoBox->show();
-    dettagliArticoloBox->hide();
-    */
     ui->latoStackedWidget->setCurrentWidget(dettagliRepartoBox);
   }
 }
@@ -264,10 +284,6 @@ void MainWindow::articoloSelezionato(){
   //btn->setDown(true);
   if(GESTIONE==modalitaCorrente) {
     dettagliArticoloBox->setCurrentArticolo(btn);
-    /*
-    dettagliArticoloBox->show();
-    dettagliRepartoBox->hide();
-    */
     ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
   } else {
     emit aggiungeArticolo(btn->getId(),btn->getNomeArticolo(),btn->getPrezzo());
@@ -338,4 +354,29 @@ void MainWindow::decodificaPassword()
   } else {
     adminPassword=cifratore->decryptToString(adminPassword);
   }
+}
+
+void MainWindow::scambia(int id1, int id2)
+{
+  QString msg=QString("Scambia %1 e %2").arg(id1).arg(id2);
+  qDebug(msg.toAscii());
+
+  QStackedWidget* box1=pulsantiList.value(id1);
+  ArticoloBtnWidget* btnWidget1=(ArticoloBtnWidget*)box1->widget(0);
+  int w1riga=btnWidget1->getRiga();
+  int w1colonna=btnWidget1->getColonna();
+  QStackedWidget* box2=pulsantiList.value(id2);
+  ArticoloBtnWidget* btnWidget2=(ArticoloBtnWidget*)box2->widget(0);
+  int w2riga=btnWidget2->getRiga();
+  int w2colonna=btnWidget2->getColonna();
+
+  QGridLayout* griglia=(QGridLayout*)ui->articoliStackedWidget->currentWidget()->layout();
+  griglia->addWidget(box1,w2riga,w2colonna);
+  griglia->addWidget(box2,w1riga,w1colonna);
+  btnWidget1->setPos(w2riga,w2colonna);
+  btnWidget2->setPos(w1riga,w1colonna);
+
+  dettagliArticoloBox->setCurrentArticolo(btnWidget1);
+  ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
+
 }

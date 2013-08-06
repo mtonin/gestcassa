@@ -18,6 +18,23 @@ void ArticoloBtnWidget::setRepartoStampa(const QString nome)
   repartoStampa=nome;
 }
 
+void ArticoloBtnWidget::setPos(int r, int c)
+{
+  riga=r;
+  colonna=c;
+  QSqlQuery stmt;
+  stmt.prepare("update pulsanti set idarticolo=? where idreparto=? and riga=? and colonna=?");
+  stmt.addBindValue(idArticolo);
+  stmt.addBindValue(idReparto);
+  stmt.addBindValue(r);
+  stmt.addBindValue(c);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+}
+
 void ArticoloBtnWidget::setButtonFont(const QFont &font)
 {
   setFont(font);
@@ -69,8 +86,9 @@ void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
   }
 }
 
-ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent) :
-  idReparto(id),
+ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonna,QWidget *parent) :
+  idPulsante(id),
+  idReparto(idRep),
   riga(numRiga),
   colonna(numColonna),
   visualizzaPrezzo(false),
@@ -119,3 +137,44 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
   setSizePolicy(buttonSizePolicy);
 
 }
+
+void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)
+{
+  if(Qt::LeftButton==e->button()) {
+    dragStartPos=e->pos();
+  }
+  QPictureButton::mousePressEvent(e);
+}
+
+void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
+{
+  if(!(e->buttons()&Qt::LeftButton)) {
+    return;
+  }
+  if((dragStartPos - e->pos()).manhattanLength() < QApplication::startDragDistance()) {
+    return;
+  }
+
+  QDrag* dragOp=new QDrag(this);
+  QMimeData* mimeData=new QMimeData;
+  mimeData->setText(QString("%1").arg(getIdPulsante()));
+  dragOp->setMimeData(mimeData);
+  dragOp->exec();
+}
+
+void ArticoloBtnWidget::dragEnterEvent(QDragEnterEvent *e)
+{
+  if(e->mimeData()->text().toInt()==getIdPulsante()) {
+    e->ignore();
+    return;
+  }
+  e->acceptProposedAction();
+}
+
+void ArticoloBtnWidget::dropEvent(QDropEvent *e)
+{
+  int idSrc=e->mimeData()->text().toInt();
+  int idDst=getIdPulsante();
+  emit swapSignal(idSrc,idDst);
+}
+

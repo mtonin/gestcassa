@@ -39,6 +39,7 @@ private slots:
   void on_cassaBtn_clicked();
   void on_gestioneBtn_clicked();
   void decodificaPassword();
+  void scambia(int id1, int id2);
 
 private:
   Ui::MainWindow *ui;
