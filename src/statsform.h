@@ -10,6 +10,7 @@ class StatsForm : public QDialog, private Ui::StatsForm
   
 public:
   explicit StatsForm(const int, QWidget *parent = 0);
+  ~StatsForm();
 
 private slots:
   void on_filtraBtn_clicked();

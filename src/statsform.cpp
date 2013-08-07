@@ -26,6 +26,11 @@ StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente
   caricaStats();
 }
 
+StatsForm::~StatsForm()
+{
+  delete statsModel;
+}
+
 void StatsForm::on_filtraBtn_clicked()
 {
   caricaStats();

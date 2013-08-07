@@ -1,3 +1,6 @@
+#include "Windows.h"
+#include "vld/vld.h"
+
 #include <QtGui/QApplication>
 #include <QTranslator>
 
@@ -23,8 +26,8 @@ int main(int argc, char *argv[])
   MainWindow w(configurazione);
   w.show();
 
-  return a.exec();
-
+  a.exec();
+  delete configurazione;
 }
 
 

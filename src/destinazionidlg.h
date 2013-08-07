@@ -11,6 +11,7 @@ class DestinazioniDlg : public QWidget, private Ui::DestinazioniDlg
   
 public:
   explicit DestinazioniDlg(QWidget *parent = 0);
+  ~DestinazioniDlg();
 
 private slots:
 

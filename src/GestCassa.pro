@@ -88,3 +88,5 @@ RESOURCES += \
 RC_FILE = gestcassa.rc
 OTHER_FILES += \
     gestcassa.rc version.rc2.tmpl
+
+LIBS += -L"$$PWD/vld"

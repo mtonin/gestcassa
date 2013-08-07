@@ -20,15 +20,24 @@ void ArticoloBtnWidget::setRepartoStampa(const QString nome)
 
 void ArticoloBtnWidget::setPos(int r, int c)
 {
+  //   aggiorna il database dopo lo spostamento dei pulsanti
   riga=r;
   colonna=c;
-  if(0==idArticolo) return;
   QSqlQuery stmt;
-  stmt.prepare("update pulsanti set idarticolo=? where idreparto=? and riga=? and colonna=?");
-  stmt.addBindValue(idArticolo);
-  stmt.addBindValue(idReparto);
-  stmt.addBindValue(r);
-  stmt.addBindValue(c);
+  if(0==idArticolo) {
+    // posizione scambiata con un pulsante vuoto
+    stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?");
+    stmt.addBindValue(idReparto);
+    stmt.addBindValue(r);
+    stmt.addBindValue(c);
+  } else {
+    stmt.prepare("insert or replace into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
+    stmt.addBindValue(idReparto);
+    stmt.addBindValue(r);
+    stmt.addBindValue(c);
+    stmt.addBindValue(idArticolo);
+    stmt.addBindValue(abilitato);
+  }
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());
@@ -141,6 +150,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonn
 
 void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)
 {
+  // impementazione per drag & drop
   if(Qt::LeftButton==e->button()) {
     dragStartPos=e->pos();
   }
@@ -149,6 +159,7 @@ void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)
 
 void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
 {
+  // impementazione per drag & drop
   if(!(e->buttons()&Qt::LeftButton)) {
     return;
   }
