@@ -54,12 +54,9 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   clockLayout->addWidget(orologio);
   ui->clockFrame->setLayout(clockLayout);
 
-  QStringList messaggi=QString("GESTIONE CASSA,build %1").arg(SVN_REV.c_str()).split(",");
-  QString descrizione=confMap->value("descrManifestazione").toString();
-  if(!descrizione.isEmpty()) {
-    messaggi.insert(0,descrizione);
-  }
+  QStringList messaggi=QString("").split(",");
   info=new infoWidget(messaggi);
+  creaInfoMessaggi();
 
   QHBoxLayout* infoLayout=new QHBoxLayout;
   infoLayout->setContentsMargins(QMargins(1,1,1,1));
@@ -78,15 +75,17 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
+  delete cifratore;
 }
 
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
   if(GESTIONE==nuovaModalita) {
-    ConfermaDlg* dlg=new ConfermaDlg("Inserire la password per accedere alla modalità amministrativa.","Password",true,this);
+
+    ConfermaDlg dlg ("Inserire la password per accedere alla modalità amministrativa.","Password",true);
     while(true) {
-      if(QDialog::Accepted!=dlg->visualizza()) return;
-      if(adminPassword==dlg->getValore()) {
+      if(QDialog::Accepted!=dlg.visualizza()) return;
+      if(adminPassword==dlg.getValore()) {
         break;
       }
       QMessageBox::critical(this,"Accesso","Password errata");
@@ -104,11 +103,12 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       itReparti.next()->setVisible(true);
       //itReparti.next()->setEnabled(true);
     }
-    QListIterator<QStackedWidget*> it(pulsantiList);
+    QListIterator<QStackedWidget*> it(articoliList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
       box->setCurrentIndex(0);
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+      //abilita drag & drop
       btnWidget->setAcceptDrops(true);
     }
 
@@ -142,10 +142,11 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     }
 
     // nasconde i pulsanti degli articoli disabilitati
-    QListIterator<QStackedWidget*> it(pulsantiList);
+    QListIterator<QStackedWidget*> it(articoliList);
     while(it.hasNext()) {
       QStackedWidget* box=it.next();
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+      //disabilita drag & drop
       btnWidget->setAcceptDrops(false);
       if(!btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
         box->setCurrentIndex(1);
@@ -182,25 +183,41 @@ void MainWindow::keyPressEvent(QKeyEvent *evt) {
 
 void MainWindow::closeEvent(QCloseEvent *evt)
 {
-  ConfermaDlg* dlg=new ConfermaDlg("Confermi l'uscita?");
-  if(QDialog::Accepted!=dlg->visualizza()) evt->ignore();
+  ConfermaDlg dlg("Confermi l'uscita?");
+  if(QDialog::Accepted!=dlg.visualizza()) evt->ignore();
 }
 
 void MainWindow::creaRepartiButtons(){
 
-  pulsantiList.clear();
+  // cancella i pulsanti degli articoli
+  QListIterator<QStackedWidget*> itArticoli(articoliList);
+  while(itArticoli.hasNext()) {
+    QStackedWidget* articolo=itArticoli.next();
+    delete articolo;
+  }
+  articoliList.clear();
+
+  // cancella i pulsanti dei reparti
+  QListIterator<RepartoBtnWidget*> itReparti(repartiList);
+  while(itReparti.hasNext()) {
+    RepartoBtnWidget* reparto=itReparti.next();
+    delete reparto;
+  }
+  repartiList.clear();
+
   QLayout* hboxLayout = ui->repartiBox->layout();
-  if(hboxLayout) delete hboxLayout;
+  if(!hboxLayout) {
+    hboxLayout = new QHBoxLayout(ui->repartiBox);
+    hboxLayout->setSpacing(2);
+    hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
+    hboxLayout->setContentsMargins(-1, 5, -1, 5);
+  }
 
   while(ui->articoliStackedWidget->count()>0) {
     QWidget* w=ui->articoliStackedWidget->widget(0);
     ui->articoliStackedWidget->removeWidget(w);
   }
 
-  hboxLayout = new QHBoxLayout(ui->repartiBox);
-  hboxLayout->setSpacing(2);
-  hboxLayout->setObjectName(QString::fromUtf8("hboxLayout"));
-  hboxLayout->setContentsMargins(-1, 5, -1, 5);
   for(int i=0;i<NUM_REPARTI;i++) {
     RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i,ui->repartiBox);
 
@@ -245,7 +262,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* 
       stackedBox->addWidget(btn);
       QFrame* blankFrame=new QFrame;
       stackedBox->addWidget(blankFrame);
-      pulsantiList.append(stackedBox);
+      articoliList.append(stackedBox);
 
       griglia->addWidget(stackedBox,riga,col);
       connect(btn,SIGNAL(clicked()),this,SLOT(articoloSelezionato()));
@@ -292,24 +309,15 @@ void MainWindow::articoloSelezionato(){
 
 void MainWindow::on_configurazioneBtn_clicked()
 {
-  bool oldVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
   connect(dlg,SIGNAL(resetArticoli()),this,SLOT(creaRepartiButtons()));
   connect(dlg,SIGNAL(passwordCambiata()),this,SLOT(decodificaPassword()));
+  connect(dlg,SIGNAL(cambiaVisualizzaPrezzo(bool)),this,SLOT(visualizzaPrezzo(bool)));
   dlg->exec();
 
-  bool newVisualizzaPrezzo=confMap->value("visualizzazionePrezzo").toBool();
-  if(oldVisualizzaPrezzo!=newVisualizzaPrezzo) {
-    QListIterator<QStackedWidget*> it(pulsantiList);
-    while(it.hasNext()) {
-      QStackedWidget* box=it.next();
-      ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
-      btnWidget->setVisualizzaPrezzo(newVisualizzaPrezzo);
-    }
-  }
-
   creaInfoMessaggi();
+  delete dlg;
 }
 
 void MainWindow::on_closeBtn_clicked()
@@ -319,15 +327,15 @@ void MainWindow::on_closeBtn_clicked()
 
 void MainWindow::on_reportBtn_clicked()
 {
-  ReportForm* form=new ReportForm(confMap);
-  form->exec();
+  ReportForm form(confMap);
+  form.exec();
 }
 
 void MainWindow::on_statsBtn_clicked()
 {
-    StatsForm* form=new StatsForm(confMap->value("sessioneCorrente").toInt());
+  StatsForm form(confMap->value("sessioneCorrente").toInt());
   //form->setWindowState(Qt::WindowMaximized);
-  form->exec();
+  form.exec();
 }
 
 void MainWindow::on_cassaBtn_clicked()
@@ -356,16 +364,26 @@ void MainWindow::decodificaPassword()
   }
 }
 
+void MainWindow::visualizzaPrezzo(bool visualizza)
+{
+  QListIterator<QStackedWidget*> it(articoliList);
+  while(it.hasNext()) {
+    QStackedWidget* box=it.next();
+    ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
+    btnWidget->setVisualizzaPrezzo(visualizza);
+  }
+}
+
 void MainWindow::scambia(int id1, int id2)
 {
   QString msg=QString("Scambia %1 e %2").arg(id1).arg(id2);
   qDebug(msg.toAscii());
 
-  QStackedWidget* box1=pulsantiList.value(id1);
+  QStackedWidget* box1=articoliList.value(id1);
   ArticoloBtnWidget* btnWidget1=(ArticoloBtnWidget*)box1->widget(0);
   int w1riga=btnWidget1->getRiga();
   int w1colonna=btnWidget1->getColonna();
-  QStackedWidget* box2=pulsantiList.value(id2);
+  QStackedWidget* box2=articoliList.value(id2);
   ArticoloBtnWidget* btnWidget2=(ArticoloBtnWidget*)box2->widget(0);
   int w2riga=btnWidget2->getRiga();
   int w2colonna=btnWidget2->getColonna();

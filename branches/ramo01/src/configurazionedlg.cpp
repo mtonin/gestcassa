@@ -53,6 +53,12 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   descrManifestazioneTxt->setFocus();
 }
 
+ConfigurazioneDlg::~ConfigurazioneDlg()
+{
+  delete cifratore;
+  delete nuovaConfigurazione;
+}
+
 void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 {
 
@@ -175,6 +181,7 @@ void ConfigurazioneDlg::on_fondoScontrinoTxt_textChanged()
 void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 {
   nuovaConfigurazione->insert("visualizzazionePrezzo",checked);
+  emit cambiaVisualizzaPrezzo(checked);
 }
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()

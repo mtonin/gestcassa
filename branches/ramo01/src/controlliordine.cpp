@@ -20,6 +20,7 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
 ControlliOrdine::~ControlliOrdine()
 {
   delete ui;
+  delete effetto;
 }
 
 void ControlliOrdine::show()

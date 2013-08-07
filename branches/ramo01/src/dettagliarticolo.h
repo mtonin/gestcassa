@@ -14,6 +14,7 @@ signals:
 
 public:
    explicit DettagliArticolo(QWidget *parent = 0);
+  ~DettagliArticolo();
    void setCurrentArticolo(const ArticoloBtnWidget*);
 
 private slots:

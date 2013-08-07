@@ -17,7 +17,7 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   destinazioneTbl->hideColumn(2);
   destinazioneTbl->horizontalHeader()->setResizeMode(0,QHeaderView::Stretch);
 
-  QDataWidgetMapper* mapper=new QDataWidgetMapper;
+  mapper=new QDataWidgetMapper;
   mapper->setModel(modello);
   mapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
   mapper->addMapping(destinazioneTxt,0);
@@ -30,6 +30,12 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
 
   destinazioneTbl->setCurrentIndex(modello->index(0,0));
   destinazioneTxt->setFocus();
+}
+
+DestinazioniDlg::~DestinazioniDlg()
+{
+  delete modello;
+  delete mapper;
 }
 
 void DestinazioniDlg::on_cancellaBtn_clicked()
