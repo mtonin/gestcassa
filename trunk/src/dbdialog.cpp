@@ -181,6 +181,23 @@ void DBDialog::leggeConfigurazione() {
     nuovaVersioneDB=5;
   }
 
+  if(versioneDB<6) {
+    if(!stmt.exec("alter table pulsanti rename to pulsanti_old") ||
+       !stmt.exec("CREATE TABLE pulsanti ( \
+                  idreparto  INTEGER, \
+                  riga       INTEGER, \
+                  colonna    INTEGER, \
+                  idarticolo INTEGER REFERENCES articoli ( idarticolo ), \
+                  abilitato  BOOLEAN);") ||
+       !stmt.exec("insert into pulsanti select idreparto,riga,colonna,idarticolo,abilitato from pulsanti_old") ||
+       !stmt.exec("drop table pulsanti_old")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=6;
+  }
+
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     stmt.prepare("insert or replace into configurazione (chiave,valore) values('versione',?)");

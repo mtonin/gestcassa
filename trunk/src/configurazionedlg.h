@@ -14,9 +14,11 @@ signals:
   void resetOrdini(const int);
   void resetArticoli();
   void passwordCambiata();
+  void cambiaVisualizzaPrezzo(bool);
 
 public:
   explicit ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent = 0);
+  ~ConfigurazioneDlg();
   QMap<QString,QVariant> getConfigurazione() {return *configurazione;}
 
 private slots:
