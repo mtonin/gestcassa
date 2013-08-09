@@ -18,6 +18,33 @@ void ArticoloBtnWidget::setRepartoStampa(const QString nome)
   repartoStampa=nome;
 }
 
+void ArticoloBtnWidget::setPos(int r, int c)
+{
+  //   aggiorna il database dopo lo spostamento dei pulsanti
+  riga=r;
+  colonna=c;
+  QSqlQuery stmt;
+  if(0==idArticolo) {
+    // posizione scambiata con un pulsante vuoto
+    stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?");
+    stmt.addBindValue(idReparto);
+    stmt.addBindValue(r);
+    stmt.addBindValue(c);
+  } else {
+    stmt.prepare("insert or replace into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
+    stmt.addBindValue(idReparto);
+    stmt.addBindValue(r);
+    stmt.addBindValue(c);
+    stmt.addBindValue(idArticolo);
+    stmt.addBindValue(abilitato);
+  }
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+}
+
 void ArticoloBtnWidget::setButtonFont(const QFont &font)
 {
   setFont(font);
@@ -69,8 +96,9 @@ void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
   }
 }
 
-ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget *parent) :
-  idReparto(id),
+ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonna,QWidget *parent) :
+  idPulsante(id),
+  idReparto(idRep),
   riga(numRiga),
   colonna(numColonna),
   visualizzaPrezzo(false),
@@ -119,3 +147,46 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int numRiga, int numColonna,QWidget 
   setSizePolicy(buttonSizePolicy);
 
 }
+
+void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)
+{
+  // impementazione per drag & drop
+  if(Qt::LeftButton==e->button()) {
+    dragStartPos=e->pos();
+  }
+  QPictureButton::mousePressEvent(e);
+}
+
+void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
+{
+  // impementazione per drag & drop
+  if(!(e->buttons()&Qt::LeftButton)) {
+    return;
+  }
+  if((dragStartPos - e->pos()).manhattanLength() < QApplication::startDragDistance()) {
+    return;
+  }
+
+  QDrag* dragOp=new QDrag(this);
+  QMimeData* mimeData=new QMimeData;
+  mimeData->setText(QString("%1").arg(getIdPulsante()));
+  dragOp->setMimeData(mimeData);
+  dragOp->exec();
+}
+
+void ArticoloBtnWidget::dragEnterEvent(QDragEnterEvent *e)
+{
+  if(e->mimeData()->text().toInt()==getIdPulsante()) {
+    e->ignore();
+    return;
+  }
+  e->acceptProposedAction();
+}
+
+void ArticoloBtnWidget::dropEvent(QDropEvent *e)
+{
+  int idSrc=e->mimeData()->text().toInt();
+  int idDst=getIdPulsante();
+  emit swapSignal(idSrc,idDst);
+}
+

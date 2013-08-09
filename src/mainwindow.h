@@ -39,6 +39,8 @@ private slots:
   void on_cassaBtn_clicked();
   void on_gestioneBtn_clicked();
   void decodificaPassword();
+  void visualizzaPrezzo(bool visualizza);
+  void scambia(int id1, int id2);
 
 private:
   Ui::MainWindow *ui;
@@ -51,7 +53,7 @@ private:
 
   //QList<ArticoloBtnWidget*> articoliBtnList;
   QList<RepartoBtnWidget*> repartiList;
-  QList<QStackedWidget*> pulsantiList;
+  QList<QStackedWidget*> articoliList;
   modalitaType modalitaCorrente;
   QMap<QString,QVariant>* confMap;
 

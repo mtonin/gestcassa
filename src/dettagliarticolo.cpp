@@ -23,6 +23,12 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
 
 }
 
+DettagliArticolo::~DettagliArticolo()
+{
+  delete modello;
+  delete articoliMenuModello;
+}
+
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn){
 
   disattivaFlag->disconnect();

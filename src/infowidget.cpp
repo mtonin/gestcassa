@@ -32,7 +32,6 @@ infoWidget::infoWidget(const QStringList lista, QWidget *parent) : listaTesto(li
 
 }
 
-
 void infoWidget::ricominciaEffetto()
 {
   currentIndex++;
