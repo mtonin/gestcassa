@@ -146,7 +146,7 @@ void DettagliArticolo::aggiornaArticolo()
       articoloBtn->setId(stmt1.value(0).toInt());
   }
 
-  stmt1.prepare("insert or replace into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)");
+  stmt1.prepare("replace into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)");
   stmt1.addBindValue(articoloBtn->getIdReparto());
   stmt1.addBindValue(articoloBtn->getRiga());
   stmt1.addBindValue(articoloBtn->getColonna());

@@ -31,7 +31,7 @@ void ArticoloBtnWidget::setPos(int r, int c)
     stmt.addBindValue(r);
     stmt.addBindValue(c);
   } else {
-    stmt.prepare("insert or replace into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
+    stmt.prepare("replace into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
     stmt.addBindValue(idReparto);
     stmt.addBindValue(r);
     stmt.addBindValue(c);

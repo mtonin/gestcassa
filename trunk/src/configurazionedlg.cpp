@@ -95,7 +95,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
   QSqlQuery stmt;
   foreach (QString key, configurazione->keys()) {
     stmt.clear();
-    stmt.prepare("insert or replace into configurazione (chiave,valore) values (?,?)");
+    stmt.prepare("replace into configurazione (chiave,valore) values (?,?)");
     stmt.addBindValue(key);
     stmt.addBindValue(configurazione->value(key).toString());
     if(!stmt.exec()) {
@@ -478,7 +478,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
         }
         if(0==tabella.compare("configurazione",Qt::CaseInsensitive)) {
-            stmt.prepare("INSERT OR REPLACE INTO CONFIGURAZIONE VALUES(?,?)");
+            stmt.prepare("REPLACE INTO CONFIGURAZIONE VALUES(?,?)");
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
         }
