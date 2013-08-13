@@ -200,7 +200,7 @@ void DBDialog::leggeConfigurazione() {
 
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
-    stmt.prepare("insert or replace into configurazione (chiave,valore) values('versione',?)");
+    stmt.prepare("replace into configurazione (chiave,valore) values('versione',?)");
     stmt.addBindValue(nuovaVersioneDB);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
