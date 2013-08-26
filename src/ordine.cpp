@@ -263,12 +263,15 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
 
     QString intestReparto=reparto;
+    QString codiceRitiro;
     if(stmt.next()) {
       bool stampaFlag=stmt.value(1).toBool();
       if(!stampaFlag) continue;
       intestReparto=stmt.value(0).toString();
-      if(stmt.value(2).toBool())
+      if(stmt.value(2).toBool()) {
+        codiceRitiro=QString("CODICE RITIRO: %1/%2").arg(serieRitiro).arg(numeroOrdine);
         flagStampaNumeroRitiro=true;
+      }
     }
 
     int x=0;
@@ -324,6 +327,12 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString totaleString=QString("TOTALE: %L1 ARTICOLI").arg(numArticoli);
     painter.setFont(fontGrassetto);
     painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
+
+    painter.setFont(fontNormale);
+    if(!codiceRitiro.isEmpty()) {
+      y+=textRect.height()+10;
+      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,codiceRitiro,&textRect);
+    }
 
     y+=textRect.height()+35;
     painter.setFont(fontMini);
