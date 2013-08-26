@@ -185,6 +185,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   QString descrManifestazione=configurazione->value("descrManifestazione","NOME MANIFESTAZIONE").toString();
   QDateTime tsStampa=QDateTime::currentDateTime().toLocalTime();
   bool flagStampaNumeroRitiro=false;
+  QChar serieRitiro=configurazione->value("serieRitiro",'A').toChar();
 
   QString intestazione;
   intestazione.append(descrManifestazione).append("\n");
@@ -410,7 +411,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     painter.setFont(fontGrassetto);
     painter.drawText(x,y,pageWidth,20,Qt::AlignCenter,testoRitiro,&textRect);
     y+=textRect.height()+5;
-    QString numRitiro=QString("%1/%2").arg(nomeCassa).arg(numeroOrdine);
+    QString numRitiro=QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
     painter.setFont(fontMaxi);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,numRitiro,&textRect);
   }
