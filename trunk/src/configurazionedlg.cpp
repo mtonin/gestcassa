@@ -16,10 +16,15 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
 {
   setupUi(this);
   setWindowFlags(Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint);
+  nuovaConfigurazione=new QMap<QString,QVariant>;
+
+  char serie='A';
+  while(serie <= 'Z') {
+    serieRitiroTxt->addItem(QChar(serie++));
+  }
 
   cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 
-  nuovaConfigurazione=new QMap<QString,QVariant>;
   cartellaPdfTxt->setText(configurazione->value("cartellaPdf","").toString());
   if(configurazione->value("stampantePdf",true).toBool()) {
     pdfChk->setChecked(true);
@@ -48,6 +53,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
   dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
+  serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro",'A').toChar().unicode()-QChar('A').unicode());
 
   tabWidget->setCurrentIndex(0);
   descrManifestazioneTxt->setFocus();
@@ -534,4 +540,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
   }
 
   on_buttonBox_accepted();
+}
+
+void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index){
+  nuovaConfigurazione->insert("serieRitiro",QChar('A'+index));
 }

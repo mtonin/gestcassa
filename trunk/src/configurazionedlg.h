@@ -62,6 +62,8 @@ private slots:
 
   void on_importArticoliBtn_clicked();
 
+  void on_serieRitiroTxt_currentIndexChanged(int index);
+
 private:
   void esportaInFile(const QString&);
   QVariant valutaStringa(const QString&);
