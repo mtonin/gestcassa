@@ -183,6 +183,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   QString fondo=configurazione->value("fondo").toString();
   QString nomeCassa=configurazione->value("nomeCassa","000").toString();
   QString descrManifestazione=configurazione->value("descrManifestazione","NOME MANIFESTAZIONE").toString();
+  QDateTime tsStampa=QDateTime::currentDateTime().toLocalTime();
+  bool flagStampaNumeroRitiro=false;
 
   QString intestazione;
   intestazione.append(descrManifestazione).append("\n");
@@ -227,6 +229,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   fontGrassettoCorsivo.setUnderline(true);
   QFont fontMini("lucida console");
   fontMini.setPointSize(1);
+  QFont fontMaxi("lucida console");
+  fontMaxi.setPointSize(50);
 
   painter.begin(&printer);
   painter.setWindow(0,0,pageWidth,pageWidth/rapportoFoglio);
@@ -249,7 +253,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   }
   foreach(QString reparto,repartiStampaList) {
 
-    stmt.prepare("select coalesce(intestazione,nome),stampaflag from destinazionistampa where nome=?");
+    stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag from destinazionistampa where nome=?");
     stmt.addBindValue(reparto);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -262,6 +266,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
       bool stampaFlag=stmt.value(1).toBool();
       if(!stampaFlag) continue;
       intestReparto=stmt.value(0).toString();
+      if(stmt.value(2).toBool())
+        flagStampaNumeroRitiro=true;
     }
 
     int x=0;
@@ -274,7 +280,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     y+=textRect.height()+10;
 
     painter.setFont(fontNormale);
-    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,tsStampa.toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
     y+=textRect.height()+10;
     painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
     painter.drawText(x+pageWidth/2,y,pageWidth/2,100,Qt::AlignRight,QString("ORDINE N. %L1").arg(numeroOrdine),&textRect);
@@ -349,7 +355,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   painter.setPen(pen);
   y+=5;
   painter.setFont(fontNormale);
-  painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,QDateTime::currentDateTime().toLocalTime().toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
+  painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,tsStampa.toString("dd-MM-yyyy   hh:mm:ss"),&textRect);
   y+=textRect.height()+5;
 
   painter.drawText(x,y,200,100,Qt::AlignLeft,QString("CASSA %1").arg(nomeCassa),&textRect);
@@ -394,6 +400,19 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     y+=textRect.height()+20;
     painter.setFont(fontNormale);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,fondo,&textRect);
+  }
+
+  if(flagStampaNumeroRitiro) {
+    y+=textRect.height()+35;
+    painter.drawLine(x,y,pageWidth,y);
+    y+=5;
+    QString testoRitiro="CONSERVARE PER IL RITIRO";
+    painter.setFont(fontGrassetto);
+    painter.drawText(x,y,pageWidth,20,Qt::AlignCenter,testoRitiro,&textRect);
+    y+=textRect.height()+5;
+    QString numRitiro=QString("%1/%2").arg(nomeCassa).arg(numeroOrdine);
+    painter.setFont(fontMaxi);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,numRitiro,&textRect);
   }
 
   y+=textRect.height()+35;

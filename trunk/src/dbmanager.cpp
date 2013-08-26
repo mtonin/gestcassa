@@ -95,6 +95,15 @@ void DBManager::leggeConfigurazione() {
     nuovaVersioneDB=5;
   }
 
+  if(versioneDB<6) {
+    if(!stmt.exec("alter table destinazionistampa add column stampanumeroritiroflag BOOLEAN NOT NULL DEFAULT ( 'false' ) ")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=6;
+  }
+
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     stmt.prepare("replace into configurazione (chiave,valore) values('versione',?)");

@@ -23,6 +23,7 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
   mapper->addMapping(destinazioneTxt,0);
   mapper->addMapping(intestazioneTxt,1);
   mapper->addMapping(stampaFlagBox,2);
+  mapper->addMapping(stampaNumeroRitiro,3);
   mapper->toFirst();
 
   connect(destinazioneTbl->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
@@ -56,6 +57,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
   modello->setData(modello->index(numRighe,0),"NOME DESTINAZIONE");
   modello->setData(modello->index(numRighe,1),"INTESTAZIONE TAGLIANDO");
   modello->setData(modello->index(numRighe,2),true);
+  modello->setData(modello->index(numRighe,3),false);
   modello->submitAll();
   destinazioneTbl->setCurrentIndex(modello->index(numRighe,0));
   destinazioneTxt->selectAll();
