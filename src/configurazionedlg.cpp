@@ -270,16 +270,20 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
   QStringList exportLista;
   QSqlQuery stmt;
 
-  if(!stmt.exec("select nome,coalesce(intestazione,'NULL') from destinazionistampa")) {
+  if(!stmt.exec("select nome,coalesce(intestazione,'NULL'),stampaflag,stampanumeroritiroflag from destinazionistampa")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
   }
   while(stmt.next()) {
     QString nomeDest=stmt.value(0).toString();
     QString intestazioneDest=stmt.value(1).toString();
-    QString riga=QString("DESTINAZIONISTAMPA#§%1#§%2")
+    bool stampaFlag=stmt.value(2).toBool();
+    bool stampaNumeroRitiroFlag=stmt.value(3).toBool();
+    QString riga=QString("DESTINAZIONISTAMPA#§%1#§%2#§%3#§%4")
                  .arg(nomeDest)
-                 .arg(intestazioneDest);
+                 .arg(intestazioneDest)
+                 .arg(stampaFlag)
+                 .arg(stampaNumeroRitiroFlag);
     exportLista.append(riga);
   }
 
@@ -440,9 +444,15 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         QString tabella=campiInput.at(idx);
         QString sql;
         if(0==tabella.compare("destinazionistampa",Qt::CaseInsensitive)) {
-            stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione) VALUES(?,?)");
+            stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?)");
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+            stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+            if(idx>=campiInput.size()-1)
+              stmt.addBindValue(valutaStringa("false"));
+            else
+              stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+
         }
         if(0==tabella.compare("pulsanti",Qt::CaseInsensitive)) {
             stmt.prepare("INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)");
