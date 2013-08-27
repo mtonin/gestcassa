@@ -450,7 +450,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         QString tabella=campiInput.at(idx);
         QString sql;
         if(0==tabella.compare("destinazionistampa",Qt::CaseInsensitive)) {
-            stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?)");
+            stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)");
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
