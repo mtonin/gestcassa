@@ -159,6 +159,8 @@ void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)
 
 void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
 {
+  QString msg=QString("mouseMoveEvent %1").arg(getIdPulsante());
+  qDebug(msg.toUtf8());
   // impementazione per drag & drop
   if(!(e->buttons()&Qt::LeftButton)) {
     return;
@@ -171,16 +173,26 @@ void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
   QMimeData* mimeData=new QMimeData;
   mimeData->setText(QString("%1").arg(getIdPulsante()));
   dragOp->setMimeData(mimeData);
+  dragOp->setPixmap(QPixmap(":/GestCassa/drag"));
   dragOp->exec();
 }
 
 void ArticoloBtnWidget::dragEnterEvent(QDragEnterEvent *e)
 {
+  QString msg=QString("dragEnterEvent %1").arg(getIdPulsante());
+  qDebug(msg.toUtf8());
   if(e->mimeData()->text().toInt()==getIdPulsante()) {
     e->ignore();
     return;
   }
   e->acceptProposedAction();
+}
+
+void ArticoloBtnWidget::dragLeaveEvent(QDragLeaveEvent *e)
+{
+  QString msg=QString("dragLeaveEvent %1").arg(getIdPulsante());
+  qDebug(msg.toUtf8());
+  e->ignore();
 }
 
 void ArticoloBtnWidget::dropEvent(QDropEvent *e)

@@ -55,6 +55,7 @@ protected:
   void paintEvent(QPaintEvent *);
   void mousePressEvent(QMouseEvent *e);
   void dragEnterEvent(QDragEnterEvent *e);
+  void dragLeaveEvent(QDragLeaveEvent *e);
   void mouseMoveEvent(QMouseEvent *e);
   void dropEvent(QDropEvent *e);
 };
