@@ -19,5 +19,6 @@
         <file alias="report 2">resources/Document 2.png</file>
         <file alias="creadb">db/creadb.sql</file>
         <file alias="duplica">resources/duplica.png</file>
+        <file alias="drag">resources/File Send.png</file>
     </qresource>
 </RCC>

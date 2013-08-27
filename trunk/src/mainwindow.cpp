@@ -64,7 +64,6 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   ui->infoFrame->setLayout(infoLayout);
 
   creaRepartiButtons();
-
   gestioneModalita(CASSA);
 
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
