@@ -106,6 +106,7 @@ void DBManager::leggeConfigurazione() {
 
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
+    conf->insert("versione",versioneDB);
     stmt.prepare("replace into configurazione (chiave,valore) values('versione',?)");
     stmt.addBindValue(nuovaVersioneDB);
     if(!stmt.exec()) {
