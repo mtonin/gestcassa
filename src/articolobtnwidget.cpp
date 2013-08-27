@@ -2,6 +2,58 @@
 #include <QtSql>
 #include <QPainter>
 
+ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonna,QWidget *parent) :
+  idPulsante(id),
+  idReparto(idRep),
+  riga(numRiga),
+  colonna(numColonna),
+  visualizzaPrezzo(false),
+  QPictureButton(parent)
+{
+
+  QSqlQuery stmt;
+  stmt.prepare("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo and a.idreparto=? and a.riga=? and a.colonna=?");
+  stmt.addBindValue(idReparto);
+  stmt.addBindValue(riga);
+  stmt.addBindValue(colonna);
+  if(!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),
+                          stmt.lastError().text());
+    return;
+  }
+  int numColIdArticolo=stmt.record().indexOf("idarticolo");
+  int numColDescr=stmt.record().indexOf("descrizione");
+  int numColprezzo=stmt.record().indexOf("prezzo");
+  int numColAbilitato=stmt.record().indexOf("abilitato");
+  int numColDestStampa=stmt.record().indexOf("destinazione");
+  int numColGestioneMenu=stmt.record().indexOf("gestioneMenu");
+  if(stmt.next()) {
+    idArticolo=stmt.value(numColIdArticolo).toInt();
+    nomeArticolo=stmt.value(numColDescr).toString();
+    prezzo=stmt.value(numColprezzo).toFloat();
+    abilitato=stmt.value(numColAbilitato).toBool();
+    repartoStampa=stmt.value(numColDestStampa).toString();
+    gestioneMenu=stmt.value(numColGestioneMenu).toBool();
+  } else {
+    //idArticolo=riga*6+colonna+1;
+    idArticolo=0;
+    //nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
+    nomeArticolo="";
+    prezzo=0;
+    abilitato=true;
+    repartoStampa="";
+    gestioneMenu=false;
+  }
+  setText(nomeArticolo);
+
+  QSizePolicy buttonSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  buttonSizePolicy.setHorizontalStretch(0);
+  buttonSizePolicy.setVerticalStretch(0);
+  buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
+  setSizePolicy(buttonSizePolicy);
+  setAcceptDrops(true);
+}
+
 void ArticoloBtnWidget::setNomeArticolo(const QString nome){
   nomeArticolo=nome;
   setText(nomeArticolo);
@@ -94,58 +146,6 @@ void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
   if(idArticolo>0 && visualizzaPrezzo) {
     PaintPrezzo();
   }
-}
-
-ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonna,QWidget *parent) :
-  idPulsante(id),
-  idReparto(idRep),
-  riga(numRiga),
-  colonna(numColonna),
-  visualizzaPrezzo(false),
-  QPictureButton(parent)
-{
-
-  QSqlQuery stmt;
-  stmt.prepare("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo and a.idreparto=? and a.riga=? and a.colonna=?");
-  stmt.addBindValue(idReparto);
-  stmt.addBindValue(riga);
-  stmt.addBindValue(colonna);
-  if(!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    return;
-  }
-  int numColIdArticolo=stmt.record().indexOf("idarticolo");
-  int numColDescr=stmt.record().indexOf("descrizione");
-  int numColprezzo=stmt.record().indexOf("prezzo");
-  int numColAbilitato=stmt.record().indexOf("abilitato");
-  int numColDestStampa=stmt.record().indexOf("destinazione");
-  int numColGestioneMenu=stmt.record().indexOf("gestioneMenu");
-  if(stmt.next()) {
-    idArticolo=stmt.value(numColIdArticolo).toInt();
-    nomeArticolo=stmt.value(numColDescr).toString();
-    prezzo=stmt.value(numColprezzo).toFloat();
-    abilitato=stmt.value(numColAbilitato).toBool();
-    repartoStampa=stmt.value(numColDestStampa).toString();
-    gestioneMenu=stmt.value(numColGestioneMenu).toBool();
-  } else {
-    //idArticolo=riga*6+colonna+1;
-    idArticolo=0;
-    //nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
-    nomeArticolo="";
-    prezzo=0;
-    abilitato=true;
-    repartoStampa="";
-    gestioneMenu=false;
-  }
-  setText(nomeArticolo);
-
-  QSizePolicy buttonSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  buttonSizePolicy.setHorizontalStretch(0);
-  buttonSizePolicy.setVerticalStretch(0);
-  buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
-  setSizePolicy(buttonSizePolicy);
-
 }
 
 void ArticoloBtnWidget::mousePressEvent(QMouseEvent *e)

@@ -63,6 +63,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id,QWidget *parent) :
     setAbilitato(stmt.value(numColAbilitato).toBool());
   } else {
     nomeReparto=QString("REPARTO %1").arg(idReparto);
+    setAbilitato(false);
   }
   setText(nomeReparto);
   SetButtonColorHot(buttonColorNormal());
