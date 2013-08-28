@@ -53,7 +53,9 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
   dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
-  serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro",'A').toChar().unicode()-QChar('A').unicode());
+  QString ser=configurazione->value("serieRitiro","Z").toString();
+  int num=ser.at(0).unicode();
+  serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro",'A').toString().at(0).unicode()-QChar('A').unicode());
 
   tabWidget->setCurrentIndex(0);
   descrManifestazioneTxt->setFocus();
