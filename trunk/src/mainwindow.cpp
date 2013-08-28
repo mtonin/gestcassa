@@ -111,12 +111,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       btnWidget->setAcceptDrops(true);
     }
 
-    /*
-    for(int idx=0;idx<ui->articoliStackedWidget->count();idx++) {
-      QWidget* w=ui->articoliStackedWidget->widget(idx);
-      w->setAcceptDrops(true);
-    }
-    */
+    ui->articoliStackedWidget->setAcceptDrops(true);
 
   } else {
     ui->configurazioneBtn->setEnabled(false);
@@ -152,12 +147,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       }
     }
 
-    /*
-    for(int idx=0;idx<ui->articoliStackedWidget->count();idx++) {
-      QWidget* w=ui->articoliStackedWidget->widget(idx);
-      w->setAcceptDrops(false);
-    }
-    */
+    ui->articoliStackedWidget->setAcceptDrops(false);
 
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
     showMaximized();
