@@ -14,6 +14,9 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   setupUi(this);
 
   articoliTab->setModel(&modello);
+  articoliTab->setWordWrap(true);
+  articoliTab->setAlternatingRowColors(true);
+  articoliTab->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   articoliTab->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
@@ -443,7 +446,7 @@ void Ordine::on_ultimoRestoBtn_clicked()
 
 void Ordine::on_pagPrevBtn_clicked()
 {
-  int primaRiga=articoliTab->rowAt(1);
+  int primaRiga=articoliTab->rowAt(0);
   QModelIndex idx=modello.index(primaRiga-1,1);
   articoliTab->scrollTo(idx,QAbstractItemView::PositionAtTop);
 }
