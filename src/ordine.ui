@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>Ordine</class>
  <widget class="QWidget" name="Ordine">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>411</width>
+    <height>448</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -123,7 +131,7 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
+      <enum>Qt::ScrollBarAlwaysOn</enum>
      </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -135,10 +143,10 @@
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="showGrid">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="gridStyle">
-      <enum>Qt::DotLine</enum>
+      <enum>Qt::DashLine</enum>
      </property>
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
@@ -305,7 +313,7 @@
       <number>1</number>
      </property>
      <item row="0" column="3">
-      <widget class="QPictureButton" name="pagPrevBtn" native="true">
+      <widget class="QPictureButton" name="pagPrevBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -328,13 +336,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>SCORRE SU'</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0" rowspan="2">
-      <widget class="QPictureButton" name="stampaBtn" native="true">
+      <widget class="QPictureButton" name="stampaBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>3</horstretch>
@@ -354,13 +362,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>STAMPA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
+      <widget class="QPictureButton" name="ultimoRestoBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>2</horstretch>
@@ -380,13 +388,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>ULTIMO RESTO</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QPictureButton" name="annullaBtn" native="true">
+      <widget class="QPictureButton" name="annullaBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>2</horstretch>
@@ -406,13 +414,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>ANNULLA</string>
        </property>
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPictureButton" name="pagNextBtn" native="true">
+      <widget class="QPictureButton" name="pagNextBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -435,13 +443,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>SCORRE GIU'</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPictureButton" name="duplicaBtn" native="true">
+      <widget class="QPictureButton" name="duplicaBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -464,13 +472,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>DUPLICA ULTIMO ORDINE</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QPictureButton" name="ristampaBtn" native="true">
+      <widget class="QPictureButton" name="ristampaBtn">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -493,7 +501,7 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="text" stdset="0">
+       <property name="text">
         <string>RISTAMPA ULTIMO ORDINE</string>
        </property>
       </widget>
