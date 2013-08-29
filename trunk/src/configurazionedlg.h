@@ -62,7 +62,7 @@ private slots:
 
   void on_importArticoliBtn_clicked();
 
-  void on_serieRitiroTxt_currentIndexChanged(int index);
+  void cambiaSerieRitiro(int index);
 
 private:
   void esportaInFile(const QString&);

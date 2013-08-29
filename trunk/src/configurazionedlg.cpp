@@ -53,12 +53,14 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
   adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
   dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
-  QString ser=configurazione->value("serieRitiro","Z").toString();
-  int num=ser.at(0).unicode();
-  serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro",'A').toString().at(0).unicode()-QChar('A').unicode());
+  //QString ser=configurazione->value("serieRitiro","Z").toString();
+  //int num=ser.at(0).unicode();
+  serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro","A").toString().at(0).unicode()-QChar('A').unicode());
 
   tabWidget->setCurrentIndex(0);
   descrManifestazioneTxt->setFocus();
+
+  connect(serieRitiroTxt,SIGNAL(currentIndexChanged(int)),this,SLOT(cambiaSerieRitiro(int)));
 }
 
 ConfigurazioneDlg::~ConfigurazioneDlg()
@@ -455,7 +457,10 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)");
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
-            stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+            if(idx>=campiInput.size()-2)
+              stmt.addBindValue(valutaStringa("true"));
+            else
+              stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             if(idx>=campiInput.size()-1)
               stmt.addBindValue(valutaStringa("false"));
             else
@@ -501,6 +506,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
         }
 
+        qDebug(campiInput.join("#").toAscii());
         if(!stmt.exec()) {
           QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
           db.rollback();
@@ -544,6 +550,6 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
   on_buttonBox_accepted();
 }
 
-void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index){
+void ConfigurazioneDlg::cambiaSerieRitiro(int index){
   nuovaConfigurazione->insert("serieRitiro",QChar('A'+index));
 }
