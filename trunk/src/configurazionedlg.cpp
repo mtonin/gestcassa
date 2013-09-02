@@ -51,7 +51,11 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString,QVariant>* par,QWidget *parent
   nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
   descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
   visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
-  adminPasswordTxt->setText(configurazione->value("adminPassword").toString());
+
+  QString pwdCifrata=configurazione->value("adminPassword").toString();
+  pwdInChiaro=cifratore->decryptToString(pwdCifrata);
+  adminPasswordTxt->setText(pwdInChiaro);
+
   dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
   //QString ser=configurazione->value("serieRitiro","Z").toString();
   //int num=ser.at(0).unicode();
@@ -92,9 +96,9 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 
 void ConfigurazioneDlg::on_buttonBox_accepted()
 {
-  if(configurazione->value("adminPassword").toString()!=adminPasswordTxt->text()) {
-    QString pwd=cifratore->encryptToString(adminPasswordTxt->text());
-    configurazione->insert("adminPassword",pwd);
+  if(pwdInChiaro!=adminPasswordTxt->text()) {
+    QString pwdCifrata=cifratore->encryptToString(adminPasswordTxt->text());
+    configurazione->insert("adminPassword",pwdCifrata);
     emit passwordCambiata();
   }
 
@@ -172,10 +176,6 @@ void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
   nuovaConfigurazione->insert("descrManifestazione",arg1);
-}
-
-void ConfigurazioneDlg::on_adminPasswordTxt_textEdited(const QString &arg1)
-{
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()

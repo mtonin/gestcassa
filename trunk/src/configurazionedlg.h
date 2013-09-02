@@ -44,8 +44,6 @@ private slots:
 
   void on_descrManifestazioneTxt_textEdited(const QString &arg1);
 
-  void on_adminPasswordTxt_textEdited(const QString &arg1);
-
   void on_intestazioneScontrinoTxt_textChanged();
 
   void on_fondoScontrinoTxt_textChanged();
@@ -71,6 +69,7 @@ private:
   QMap<QString,QVariant>* configurazione;
   QMap<QString,QVariant>* nuovaConfigurazione;
   SimpleCrypt* cifratore;
+  QString pwdInChiaro;
 
   QPrinter printer;
 };
