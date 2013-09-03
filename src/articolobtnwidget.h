@@ -27,6 +27,7 @@ public:
   bool isGestioneMenu() {return gestioneMenu;}
   void setGestioneMenu(bool val) {gestioneMenu=val;}
   void setPos(int r,int c);
+  void setDragAbilitato(bool valore);
 
 signals:
   void swapSignal(int id1, int id2);
@@ -48,6 +49,7 @@ private:
   bool gestioneMenu;
   int idPulsante;
   QPoint dragStartPos;
+  bool dragAbilitato;
 
 protected:
 

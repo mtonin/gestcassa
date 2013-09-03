@@ -26,6 +26,9 @@ int main(int argc, char *argv[])
   MainWindow w(configurazione);
   w.show();
 
+  //a.setStartDragDistance(50);
+  //a.setStartDragTime(1000);
+
   a.exec();
   delete configurazione;
 }

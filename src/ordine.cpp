@@ -320,7 +320,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
       QRect tmpRect;
       painter.setFont(fontNormale);
       painter.drawText(x,y,(pageWidth/10)*2-5,100,Qt::AlignLeft|Qt::AlignTop,quantitaString,&tmpRect);
-      painter.drawText(x+(pageWidth/10)*2,y,(pageWidth/10)*7-5,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
+      painter.drawText(x+(pageWidth/10)*2,y,(pageWidth/10)*8-5,1000,Qt::AlignLeft|Qt::AlignTop|Qt::TextWordWrap,descrizione,&textRect);
     }
 
     y+=textRect.height()+5;
