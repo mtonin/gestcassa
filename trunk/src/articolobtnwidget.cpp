@@ -51,7 +51,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonn
   buttonSizePolicy.setVerticalStretch(0);
   buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
   setSizePolicy(buttonSizePolicy);
-  setAcceptDrops(true);
+  setDragAbilitato(true);
 }
 
 void ArticoloBtnWidget::setNomeArticolo(const QString nome){
@@ -95,6 +95,12 @@ void ArticoloBtnWidget::setPos(int r, int c)
                           stmt.lastError().text());
     return;
   }
+}
+
+void ArticoloBtnWidget::setDragAbilitato(bool valore)
+{
+  setAcceptDrops(valore);
+  dragAbilitato=valore;
 }
 
 void ArticoloBtnWidget::setButtonFont(const QFont &font)
@@ -165,6 +171,8 @@ void ArticoloBtnWidget::mouseMoveEvent(QMouseEvent *e)
   if(!(e->buttons()&Qt::LeftButton)) {
     return;
   }
+  if(!dragAbilitato)
+    return;
   if((dragStartPos - e->pos()).manhattanLength() < QApplication::startDragDistance()) {
     return;
   }

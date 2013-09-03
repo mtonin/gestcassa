@@ -108,7 +108,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       box->setCurrentIndex(0);
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
       //abilita drag & drop
-      btnWidget->setAcceptDrops(true);
+      btnWidget->setDragAbilitato(true);
     }
 
     ui->articoliStackedWidget->setAcceptDrops(true);
@@ -141,7 +141,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       QStackedWidget* box=it.next();
       ArticoloBtnWidget* btnWidget=(ArticoloBtnWidget*)box->widget(0);
       //disabilita drag & drop
-      btnWidget->setAcceptDrops(false);
+      btnWidget->setDragAbilitato(false);
       if(!btnWidget->getAbilitato() || btnWidget->getNomeArticolo().isEmpty()) {
         box->setCurrentIndex(1);
       }
