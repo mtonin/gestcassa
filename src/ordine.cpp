@@ -255,22 +255,22 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   while(stmt.next()) {
     repartiStampaList.append(stmt.value(0).toString());
   }
-  foreach(QString reparto,repartiStampaList) {
+  foreach(QString destinazioneStampa,repartiStampaList) {
 
     stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag from destinazionistampa where nome=?");
-    stmt.addBindValue(reparto);
+    stmt.addBindValue(destinazioneStampa);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
                             stmt.lastError().text());
       return;
     }
 
-    QString intestReparto=reparto;
+    QString intestDestinazione="DESTINAZIONE NON IMPOSTATA";
     QString codiceRitiro;
     if(stmt.next()) {
       bool stampaFlag=stmt.value(1).toBool();
       if(!stampaFlag) continue;
-      intestReparto=stmt.value(0).toString();
+      intestDestinazione=stmt.value(0).toString();
       if(stmt.value(2).toBool()) {
         codiceRitiro=QString("CODICE RITIRO: %1/%2").arg(serieRitiro).arg(numeroOrdine);
         flagStampaNumeroRitiro=true;
@@ -280,7 +280,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     int x=0;
     int y=0;
     painter.setFont(fontGrassettoCorsivo);
-    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestReparto,&textRect);
+    painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestDestinazione,&textRect);
     y+=textRect.height()+10;
     painter.setFont(fontGrassetto);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,descrManifestazione,&textRect);
@@ -298,11 +298,11 @@ void Ordine::stampaScontrino(const int numeroOrdine)
                  FROM storicoordini \
                  where idsessione=? \
                  and numeroordine=? \
-                 and destinazione=? \
+                 and coalesce(destinazione,'')=? \
                  group by numeroordine,descrizione");
     stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(numeroOrdine);
-    stmt.addBindValue(reparto);
+    stmt.addBindValue(destinazioneStampa.isEmpty()?"":destinazioneStampa);
 
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),
