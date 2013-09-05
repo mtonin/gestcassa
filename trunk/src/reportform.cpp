@@ -48,7 +48,7 @@ QTextDocument* ReportForm::creaDocumentTutto()
     cursore.movePosition(QTextCursor::NextCell);
   }
 
-  QString sql="select a.descrizione,a.prezzo,a.destinazione,b.descrizione as reparto \
+  QString sql="select a.descrizione,a.prezzo,a.destinazione,a.gestioneMenu,b.descrizione as reparto \
               from articoli a,reparti b, pulsanti c \
               where c.idarticolo=a.idarticolo \
               and c.idreparto=b.idreparto";
@@ -69,6 +69,7 @@ QTextDocument* ReportForm::creaDocumentTutto()
   int posPrezzo=stmt.record().indexOf("prezzo");
   int posDestinazione=stmt.record().indexOf("destinazione");
   int posReparto=stmt.record().indexOf("reparto");
+  int posGestioneMenu=stmt.record().indexOf("gestioneMenu");
   QTextBlockFormat rightAlignFormat;
   rightAlignFormat.setAlignment(Qt::AlignRight);
 
@@ -76,6 +77,12 @@ QTextDocument* ReportForm::creaDocumentTutto()
     QString descrizione=stmt.value(posDescrizione).toString();
     QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
     QString destinazione=stmt.value(posDestinazione).toString();
+    bool gestioneMenu=stmt.value(posGestioneMenu).toBool();
+    if(gestioneMenu)
+      destinazione="**MENU**";
+    if(destinazione.isEmpty())
+      destinazione="**NON IMPOSTATA**";
+
     QString reparto=stmt.value(posReparto).toString();
 
     tabella->appendRows(1);
@@ -128,7 +135,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextRow);
 
-    sql="select a.descrizione,a.prezzo,a.destinazione \
+    sql="select a.descrizione,a.prezzo,a.destinazione,a.gestioneMenu \
         from articoli a,reparti b, pulsanti c \
         where c.idarticolo=a.idarticolo \
         and c.idreparto=b.idreparto \
@@ -152,6 +159,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
     int posDescrizione=stmt.record().indexOf("descrizione");
     int posPrezzo=stmt.record().indexOf("prezzo");
     int posDestinazione=stmt.record().indexOf("destinazione");
+    int posGestioneMenu=stmt.record().indexOf("gestioneMenu");
 
     QTextDocument tableDocument;
     QTextCursor tableCursore(&tableDocument);
@@ -170,6 +178,11 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
       QString descrizione=stmt.value(posDescrizione).toString();
       QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
       QString destinazione=stmt.value(posDestinazione).toString();
+      bool gestioneMenu=stmt.value(posGestioneMenu).toBool();
+      if(gestioneMenu)
+        destinazione="**MENU**";
+      if(destinazione.isEmpty())
+        destinazione="**NON IMPOSTATA**";
 
       tabella->appendRows(1);
       tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
@@ -196,8 +209,8 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
 
 }
 
-QTextDocument* ReportForm::creaDocumentPerDestinazione()
-{
+QTextDocument* ReportForm::creaDocumentPerDestinazione() {
+
   QTextDocument* documento=new QTextDocument(this);
   QTextCursor cursore(documento);
   QString testo;
@@ -219,72 +232,20 @@ QTextDocument* ReportForm::creaDocumentPerDestinazione()
     putHeader(cursore,testo);
     cursore.movePosition(QTextCursor::NextRow);
 
-    sql="select a.descrizione,a.prezzo,b.descrizione as reparto \
-        from articoli a,reparti b, pulsanti c \
-        where c.idarticolo=a.idarticolo \
-        and c.idreparto=b.idreparto \
-        and a.gestioneMenu='false' \
-        and a.destinazione=?";
-    if(ordineAlfabeticoBox->isChecked()) {
-      sql.append(" order by lower(a.descrizione) asc");
-    } else {
-      sql.append(" order by a.prezzo asc");
-    }
+    cursore.insertFragment(QTextDocumentFragment(creaDocumentDestinazione(nomeDestinazione)));
+  }
 
-    QSqlQuery stmt;
-    stmt.prepare(sql);
-    stmt.addBindValue(nomeDestinazione);
-    if(!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
-      return NULL;
-    }
+  QTextDocument* articoliSenzaRepartiDoc=creaDocumentDestinazione("");
+  if(articoliSenzaRepartiDoc!=NULL) {
+    cursore.insertText("\n\n\n\n");
+    testo=QString("ARTICOLI CON DESTINAZIONE DI STAMPA NON IMPOSTATA");
+    putHeader(cursore,testo);
+    cursore.movePosition(QTextCursor::NextRow);
 
-    int totArticoli=0;
+    cursore.insertFragment(QTextDocumentFragment(articoliSenzaRepartiDoc));
+  }
 
-    int posDescrizione=stmt.record().indexOf("descrizione");
-    int posPrezzo=stmt.record().indexOf("prezzo");
-    int posReparto=stmt.record().indexOf("reparto");
-
-    QTextDocument tableDocument;
-    QTextCursor tableCursore(&tableDocument);
-
-    QTextTable* tabella=tableCursore.insertTable(1,3);
-    foreach(testo,((QString)"ARTICOLO,PREZZO,REPARTO").split(",")) {
-      putHeader(tableCursore,testo);
-      tableCursore.movePosition(QTextCursor::NextCell);
-    }
-
-    QTextBlockFormat rightAlignFormat;
-    rightAlignFormat.setAlignment(Qt::AlignRight);
-
-    while(stmt.next()) {
-      totArticoli++;
-      QString descrizione=stmt.value(posDescrizione).toString();
-      QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
-      QString reparto=stmt.value(posReparto).toString();
-
-      tabella->appendRows(1);
-      tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
-      tableCursore.insertText(descrizione);
-      tableCursore.movePosition(QTextCursor::NextCell);
-
-      tableCursore.setBlockFormat(rightAlignFormat);
-      tableCursore.insertText(prezzo);
-      tableCursore.movePosition(QTextCursor::NextCell);
-      tableCursore.insertText(reparto);
-    }
-
-    formattaTabella(tabella);
-
-    if(0==totArticoli){
-      cursore.insertText("\nNessun articolo in questa destinazione.");
-    } else {
-      cursore.insertFragment(QTextDocumentFragment(&tableDocument));
-    }
-
-}
-
-return documento;
+  return documento;
 }
 
 QTextDocument *ReportForm::creaDocumentMenu()
@@ -355,7 +316,7 @@ QTextDocument *ReportForm::creaDocumentMenu()
     QString contenutoMenu;
     while(stmt1.next()) {
       if(!contenutoMenu.isEmpty()) contenutoMenu.append('\n');
-      contenutoMenu.append(stmt1.value(0).toString());
+      contenutoMenu.append("- ").append(stmt1.value(0).toString());
     }
     tableCursore.insertText(contenutoMenu);
     tableCursore.movePosition(QTextCursor::NextCell);
@@ -366,11 +327,77 @@ QTextDocument *ReportForm::creaDocumentMenu()
   return tableDocument;
 }
 
+QTextDocument *ReportForm::creaDocumentDestinazione(const QString& nomeDestinazione)  {
+
+  QTextDocument* tableDocument=new QTextDocument(this);
+  QTextCursor tableCursore(tableDocument);
+
+    QString sql="select a.descrizione,a.prezzo,b.descrizione as reparto \
+        from articoli a,reparti b, pulsanti c \
+        where c.idarticolo=a.idarticolo \
+        and c.idreparto=b.idreparto \
+        and a.gestioneMenu='false' \
+        and coalesce(a.destinazione,'')=?";
+    if(ordineAlfabeticoBox->isChecked()) {
+      sql.append(" order by lower(a.descrizione) asc");
+    } else {
+      sql.append(" order by a.prezzo asc");
+    }
+
+    QSqlQuery stmt;
+    stmt.prepare(sql);
+    stmt.addBindValue(nomeDestinazione);
+    if(!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return NULL;
+    }
+
+    int totArticoli=0;
+
+    int posDescrizione=stmt.record().indexOf("descrizione");
+    int posPrezzo=stmt.record().indexOf("prezzo");
+    int posReparto=stmt.record().indexOf("reparto");
+
+    QTextTable* tabella=tableCursore.insertTable(1,3);
+    foreach(QString testo,((QString)"ARTICOLO,PREZZO,REPARTO").split(",")) {
+      putHeader(tableCursore,testo);
+      tableCursore.movePosition(QTextCursor::NextCell);
+    }
+
+    QTextBlockFormat rightAlignFormat;
+    rightAlignFormat.setAlignment(Qt::AlignRight);
+
+    while(stmt.next()) {
+      totArticoli++;
+      QString descrizione=stmt.value(posDescrizione).toString();
+      QString prezzo=QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(),4,'f',2);
+      QString reparto=stmt.value(posReparto).toString();
+
+      tabella->appendRows(1);
+      tableCursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
+      tableCursore.insertText(descrizione);
+      tableCursore.movePosition(QTextCursor::NextCell);
+
+      tableCursore.setBlockFormat(rightAlignFormat);
+      tableCursore.insertText(prezzo);
+      tableCursore.movePosition(QTextCursor::NextCell);
+      tableCursore.insertText(reparto);
+    }
+
+    formattaTabella(tabella);
+
+    if(0==totArticoli){
+      return NULL;
+    }
+
+    return tableDocument;
+}
+
 void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, bool preview)
 {
 
   TextPrinter* tprinter=new TextPrinter(this);
-  QString header=QString("<center><b>%1 - %2</b></center>").arg(configurazione->value("descrManifestazione").toString()).arg(descrReport);
+  QString header=QString("<center><b>%1<br>%2</b></center>").arg(configurazione->value("descrManifestazione").toString()).arg(descrReport);
   tprinter->setHeaderText(header);
   tprinter->setFooterText("<center><b>GESTIONE CASSA</b><br>Pag. &page;</center>");
   tprinter->setHeaderSize(5);
