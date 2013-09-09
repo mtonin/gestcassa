@@ -14,6 +14,7 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
   effetto->setEndValue("0");
   effetto->setDuration(3000);
   effetto->setEasingCurve(QEasingCurve::InCubic);
+  connect(effetto,SIGNAL(finished()),this,SIGNAL(effettoTerminato()));
 
 }
 

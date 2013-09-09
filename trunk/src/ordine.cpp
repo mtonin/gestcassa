@@ -17,6 +17,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   articoliTab->setWordWrap(true);
   articoliTab->setAlternatingRowColors(true);
   articoliTab->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  articoliTab->horizontalHeader()->setDefaultSectionSize(70);
   articoliTab->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
@@ -91,6 +92,7 @@ void Ordine::on_articoliTab_clicked(const QModelIndex &index)
   disconnect(controlli,0,0,0);
   connect(controlli,SIGNAL(incrementa(int)),&modello,SLOT(incrementa(int)));
   connect(controlli,SIGNAL(decrementa(int,QModelIndex)),&modello,SLOT(decrementa(int,QModelIndex)));
+  connect(controlli,SIGNAL(effettoTerminato()),articoliTab->selectionModel(),SLOT(clearSelection()));
 
   QPoint pos=QCursor::pos();
   pos.setY(pos.y()+20);
