@@ -16,6 +16,7 @@ private slots:
   void on_anteprimaBtn_clicked();
 
   void on_esportaBtn_clicked();
+  void on_prenotazioniBtn_clicked();
 
 private:
   QTextDocument* creaDocumentTutto();
@@ -23,6 +24,7 @@ private:
   QTextDocument* creaDocumentPerDestinazione();
   QTextDocument* creaDocumentMenu();
   QTextDocument* creaDocumentDestinazione(const QString& nomeDestinazione);
+  QTextDocument* creaFoglioPrenotazioni();
   void stampa(const QTextDocument* doc,const QString descrReport,bool preview);
   void putHeader(QTextCursor cursore, const QString testo);
   void formattaTabella(QTextTable*);

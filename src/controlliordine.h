@@ -15,6 +15,7 @@ class ControlliOrdine : public QWidget
 signals:
   void incrementa(const int);
   void decrementa(const int,const QModelIndex&);
+  void effettoTerminato();
 
 public:
   explicit ControlliOrdine(QWidget *parent = 0);
