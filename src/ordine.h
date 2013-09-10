@@ -21,7 +21,7 @@ public slots:
   void nuovoOrdine(const int);
 
 private slots:
-  void on_articoliTab_clicked(const QModelIndex &index);
+  void on_seleziona(const QModelIndex &index);
   void ricalcolaTotale(QModelIndex,QModelIndex);
 
   void on_annullaBtn_clicked();
