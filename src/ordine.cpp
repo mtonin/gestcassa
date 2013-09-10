@@ -22,7 +22,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
-  connect(articoliTab->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),this,SLOT(on_seleziona(QModelIndex)));
+  connect(articoliTab,SIGNAL(clicked(QModelIndex)),this,SLOT(seleziona(QModelIndex)));
   controlli=new ControlliOrdine(this);
 
   importoUltimoOrdine=0;
@@ -84,16 +84,22 @@ void Ordine::hide()
   QWidget::hide();
 }
 
-void Ordine::on_seleziona(const QModelIndex &index)
+void Ordine::seleziona(const QModelIndex &indexNew)
 {
-  int id=modello.index(index.row(),0).data().toInt();
+  if(!indexNew.isValid())
+    return;
+
+  int id=modello.index(indexNew.row(),0).data().toInt();
   controlli->setIdArticolo(id);
-  controlli->setModelIndex(index);
+  controlli->setModelIndex(indexNew);
   connect(&modello,SIGNAL(rigaCancellata()),controlli,SLOT(close()));
+
+  articoliTab->selectionModel()->select(indexNew,QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);
+
   disconnect(controlli,0,0,0);
   connect(controlli,SIGNAL(incrementa(int)),&modello,SLOT(incrementa(int)));
   connect(controlli,SIGNAL(decrementa(int,QModelIndex)),&modello,SLOT(decrementa(int,QModelIndex)));
-  connect(controlli,SIGNAL(effettoTerminato()),articoliTab->selectionModel(),SLOT(clearSelection()));
+  connect(controlli,SIGNAL(effettoTerminato()),this,SLOT(clearSelezione()));
 
   QPoint pos=QCursor::pos();
   pos.setY(pos.y()+20);
@@ -181,6 +187,12 @@ void Ordine::nuovoOrdine(const int idSessione)
   } else {
     importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine,4,'f',2));
   }
+}
+
+void Ordine::clearSelezione()
+{
+  articoliTab->selectionModel()->select(QModelIndex(),QItemSelectionModel::Clear);
+  controlli->close();
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
