@@ -72,7 +72,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
 {
-  controlli->hide();
+  clearSelezione();
   modello.incrementa(idArticolo,descrizione,prezzo);
   articoliTab->scrollToBottom();
 
