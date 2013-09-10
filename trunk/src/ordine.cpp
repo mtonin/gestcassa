@@ -22,6 +22,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   articoliTab->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
   articoliTab->hideColumn(0);
   connect(&modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(ricalcolaTotale(QModelIndex,QModelIndex)));
+  connect(articoliTab->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),this,SLOT(on_seleziona(QModelIndex)));
   controlli=new ControlliOrdine(this);
 
   importoUltimoOrdine=0;
@@ -83,7 +84,7 @@ void Ordine::hide()
   QWidget::hide();
 }
 
-void Ordine::on_articoliTab_clicked(const QModelIndex &index)
+void Ordine::on_seleziona(const QModelIndex &index)
 {
   int id=modello.index(index.row(),0).data().toInt();
   controlli->setIdArticolo(id);
