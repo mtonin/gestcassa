@@ -19,9 +19,10 @@ public slots:
   void hide();
   bool isInComposizione() {return modello.rowCount()>0?true:false;}
   void nuovoOrdine(const int);
+  void clearSelezione();
 
 private slots:
-  void on_seleziona(const QModelIndex &index);
+  void seleziona(const QModelIndex &indexNew);
   void ricalcolaTotale(QModelIndex,QModelIndex);
 
   void on_annullaBtn_clicked();
