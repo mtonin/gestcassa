@@ -322,7 +322,7 @@ void MainWindow::on_reportBtn_clicked()
 
 void MainWindow::on_statsBtn_clicked()
 {
-  StatsForm form(confMap->value("sessioneCorrente").toInt(),this);
+  StatsForm form(confMap,this);
   //form.setWindowState(Qt::WindowMaximized);
   form.exec();
 }
