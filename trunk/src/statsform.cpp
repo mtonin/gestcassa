@@ -104,14 +104,8 @@ void StatsForm::caricaStats()
     return;
   }
   statsModel->clear();
-  tsInizio.clear();
-  tsFine.clear();
 
   while(stmt.next()) {
-    if(tsInizio.isEmpty()) {
-      tsInizio=stmt.value(2).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
-    }
-    tsFine=stmt.value(2).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
     QString nomeArticolo=stmt.value(0).toString();
     int quantita=stmt.value(1).toInt();
     QList<QStandardItem*> riga;
@@ -160,8 +154,8 @@ void StatsForm::caricaStats()
 void StatsForm::calcolaTotali()
 {
 
-  QString sql("select count(*),sum(importoordine) \
-              from (SELECT idsessione||numeroordine,importo as importoordine \
+  QString sql("select count(*),sum(importoordine),min(datetime(minTs)),max(datetime(maxTs)) \
+              from (SELECT idsessione||numeroordine,importo as importoordine, min(datetime(tsstampa)) as minTs,max(datetime(tsstampa)) as maxTs \
                             FROM storicoordini \
                             where \
                             %1 \
@@ -198,6 +192,12 @@ void StatsForm::calcolaTotali()
 
   totaleOrdiniTxt->setText(QString("%L1").arg(totOrdini));
   totaleImportoTxt->setText(QString("%1 %L2").arg(QChar(0x20AC)).arg(totImporto,4,'f',2));
+
+  tsInizio=stmt.value(2).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
+  tsFine=stmt.value(3).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
+  ordineDataFrom->setText(tsInizio);
+  ordineDataTo->setText(tsFine);
+
 }
 
 void StatsForm::on_stampaBtn_clicked(){
