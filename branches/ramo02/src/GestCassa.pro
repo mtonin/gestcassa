@@ -35,7 +35,9 @@ SOURCES += main.cpp\
     statsform.cpp \
     statsmodel.cpp \
     confermadlg.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    storicoordini.cpp \
+    storicoordinimodel.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -60,7 +62,9 @@ HEADERS  += mainwindow.h \
     statsform.h \
     statsmodel.h \
     confermadlg.h \
-    dbmanager.h
+    dbmanager.h \
+    storicoordini.h \
+    storicoordinimodel.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -74,7 +78,8 @@ FORMS    += mainwindow.ui \
     reportform.ui \
     infowidget.ui \
     statsform.ui \
-    confermadlg.ui
+    confermadlg.ui \
+    storicoordini.ui
 
 #include(version.txt)
 

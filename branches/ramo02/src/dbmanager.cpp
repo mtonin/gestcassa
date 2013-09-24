@@ -104,6 +104,43 @@ void DBManager::leggeConfigurazione() {
     nuovaVersioneDB=6;
   }
 
+  if(versioneDB<7) {
+    if(!stmt.exec("CREATE TABLE storicoordinitot (  \
+                  idsessione   INTEGER, \
+                  numeroordine INTEGER, \
+                  tsstampa     DATETIME, \
+                  importo      REAL, \
+                  flagstorno   BOOLEAN NOT NULL DEFAULT ('false'))")   ||
+       !stmt.exec("CREATE TABLE storicoordinidett (  \
+                      idsessione   INTEGER, \
+                      numeroordine INTEGER, \
+                      descrizione  VARCHAR, \
+                      quantita     INTEGER, \
+                      destinazione VARCHAR, \
+                      prezzo       REAL, \
+                      tipoArticolo CHAR     NOT NULL  )")  ||
+       !stmt.exec("alter table storicoordini rename to storicoordini_old")  ||
+       !stmt.exec("CREATE VIEW storicoordini AS \
+                  SELECT tot.idsessione, tot.numeroordine, tot.tsstampa, tot.importo, dett.descrizione, dett.prezzo, dett.quantita, dett.destinazione, dett.tipoArticolo \
+                  FROM storicoordinitot tot, storicoordinidett dett \
+                  WHERE tot.idsessione = dett.idsessione \
+                  AND tot.numeroordine = dett.numeroordine \
+                  AND tot.flagstorno = 'false'")  ||
+       !stmt.exec("insert into storicoordinitot (idsessione,numeroordine,tsstampa,importo) \
+                  select a.idsessione,a.numeroordine,a.tsstampa,a.importo \
+                  from storicoordini_old a \
+                  group by a.idsessione,a.numeroordine,a.tsstampa,a.importo")  ||
+       !stmt.exec("insert into storicoordinidett (idsessione,numeroordine,descrizione,quantita,destinazione,prezzo,tipoarticolo) \
+                  select a.idsessione,a.numeroordine,a.descrizione,a.quantita,a.destinazione,a.prezzo,a.tipoArticolo \
+                  from storicoordini_old a") ||
+       !stmt.exec("drop table storicoordini_old")     ) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      db.rollback();
+      return;
+    }
+    nuovaVersioneDB=7;
+  }
+
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     conf->insert("versione",versioneDB);
