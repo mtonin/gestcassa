@@ -2,6 +2,7 @@
 #include "restodlg.h"
 #include "controlliordine.h"
 #include "confermadlg.h"
+#include "storicoordini.h"
 
 #include <QMessageBox>
 #include <QTimer>
@@ -475,6 +476,10 @@ void Ordine::on_pagNextBtn_clicked()
 
 void Ordine::on_duplicaBtn_clicked()
 {
+  StoricoOrdini dlg;
+  dlg.exec();
+  return;
+
   if(isInComposizione()) {
     ConfermaDlg* dlg=new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?","",false,this);
     if(QDialog::Accepted!=dlg->visualizza()) return;
