@@ -4,16 +4,20 @@
 #include <QtSql>
 #include <QDataWidgetMapper>
 
-StoricoOrdini::StoricoOrdini(QWidget *parent) :
-  QDialog(parent)
+StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(parent)
 {
   setupUi(this);
   setWindowFlags(Qt::Tool);
   activateWindow();
 
+  fromData->setDate(QDate::currentDate());
+  toData->setDate(QDate::currentDate());
+
   ordiniModel=new storicoOrdiniModel(this);
-  ordiniModel->setQuery("select idsessione,numeroordine,tsstampa,importo,flagstorno \
-                               from storicoordinitot");
+  ordiniModel->setTable("storicoordinitot");
+  condizione=QString("idsessione=%1").arg(idSessione);
+  ordiniModel->setFilter(condizione);
+  ordiniModel->select();
   ordiniTable->setModel(ordiniModel);
   ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   ordiniTable->verticalHeader()->setVisible(false);
@@ -38,6 +42,29 @@ void StoricoOrdini::caricaArticoliOrdine()
                                 from storicoordinidett \
                                 where idsessione=%1 and numeroordine=%2 and tipoArticolo <> 'C'").arg(sessioneOrdineTxt->text()).arg(numeroOrdineTxt->text());
   articoliOrdineModel->setQuery(sql);
+  articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"QUANTITA'",Qt::DisplayRole);
+  articoliOrdineModel->setHeaderData(1,Qt::Horizontal,"DESCRIZIONE",Qt::DisplayRole);
   articoliOrdineTbl->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
 
+}
+
+void StoricoOrdini::on_filtraBtn_5_clicked()
+{
+  if(ultimaSessioneBox->isChecked()) {
+    ordiniModel->setFilter(condizione);
+  } else {
+    QString condDataOra=QString("datetime(tsstampa) between datetime(\"%1 %2\") and datetime(\"%3 %4\")")
+                        .arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"))
+                        .arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+    ordiniModel->setFilter(condDataOra);
+  }
+  ordiniTable->scrollToTop();
+}
+
+void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
+{
+  fromData->setEnabled(checked);
+  fromOra->setEnabled(checked);
+  toData->setEnabled(checked);
+  toOra->setEnabled(checked);
 }

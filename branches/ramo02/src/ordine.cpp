@@ -476,7 +476,7 @@ void Ordine::on_pagNextBtn_clicked()
 
 void Ordine::on_duplicaBtn_clicked()
 {
-  StoricoOrdini dlg;
+  StoricoOrdini dlg(idSessioneCorrente);
   dlg.exec();
   return;
 

@@ -1,15 +1,30 @@
 #include "storicoordinimodel.h"
-
+#include <QBrush>
 storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
-  QSqlQueryModel(parent)
+  QSqlTableModel(parent)
 {
+  setEditStrategy(QSqlTableModel::OnFieldChange);
 }
 
 QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
 {
   if(!index.isValid()) return QVariant();
+  QModelIndex tmpIdx=QSqlTableModel::index(index.row(),4);
+  bool flagStorno=QSqlTableModel::data(tmpIdx).toBool();
 
-  QVariant rigaArticolo=QSqlQueryModel::data(index,role);
+  QVariant rigaArticolo=QSqlTableModel::data(index,role);
+  if(flagStorno) {
+    if(Qt::ForegroundRole==role) {
+      QBrush brush(Qt::SolidPattern);
+      brush.setColor(Qt::white);
+      return QVariant(brush);
+    }
+    if(Qt::BackgroundRole==role) {
+      QBrush brush(Qt::SolidPattern);
+      brush.setColor(Qt::gray);
+      return QVariant(brush);
+    }
+  }
   switch (index.column()) {
     case 0:
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
@@ -26,6 +41,14 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
       }
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
+    case 4:
+      if(Qt::DisplayRole==role) {
+        return QVariant();
+      }
+      if(Qt::CheckStateRole==role) {
+        return flagStorno?Qt::Checked:Qt::Unchecked;
+      }
+
     default:
       break;
   }
@@ -57,4 +80,26 @@ QVariant storicoOrdiniModel::headerData(int section, Qt::Orientation orientation
     }
   }
   return QSqlQueryModel::headerData(section,orientation,role);
+}
+
+Qt::ItemFlags storicoOrdiniModel::flags(const QModelIndex &index) const
+{
+  Qt::ItemFlags flags=QAbstractItemModel::flags(index);
+  if(1==index.column()) {
+    flags |=  Qt::ItemIsEditable;
+  }
+  if(4==index.column()) {
+    flags |=  Qt::ItemIsUserCheckable|Qt::ItemIsEnabled;
+  }
+  return flags;
+}
+
+bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+  if(4==index.column()) {
+    if(Qt::CheckStateRole==role) {
+        QSqlTableModel::setData(index,Qt::Checked==value.toInt()?"true":"false",Qt::EditRole);
+    }
+  }
+  return true;
 }

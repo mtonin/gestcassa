@@ -29,6 +29,109 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_17">
         <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QRadioButton" name="ultimaSessioneBox">
+            <property name="text">
+             <string>Ultima sessione</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QRadioButton" name="filtroDateBox">
+              <property name="text">
+               <string>Date:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Da</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDateEdit" name="fromData">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="calendarPopup">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTimeEdit" name="fromOra">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>13</width>
+                  <height>17</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>A</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDateEdit" name="toData">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="calendarPopup">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTimeEdit" name="toOra">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="time">
+                 <time>
+                  <hour>23</hour>
+                  <minute>59</minute>
+                  <second>59</second>
+                 </time>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_17">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -130,15 +233,15 @@ filtri</string>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
        <attribute name="horizontalHeaderMinimumSectionSize">
         <number>30</number>
        </attribute>
@@ -275,8 +378,8 @@ filtri</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>578</x>
-     <y>61</y>
+     <x>834</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
      <x>1009</x>

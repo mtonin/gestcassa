@@ -1,9 +1,9 @@
 #ifndef STORICOORDINIMODEL_H
 #define STORICOORDINIMODEL_H
 
-#include <QSqlQueryModel>
+#include <QSqlTableModel>
 
-class storicoOrdiniModel : public QSqlQueryModel
+class storicoOrdiniModel : public QSqlTableModel
 {
   Q_OBJECT
 public:
@@ -11,8 +11,8 @@ public:
 
   QVariant data(const QModelIndex &index, int role) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-
-signals:
+  Qt::ItemFlags flags(const QModelIndex &index) const;
+  bool setData(const QModelIndex &index, const QVariant &value, int role);
   
 public slots:
 
