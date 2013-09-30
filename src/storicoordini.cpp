@@ -60,6 +60,7 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
     ordiniModel->setFilter(condDataOra);
   }
   ordiniTable->scrollToTop();
+
 }
 
 void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
