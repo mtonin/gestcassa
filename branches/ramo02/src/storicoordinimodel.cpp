@@ -35,9 +35,9 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
     case 2:
       break;
     case 3:
-      if(Qt::DisplayRole==role) {
+      if(Qt::DisplayRole==role || Qt::EditRole==role) {
         float importo=rigaArticolo.toFloat();
-        return QString("%L1").arg(importo,4,'f',2);
+        return QString("%1 %L2").arg(QChar(0x20AC)).arg(importo,4,'f',2);
       }
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
