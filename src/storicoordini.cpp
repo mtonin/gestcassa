@@ -21,6 +21,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
   ordiniTable->setModel(ordiniModel);
   ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   ordiniTable->verticalHeader()->setVisible(false);
+  //ordiniTable->selectRow(0);
 
   articoliOrdineModel=new QSqlQueryModel(this);
   articoliOrdineTbl->setModel(articoliOrdineModel);
