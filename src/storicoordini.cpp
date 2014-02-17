@@ -32,6 +32,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
   mapper->addMapping(numeroOrdineTxt,1);
   mapper->addMapping(importoOrdineTxt,3);
 
+  connect(ordiniModel,SIGNAL(dataChanged(QModelIndex,QModelIndex)),ordiniTable,SLOT(setCurrentIndex(QModelIndex)));
   connect(ordiniTable->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),mapper,SLOT(setCurrentModelIndex(QModelIndex)));
   connect(ordiniTable->selectionModel(),SIGNAL(currentChanged(QModelIndex,QModelIndex)),this,SLOT(caricaArticoliOrdine()));
 

@@ -16,12 +16,12 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
   if(flagStorno) {
     if(Qt::ForegroundRole==role) {
       QBrush brush(Qt::SolidPattern);
-      brush.setColor(Qt::white);
+      brush.setColor(Qt::black);
       return QVariant(brush);
     }
     if(Qt::BackgroundRole==role) {
-      QBrush brush(Qt::SolidPattern);
-      brush.setColor(Qt::gray);
+      QBrush brush(Qt::Dense3Pattern);
+      brush.setColor(Qt::lightGray);
       return QVariant(brush);
     }
   }
@@ -99,6 +99,7 @@ bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value
   if(4==index.column()) {
     if(Qt::CheckStateRole==role) {
         QSqlTableModel::setData(index,Qt::Checked==value.toInt()?"true":"false",Qt::EditRole);
+        emit dataChanged(index,index);
     }
   }
   return true;
