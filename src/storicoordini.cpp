@@ -42,11 +42,17 @@ void StoricoOrdini::caricaArticoliOrdine()
 {
   QString sql=QString("select quantita,descrizione \
                                 from storicoordinidett \
-                                where idsessione=%1 and numeroordine=%2 and tipoArticolo <> 'C'").arg(sessioneOrdineTxt->text()).arg(numeroOrdineTxt->text());
+                                where idsessione=%1 and numeroordine=%2 and tipoArticolo <> 'C'")
+                                .arg(sessioneOrdineTxt->text()).arg(numeroOrdineTxt->text());
   articoliOrdineModel->setQuery(sql);
-  articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"QUANTITA'",Qt::DisplayRole);
+  articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"Q.TA'",Qt::DisplayRole);
   articoliOrdineModel->setHeaderData(1,Qt::Horizontal,"DESCRIZIONE",Qt::DisplayRole);
+  articoliOrdineTbl->setWordWrap(true);
+  articoliOrdineTbl->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  articoliOrdineTbl->horizontalHeader()->setDefaultSectionSize(70);
+  articoliOrdineTbl->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliOrdineTbl->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
+
 
 }
 
