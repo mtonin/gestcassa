@@ -204,6 +204,41 @@
              </spacer>
             </item>
             <item>
+             <widget class="QToolButton" name="testBtn">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Test</string>
+              </property>
+              <property name="icon">
+               <iconset resource="risorse.qrc">
+                <normaloff>:/GestCassa/warning</normaloff>:/GestCassa/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>48</width>
+                <height>48</height>
+               </size>
+              </property>
+              <property name="toolButtonStyle">
+               <enum>Qt::ToolButtonTextUnderIcon</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QToolButton" name="gestioneBtn">
               <property name="enabled">
                <bool>true</bool>

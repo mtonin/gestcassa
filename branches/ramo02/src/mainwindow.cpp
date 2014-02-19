@@ -387,3 +387,18 @@ void MainWindow::scambia(int id1, int id2)
   ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
 
 }
+
+void MainWindow::on_testBtn_clicked() {
+    int idSessione=confMap->value("sessioneCorrente").toInt();
+    if(idSessione<999999) {
+        confMap->insert("sessioneCorrente",999999);
+        confMap->insert("sessioneSalvata",idSessione);
+        ordineBox->nuovoOrdine(999999);
+    } else {
+        idSessione=confMap->value("sessioneSalvata").toInt();
+        confMap->insert("sessioneCorrente",idSessione);
+        confMap->remove("sessioneSalvata");
+        ordineBox->nuovoOrdine(idSessione);
+    }
+    gestioneModalita(CASSA);
+}
