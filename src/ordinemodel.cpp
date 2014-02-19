@@ -83,6 +83,14 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,con
     db.transaction();
 
     QSqlQuery stmt;
+    if(!stmt.exec("delete from ordinirighe") ||
+        !stmt.exec("delete from ordini")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),
+                              stmt.lastError().text());
+        db.rollback();
+        return false;
+    }
+
     stmt.prepare("insert into ordini(numero,tsstampa,importo) values(?,?,?)");
     stmt.addBindValue(numeroOrdine);
     QDateTime ts=QDateTime::currentDateTime();
@@ -108,41 +116,29 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,con
     }
   }
 
-  stmt.prepare("insert into storicoordinitot values(?,?,?,?,'false')");
-  stmt.addBindValue(idSessione);
-  stmt.addBindValue(numeroOrdine);
-  stmt.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
-  stmt.addBindValue(importo);
-  if(!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    db.rollback();
-    return false;
-  }
+  if(idSessione<999999) {
+      stmt.prepare("insert into storicoordinitot values(?,?,?,?,'false')");
+      stmt.addBindValue(idSessione);
+      stmt.addBindValue(numeroOrdine);
+      stmt.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
+      stmt.addBindValue(importo);
+      if(!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),
+                              stmt.lastError().text());
+        db.rollback();
+        return false;
+      }
 
-  stmt.prepare("insert into storicoordinidett select ?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
-  stmt.addBindValue(idSessione);
-  stmt.addBindValue(numeroOrdine);
-  if(!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    db.rollback();
-    return false;
+      stmt.prepare("insert into storicoordinidett select ?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+      stmt.addBindValue(idSessione);
+      stmt.addBindValue(numeroOrdine);
+      if(!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),
+                              stmt.lastError().text());
+        db.rollback();
+        return false;
+      }
   }
-
-  /*
-  stmt.prepare("insert into storicoordini select ?,numeroordine,?,?,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
-  stmt.addBindValue(idSessione);
-  stmt.addBindValue(ts);
-  stmt.addBindValue(importo);
-  stmt.addBindValue(numeroOrdine);
-  if(!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),
-                          stmt.lastError().text());
-    db.rollback();
-    return false;
-  }
-    */
 
   db.commit();
   return true;

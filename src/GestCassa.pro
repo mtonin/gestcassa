@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     dettaglireparto.cpp \
     dettagliarticolo.cpp \
     articolobtnwidget.cpp \
-    dbdialog.cpp \
     ordinemodel.cpp \
     controlliordine.cpp \
     restodlg.cpp \
@@ -47,7 +46,6 @@ HEADERS  += mainwindow.h \
     commons.h \
     dettagliarticolo.h \
     articolobtnwidget.h \
-    dbdialog.h \
     ordinemodel.h \
     controlliordine.h \
     restodlg.h \
@@ -70,7 +68,6 @@ FORMS    += mainwindow.ui \
     ordine.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
-    dbdialog.ui \
     controlliordine.ui \
     restodlg.ui \
     configurazionedlg.ui \

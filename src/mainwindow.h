@@ -42,6 +42,8 @@ private slots:
   void visualizzaPrezzo(bool visualizza);
   void scambia(int id1, int id2);
 
+  void on_testBtn_clicked();
+
 private:
   Ui::MainWindow *ui;
   Ordine* ordineBox;
