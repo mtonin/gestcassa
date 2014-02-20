@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
+    <width>171</width>
     <height>350</height>
    </rect>
   </property>
@@ -80,7 +80,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPictureButton" name="sfondoBtn">
+      <widget class="QPictureButton" name="sfondoBtn" native="true">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -93,7 +93,7 @@
        <property name="whatsThis">
         <string/>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string/>
        </property>
       </widget>
@@ -112,7 +112,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QPictureButton" name="carattereBtn">
+      <widget class="QPictureButton" name="carattereBtn" native="true">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -125,7 +125,7 @@
        <property name="whatsThis">
         <string/>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string/>
        </property>
       </widget>
@@ -138,7 +138,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QPictureButton" name="fontBtn">
+      <widget class="QPictureButton" name="fontBtn" native="true">
        <property name="maximumSize">
         <size>
          <width>50</width>
@@ -151,7 +151,7 @@
        <property name="whatsThis">
         <string/>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string>abc</string>
        </property>
       </widget>

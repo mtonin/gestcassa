@@ -389,16 +389,25 @@ void MainWindow::scambia(int id1, int id2)
 }
 
 void MainWindow::on_testBtn_clicked() {
+    if(ordineBox->isInComposizione()) {
+      QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
+      return;
+    }
+    qApp->restoreOverrideCursor();
+    gestioneModalita(CASSA);
     int idSessione=confMap->value("sessioneCorrente").toInt();
     if(idSessione<999999) {
         confMap->insert("sessioneCorrente",999999);
         confMap->insert("sessioneSalvata",idSessione);
         ordineBox->nuovoOrdine(999999);
+        ordineBox->enterTest();
+        ui->testBtn->setDown(true);
     } else {
         idSessione=confMap->value("sessioneSalvata").toInt();
         confMap->insert("sessioneCorrente",idSessione);
         confMap->remove("sessioneSalvata");
         ordineBox->nuovoOrdine(idSessione);
+        ordineBox->exitTest();
+        ui->testBtn->setDown(false);
     }
-    gestioneModalita(CASSA);
 }

@@ -6,6 +6,7 @@
 #include "controlliordine.h"
 #include <QStandardItemModel>
 #include <QMap>
+#include <QTimer>
 
 class Ordine : public QWidget, private Ui::Ordine
 {
@@ -13,6 +14,8 @@ class Ordine : public QWidget, private Ui::Ordine
   
 public:
   explicit Ordine(QMap<QString,QVariant>* par,QWidget *parent = 0);
+  void enterTest();
+  void exitTest();
 
 public slots:
   void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
@@ -24,6 +27,7 @@ public slots:
 private slots:
   void seleziona(const QModelIndex &indexNew);
   void ricalcolaTotale(QModelIndex,QModelIndex);
+  void lampeggia();
 
   void on_annullaBtn_clicked();
 
@@ -45,9 +49,10 @@ private:
   int idSessioneCorrente;
   int numOrdineCorrente;
   float importoOrdineCorrente;
-
+  QTimer* blinkTimer;
   OrdineModel modello;
   ControlliOrdine* controlli;
+  QString colore;
   void stampaScontrino(const int);
 };
 
