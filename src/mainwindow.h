@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QList>
 #include <QMap>
+#include <QTimer>
 
 namespace Ui {
   class MainWindow;
@@ -41,6 +42,7 @@ private slots:
   void decodificaPassword();
   void visualizzaPrezzo(bool visualizza);
   void scambia(int id1, int id2);
+  void lampeggia();
 
   void on_testBtn_clicked();
 
@@ -52,6 +54,8 @@ private:
   infoWidget* info;
   SimpleCrypt* cifratore;
   QString adminPassword;
+  QTimer* blinkTimer;
+  QString colore;
 
   //QList<ArticoloBtnWidget*> articoliBtnList;
   QList<RepartoBtnWidget*> repartiList;
@@ -65,6 +69,8 @@ private:
   void gestioneModalita(const modalitaType nuovaModalita);
   void creaArticoliPerRepartoButtons(int, RepartoBtnWidget*);
   void creaInfoMessaggi();
+  void enterTest();
+  void exitTest();
 
 };
 

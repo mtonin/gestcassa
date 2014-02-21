@@ -3,7 +3,8 @@
 
 enum modalitaType {
    CASSA,
-   GESTIONE
+   GESTIONE,
+   TEST
 } ;
 
 
