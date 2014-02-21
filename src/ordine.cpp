@@ -61,6 +61,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
   ristampaBtn->SetButtonColorNormal(Qt::yellow);
+  stornoBtn->SetButtonColorNormal(Qt::yellow);
   stampaBtn->SetButtonColorHot(Qt::magenta);
   annullaBtn->SetButtonColorHot(Qt::magenta);
   duplicaBtn->SetButtonColorHot(Qt::magenta);
@@ -68,6 +69,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorHot(Qt::magenta);
   pagNextBtn->SetButtonColorHot(Qt::magenta);
   ristampaBtn->SetButtonColorHot(Qt::magenta);
+  stornoBtn->SetButtonColorHot(Qt::magenta);
 
 }
 
@@ -476,10 +478,6 @@ void Ordine::on_pagNextBtn_clicked()
 
 void Ordine::on_duplicaBtn_clicked()
 {
-  StoricoOrdini dlg(idSessioneCorrente);
-  dlg.exec();
-  return;
-
   if(isInComposizione()) {
     ConfermaDlg* dlg=new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?","",false,this);
     if(QDialog::Accepted!=dlg->visualizza()) return;
@@ -501,4 +499,10 @@ void Ordine::on_duplicaBtn_clicked()
     while(quantita-->0)
       nuovoArticolo(idArticolo,descrizione,prezzo);
   }
+}
+
+void Ordine::on_stornoBtn_clicked() {
+    StoricoOrdini dlg(idSessioneCorrente);
+    dlg.exec();
+    return;
 }
