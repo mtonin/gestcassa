@@ -69,6 +69,8 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
   showMaximized();
 
+  blinkTimer=new QTimer(this);
+  connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
 }
 
 MainWindow::~MainWindow()
@@ -95,6 +97,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
     ui->latoStackedWidget->setCurrentIndex(0);
+    ui->testBtn->setEnabled(false);
 
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
@@ -113,12 +116,14 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     ui->articoliStackedWidget->setAcceptDrops(true);
 
-  } else {
+  };
+  if(CASSA==nuovaModalita) {
     ui->configurazioneBtn->setEnabled(false);
     ui->reportBtn->setEnabled(false);
-    ui->gestioneBtn->setEnabled(false);
     ui->cassaBtn->setEnabled(false);
     ui->gestioneBtn->setEnabled(true);
+    ui->testBtn->setEnabled(true);
+    ui->statsBtn->setEnabled(true);
 
     //ui->modalitaBtn->setText("GESTIONE");
     //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
@@ -151,6 +156,14 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
     showMaximized();
+  }
+  if(TEST==nuovaModalita) {
+      ui->configurazioneBtn->setEnabled(false);
+      ui->reportBtn->setEnabled(false);
+      ui->cassaBtn->setEnabled(false);
+      ui->gestioneBtn->setEnabled(false);
+      ui->testBtn->setEnabled(true);
+      ui->statsBtn->setEnabled(false);
   }
 
   modalitaCorrente=nuovaModalita;
@@ -394,20 +407,47 @@ void MainWindow::on_testBtn_clicked() {
       return;
     }
     qApp->restoreOverrideCursor();
-    gestioneModalita(CASSA);
     int idSessione=confMap->value("sessioneCorrente").toInt();
     if(idSessione<999999) {
+        gestioneModalita(TEST);
         confMap->insert("sessioneCorrente",999999);
         confMap->insert("sessioneSalvata",idSessione);
         ordineBox->nuovoOrdine(999999);
-        ordineBox->enterTest();
+        enterTest();
         ui->testBtn->setDown(true);
     } else {
+        gestioneModalita(CASSA);
         idSessione=confMap->value("sessioneSalvata").toInt();
         confMap->insert("sessioneCorrente",idSessione);
         confMap->remove("sessioneSalvata");
         ordineBox->nuovoOrdine(idSessione);
-        ordineBox->exitTest();
+        exitTest();
         ui->testBtn->setDown(false);
     }
+}
+
+void MainWindow::lampeggia() {
+    QString coloreCarattere;
+    if(colore=="red") {
+        colore="";
+    } else {
+        colore="red";
+        coloreCarattere="white";
+    }
+    QString stylesheet=QString("background-color: %1; color: %2;").arg(colore).arg(coloreCarattere);
+    ui->messaggiArea->setStyleSheet(stylesheet);
+}
+
+void MainWindow::enterTest()
+{
+    ui->messaggiArea->setText("MODALITA' TEST");
+    lampeggia();
+    blinkTimer->start(1000);
+}
+
+void MainWindow::exitTest()
+{
+    blinkTimer->stop();
+    ui->messaggiArea->setText("");
+    ui->messaggiArea->setStyleSheet("");
 }

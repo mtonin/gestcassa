@@ -69,10 +69,6 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagNextBtn->SetButtonColorHot(Qt::magenta);
   ristampaBtn->SetButtonColorHot(Qt::magenta);
 
-  testLbl->setDisabled(true);
-  //testLbl->setAttribute(Qt::WA_DontShowOnScreen);
-  blinkTimer=new QTimer(this);
-  connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -124,15 +120,6 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
     importoOrdineCorrente+=modello.index(i,3).data(Qt::UserRole).toFloat();
   }
   totaleLine->setText(QString("%L1").arg(importoOrdineCorrente,4,'f',2));
-}
-
-void Ordine::lampeggia() {
-    if(colore=="red")
-        colore="";
-    else
-        colore="red";
-    QString stylesheet=QString("background-color: %1;").arg(colore);
-    testLbl->setStyleSheet(stylesheet);
 }
 
 void Ordine::on_annullaBtn_clicked()
@@ -207,20 +194,6 @@ void Ordine::clearSelezione()
 {
   articoliTab->selectionModel()->select(QModelIndex(),QItemSelectionModel::Clear);
   controlli->close();
-}
-
-void Ordine::enterTest()
-{
-    testLbl->setEnabled(true);
-    lampeggia();
-    blinkTimer->start(1000);
-}
-
-void Ordine::exitTest()
-{
-    blinkTimer->stop();
-    testLbl->setDisabled(true);
-    testLbl->setStyleSheet("");
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
