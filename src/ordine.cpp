@@ -69,8 +69,8 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagNextBtn->SetButtonColorHot(Qt::magenta);
   ristampaBtn->SetButtonColorHot(Qt::magenta);
 
-  //testLbl->setVisible(false);
-  testLbl->setAttribute(Qt::WA_DontShowOnScreen);
+  testLbl->setDisabled(true);
+  //testLbl->setAttribute(Qt::WA_DontShowOnScreen);
   blinkTimer=new QTimer(this);
   connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
 }
@@ -128,7 +128,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 
 void Ordine::lampeggia() {
     if(colore=="red")
-        colore="white";
+        colore="";
     else
         colore="red";
     QString stylesheet=QString("background-color: %1;").arg(colore);
@@ -211,14 +211,16 @@ void Ordine::clearSelezione()
 
 void Ordine::enterTest()
 {
-    testLbl->setVisible(true);
+    testLbl->setEnabled(true);
+    lampeggia();
     blinkTimer->start(1000);
 }
 
 void Ordine::exitTest()
 {
     blinkTimer->stop();
-    testLbl->setVisible(false);
+    testLbl->setDisabled(true);
+    testLbl->setStyleSheet("");
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
