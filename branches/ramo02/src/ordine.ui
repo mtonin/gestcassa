@@ -376,58 +376,6 @@
      <property name="spacing">
       <number>1</number>
      </property>
-     <item row="1" column="2">
-      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>75</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" stdset="0">
-        <string>ULTIMO RESTO</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QPictureButton" name="annullaBtn" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>75</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" stdset="0">
-        <string>ANNULLA</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QPictureButton" name="duplicaBtn" native="true">
        <property name="enabled">
@@ -457,29 +405,29 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0" rowspan="2">
-      <widget class="QPictureButton" name="stampaBtn" native="true">
+     <item row="1" column="2">
+      <widget class="QPictureButton" name="ultimoRestoBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>3</horstretch>
-         <verstretch>2</verstretch>
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>100</height>
+         <height>75</height>
         </size>
        </property>
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>10</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="text" stdset="0">
-        <string>STAMPA</string>
+        <string>ULTIMO RESTO</string>
        </property>
       </widget>
      </item>
@@ -512,7 +460,33 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="4">
+     <item row="0" column="2">
+      <widget class="QPictureButton" name="annullaBtn" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>ANNULLA</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
       <widget class="QPictureButton" name="pagNextBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
@@ -541,7 +515,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
+     <item row="0" column="3">
       <widget class="QPictureButton" name="pagPrevBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
@@ -570,61 +544,29 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QPictureButton" name="stornoBtn" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
+     <item row="0" column="0" rowspan="2">
+      <widget class="QPictureButton" name="stampaBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
+         <horstretch>3</horstretch>
+         <verstretch>2</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>75</height>
+         <height>100</height>
         </size>
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>16</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="text" stdset="0">
-        <string>STORNO</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QPictureButton" name="pagPrevBtn_3" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>75</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" stdset="0">
-        <string/>
+        <string>STAMPA</string>
        </property>
       </widget>
      </item>

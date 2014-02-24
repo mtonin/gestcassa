@@ -2,7 +2,6 @@
 #include "restodlg.h"
 #include "controlliordine.h"
 #include "confermadlg.h"
-#include "storicoordini.h"
 
 #include <QMessageBox>
 #include <QTimer>
@@ -61,7 +60,6 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorNormal(Qt::yellow);
   pagNextBtn->SetButtonColorNormal(Qt::yellow);
   ristampaBtn->SetButtonColorNormal(Qt::yellow);
-  stornoBtn->SetButtonColorNormal(Qt::yellow);
   stampaBtn->SetButtonColorHot(Qt::magenta);
   annullaBtn->SetButtonColorHot(Qt::magenta);
   duplicaBtn->SetButtonColorHot(Qt::magenta);
@@ -69,7 +67,6 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
   pagPrevBtn->SetButtonColorHot(Qt::magenta);
   pagNextBtn->SetButtonColorHot(Qt::magenta);
   ristampaBtn->SetButtonColorHot(Qt::magenta);
-  stornoBtn->SetButtonColorHot(Qt::magenta);
 
 }
 
@@ -499,10 +496,4 @@ void Ordine::on_duplicaBtn_clicked()
     while(quantita-->0)
       nuovoArticolo(idArticolo,descrizione,prezzo);
   }
-}
-
-void Ordine::on_stornoBtn_clicked() {
-    StoricoOrdini dlg(idSessioneCorrente);
-    dlg.exec();
-    return;
 }

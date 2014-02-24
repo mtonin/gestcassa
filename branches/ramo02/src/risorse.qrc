@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/GestCassa">
         <file>cash_register.ico</file>
-        <file alias="spegne">resources/close_delete.png</file>
+        <file alias="cancella">resources/close_delete.png</file>
         <file alias="configurazione">resources/options.png</file>
         <file alias="gestione">resources/pencil_edit.png</file>
         <file alias="cassa">resources/shopping_cart_empty.png</file>
@@ -21,5 +21,7 @@
         <file alias="duplica">resources/duplica.png</file>
         <file alias="drag">resources/File Send.png</file>
         <file alias="warning">resources/Sign Warning.png</file>
+        <file alias="operazioni">resources/Cog.png</file>
+        <file alias="esce">resources/home_go_32.png</file>
     </qresource>
 </RCC>

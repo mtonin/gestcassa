@@ -32,5 +32,3 @@ int main(int argc, char *argv[])
   a.exec();
   delete configurazione;
 }
-
-
