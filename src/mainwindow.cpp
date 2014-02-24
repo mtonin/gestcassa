@@ -10,6 +10,8 @@
 #include "QDigitalClock.h"
 #include "statsform.h"
 #include "confermadlg.h"
+#include "operazionidlg.h"
+#include "storicoordini.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -81,6 +83,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
+  int idSessione=0;
+
   if(GESTIONE==nuovaModalita) {
 
     ConfermaDlg dlg ("Inserire la password per accedere alla modalità amministrativa.","Password",true);
@@ -92,13 +96,20 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       QMessageBox::critical(this,"Accesso","Password errata");
     }
 
+    if(TEST==modalitaCorrente) {
+        idSessione=confMap->value("sessioneSalvata").toInt();
+        confMap->insert("sessioneCorrente",idSessione);
+        confMap->remove("sessioneSalvata");
+        exitTest();
+    }
+    /*
     ui->configurazioneBtn->setEnabled(true);
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
     ui->latoStackedWidget->setCurrentIndex(0);
     ui->testBtn->setEnabled(false);
-
+    */
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
@@ -118,12 +129,21 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
   };
   if(CASSA==nuovaModalita) {
+      /*
     ui->configurazioneBtn->setEnabled(false);
     ui->reportBtn->setEnabled(false);
     ui->cassaBtn->setEnabled(false);
     ui->gestioneBtn->setEnabled(true);
     ui->testBtn->setEnabled(true);
     ui->statsBtn->setEnabled(true);
+    */
+    if(TEST==modalitaCorrente) {
+      idSessione=confMap->value("sessioneSalvata").toInt();
+      confMap->insert("sessioneCorrente",idSessione);
+      confMap->remove("sessioneSalvata");
+      ordineBox->nuovoOrdine(idSessione);
+      exitTest();
+    }
 
     //ui->modalitaBtn->setText("GESTIONE");
     //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
@@ -158,12 +178,19 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     showMaximized();
   }
   if(TEST==nuovaModalita) {
+      /*
       ui->configurazioneBtn->setEnabled(false);
       ui->reportBtn->setEnabled(false);
       ui->cassaBtn->setEnabled(false);
       ui->gestioneBtn->setEnabled(false);
       ui->testBtn->setEnabled(true);
       ui->statsBtn->setEnabled(false);
+      */
+    idSessione=confMap->value("sessioneCorrente").toInt();
+    confMap->insert("sessioneCorrente",999999);
+    confMap->insert("sessioneSalvata",idSessione);
+    ordineBox->nuovoOrdine(999999);
+    enterTest();
   }
 
   modalitaCorrente=nuovaModalita;
@@ -309,7 +336,7 @@ void MainWindow::articoloSelezionato(){
   }
 }
 
-void MainWindow::on_configurazioneBtn_clicked()
+void MainWindow::execConfigurazione()
 {
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
@@ -324,29 +351,32 @@ void MainWindow::on_configurazioneBtn_clicked()
 
 void MainWindow::on_closeBtn_clicked()
 {
-    close();
+    OperazioniDlg dlg(modalitaCorrente);
+    connect(&dlg,SIGNAL(operazioneSelezionata(int)),this,SLOT(esegueOperazione(int)));
+    dlg.exec();
+    // close();
 }
 
-void MainWindow::on_reportBtn_clicked()
+void MainWindow::execReport()
 {
   ReportForm form(confMap);
   form.exec();
 }
 
-void MainWindow::on_statsBtn_clicked()
+void MainWindow::execStats()
 {
   StatsForm form(confMap->value("sessioneCorrente").toInt());
   //form->setWindowState(Qt::WindowMaximized);
   form.exec();
 }
 
-void MainWindow::on_cassaBtn_clicked()
+void MainWindow::execCassa()
 {
   //qApp->setOverrideCursor(Qt::BlankCursor);
   gestioneModalita(CASSA);
 }
 
-void MainWindow::on_gestioneBtn_clicked()
+void MainWindow::execGestione()
 {
   if(ordineBox->isInComposizione()) {
     QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
@@ -401,12 +431,15 @@ void MainWindow::scambia(int id1, int id2)
 
 }
 
-void MainWindow::on_testBtn_clicked() {
+void MainWindow::execTest() {
     if(ordineBox->isInComposizione()) {
       QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
       return;
     }
+    gestioneModalita(TEST);
     qApp->restoreOverrideCursor();
+
+    /*
     int idSessione=confMap->value("sessioneCorrente").toInt();
     if(idSessione<999999) {
         gestioneModalita(TEST);
@@ -414,7 +447,7 @@ void MainWindow::on_testBtn_clicked() {
         confMap->insert("sessioneSalvata",idSessione);
         ordineBox->nuovoOrdine(999999);
         enterTest();
-        ui->testBtn->setDown(true);
+        //ui->testBtn->setDown(true);
     } else {
         gestioneModalita(CASSA);
         idSessione=confMap->value("sessioneSalvata").toInt();
@@ -422,8 +455,9 @@ void MainWindow::on_testBtn_clicked() {
         confMap->remove("sessioneSalvata");
         ordineBox->nuovoOrdine(idSessione);
         exitTest();
-        ui->testBtn->setDown(false);
+        //ui->testBtn->setDown(false);
     }
+    */
 }
 
 void MainWindow::lampeggia() {
@@ -438,6 +472,36 @@ void MainWindow::lampeggia() {
     ui->messaggiArea->setStyleSheet(stylesheet);
 }
 
+void MainWindow::esegueOperazione(int idx){
+    switch(idx) {
+    case 1:
+        close();
+        break;
+    case 2:
+        execReport();
+        break;
+    case 3:
+        execConfigurazione();
+        break;
+    case 4:
+        execGestione();
+        break;
+    case 5:
+        execCassa();
+        break;
+    case 6:
+        execTest();
+        break;
+    case 7:
+        execStats();
+        break;
+    case 8:
+        execStorno();
+        break;
+    }
+
+}
+
 void MainWindow::enterTest()
 {
     ui->messaggiArea->setText("MODALITA' TEST");
@@ -450,4 +514,11 @@ void MainWindow::exitTest()
     blinkTimer->stop();
     ui->messaggiArea->setText("");
     ui->messaggiArea->setStyleSheet("");
+}
+
+void MainWindow::execStorno() {
+    int idSessione=confMap->value("sessioneCorrente").toInt();
+    StoricoOrdini dlg(idSessione);
+    dlg.exec();
+    return;
 }

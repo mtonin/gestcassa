@@ -33,18 +33,20 @@ private slots:
   void creaRepartiButtons();
   void repartoSelezionato();
   void articoloSelezionato();
-  void on_configurazioneBtn_clicked();
+  void execConfigurazione();
   void on_closeBtn_clicked();
-  void on_reportBtn_clicked();
-  void on_statsBtn_clicked();
-  void on_cassaBtn_clicked();
-  void on_gestioneBtn_clicked();
+  void execReport();
+  void execStats();
+  void execCassa();
+  void execGestione();
   void decodificaPassword();
   void visualizzaPrezzo(bool visualizza);
   void scambia(int id1, int id2);
   void lampeggia();
+  void esegueOperazione(int idx);
 
-  void on_testBtn_clicked();
+  void execTest();
+  void execStorno();
 
 private:
   Ui::MainWindow *ui;
