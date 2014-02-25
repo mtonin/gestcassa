@@ -262,9 +262,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   // stampa scontrini per destinazione
 
   QSqlQuery stmt;
-  stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
-  stmt.addBindValue(idSessioneCorrente);
-  stmt.addBindValue(numeroOrdine);
+  //stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
+  stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo <> 'M'");
+  //stmt.addBindValue(idSessioneCorrente);
+  //stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -319,13 +320,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
     y+=10;
 
+    /*
     stmt.prepare("SELECT descrizione,sum(quantita) \
                  FROM storicoordini \
                  where idsessione=? \
                  and numeroordine=? \
                  and coalesce(destinazione,'')=? \
                  group by numeroordine,descrizione");
-    stmt.addBindValue(idSessioneCorrente);
+    */
+    stmt.prepare("SELECT descrizione,sum(quantita) \
+                 FROM dettagliordine \
+                 where numeroordine=? \
+                 and coalesce(destinazione,'')=? \
+                 group by numeroordine,descrizione");
+    //stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(numeroOrdine);
     stmt.addBindValue(destinazioneStampa.isEmpty()?"":destinazioneStampa);
 
@@ -413,9 +421,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   painter.drawLine(x,y+textRect.height()+5,pageWidth,y+textRect.height()+5);
   y+=10;
 
-  stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
-  stmt.addBindValue(idSessioneCorrente);
-  stmt.addBindValue(numeroOrdine);
+  //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
+  stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'");
+  //stmt.addBindValue(idSessioneCorrente);
+  //stmt.addBindValue(numeroOrdine);
 
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),

@@ -53,7 +53,6 @@ void StoricoOrdini::caricaArticoliOrdine()
   articoliOrdineTbl->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
   articoliOrdineTbl->horizontalHeader()->setResizeMode(1,QHeaderView::Stretch);
 
-
 }
 
 void StoricoOrdini::on_filtraBtn_5_clicked()
@@ -67,7 +66,9 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
     ordiniModel->setFilter(condDataOra);
   }
   ordiniTable->scrollToTop();
-
+  sessioneOrdineTxt->clear();
+  numeroOrdineTxt->clear();
+  importoOrdineTxt->clear();
 }
 
 void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
