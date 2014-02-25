@@ -19,7 +19,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
   ordiniModel->setFilter(condizione);
   ordiniModel->select();
   ordiniTable->setModel(ordiniModel);
-  ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   ordiniTable->verticalHeader()->setVisible(false);
   //ordiniTable->selectRow(0);
 
