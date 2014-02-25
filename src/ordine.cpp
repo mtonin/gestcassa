@@ -1,3 +1,4 @@
+#include "commons.h"
 #include "ordine.h"
 #include "restodlg.h"
 #include "controlliordine.h"
@@ -169,8 +170,10 @@ void Ordine::nuovoOrdine(const int idSessione)
   idSessioneCorrente=idSessione;
   importoUltimoOrdine=importoOrdineCorrente;
   modello.clear();
-  QSqlQuery query("select max(numero) from ordini");
-  if(!query.isActive()) {
+  QSqlQuery query;
+  query.prepare("select max(numeroordine) from storicoordini where idsessione=?");
+  query.addBindValue(idSessioneCorrente);
+  if(!query.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                         query.lastError().text());
     return;
@@ -210,6 +213,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   if(!intest.isEmpty()) {
     intestazione.append(intest).append("\n");
   }
+  QString rigaTest="SESSIONE DI TEST\nSCONTRINO NON VALIDO";
 
   QPrinter printer;
   bool stampantePdf=configurazione->value("stampantePdf",true).toBool();
@@ -217,9 +221,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   if(stampantePdf) {
     QDir cartellaPdf(configurazione->value("cartellaPdf","ticket").toString());
     cartellaPdf.mkpath(cartellaPdf.absolutePath());
-    QString pdfString=QString("Cartella pdf: %1").arg(cartellaPdf.absolutePath());
-    qDebug(pdfString.toAscii());
-    printer.setOutputFileName(QString("%1/%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
+    if(ID_SESSIONE_TEST==idSessioneCorrente)
+        printer.setOutputFileName(QString("%1/TEST%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
+    else
+        printer.setOutputFileName(QString("%1/%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine,5,10,QChar('0')));
   } else {
     printer.setPrinterName(stampanteSelezionata);
   }
@@ -294,6 +299,11 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     int x=0;
     int y=0;
+    if(ID_SESSIONE_TEST==idSessioneCorrente) {
+        painter.setFont(fontGrassetto);
+        painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,rigaTest,&textRect);
+        y+=textRect.height()+10;
+    }
     painter.setFont(fontGrassettoCorsivo);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,intestDestinazione,&textRect);
     y+=textRect.height()+10;
@@ -345,14 +355,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString totaleString=QString("TOTALE: %L1 ARTICOLI").arg(numArticoli);
     painter.setFont(fontGrassetto);
     painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
+    y+=textRect.height()+20;
 
     painter.setFont(fontNormale);
     if(!codiceRitiro.isEmpty()) {
-      y+=textRect.height()+10;
       painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,codiceRitiro,&textRect);
+      y+=textRect.height()+10;
     }
 
-    y+=textRect.height()+35;
+    if(ID_SESSIONE_TEST==idSessioneCorrente) {
+        painter.setFont(fontGrassetto);
+        painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,rigaTest,&textRect);
+        y+=textRect.height()+10;
+    }
+
     painter.setFont(fontMini);
     painter.drawText(x,y,".");
     painter.setFont(fontNormale);
@@ -370,6 +386,12 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
   int x=0;
   int y=0;
+
+  if(ID_SESSIONE_TEST==idSessioneCorrente) {
+      painter.setFont(fontGrassetto);
+      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,rigaTest,&textRect);
+      y+=textRect.height()+10;
+  }
 
   y+=5;
   painter.setFont(fontGrassetto);
@@ -423,15 +445,15 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   QString totaleString=QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale,5,'f',2);
   painter.setFont(fontGrassetto);
   painter.drawText(x,y,pageWidth,100,Qt::AlignRight,totaleString,&textRect);
+  y+=textRect.height()+20;
 
   if(!fondo.isEmpty()) {
-    y+=textRect.height()+20;
     painter.setFont(fontNormale);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,fondo,&textRect);
+    y+=textRect.height()+15;
   }
 
   if(flagStampaNumeroRitiro) {
-    y+=textRect.height()+35;
     painter.drawLine(x,y,pageWidth,y);
     y+=5;
     QString testoRitiro="CONSERVARE PER IL RITIRO";
@@ -441,9 +463,15 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString numRitiro=QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
     painter.setFont(fontMaxi);
     painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter,numRitiro,&textRect);
+    y+=textRect.height()+35;
   }
 
-  y+=textRect.height()+35;
+  if(ID_SESSIONE_TEST==idSessioneCorrente) {
+      painter.setFont(fontGrassetto);
+      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter|Qt::TextWordWrap,rigaTest,&textRect);
+      y+=textRect.height()+10;
+  }
+
   painter.setFont(fontMini);
   painter.drawText(x,y,".");
   painter.end();
@@ -480,10 +508,8 @@ void Ordine::on_duplicaBtn_clicked()
     if(QDialog::Accepted!=dlg->visualizza()) return;
     modello.clear();
   }
-  int numeroOrdine=numOrdineCorrente-1;
   QSqlQuery stmt;
-  stmt.prepare("select a.idarticolo,a.quantita,b.descrizione,b.prezzo from ordinirighe a,articoli b where a.numeroordine=? and a.idarticolo=b.idarticolo");
-  stmt.addBindValue(numeroOrdine);
+  stmt.prepare("select a.idarticolo,a.quantita,b.descrizione,b.prezzo from ordinirighe a,articoli b where a.idarticolo=b.idarticolo");
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;

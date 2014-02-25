@@ -107,9 +107,10 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
-    ui->latoStackedWidget->setCurrentIndex(0);
     ui->testBtn->setEnabled(false);
     */
+
+    ui->latoStackedWidget->setCurrentIndex(0);
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
@@ -126,7 +127,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     }
 
     ui->articoliStackedWidget->setAcceptDrops(true);
-
+    ui->messaggiArea->setText("MODALITA' GESTIONE");
   };
   if(CASSA==nuovaModalita) {
       /*
@@ -175,6 +176,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->articoliStackedWidget->setAcceptDrops(false);
 
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
+    ui->messaggiArea->setText("MODALITA' CASSA");
     showMaximized();
   }
   if(TEST==nuovaModalita) {
@@ -187,9 +189,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       ui->statsBtn->setEnabled(false);
       */
     idSessione=confMap->value("sessioneCorrente").toInt();
-    confMap->insert("sessioneCorrente",999999);
+    confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
     confMap->insert("sessioneSalvata",idSessione);
-    ordineBox->nuovoOrdine(999999);
+    ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
     enterTest();
   }
 
@@ -441,11 +443,11 @@ void MainWindow::execTest() {
 
     /*
     int idSessione=confMap->value("sessioneCorrente").toInt();
-    if(idSessione<999999) {
+    if(idSessione<ID_SESSIONE_TEST) {
         gestioneModalita(TEST);
-        confMap->insert("sessioneCorrente",999999);
+        confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
         confMap->insert("sessioneSalvata",idSessione);
-        ordineBox->nuovoOrdine(999999);
+        ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
         enterTest();
         //ui->testBtn->setDown(true);
     } else {
@@ -463,7 +465,8 @@ void MainWindow::execTest() {
 void MainWindow::lampeggia() {
     QString coloreCarattere;
     if(colore=="red") {
-        colore="";
+        colore="white";
+        coloreCarattere="black";
     } else {
         colore="red";
         coloreCarattere="white";
@@ -513,7 +516,7 @@ void MainWindow::exitTest()
 {
     blinkTimer->stop();
     ui->messaggiArea->setText("");
-    ui->messaggiArea->setStyleSheet("");
+    ui->messaggiArea->setStyleSheet("background-color: white; color: black;");
 }
 
 void MainWindow::execStorno() {
