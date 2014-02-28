@@ -69,7 +69,8 @@ MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) :
   gestioneModalita(CASSA);
 
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
-  showMaximized();
+  setWindowState(Qt::WindowFullScreen);
+  //showMaximized();
 
   blinkTimer=new QTimer(this);
   connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
@@ -368,7 +369,6 @@ void MainWindow::execReport()
 void MainWindow::execStats()
 {
   StatsForm form(confMap->value("sessioneCorrente").toInt());
-  //form->setWindowState(Qt::WindowMaximized);
   form.exec();
 }
 

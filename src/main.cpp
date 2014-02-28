@@ -31,4 +31,7 @@ int main(int argc, char *argv[])
 
   a.exec();
   delete configurazione;
+
+  //ExitWindowsEx(EWX_LOGOFF,0);
+
 }
