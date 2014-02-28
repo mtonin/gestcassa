@@ -5,7 +5,9 @@
 StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente(idSessione), QDialog(parent)
 {
   setupUi(this);
-  setWindowFlags(Qt::Tool);
+  //setWindowFlags(Qt::Tool);
+  setWindowState(Qt::WindowMaximized);
+  setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
   activateWindow();
 
   fromData->setDate(QDate::currentDate());
@@ -19,7 +21,7 @@ StatsForm::StatsForm(const int idSessione, QWidget *parent) : idSessioneCorrente
   statsView->setWordWrap(true);
   statsView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  statsView->horizontalHeader()->setStretchLastSection(true);
+  statsView->horizontalHeader()->setStretchLastSection(false);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
 
@@ -123,15 +125,16 @@ void StatsForm::caricaStats()
   graficoPlot->xAxis->setTickLabelRotation(60);
   graficoPlot->xAxis->setSubTickCount(0);
   graficoPlot->xAxis->setTickLength(0, 4);
-  graficoPlot->xAxis->setGrid(false);
+  graficoPlot->xAxis->grid()->setVisible(false);
   graficoPlot->xAxis->setRange(0, ++numero);
   graficoPlot->xAxis->setPadding(10);
-  graficoPlot->setAutoMargin(true);
+  graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
   graficoPlot->rescaleAxes();
   graficoPlot->replot();
 
-  graficoPlot->setRangeDrag(Qt::Horizontal|Qt::Vertical);
-  graficoPlot->setRangeZoom(Qt::Horizontal|Qt::Vertical);
+  //graficoPlot->axisRect()->setRangeDrag(Qt::Horizontal|Qt::Vertical);
+  //graficoPlot->axisRect()->setRangeZoom(Qt::Horizontal|Qt::Vertical);
+  graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
 
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
 

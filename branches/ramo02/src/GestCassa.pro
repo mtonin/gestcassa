@@ -95,3 +95,5 @@ OTHER_FILES += \
     gestcassa.rc version.rc2.tmpl version.txt.tmpl svnrev.h.tmpl
 
 LIBS += -L"$$PWD/vld"
+
+//LIBS +=user32.lib
