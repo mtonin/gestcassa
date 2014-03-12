@@ -32,8 +32,8 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QWidget *parent) :
 
     QPoint pos=QCursor::pos();
     pos.setY(pos.y()-height());
-    QDesktopWidget* desktop=QApplication::desktop();
-    int screenHeight=desktop->screenGeometry().height();
+    //QDesktopWidget* desktop=QApplication::desktop();
+    //int screenHeight=desktop->screenGeometry().height();
     if(pos.y()<0) {
       pos.setY(0);
     }
