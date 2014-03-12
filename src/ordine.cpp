@@ -213,7 +213,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
   if(!intest.isEmpty()) {
     intestazione.append(intest).append("\n");
   }
-  QString rigaTest="SESSIONE DI TEST\nSCONTRINO NON VALIDO";
+  QString rigaTest="=   SESSIONE DI TEST   =\n= SCONTRINO NON VALIDO =";
 
   QPrinter printer;
   bool stampantePdf=configurazione->value("stampantePdf",true).toBool();

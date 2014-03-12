@@ -22,58 +22,58 @@ const int NUM_RIGHE_ART=5;
 const int NUM_COLONNE_ART=6;
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
-  ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow)
 {
-  setAcceptDrops(true);
+    ui->setupUi(this);
 
-  cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-  decodificaPassword();
+    setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
+    setWindowState(Qt::WindowFullScreen);
+    //showMaximized();
 
-  ui->setupUi(this);
+    setAcceptDrops(true);
 
-  dettagliRepartoBox=new DettagliReparto;
-  dettagliArticoloBox=new DettagliArticolo;
-  ordineBox=new Ordine(confMap);
+    cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    decodificaPassword();
 
-  ui->latoStackedWidget->addWidget(new QFrame);
-  ui->latoStackedWidget->addWidget(dettagliRepartoBox);
-  ui->latoStackedWidget->addWidget(dettagliArticoloBox);
-  ui->latoStackedWidget->addWidget(ordineBox);
+    dettagliRepartoBox=new DettagliReparto;
+    dettagliArticoloBox=new DettagliArticolo;
+    ordineBox=new Ordine(confMap);
 
-  connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
+    ui->latoStackedWidget->addWidget(new QFrame);
+    ui->latoStackedWidget->addWidget(dettagliRepartoBox);
+    ui->latoStackedWidget->addWidget(dettagliArticoloBox);
+    ui->latoStackedWidget->addWidget(ordineBox);
 
-  QDigitalClock* orologio=new QDigitalClock;
-  orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
-  QFont font=orologio->font();
-  font.setBold(true);
-  font.setPointSize(10);
-  orologio->setFont(font);
-  //orologio->SetTextColor(Qt::red);
-  orologio->SetAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
 
-  QHBoxLayout* clockLayout=new QHBoxLayout;
-  clockLayout->setContentsMargins(QMargins(0,0,0,0));
-  clockLayout->addWidget(orologio);
-  ui->clockFrame->setLayout(clockLayout);
+    QDigitalClock* orologio=new QDigitalClock;
+    orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
+    QFont font=orologio->font();
+    font.setBold(true);
+    font.setPointSize(10);
+    orologio->setFont(font);
+    //orologio->SetTextColor(Qt::red);
+    orologio->SetAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-  QStringList messaggi=QString("").split(",");
-  info=new infoWidget(messaggi);
-  creaInfoMessaggi();
+    QHBoxLayout* clockLayout=new QHBoxLayout;
+    clockLayout->setContentsMargins(QMargins(0,0,0,0));
+    clockLayout->addWidget(orologio);
+    ui->clockFrame->setLayout(clockLayout);
 
-  QHBoxLayout* infoLayout=new QHBoxLayout;
-  infoLayout->setContentsMargins(QMargins(1,1,1,1));
-  infoLayout->addWidget(info);
-  ui->infoFrame->setLayout(infoLayout);
+    QStringList messaggi=QString("").split(",");
+    info=new infoWidget(messaggi);
+    creaInfoMessaggi();
 
-  creaRepartiButtons();
-  gestioneModalita(CASSA);
+    QHBoxLayout* infoLayout=new QHBoxLayout;
+    infoLayout->setContentsMargins(QMargins(1,1,1,1));
+    infoLayout->addWidget(info);
+    ui->infoFrame->setLayout(infoLayout);
 
-  setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
-  setWindowState(Qt::WindowFullScreen);
-  //showMaximized();
+    creaRepartiButtons();
+    gestioneModalita(CASSA);
 
-  blinkTimer=new QTimer(this);
-  connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
+    blinkTimer=new QTimer(this);
+    connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
 }
 
 MainWindow::~MainWindow()
