@@ -1,6 +1,6 @@
 #include "storicoordini.h"
 #include "storicoordinimodel.h"
-
+#include "storicoarticoliordinimodel.h"
 #include <QtSql>
 #include <QDataWidgetMapper>
 
@@ -19,11 +19,12 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
   ordiniModel->setFilter(condizione);
   ordiniModel->select();
   ordiniTable->setModel(ordiniModel);
-  ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  ordiniTable->horizontalHeader()->setResizeMode(2,QHeaderView::Stretch);
   ordiniTable->verticalHeader()->setVisible(false);
   //ordiniTable->selectRow(0);
 
-  articoliOrdineModel=new QSqlQueryModel(this);
+  articoliOrdineModel=new storicoArticoliOrdiniModel(this);
   articoliOrdineTbl->setModel(articoliOrdineModel);
 
   QDataWidgetMapper* mapper=new QDataWidgetMapper(this);
@@ -45,8 +46,10 @@ void StoricoOrdini::caricaArticoliOrdine()
                                 where idsessione=%1 and numeroordine=%2 and tipoArticolo <> 'C'")
                                 .arg(sessioneOrdineTxt->text()).arg(numeroOrdineTxt->text());
   articoliOrdineModel->setQuery(sql);
+  /*
   articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"Q.TA'",Qt::DisplayRole);
   articoliOrdineModel->setHeaderData(1,Qt::Horizontal,"DESCRIZIONE",Qt::DisplayRole);
+  */
   articoliOrdineTbl->setWordWrap(true);
   articoliOrdineTbl->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   articoliOrdineTbl->horizontalHeader()->setDefaultSectionSize(70);

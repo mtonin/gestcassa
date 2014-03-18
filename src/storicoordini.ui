@@ -421,9 +421,6 @@ filtri</string>
         </item>
         <item>
          <widget class="QTableView" name="articoliOrdineTbl">
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
           <property name="selectionMode">
            <enum>QAbstractItemView::NoSelection</enum>
           </property>
