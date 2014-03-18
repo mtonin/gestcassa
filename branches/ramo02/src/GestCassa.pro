@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     dbmanager.cpp \
     storicoordini.cpp \
     storicoordinimodel.cpp \
-    operazionidlg.cpp
+    operazionidlg.cpp \
+    storicoarticoliordinimodel.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -64,7 +65,8 @@ HEADERS  += mainwindow.h \
     dbmanager.h \
     storicoordini.h \
     storicoordinimodel.h \
-    operazionidlg.h
+    operazionidlg.h \
+    storicoarticoliordinimodel.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
