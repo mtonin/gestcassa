@@ -45,7 +45,6 @@ private:
   int idSessioneCorrente;
   int numOrdineCorrente;
   float importoOrdineCorrente;
-
   OrdineModel modello;
   ControlliOrdine* controlli;
   void stampaScontrino(const int);

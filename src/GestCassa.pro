@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     dettaglireparto.cpp \
     dettagliarticolo.cpp \
     articolobtnwidget.cpp \
-    dbdialog.cpp \
     ordinemodel.cpp \
     controlliordine.cpp \
     restodlg.cpp \
@@ -35,7 +34,11 @@ SOURCES += main.cpp\
     statsform.cpp \
     statsmodel.cpp \
     confermadlg.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    storicoordini.cpp \
+    storicoordinimodel.cpp \
+    operazionidlg.cpp \
+    storicoarticoliordinimodel.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -45,7 +48,6 @@ HEADERS  += mainwindow.h \
     commons.h \
     dettagliarticolo.h \
     articolobtnwidget.h \
-    dbdialog.h \
     ordinemodel.h \
     controlliordine.h \
     restodlg.h \
@@ -60,13 +62,16 @@ HEADERS  += mainwindow.h \
     statsform.h \
     statsmodel.h \
     confermadlg.h \
-    dbmanager.h
+    dbmanager.h \
+    storicoordini.h \
+    storicoordinimodel.h \
+    operazionidlg.h \
+    storicoarticoliordinimodel.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
     dettaglireparto.ui \
     dettagliarticolo.ui \
-    dbdialog.ui \
     controlliordine.ui \
     restodlg.ui \
     configurazionedlg.ui \
@@ -74,7 +79,9 @@ FORMS    += mainwindow.ui \
     reportform.ui \
     infowidget.ui \
     statsform.ui \
-    confermadlg.ui
+    confermadlg.ui \
+    storicoordini.ui \
+    operazionidlg.ui
 
 #include(version.txt)
 
@@ -90,3 +97,5 @@ OTHER_FILES += \
     gestcassa.rc version.rc2.tmpl version.txt.tmpl svnrev.h.tmpl
 
 LIBS += -L"$$PWD/vld"
+
+//LIBS +=user32.lib

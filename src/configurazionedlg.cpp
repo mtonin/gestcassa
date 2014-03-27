@@ -217,8 +217,9 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
   int idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
   idSessioneCorrente++;
 
-  stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,datetime('now'))");
+  stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
   stmt.addBindValue(idSessioneCorrente);
+  stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
