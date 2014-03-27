@@ -27,7 +27,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1,0,0,0,0">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -152,39 +152,66 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QPushButton" name="filtraBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Applica
+         <widget class="QPushButton" name="filtraBtn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Applica
 filtri</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stampaBtn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Esporta
+in PDF</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="filtraBtn_2">
@@ -257,90 +284,164 @@ filtri</string>
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="label_4">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Ordini emessi</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="totaleOrdiniTxt">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_8">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>13</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Importo incassato</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="totaleImportoTxt">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Primo ordine</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="ordineDataFrom">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>13</width>
+            <height>17</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_6">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Ultimo ordine</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLineEdit" name="ordineDataTo">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Ordini emessi</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="totaleOrdiniTxt">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>13</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Importo incassato</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLineEdit" name="totaleImportoTxt">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer name="horizontalSpacer_10">
@@ -362,7 +463,7 @@ filtri</string>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,4">
+    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,3">
      <item>
       <widget class="QTableView" name="statsView">
        <property name="sizePolicy">
@@ -389,10 +490,11 @@ filtri</string>
       <widget class="QCustomPlot" name="graficoPlot" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>3</horstretch>
+         <horstretch>2</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <zorder></zorder>
       </widget>
      </item>
     </layout>
