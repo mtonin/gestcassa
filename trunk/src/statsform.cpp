@@ -15,7 +15,9 @@ StatsForm::StatsForm(QMap<QString, QVariant> *par, QWidget *parent) : configuraz
   idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
 
   setupUi(this);
-  setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint);
+  //setWindowFlags(Qt::Tool);
+  setWindowState(Qt::WindowMaximized);
+  setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
   activateWindow();
   showMaximized();
 
@@ -30,7 +32,7 @@ StatsForm::StatsForm(QMap<QString, QVariant> *par, QWidget *parent) : configuraz
   statsView->setWordWrap(true);
   statsView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-  //statsView->horizontalHeader()->setStretchLastSection(true);
+  statsView->horizontalHeader()->setStretchLastSection(false);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
 
@@ -138,13 +140,13 @@ void StatsForm::caricaStats()
   graficoPlot->xAxis->grid()->setVisible(false);
   graficoPlot->xAxis->setRange(0, ++numero);
   graficoPlot->xAxis->setPadding(10);
-  graficoPlot->plotLayout()->setAutoMargins(QCP::msAll);
+  graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
   graficoPlot->rescaleAxes();
   graficoPlot->replot();
 
-  graficoPlot->setInteraction(QCP::iRangeDrag,true);
-  graficoPlot->setInteraction(QCP::iRangeZoom,true);
-  //graficoPlot->setInteraction(QCP::iSelectItems,true);
+  //graficoPlot->axisRect()->setRangeDrag(Qt::Horizontal|Qt::Vertical);
+  //graficoPlot->axisRect()->setRangeZoom(Qt::Horizontal|Qt::Vertical);
+  graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
 
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
 
@@ -193,8 +195,9 @@ void StatsForm::calcolaTotali()
   totaleOrdiniTxt->setText(QString("%L1").arg(totOrdini));
   totaleImportoTxt->setText(QString("%1 %L2").arg(QChar(0x20AC)).arg(totImporto,4,'f',2));
 
-  tsInizio=stmt.value(2).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
-  tsFine=stmt.value(3).toDateTime().toString("dd-MM-yyyy hh:mm:ss");
+  tsInizio=stmt.value(2).toDateTime().toString("dd/MM/yyyy hh:mm:ss");
+  tsFine=stmt.value(3).toDateTime().toString("dd/MM/yyyy hh:mm:ss");
+
   ordineDataFrom->setText(tsInizio);
   ordineDataTo->setText(tsFine);
 

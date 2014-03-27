@@ -10,6 +10,8 @@
 #include "QDigitalClock.h"
 #include "statsform.h"
 #include "confermadlg.h"
+#include "operazionidlg.h"
+#include "storicoordini.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -20,55 +22,58 @@ const int NUM_RIGHE_ART=5;
 const int NUM_COLONNE_ART=6;
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
-  ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow)
 {
-  setAcceptDrops(true);
+    ui->setupUi(this);
 
-  cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-  decodificaPassword();
+    setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
+    setWindowState(Qt::WindowFullScreen);
+    //showMaximized();
 
-  ui->setupUi(this);
+    setAcceptDrops(true);
 
-  dettagliRepartoBox=new DettagliReparto;
-  dettagliArticoloBox=new DettagliArticolo;
-  ordineBox=new Ordine(confMap);
+    cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    decodificaPassword();
 
-  ui->latoStackedWidget->addWidget(new QFrame);
-  ui->latoStackedWidget->addWidget(dettagliRepartoBox);
-  ui->latoStackedWidget->addWidget(dettagliArticoloBox);
-  ui->latoStackedWidget->addWidget(ordineBox);
+    dettagliRepartoBox=new DettagliReparto;
+    dettagliArticoloBox=new DettagliArticolo;
+    ordineBox=new Ordine(confMap);
 
-  connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
+    ui->latoStackedWidget->addWidget(new QFrame);
+    ui->latoStackedWidget->addWidget(dettagliRepartoBox);
+    ui->latoStackedWidget->addWidget(dettagliArticoloBox);
+    ui->latoStackedWidget->addWidget(ordineBox);
 
-  QDigitalClock* orologio=new QDigitalClock;
-  orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
-  QFont font=orologio->font();
-  font.setBold(true);
-  font.setPointSize(10);
-  orologio->setFont(font);
-  //orologio->SetTextColor(Qt::red);
-  orologio->SetAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    connect(this,SIGNAL(aggiungeArticolo(int,QString,float)),ordineBox,SLOT(nuovoArticolo(int,QString,float)));
 
-  QHBoxLayout* clockLayout=new QHBoxLayout;
-  clockLayout->setContentsMargins(QMargins(0,0,0,0));
-  clockLayout->addWidget(orologio);
-  ui->clockFrame->setLayout(clockLayout);
+    QDigitalClock* orologio=new QDigitalClock;
+    orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
+    QFont font=orologio->font();
+    font.setBold(true);
+    font.setPointSize(10);
+    orologio->setFont(font);
+    //orologio->SetTextColor(Qt::red);
+    orologio->SetAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-  QStringList messaggi=QString("").split(",");
-  info=new infoWidget(messaggi);
-  creaInfoMessaggi();
+    QHBoxLayout* clockLayout=new QHBoxLayout;
+    clockLayout->setContentsMargins(QMargins(0,0,0,0));
+    clockLayout->addWidget(orologio);
+    ui->clockFrame->setLayout(clockLayout);
 
-  QHBoxLayout* infoLayout=new QHBoxLayout;
-  infoLayout->setContentsMargins(QMargins(1,1,1,1));
-  infoLayout->addWidget(info);
-  ui->infoFrame->setLayout(infoLayout);
+    QStringList messaggi=QString("").split(",");
+    info=new infoWidget(messaggi);
+    creaInfoMessaggi();
 
-  creaRepartiButtons();
-  gestioneModalita(CASSA);
+    QHBoxLayout* infoLayout=new QHBoxLayout;
+    infoLayout->setContentsMargins(QMargins(1,1,1,1));
+    infoLayout->addWidget(info);
+    ui->infoFrame->setLayout(infoLayout);
 
-  setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
-  showMaximized();
+    creaRepartiButtons();
+    gestioneModalita(CASSA);
 
+    blinkTimer=new QTimer(this);
+    connect(blinkTimer,SIGNAL(timeout()),this,SLOT(lampeggia()));
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +84,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 {
+  int idSessione=0;
+
   if(GESTIONE==nuovaModalita) {
 
     ConfermaDlg dlg ("Inserire la password per accedere alla modalità amministrativa.","Password",true);
@@ -90,12 +97,21 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       QMessageBox::critical(this,"Accesso","Password errata");
     }
 
+    if(TEST==modalitaCorrente) {
+        idSessione=confMap->value("sessioneSalvata").toInt();
+        confMap->insert("sessioneCorrente",idSessione);
+        confMap->remove("sessioneSalvata");
+        exitTest();
+    }
+    /*
     ui->configurazioneBtn->setEnabled(true);
     ui->reportBtn->setEnabled(true);
     ui->cassaBtn->setEnabled(true);
     ui->gestioneBtn->setEnabled(false);
-    ui->latoStackedWidget->setCurrentIndex(0);
+    ui->testBtn->setEnabled(false);
+    */
 
+    ui->latoStackedWidget->setCurrentIndex(0);
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
@@ -112,13 +128,24 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     }
 
     ui->articoliStackedWidget->setAcceptDrops(true);
-
-  } else {
+    ui->messaggiArea->setText("MODALITA' GESTIONE");
+  };
+  if(CASSA==nuovaModalita) {
+      /*
     ui->configurazioneBtn->setEnabled(false);
     ui->reportBtn->setEnabled(false);
-    ui->gestioneBtn->setEnabled(false);
     ui->cassaBtn->setEnabled(false);
     ui->gestioneBtn->setEnabled(true);
+    ui->testBtn->setEnabled(true);
+    ui->statsBtn->setEnabled(true);
+    */
+    if(TEST==modalitaCorrente) {
+      idSessione=confMap->value("sessioneSalvata").toInt();
+      confMap->insert("sessioneCorrente",idSessione);
+      confMap->remove("sessioneSalvata");
+      ordineBox->nuovoOrdine(idSessione);
+      exitTest();
+    }
 
     //ui->modalitaBtn->setText("GESTIONE");
     //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
@@ -150,7 +177,23 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->articoliStackedWidget->setAcceptDrops(false);
 
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
+    ui->messaggiArea->setText("MODALITA' CASSA");
     showMaximized();
+  }
+  if(TEST==nuovaModalita) {
+      /*
+      ui->configurazioneBtn->setEnabled(false);
+      ui->reportBtn->setEnabled(false);
+      ui->cassaBtn->setEnabled(false);
+      ui->gestioneBtn->setEnabled(false);
+      ui->testBtn->setEnabled(true);
+      ui->statsBtn->setEnabled(false);
+      */
+    idSessione=confMap->value("sessioneCorrente").toInt();
+    confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
+    confMap->insert("sessioneSalvata",idSessione);
+    ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
+    enterTest();
   }
 
   modalitaCorrente=nuovaModalita;
@@ -296,7 +339,7 @@ void MainWindow::articoloSelezionato(){
   }
 }
 
-void MainWindow::on_configurazioneBtn_clicked()
+void MainWindow::execConfigurazione()
 {
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
@@ -311,29 +354,32 @@ void MainWindow::on_configurazioneBtn_clicked()
 
 void MainWindow::on_closeBtn_clicked()
 {
-    close();
+    OperazioniDlg dlg(modalitaCorrente);
+    connect(&dlg,SIGNAL(operazioneSelezionata(int)),this,SLOT(esegueOperazione(int)));
+    dlg.exec();
+    // close();
 }
 
-void MainWindow::on_reportBtn_clicked()
+void MainWindow::execReport()
 {
   ReportForm form(confMap);
   form.exec();
 }
 
-void MainWindow::on_statsBtn_clicked()
+void MainWindow::execStats()
 {
   StatsForm form(confMap,this);
   //form.setWindowState(Qt::WindowMaximized);
   form.exec();
 }
 
-void MainWindow::on_cassaBtn_clicked()
+void MainWindow::execCassa()
 {
   //qApp->setOverrideCursor(Qt::BlankCursor);
   gestioneModalita(CASSA);
 }
 
-void MainWindow::on_gestioneBtn_clicked()
+void MainWindow::execGestione()
 {
   if(ordineBox->isInComposizione()) {
     QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
@@ -386,4 +432,97 @@ void MainWindow::scambia(int id1, int id2)
   dettagliArticoloBox->setCurrentArticolo(btnWidget1);
   ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
 
+}
+
+void MainWindow::execTest() {
+    if(ordineBox->isInComposizione()) {
+      QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
+      return;
+    }
+    gestioneModalita(TEST);
+    qApp->restoreOverrideCursor();
+
+    /*
+    int idSessione=confMap->value("sessioneCorrente").toInt();
+    if(idSessione<ID_SESSIONE_TEST) {
+        gestioneModalita(TEST);
+        confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
+        confMap->insert("sessioneSalvata",idSessione);
+        ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
+        enterTest();
+        //ui->testBtn->setDown(true);
+    } else {
+        gestioneModalita(CASSA);
+        idSessione=confMap->value("sessioneSalvata").toInt();
+        confMap->insert("sessioneCorrente",idSessione);
+        confMap->remove("sessioneSalvata");
+        ordineBox->nuovoOrdine(idSessione);
+        exitTest();
+        //ui->testBtn->setDown(false);
+    }
+    */
+}
+
+void MainWindow::lampeggia() {
+    QString coloreCarattere;
+    if(colore=="red") {
+        colore="white";
+        coloreCarattere="black";
+    } else {
+        colore="red";
+        coloreCarattere="white";
+    }
+    QString stylesheet=QString("background-color: %1; color: %2;").arg(colore).arg(coloreCarattere);
+    ui->messaggiArea->setStyleSheet(stylesheet);
+}
+
+void MainWindow::esegueOperazione(int idx){
+    switch(idx) {
+    case 1:
+        close();
+        break;
+    case 2:
+        execReport();
+        break;
+    case 3:
+        execConfigurazione();
+        break;
+    case 4:
+        execGestione();
+        break;
+    case 5:
+        execCassa();
+        break;
+    case 6:
+        execTest();
+        break;
+    case 7:
+        execStats();
+        break;
+    case 8:
+        execStorno();
+        break;
+    }
+
+}
+
+void MainWindow::enterTest()
+{
+    ui->messaggiArea->setText("MODALITA' TEST");
+    lampeggia();
+    blinkTimer->start(1000);
+}
+
+void MainWindow::exitTest()
+{
+    blinkTimer->stop();
+    ui->messaggiArea->setText("");
+    ui->messaggiArea->setStyleSheet("background-color: white; color: black;");
+}
+
+void MainWindow::execStorno() {
+    int idSessione=confMap->value("sessioneCorrente").toInt();
+    StoricoOrdini dlg(idSessione);
+    dlg.exec();
+    return;
 }

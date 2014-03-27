@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>411</width>
-    <height>448</height>
+    <width>350</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,10 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>2</number>
+    <number>5</number>
    </property>
    <property name="margin">
-    <number>3</number>
+    <number>2</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -116,7 +116,7 @@
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
-       <verstretch>2</verstretch>
+       <verstretch>5</verstretch>
       </sizepolicy>
      </property>
      <property name="palette">
@@ -240,7 +240,7 @@
      <property name="verticalSpacing">
       <number>2</number>
      </property>
-     <item row="0" column="0">
+     <item row="0" column="1">
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -253,7 +253,7 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="1">
+     <item row="0" column="2">
       <widget class="QLabel" name="label_3">
        <property name="font">
         <font>
@@ -270,7 +270,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <widget class="QLineEdit" name="totaleLine">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -305,7 +305,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="1">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -318,7 +318,7 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="1">
+     <item row="1" column="2">
       <widget class="QLabel" name="numeroLbl_3">
        <property name="font">
         <font>
@@ -331,9 +331,12 @@
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="1" column="3">
       <widget class="QLineEdit" name="importoUltimoOrdineText">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -373,8 +376,8 @@
      <property name="spacing">
       <number>1</number>
      </property>
-     <item row="0" column="3">
-      <widget class="QPictureButton" name="pagPrevBtn" native="true">
+     <item row="1" column="1">
+      <widget class="QPictureButton" name="duplicaBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -398,33 +401,7 @@
         </font>
        </property>
        <property name="text" stdset="0">
-        <string>SCORRE SU'</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" rowspan="2">
-      <widget class="QPictureButton" name="stampaBtn" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>3</horstretch>
-         <verstretch>2</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>100</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" stdset="0">
-        <string>STAMPA</string>
+        <string>DUPLICA ULTIMO ORDINE</string>
        </property>
       </widget>
      </item>
@@ -451,6 +428,35 @@
        </property>
        <property name="text" stdset="0">
         <string>ULTIMO RESTO</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPictureButton" name="ristampaBtn" native="true">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>2</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>75</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text" stdset="0">
+        <string>RISTAMPA ULTIMO ORDINE</string>
        </property>
       </widget>
      </item>
@@ -509,8 +515,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QPictureButton" name="duplicaBtn" native="true">
+     <item row="0" column="3">
+      <widget class="QPictureButton" name="pagPrevBtn" native="true">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -534,36 +540,33 @@
         </font>
        </property>
        <property name="text" stdset="0">
-        <string>DUPLICA ULTIMO ORDINE</string>
+        <string>SCORRE SU'</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QPictureButton" name="ristampaBtn" native="true">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
+     <item row="0" column="0" rowspan="2">
+      <widget class="QPictureButton" name="stampaBtn" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>2</horstretch>
-         <verstretch>1</verstretch>
+         <horstretch>3</horstretch>
+         <verstretch>2</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>75</height>
+         <height>100</height>
         </size>
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>16</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="text" stdset="0">
-        <string>RISTAMPA ULTIMO ORDINE</string>
+        <string>STAMPA</string>
        </property>
       </widget>
      </item>
