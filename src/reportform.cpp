@@ -274,7 +274,7 @@ QTextDocument *ReportForm::creaDocumentMenu()
               from articoli a,reparti b, pulsanti c \
               where c.idarticolo=a.idarticolo \
               and c.idreparto=b.idreparto \
-              and a.gestionemenu='true'";
+              and a.gestionemenu=1";
 
   if(ordineAlfabeticoBox->isChecked()) {
     sql.append(" order by lower(a.descrizione) asc");
@@ -349,7 +349,7 @@ QTextDocument *ReportForm::creaDocumentDestinazione(const QString& nomeDestinazi
         from articoli a,reparti b, pulsanti c \
         where c.idarticolo=a.idarticolo \
         and c.idreparto=b.idreparto \
-        and a.gestioneMenu='false' \
+        and a.gestioneMenu=0\
         and coalesce(a.destinazione,'')=?";
     if(ordineAlfabeticoBox->isChecked()) {
       sql.append(" order by lower(a.descrizione) asc");
@@ -511,7 +511,7 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         where c.idarticolo=a.idarticolo \
         and c.idreparto=b.idreparto \
         and c.idreparto=? \
-        and c.abilitato = 'true' \
+        and c.abilitato = 1 \
         order by a.descrizione asc";
 
     QSqlQuery stmt;

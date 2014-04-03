@@ -16,10 +16,7 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <QHBoxLayout>
-
-const int NUM_REPARTI=8;
-const int NUM_RIGHE_ART=5;
-const int NUM_COLONNE_ART=6;
+#include <QtSql>
 
 MainWindow::MainWindow(QMap<QString,QVariant>* configurazione,QWidget *parent) : confMap(configurazione),QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -221,6 +218,9 @@ void MainWindow::closeEvent(QCloseEvent *evt)
 
 void MainWindow::creaRepartiButtons(){
 
+  // ricarica la cache
+  caricaArticoli();
+
   // cancella i pulsanti degli articoli
   QListIterator<QStackedWidget*> itArticoli(articoliList);
   while(itArticoli.hasNext()) {
@@ -284,7 +284,9 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto,RepartoBtnWidget* 
       QStackedWidget* stackedBox=new QStackedWidget;
       int idPulsante=numReparto*NUM_RIGHE_ART*NUM_COLONNE_ART+riga*NUM_COLONNE_ART+col;
 
-      ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+      //ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+      QMap<QString,QVariant>* articoloMap=articoliCache.object(idPulsante);
+      ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,articoloMap);
       btn->SetButtonColorNormal(coloreSfondo);
       btn->SetButtonColorHot(coloreSfondo);
       btn->SetTextColorEnabled(coloreCarattere);
@@ -526,3 +528,41 @@ void MainWindow::execStorno() {
     dlg.exec();
     return;
 }
+
+void MainWindow::caricaArticoli() {
+
+  articoliCache.clear();
+  QSqlQuery stmt("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo");
+  if(!stmt.isActive()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
+  int numColReparto=stmt.record().indexOf("idreparto");
+  int numColColonna=stmt.record().indexOf("colonna");
+  int numColRiga=stmt.record().indexOf("riga");
+  int numColIdArticolo=stmt.record().indexOf("idarticolo");
+  int numColDescr=stmt.record().indexOf("descrizione");
+  int numColprezzo=stmt.record().indexOf("prezzo");
+  int numColAbilitato=stmt.record().indexOf("abilitato");
+  int numColDestStampa=stmt.record().indexOf("destinazione");
+  int numColGestioneMenu=stmt.record().indexOf("gestioneMenu");
+  while(stmt.next()) {
+    QMap<QString,QVariant>* articoloMap=new QMap<QString,QVariant>();
+    int numReparto=stmt.value(numColReparto).toInt();
+    int riga=stmt.value(numColRiga).toInt();
+    int colonna=stmt.value(numColColonna).toInt();
+    int idPulsante=numReparto*NUM_RIGHE_ART*NUM_COLONNE_ART+riga*NUM_COLONNE_ART+colonna;
+    articoloMap->insert("idarticolo",stmt.value(numColIdArticolo));
+    articoloMap->insert("nome",stmt.value(numColDescr));
+    articoloMap->insert("prezzo",stmt.value(numColprezzo));
+    articoloMap->insert("abilitato",stmt.value(numColAbilitato));
+    articoloMap->insert("repartoStampa",stmt.value(numColDestStampa));
+    articoloMap->insert("gestioneMenu",stmt.value(numColGestioneMenu));
+    articoloMap->insert("riga",stmt.value(numColRiga));
+    articoloMap->insert("colonna",stmt.value(numColColonna));
+    articoloMap->insert("reparto",stmt.value(numColReparto));
+    articoliCache.insert(idPulsante,articoloMap);
+  }
+
+}
+

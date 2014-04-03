@@ -1,6 +1,7 @@
 #include "configurazionedlg.h"
 #include "destinazionidlg.h"
 #include "confermadlg.h"
+#include "dbmanager.h"
 
 #include <QPageSetupDialog>
 #include <QPrintDialog>
@@ -109,7 +110,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
   QSqlQuery stmt;
   foreach (QString key, configurazione->keys()) {
     stmt.clear();
-    stmt.prepare("replace into configurazione (chiave,valore) values (?,?)");
+    stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)");
     stmt.addBindValue(key);
     stmt.addBindValue(configurazione->value(key).toString());
     if(!stmt.exec()) {
@@ -408,7 +409,12 @@ QVariant ConfigurazioneDlg::valutaStringa(const QString &str)
     if(0==str.compare("null",Qt::CaseInsensitive)) {
         return QVariant(QVariant::String);
     } else {
-        return QVariant(str);
+        if(0==str.compare("true",Qt::CaseInsensitive))
+            return QVariant(1);
+        else if(0==str.compare("false",Qt::CaseInsensitive))
+            return QVariant(0);
+        else
+            return QVariant(str);
     }
 }
 
@@ -502,7 +508,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
         }
         if(0==tabella.compare("configurazione",Qt::CaseInsensitive)) {
-            stmt.prepare("REPLACE INTO CONFIGURAZIONE VALUES(?,?)");
+            stmt.prepare("UPDATE OR INSERT INTO CONFIGURAZIONE VALUES(?,?)");
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
         }
@@ -552,5 +558,5 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 }
 
 void ConfigurazioneDlg::cambiaSerieRitiro(int index){
-  nuovaConfigurazione->insert("serieRitiro",QChar('A'+index));
+    nuovaConfigurazione->insert("serieRitiro",QChar('A'+index));
 }

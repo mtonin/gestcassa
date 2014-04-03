@@ -1,3 +1,4 @@
+#include "commons.h"
 #include "articolobtnwidget.h"
 #include <QtSql>
 #include <QPainter>
@@ -54,6 +55,38 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id,int idRep,int numRiga, int numColonn
   setDragAbilitato(true);
 }
 
+ArticoloBtnWidget::ArticoloBtnWidget(int id, QMap<QString,QVariant>* articoloMap,QWidget *parent)
+{
+  if(NULL!=articoloMap) {
+      idPulsante=id;
+      idArticolo=articoloMap->value("idarticolo").toInt();
+      riga=articoloMap->value("riga").toInt();
+      colonna=articoloMap->value("colonna").toInt();
+      idReparto=articoloMap->value("reparto").toInt();
+      nomeArticolo=articoloMap->value("nome").toString();
+      prezzo=articoloMap->value("prezzo").toFloat();
+      abilitato=articoloMap->value("abilitato").toBool();
+      repartoStampa=articoloMap->value("repartoStampa").toString();
+      gestioneMenu=articoloMap->value("gestioneMenu").toBool();
+    } else {
+      //idArticolo=riga*6+colonna+1;
+      idArticolo=0;
+      //nomeArticolo=QString("ARTICOLO %1").arg(riga*6+colonna+1);
+      nomeArticolo="";
+      prezzo=0;
+      abilitato=true;
+      repartoStampa="";
+      gestioneMenu=false;
+    }
+  setText(nomeArticolo);
+  QSizePolicy buttonSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  buttonSizePolicy.setHorizontalStretch(0);
+  buttonSizePolicy.setVerticalStretch(0);
+  buttonSizePolicy.setHeightForWidth(sizePolicy().hasHeightForWidth());
+  setSizePolicy(buttonSizePolicy);
+  setDragAbilitato(true);
+}
+
 void ArticoloBtnWidget::setNomeArticolo(const QString nome){
   nomeArticolo=nome;
   setText(nomeArticolo);
@@ -83,7 +116,7 @@ void ArticoloBtnWidget::setPos(int r, int c)
     stmt.addBindValue(r);
     stmt.addBindValue(c);
   } else {
-    stmt.prepare("replace into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
+    stmt.prepare("update or insert into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
     stmt.addBindValue(idReparto);
     stmt.addBindValue(r);
     stmt.addBindValue(c);

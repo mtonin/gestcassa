@@ -1,38 +1,36 @@
+#include "commons.h"
 #include "dbmanager.h"
 #include "confermadlg.h"
 
 #include <QFile>
-#include <QFileInfo>
-#include <QDir>
 #include <QtSql>
-#include <QDesktopServices>
 #include <QMessageBox>
-
-const QString dbFileName("GestioneCassa/cassadb.db3");
+#include <QTcpSocket>
 
 DBManager::DBManager(QObject *parent) :QObject(parent) {
 }
 
 DBManager::DBManager(QMap<QString, QVariant> *configurazione):conf(configurazione) {
 
-  QFileInfo dbFileInfo(QString("%1/%2")
-             .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
-             .arg(dbFileName));
-  dbFilePath=dbFileInfo.absoluteFilePath();
-  QDir dbParentDir(dbFileInfo.absolutePath());
-  dbParentDir.mkpath(dbFileInfo.absolutePath());
-  leggeConfigurazione();
 }
 
-void DBManager::leggeConfigurazione() {
+bool DBManager::init(const QString nomeFile) {
+
+    dbFilePath=nomeFile;
+    return leggeConfigurazione();
+
+}
+
+bool DBManager::leggeConfigurazione() {
 
   if(!createConnection(dbFilePath,"","")) {
-    return;
+      return false;
   }
 
   QSqlQuery stmt("select chiave,valore from configurazione");
   if(!stmt.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return false;
   }
   while(stmt.next()) {
     QString key=stmt.value(0).toString();
@@ -42,10 +40,18 @@ void DBManager::leggeConfigurazione() {
 
   if(!stmt.exec("select max(idsessione) from sessione")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return false;
   }
+  int sessioneCorrente;
   while(stmt.next()) {
-    QVariant valore=stmt.value(0).toString();
-    conf->insert("sessioneCorrente",valore);
+    sessioneCorrente=stmt.value(0).toInt();
+  }
+  if(0==sessioneCorrente) {
+    if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',current_timestamp)")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+      return false;
+    }
+    conf->insert("sessioneCorrente",1);
   }
 
   conf->insert("dbFilePath",dbFilePath);
@@ -56,10 +62,10 @@ void DBManager::leggeConfigurazione() {
   QSqlDatabase db=QSqlDatabase::database();
   db.transaction();
   if(versioneDB<2) {
-    if(!stmt.exec("alter table destinazionistampa add column stampaflag   BOOLEAN NOT NULL DEFAULT ( 'true' ) ")) {
+    if(!stmt.exec("alter table destinazionistampa add column stampaflag   BOOLEAN NOT NULL DEFAULT ( 1 ) ")) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=2;
   }
@@ -72,16 +78,16 @@ void DBManager::leggeConfigurazione() {
        !stmt.exec("drop table ordinirighe_old")) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=3;
   }
 
   if(versioneDB<4) {
-    if(!stmt.exec("alter table reparti add column abilitato   BOOLEAN NOT NULL DEFAULT ( 'true' ) ")) {
+    if(!stmt.exec("alter table reparti add column abilitato   BOOLEAN NOT NULL DEFAULT ( 1 ) ")) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=4;
   }
@@ -90,16 +96,16 @@ void DBManager::leggeConfigurazione() {
     if(!stmt.exec("alter table ordinicontenuto rename to storicoordini")) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=5;
   }
 
   if(versioneDB<6) {
-    if(!stmt.exec("alter table destinazionistampa add column stampanumeroritiroflag BOOLEAN NOT NULL DEFAULT ( 'false' ) ")) {
+    if(!stmt.exec("alter table destinazionistampa add column stampanumeroritiroflag BOOLEAN NOT NULL DEFAULT ( 0 ) ")) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=6;
   }
@@ -110,7 +116,7 @@ void DBManager::leggeConfigurazione() {
                   numeroordine INTEGER, \
                   tsstampa     DATETIME, \
                   importo      REAL, \
-                  flagstorno   BOOLEAN NOT NULL DEFAULT ('false'))")   ||
+                  flagstorno   BOOLEAN NOT NULL DEFAULT (0))")   ||
        !stmt.exec("CREATE TABLE storicoordinidett (  \
                       idsessione   INTEGER, \
                       numeroordine INTEGER, \
@@ -125,7 +131,7 @@ void DBManager::leggeConfigurazione() {
                   FROM storicoordinitot tot, storicoordinidett dett \
                   WHERE tot.idsessione = dett.idsessione \
                   AND tot.numeroordine = dett.numeroordine \
-                  AND tot.flagstorno = 'false'")  ||
+                  AND tot.flagstorno = 0")  ||
        !stmt.exec("insert into storicoordinitot (idsessione,numeroordine,tsstampa,importo) \
                   select a.idsessione,a.numeroordine,a.tsstampa,a.importo \
                   from storicoordini_old a \
@@ -136,25 +142,60 @@ void DBManager::leggeConfigurazione() {
        !stmt.exec("drop table storicoordini_old")     ) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
     nuovaVersioneDB=7;
+  }
+
+  if(versioneDB<8) {
+      if(!stmt.exec("DROP VIEW storicoordini") ||
+         !stmt.exec("ALTER TABLE storicoordinitot rename to storicoordinitot_old") ||
+         !stmt.exec("ALTER TABLE storicoordinidett rename to storicoordinidett_old") ||
+         !stmt.exec("CREATE TABLE storicoordinitot (  \
+                    idsessione   INTEGER, \
+                    idcassa         VARCHAR, \
+                    numeroordine INTEGER, \
+                    tsstampa     DATETIME, \
+                    importo      REAL, \
+                    flagstorno   BOOLEAN NOT NULL DEFAULT (0))")   ||
+         !stmt.exec("CREATE TABLE storicoordinidett (  \
+                        idsessione   INTEGER, \
+                        idcassa         VARCHAR, \
+                        numeroordine INTEGER, \
+                        descrizione  VARCHAR, \
+                        quantita     INTEGER, \
+                        destinazione VARCHAR, \
+                        prezzo       REAL, \
+                        tipoArticolo CHAR     NOT NULL  )")  ||
+         !stmt.exec("CREATE VIEW storicoordini AS \
+                    SELECT tot.idsessione, tot.idcassa, tot.numeroordine, tot.tsstampa, tot.importo, dett.descrizione, dett.prezzo, dett.quantita, dett.destinazione, dett.tipoArticolo \
+                    FROM storicoordinitot tot, storicoordinidett dett \
+                    WHERE tot.idsessione = dett.idsessione \
+                    AND tot.idcassa = dett.idcassa \
+                    AND tot.numeroordine = dett.numeroordine \
+                    AND tot.flagstorno = 0")  ) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        db.rollback();
+        return false;
+    }
+    nuovaVersioneDB=8;
   }
 
   if(versioneDB!=nuovaVersioneDB) {
     versioneDB=nuovaVersioneDB;
     conf->insert("versione",versioneDB);
-    stmt.prepare("replace into configurazione (chiave,valore) values('versione',?)");
+    stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)");
     stmt.addBindValue(nuovaVersioneDB);
     if(!stmt.exec()) {
       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
       db.rollback();
-      return;
+      return false;
     }
 
   }
 
   db.commit();
+   return true;
 }
 
 bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password)
@@ -165,10 +206,25 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
   if(!dbFile.exists()) {
     creaDb();
   }
-  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(nomeFile);
-  db.setUserName(utente);
-  db.setPassword(password);
+  //QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+  QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
+  //db.setHostName("10.30.102.157");
+  //db.setPort(3050);
+  db.setDatabaseName("GCAS");
+  db.setUserName("mauro");
+  db.setPassword("superpippo");
+  //db.setDatabaseName(nomeFile);
+
+    // testa se il server è attivo
+    /*
+  QTcpSocket testsock;
+    testsock.connectToHost(db.hostName(),db.port());
+    if(!testsock.waitForConnected(3000)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),testsock.errorString());
+      return false;
+    }
+    */
+
   if (!db.open()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),db.lastError().text());
     return false;
@@ -179,11 +235,13 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
     return false;
   }
 
+/*
   query.exec("pragma foreign_keys=ON;");
   if(!query.isActive()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
     return false;
   }
+*/
 
   return true;
 }
@@ -223,7 +281,7 @@ void DBManager::creaDb()
 
   }
 
-  if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',datetime('now'))")) {
+  if(!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',current_timestamp)")) {
     QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
     return;
   }

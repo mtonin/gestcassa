@@ -68,7 +68,7 @@ void StatsForm::caricaStats()
   QVector<double> tickData;
   int numero=0;
 
-  QString sql("SELECT descrizione,sum(quantita),tsstampa \
+  QString sql("SELECT descrizione,sum(quantita),max(tsstampa) \
               FROM storicoordini \
               where \
               %1 \
@@ -79,7 +79,7 @@ void StatsForm::caricaStats()
   if(ultimaSessioneBox->isChecked()) {
     condizione="idsessione=?";
   } else {
-    condizione="datetime(tsstampa) between ? and ?";
+    condizione="tsstampa between ? and ?";
   }
   sql=sql.arg(condizione);
   QString tipoArticolo;
@@ -89,7 +89,10 @@ void StatsForm::caricaStats()
       tipoArticolo="C";
   }
   QSqlQuery stmt;
-  stmt.prepare(sql);
+  if(!stmt.prepare(sql)) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
 
   if(ultimaSessioneBox->isChecked()) {
     stmt.addBindValue(idSessioneCorrente);
@@ -156,24 +159,27 @@ void StatsForm::caricaStats()
 void StatsForm::calcolaTotali()
 {
 
-  QString sql("select count(*),sum(importoordine),min(datetime(minTs)),max(datetime(maxTs)) \
-              from (SELECT idsessione||numeroordine,importo as importoordine, min(datetime(tsstampa)) as minTs,max(datetime(tsstampa)) as maxTs \
+  QString sql("select count(*),sum(importoordine),min(minTs),max(maxTs) \
+              from (SELECT idsessione||numeroordine as keyordine,importo as importoordine, min(tsstampa) as minTs,max(tsstampa) as maxTs \
                             FROM storicoordini \
                             where \
                             %1 \
-                            group by idsessione,numeroordine)");
+                            group by idsessione||numeroordine,importo)");
 
   QString condizione;
   if(ultimaSessioneBox->isChecked()) {
     condizione="idsessione=?";
   } else {
-    condizione="datetime(tsstampa) between ? and ?";
+    condizione="tsstampa between ? and ?";
   }
 
   sql=sql.arg(condizione);
 
   QSqlQuery stmt;
-  stmt.prepare(sql);
+  if(!stmt.prepare(sql)) {
+    QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+    return;
+  }
 
   if(ultimaSessioneBox->isChecked()) {
     stmt.addBindValue(idSessioneCorrente);

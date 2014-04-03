@@ -9,7 +9,7 @@ storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
 QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
 {
   if(!index.isValid()) return QVariant();
-  QModelIndex tmpIdx=QSqlTableModel::index(index.row(),4);
+  QModelIndex tmpIdx=QSqlTableModel::index(index.row(),5);
   bool flagStorno=QSqlTableModel::data(tmpIdx).toBool();
 
   QVariant rigaArticolo=QSqlTableModel::data(index,role);
@@ -30,18 +30,21 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
     case 1:
+        if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
+        break;
+    case 2:
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
-    case 2:
-      break;
     case 3:
+      break;
+    case 4:
       if(Qt::DisplayRole==role || Qt::EditRole==role) {
         float importo=rigaArticolo.toFloat();
         return QString("%1 %L2").arg(QChar(0x20AC)).arg(importo,4,'f',2);
       }
       if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
       break;
-    case 4:
+    case 5:
       if(Qt::DisplayRole==role) {
         return QVariant();
       }
@@ -64,15 +67,18 @@ QVariant storicoOrdiniModel::headerData(int section, Qt::Orientation orientation
         return "SESSIONE";
         break;
       case 1:
-        return "NUMERO";
+        return "CASSA";
         break;
       case 2:
-        return "DATA/ORA";
+        return "NUMERO";
         break;
       case 3:
-        return "IMPORTO";
+        return "DATA/ORA";
         break;
       case 4:
+        return "IMPORTO";
+        break;
+      case 5:
         return "STORNO";
         break;
       default:
@@ -85,10 +91,10 @@ QVariant storicoOrdiniModel::headerData(int section, Qt::Orientation orientation
 Qt::ItemFlags storicoOrdiniModel::flags(const QModelIndex &index) const
 {
   Qt::ItemFlags flags=QAbstractItemModel::flags(index);
-  if(1==index.column()) {
+  if(2==index.column()) {
     flags |=  Qt::ItemIsEditable;
   }
-  if(4==index.column()) {
+  if(5==index.column()) {
     flags |=  Qt::ItemIsUserCheckable|Qt::ItemIsEnabled;
   }
   return flags;
@@ -96,9 +102,9 @@ Qt::ItemFlags storicoOrdiniModel::flags(const QModelIndex &index) const
 
 bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-  if(4==index.column()) {
+  if(5==index.column()) {
     if(Qt::CheckStateRole==role) {
-        QSqlTableModel::setData(index,Qt::Checked==value.toInt()?"true":"false",Qt::EditRole);
+        QSqlTableModel::setData(index,Qt::Checked==value.toInt()?"1":"0",Qt::EditRole);
         emit dataChanged(index,index);
     }
   }

@@ -146,7 +146,11 @@ void DettagliArticolo::aggiornaArticolo()
       articoloBtn->setId(stmt1.value(0).toInt());
   }
 
-  stmt1.prepare("replace into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)");
+  if(!stmt1.prepare("update or insert into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),
+                            stmt1.lastError().text());
+      return;
+  }
   stmt1.addBindValue(articoloBtn->getIdReparto());
   stmt1.addBindValue(articoloBtn->getRiga());
   stmt1.addBindValue(articoloBtn->getColonna());
@@ -260,7 +264,7 @@ void DettagliArticolo::on_nuovoBtn_clicked()
 void DettagliArticolo::creaSelezioneArticoloBox()
 {
   articoliMenuModello->clear();
-  QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu='false' order by lower(descrizione) asc");
+  QSqlQuery stmt("select idarticolo,descrizione from articoli where gestioneMenu=0 order by lower(descrizione) asc");
   if(!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"),
                           stmt.lastError().text());

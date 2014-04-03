@@ -152,7 +152,9 @@ void Ordine::on_stampaBtn_clicked()
     return;
   }
 
-  if(modello.completaOrdine(numOrdineCorrente,importoOrdineCorrente,idSessioneCorrente)) {
+  QString nomeCassa=configurazione->value("nomeCassa","000").toString();
+
+  if(modello.completaOrdine(numOrdineCorrente,importoOrdineCorrente,idSessioneCorrente,nomeCassa)) {
 
       stampaScontrino(numOrdineCorrente);
 

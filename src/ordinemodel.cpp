@@ -78,7 +78,7 @@ void OrdineModel::clear()
   emit dataChanged(QModelIndex(),QModelIndex());
 }
 
-bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,const int idSessione)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,const int idSessione, QString idCassa)
 {
     QSqlDatabase db(QSqlDatabase::database());
     db.transaction();
@@ -118,8 +118,9 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,con
   }
 
   if(idSessione!=ID_SESSIONE_TEST) {
-      stmt.prepare("insert into storicoordinitot values(?,?,?,?,'false')");
+      stmt.prepare("insert into storicoordinitot values(?,?,?,?,?,0)");
       stmt.addBindValue(idSessione);
+      stmt.addBindValue(idCassa);
       stmt.addBindValue(numeroOrdine);
       stmt.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
       stmt.addBindValue(importo);
@@ -130,8 +131,9 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo,con
         return false;
       }
 
-      stmt.prepare("insert into storicoordinidett select ?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
+      stmt.prepare("insert into storicoordinidett select ?,?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?");
       stmt.addBindValue(idSessione);
+      stmt.addBindValue(idCassa);
       stmt.addBindValue(numeroOrdine);
       if(!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),

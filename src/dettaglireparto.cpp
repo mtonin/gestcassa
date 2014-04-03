@@ -28,7 +28,7 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn){
 
 void DettagliReparto::aggiornaReparto()
 {
-  QSqlQuery query("replace into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato) values(?,?,?,?,?,?)");
+  QSqlQuery query("update or insert into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato) values(?,?,?,?,?,?)");
   query.addBindValue(repartoBtn->getId());
   query.addBindValue(testoReparto->text());
   query.addBindValue(repartoBtn->getFont());

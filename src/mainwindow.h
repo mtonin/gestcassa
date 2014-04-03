@@ -12,6 +12,7 @@
 #include <QList>
 #include <QMap>
 #include <QTimer>
+#include <QCache>
 
 namespace Ui {
   class MainWindow;
@@ -58,6 +59,7 @@ private:
   QString adminPassword;
   QTimer* blinkTimer;
   QString colore;
+  QCache<int,QMap<QString,QVariant>> articoliCache;
 
   //QList<ArticoloBtnWidget*> articoliBtnList;
   QList<RepartoBtnWidget*> repartiList;
@@ -73,6 +75,7 @@ private:
   void creaInfoMessaggi();
   void enterTest();
   void exitTest();
+  void caricaArticoli();
 
 };
 

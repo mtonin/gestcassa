@@ -10,6 +10,7 @@ class DBManager : public QObject
 public:
   explicit DBManager(QObject *parent = 0);
   explicit DBManager(QMap<QString,QVariant>* configurazione);
+  bool init(const QString);
 
 signals:
   
@@ -18,7 +19,7 @@ public slots:
 private:
       bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
       void creaDb();
-      void leggeConfigurazione();
+      bool leggeConfigurazione();
 
       QMap<QString,QVariant>* conf;
       QString dbFilePath;
