@@ -4,7 +4,8 @@
 #include <QDialog>
 #include "commons.h"
 
-namespace Ui {
+namespace Ui
+{
 class OperazioniDlg;
 }
 

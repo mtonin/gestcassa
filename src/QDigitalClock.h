@@ -56,7 +56,7 @@ const Qt::Alignment DIGITAL_CLOCK_DEAULT_ALIGNMNET  = Qt::AlignLeft | Qt::AlignV
 
 
 /*
-    Class that defines a digital clock widget. 
+    Class that defines a digital clock widget.
     The clock's look is customizable with different properties.
 
     Format expressions:
@@ -109,7 +109,7 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-     // Property getter
+    // Property getter
     QColor textColor() const;
     QString format() const;
     int interval() const;

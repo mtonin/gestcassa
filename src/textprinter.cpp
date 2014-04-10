@@ -20,7 +20,10 @@
 #include <QPrintPreviewDialog>
 #endif
 
-static inline double mmToInches(double mm) { return mm * 0.039370147; }
+static inline double mmToInches(double mm)
+{
+    return mm * 0.039370147;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // TextPrinter()
@@ -43,17 +46,17 @@ TextPrinter::TextPrinter(QObject *parent)
 
     printer_->setFullPage(true);
     printer_->setOrientation(QPrinter::Portrait);
-    
+
     // for convenience, default to US_Letter for C/US/Canada
     // NOTE: bug in Qt, this value is not loaded by QPrintDialog
     switch (QLocale::system().country()) {
-      case QLocale::AnyCountry:
-      case QLocale::Canada:
-      case QLocale::UnitedStates:
-      case QLocale::UnitedStatesMinorOutlyingIslands:
-          printer_->setPageSize(QPrinter::Letter); break;
-      default:
-          printer_->setPageSize(QPrinter::A4); break;
+    case QLocale::AnyCountry:
+    case QLocale::Canada:
+    case QLocale::UnitedStates:
+    case QLocale::UnitedStatesMinorOutlyingIslands:
+        printer_->setPageSize(QPrinter::Letter); break;
+    default:
+        printer_->setPageSize(QPrinter::A4); break;
     }
 }
 
@@ -77,7 +80,7 @@ TextPrinter::~TextPrinter()
 
 QPrinter::PageSize TextPrinter::pageSize() const
 {
-    return printer_->pageSize(); 
+    return printer_->pageSize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -476,7 +479,7 @@ void TextPrinter::print(const QTextDocument *document,
 
     delete tempdoc_;
     tempdoc_ = 0;
-} 
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // exportPDF()
@@ -499,7 +502,7 @@ void TextPrinter::exportPdf(const QTextDocument *document,
         exportname = filename;
     } else {
         exportname = QFileDialog::getSaveFileName(parent_, dialogcaption,
-                                                  filename, "*.pdf");
+                     filename, "*.pdf");
     }
     if (exportname.isEmpty()) return;
     if (QFileInfo(exportname).suffix().isEmpty())
@@ -538,7 +541,7 @@ void TextPrinter::preview(const QTextDocument *document,
 
     // preview it
     tempdoc_ = document->clone();
-    dialog->setWindowFlags(Qt::Window|Qt::CustomizeWindowHint|Qt::WindowCloseButtonHint|Qt::WindowMaximizeButtonHint);
+    dialog->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint | Qt::WindowMaximizeButtonHint);
     //dialog->setWindowState(Qt::WindowMaximized);
     dialog->exec();
 
@@ -564,7 +567,7 @@ QRectF TextPrinter::paperRect(QPaintDevice *device)
     rect.setWidth(rect.width() *
                   device->logicalDpiX() / printer_->logicalDpiX());
     rect.setHeight(rect.height() *
-                  device->logicalDpiY() / printer_->logicalDpiY());
+                   device->logicalDpiY() / printer_->logicalDpiY());
 
     return rect;
 }
@@ -608,7 +611,7 @@ QRectF TextPrinter::headerRect(QPaintDevice *device)
 
     (headerrule_ / 144.0);
 
-    rect.setBottom(rect.top() + 
+    rect.setBottom(rect.top() +
                    mmToInches(headersize_) * device->logicalDpiY());
 
     return rect;
@@ -681,17 +684,17 @@ void TextPrinter::print(QPrinter *printer)
     painter.setRenderHints(QPainter::Antialiasing |
                            QPainter::TextAntialiasing |
                            QPainter::SmoothPixmapTransform, true);
-    for (int dc=0; dc<doccopies; dc++) {
+    for (int dc = 0; dc < doccopies; dc++) {
         int pagenum = firstpage;
         while (true) {
-            for (int pc=0; pc<pagecopies; pc++) {
+            for (int pc = 0; pc < pagecopies; pc++) {
                 if (printer->printerState() == QPrinter::Aborted ||
                     printer->printerState() == QPrinter::Error) {
                     return;
                 }
                 // print page
                 paintPage(&painter, tempdoc_, pagenum);
-                if (pc < pagecopies-1) printer->newPage();
+                if (pc < pagecopies - 1) printer->newPage();
             }
             if (pagenum == lastpage) break;
             if (ascending) pagenum++;
@@ -699,7 +702,7 @@ void TextPrinter::print(QPrinter *printer)
             printer->newPage();
         }
 
-        if (dc < doccopies-1) printer->newPage();
+        if (dc < doccopies - 1) printer->newPage();
     }
 }
 
@@ -789,8 +792,8 @@ void TextPrinter::paintPage(QPainter *painter,
     painter->save();
 
     rect = contentRect(painter->device());
-    painter->translate(rect.left(), rect.top() - (pagenum-1) * rect.height());
-    QRectF clip(0, (pagenum-1) * rect.height(), rect.width(), rect.height());
+    painter->translate(rect.left(), rect.top() - (pagenum - 1) * rect.height());
+    QRectF clip(0, (pagenum - 1) * rect.height(), rect.width(), rect.height());
 
     document->drawContents(painter, clip);
 

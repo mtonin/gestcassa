@@ -52,20 +52,20 @@ class TextPrinter : public QObject
     Q_OBJECT
 public:
     /// Default constructor
-    explicit TextPrinter(QObject *parent=0);
+    explicit TextPrinter(QObject *parent = 0);
     /// Destructor
     ~TextPrinter();
 
     /// Print the document
     void print(const QTextDocument *document,
-               const QString &caption=QString());
+               const QString &caption = QString());
     /// Export the document to PDF
     void exportPdf(const QTextDocument *document,
-                   const QString &caption=QString(),
-                   const QString &filename=QString());
+                   const QString &caption = QString(),
+                   const QString &filename = QString());
     /// Display the document in a preview dialog
     void preview(const QTextDocument *document,
-                 const QString &caption=QString());
+                 const QString &caption = QString());
 
     /// Get page size
     QPrinter::PageSize pageSize() const;
