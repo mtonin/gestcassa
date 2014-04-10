@@ -52,7 +52,7 @@ QPictureButton::QPictureButton(QWidget* parent) : QAbstractButton(parent)
     setText(PICTURE_BUTTON_DEFAULT_TEXT);
 }
 
-QPictureButton::~QPictureButton() 
+QPictureButton::~QPictureButton()
 {
 }
 
@@ -72,93 +72,62 @@ void QPictureButton::PaintButton()
 
     QPixmap CurrentPixmap;
     QColor CurrentButtonColor;
-    if (this->isEnabled())
-    {
-        if (m_Focus == true)
-        {
-            if(this->isCheckable())
-            {
-                if(this->isChecked() || this->isDown())
-                {
+    if (this->isEnabled()) {
+        if (m_Focus == true) {
+            if (this->isCheckable()) {
+                if (this->isChecked() || this->isDown()) {
                     CurrentPixmap      = m_PictureCheckedHot;
                     CurrentButtonColor = m_ButtonColorCheckedHot;
-                }
-                else
-                {
+                } else {
                     CurrentPixmap      = m_PictureHot;
                     CurrentButtonColor = m_ButtonColorHot;
                 } // if(m_Checked)
-            }
-            else
-            {
-                if (this->isDown())
-                {
+            } else {
+                if (this->isDown()) {
                     CurrentPixmap      = m_PicturePushed;
                     CurrentButtonColor = m_ButtonColorPushed;
-                }
-                else
-                {
+                } else {
                     CurrentPixmap      = m_PictureHot;
                     CurrentButtonColor = m_ButtonColorHot;
                 } // if (m_Checked == true)
             } // if(m_Checkable && m_Checked)
-        }
-        else
-        {
-            if(this->isCheckable())
-            {
-                if(this->isChecked() || this->isDown())
-                {
+        } else {
+            if (this->isCheckable()) {
+                if (this->isChecked() || this->isDown()) {
                     CurrentPixmap      = m_PicturePushed;
                     CurrentButtonColor = m_ButtonColorPushed;
-                }
-                else
-                {
+                } else {
                     CurrentPixmap      = m_PictureNormal;
                     CurrentButtonColor = m_ButtonColorNormal;
                 } // if(m_Checked)
-            }
-            else
-            {
-                if (this->isDown())
-                {
+            } else {
+                if (this->isDown()) {
                     CurrentPixmap      = m_PictureNormal;
                     CurrentButtonColor = m_ButtonColorNormal;
-                }
-                else
-                {
+                } else {
                     CurrentPixmap      = m_PictureNormal;
                     CurrentButtonColor = m_ButtonColorNormal;
                 } // if (m_Checked == true)
             } // if(m_Checkable && m_Checked)
         } // if (m_Focus == true)
-    }
-    else
-    {
+    } else {
         CurrentPixmap      = m_PictureDisabled;
         CurrentButtonColor = m_ButtonColorDisabled;
     } // if (this->isEnabled())
 
-    if(CurrentPixmap.isNull())
-    {
-        if(m_BorderEnabled)
-        {
+    if (CurrentPixmap.isNull()) {
+        if (m_BorderEnabled) {
             painter.setPen(QPen(m_BorderColor));
-        }
-        else
-        {
+        } else {
             painter.setPen(Qt::NoPen);
         }
         QBrush Brush(CurrentButtonColor, Qt::SolidPattern);
         painter.setBrush(Brush);
         painter.drawRect(Rect);
-    }
-    else
-    {
+    } else {
         painter.drawPixmap(Rect, CurrentPixmap);
 
-        if(m_BorderEnabled)
-        {
+        if (m_BorderEnabled) {
             painter.setPen(QPen(m_BorderColor));
             QBrush Brush(CurrentButtonColor, Qt::NoBrush);
             painter.setBrush(Brush);
@@ -169,8 +138,7 @@ void QPictureButton::PaintButton()
 
 void QPictureButton::PaintIcon()
 {
-    if(!icon().isNull())
-    {
+    if (!icon().isNull()) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
         QRect PainterRect = painter.window();
@@ -178,20 +146,19 @@ void QPictureButton::PaintIcon()
         int Top  = (PainterRect.height() - iconSize().height()) / 2;
         int Left = (PainterRect.width()  - iconSize().width())  / 2;
 
-        switch(m_IconPosition)
-        {
-            case PositionTop:
-                Top = m_IconSpace;
-                break;
-            case PositionBottom:
-                Top = PainterRect.height() - iconSize().height() - m_IconSpace;
-                break;
-            case PositionLeft:
-                Left = m_IconSpace;
-                break;
-            case PositionRight:
-                Left = PainterRect.width() - iconSize().width() - m_IconSpace;
-                break;
+        switch (m_IconPosition) {
+        case PositionTop:
+            Top = m_IconSpace;
+            break;
+        case PositionBottom:
+            Top = PainterRect.height() - iconSize().height() - m_IconSpace;
+            break;
+        case PositionLeft:
+            Left = m_IconSpace;
+            break;
+        case PositionRight:
+            Left = PainterRect.width() - iconSize().width() - m_IconSpace;
+            break;
         }
 
         QPixmap Pixmap = icon().pixmap(iconSize());
@@ -214,56 +181,50 @@ void QPictureButton::PaintText()
     int Left   = PainterRect.left();
     int Height = PainterRect.height();
     int Width  = PainterRect.width();
-    int Align = Qt::AlignCenter|Qt::TextWordWrap;
+    int Align = Qt::AlignCenter | Qt::TextWordWrap;
 
-    if(!this->icon().isNull())
-    {
-        switch(m_IconPosition)
-        {
-            case PositionTop:
-                //Top += (this->iconSize().height() + m_IconSpace + m_TextSpace);
-                Top += (this->iconSize().height() + m_IconSpace);
-                Align = Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap;
-                break;
-            case PositionBottom:
-                //Top -= (this->iconSize().height() + m_IconSpace + m_TextSpace);
-                Top -= (this->iconSize().height() + m_IconSpace);
-                Align = Qt::AlignHCenter | Qt::AlignBottom;
-                break;
-            case PositionLeft:
-                //Left += (this->iconSize().width() + m_IconSpace + m_TextSpace);
-                Left += (this->iconSize().width() + m_IconSpace);
-                Align = Qt::AlignLeft | Qt::AlignVCenter;
-                break;
-            case PositionRight:
-                //Left -= (this->iconSize().width() + m_IconSpace + m_TextSpace);
-                Left -= (this->iconSize().width() + m_IconSpace);
-                Align = Qt::AlignRight | Qt::AlignVCenter;
-                break;
+    if (!this->icon().isNull()) {
+        switch (m_IconPosition) {
+        case PositionTop:
+            //Top += (this->iconSize().height() + m_IconSpace + m_TextSpace);
+            Top += (this->iconSize().height() + m_IconSpace);
+            Align = Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap;
+            break;
+        case PositionBottom:
+            //Top -= (this->iconSize().height() + m_IconSpace + m_TextSpace);
+            Top -= (this->iconSize().height() + m_IconSpace);
+            Align = Qt::AlignHCenter | Qt::AlignBottom;
+            break;
+        case PositionLeft:
+            //Left += (this->iconSize().width() + m_IconSpace + m_TextSpace);
+            Left += (this->iconSize().width() + m_IconSpace);
+            Align = Qt::AlignLeft | Qt::AlignVCenter;
+            break;
+        case PositionRight:
+            //Left -= (this->iconSize().width() + m_IconSpace + m_TextSpace);
+            Left -= (this->iconSize().width() + m_IconSpace);
+            Align = Qt::AlignRight | Qt::AlignVCenter;
+            break;
         }
     }
 
-    if((this->isDown()) ||(this->isChecked()))
-    {
+    if ((this->isDown()) || (this->isChecked())) {
         Top  += PICTURE_BUTTON_TEXT_OFFSET_PUSHED_TOP;
         Left += PICTURE_BUTTON_TEXT_OFFSET_PUSHED_LEFT;
     }
 
     // Text color
-    if(this->isEnabled())
-    {
+    if (this->isEnabled()) {
         painter.setPen(QPen(m_TextColorEnabled));
-    }
-    else
-    {
+    } else {
         painter.setPen(QPen(m_TextColorDisabled));
     }
 
     // Paint
-    Left+=m_TextSpace;
-    Top+=m_TextSpace;
-    Width-=2*m_TextSpace;
-    Height-=2*m_TextSpace;
+    Left += m_TextSpace;
+    Top += m_TextSpace;
+    Width -= 2 * m_TextSpace;
+    Height -= 2 * m_TextSpace;
     QRect FontRect(Left, Top, Width, Height);
     painter.drawText(FontRect, Align, this->text());
 }

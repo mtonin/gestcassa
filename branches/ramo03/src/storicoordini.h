@@ -8,21 +8,21 @@
 
 class StoricoOrdini : public QDialog, private Ui::StoricoOrdini
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit StoricoOrdini(const int idSessione,QWidget *parent = 0);
+    explicit StoricoOrdini(const int idSessione, QWidget *parent = 0);
 
 private slots:
-  void caricaArticoliOrdine();
-  void on_filtraBtn_5_clicked();
-  void on_filtroDateBox_toggled(bool checked);
+    void caricaArticoliOrdine();
+    void on_filtraBtn_5_clicked();
+    void on_filtroDateBox_toggled(bool checked);
 
 private:
-  storicoOrdiniModel* ordiniModel;
-  QSqlQueryModel* articoliOrdineModel;
+    storicoOrdiniModel* ordiniModel;
+    QSqlQueryModel* articoliOrdineModel;
 
-  QString condizione;
+    QString condizione;
 };
 
 #endif // STORICOORDINI_H

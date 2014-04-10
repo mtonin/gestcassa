@@ -7,34 +7,34 @@ storicoArticoliOrdiniModel::storicoArticoliOrdiniModel(QObject *parent) :
 
 QVariant storicoArticoliOrdiniModel::data(const QModelIndex &index, int role) const
 {
-  if(!index.isValid()) return QVariant();
+    if (!index.isValid()) return QVariant();
 
-  switch (index.column()) {
+    switch (index.column()) {
     case 0:
-      if(Qt::TextAlignmentRole==role) return Qt::AlignRight|Qt::AlignVCenter;
-      break;
+        if (Qt::TextAlignmentRole == role) return Qt::AlignRight | Qt::AlignVCenter;
+        break;
     case 1:
-      break;
+        break;
     default:
-      break;
-  }
-  return QSqlQueryModel::data(index,role);
+        break;
+    }
+    return QSqlQueryModel::data(index, role);
 }
 
 
 QVariant storicoArticoliOrdiniModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if(Qt::Horizontal==orientation && Qt::DisplayRole==role) {
-    switch (section) {
-      case 0:
-        return "Q.TA'";
-        break;
-      case 1:
-        return "ARTICOLO";
-        break;
-      default:
-        break;
+    if (Qt::Horizontal == orientation && Qt::DisplayRole == role) {
+        switch (section) {
+        case 0:
+            return "Q.TA'";
+            break;
+        case 1:
+            return "ARTICOLO";
+            break;
+        default:
+            break;
+        }
     }
-  }
-  return QSqlQueryModel::headerData(section,orientation,role);
+    return QSqlQueryModel::headerData(section, orientation, role);
 }

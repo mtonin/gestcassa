@@ -6,19 +6,19 @@
 
 class infoWidget : public QWidget, private Ui::infoWidget
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 private slots:
-  void ricominciaEffetto();
+    void ricominciaEffetto();
 
 public:
-  explicit infoWidget(const QStringList lista,QWidget *parent = 0);
-  void setListaTesto(const QStringList lista);
+    explicit infoWidget(const QStringList lista, QWidget *parent = 0);
+    void setListaTesto(const QStringList lista);
 
 private:
-  QStringList listaTesto;
-  int currentIndex;
-  QAnimationGroup* effetto;
+    QStringList listaTesto;
+    int currentIndex;
+    QAnimationGroup* effetto;
 
 };
 

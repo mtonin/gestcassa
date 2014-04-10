@@ -11,7 +11,7 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QWidget *parent) :
     setWindowFlags(Qt::Tool);
     activateWindow();
 
-    switch(modalitaCorrente) {
+    switch (modalitaCorrente) {
     case CASSA:
         ui->cassaBtn->setDisabled(true);
         ui->configurazioneBtn->setDisabled(true);
@@ -30,34 +30,34 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QWidget *parent) :
         break;
     }
 
-    QPoint pos=QCursor::pos();
-    pos.setY(pos.y()-height());
+    QPoint pos = QCursor::pos();
+    pos.setY(pos.y() - height());
     //QDesktopWidget* desktop=QApplication::desktop();
     //int screenHeight=desktop->screenGeometry().height();
-    if(pos.y()<0) {
-      pos.setY(0);
+    if (pos.y() < 0) {
+        pos.setY(0);
     }
     move(pos);
 
-    QSignalMapper* mapper=new QSignalMapper(this);
-    connect(ui->closeBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->closeBtn,1);
-    connect(ui->reportBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->reportBtn,2);
-    connect(ui->configurazioneBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->configurazioneBtn,3);
-    connect(ui->gestioneBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->gestioneBtn,4);
-    connect(ui->cassaBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->cassaBtn,5);
-    connect(ui->testBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->testBtn,6);
-    connect(ui->statsBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->statsBtn,7);
-    connect(ui->stornoBtn,SIGNAL(clicked()),mapper,SLOT(map()));
-    mapper->setMapping(ui->stornoBtn,8);
+    QSignalMapper* mapper = new QSignalMapper(this);
+    connect(ui->closeBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->closeBtn, 1);
+    connect(ui->reportBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->reportBtn, 2);
+    connect(ui->configurazioneBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->configurazioneBtn, 3);
+    connect(ui->gestioneBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->gestioneBtn, 4);
+    connect(ui->cassaBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->cassaBtn, 5);
+    connect(ui->testBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->testBtn, 6);
+    connect(ui->statsBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->statsBtn, 7);
+    connect(ui->stornoBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->stornoBtn, 8);
 
-    connect(mapper,SIGNAL(mapped(int)),this,SLOT(pulsanteClicked(int)));
+    connect(mapper, SIGNAL(mapped(int)), this, SLOT(pulsanteClicked(int)));
 
 }
 

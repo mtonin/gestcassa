@@ -7,21 +7,21 @@
 
 class DestinazioniDlg : public QWidget, private Ui::DestinazioniDlg
 {
-  Q_OBJECT
-  
+    Q_OBJECT
+
 public:
-  explicit DestinazioniDlg(QWidget *parent = 0);
-  ~DestinazioniDlg();
+    explicit DestinazioniDlg(QWidget *parent = 0);
+    ~DestinazioniDlg();
 
 private slots:
 
-  void on_cancellaBtn_clicked();
+    void on_cancellaBtn_clicked();
 
-  void on_nuovoBtn_clicked();
+    void on_nuovoBtn_clicked();
 
 private:
-  QSqlTableModel* modello;
-  QDataWidgetMapper* mapper;
+    QSqlTableModel* modello;
+    QDataWidgetMapper* mapper;
 
 };
 
