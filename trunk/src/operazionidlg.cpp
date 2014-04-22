@@ -17,12 +17,12 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QWidget *parent) :
         break;
     case TEST:
         ui->testBtn->setDisabled(true);
-        ui->gestioneBtn->setDisabled(true);
-        ui->stornoBtn->setDisabled(true);
+        //ui->gestioneBtn->setDisabled(true);
+        //ui->stornoBtn->setDisabled(true);
         break;
     case GESTIONE:
         ui->gestioneBtn->setDisabled(true);
-        ui->testBtn->setDisabled(true);
+        //ui->testBtn->setDisabled(true);
         break;
     }
 
