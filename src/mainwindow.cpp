@@ -122,16 +122,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     ui->articoliStackedWidget->setAcceptDrops(true);
     ui->messaggiArea->setText("MODALITA' GESTIONE");
-  };
-  if(CASSA==nuovaModalita) {
-    if(TEST==modalitaCorrente) {
-      idSessione=confMap->value("sessioneSalvata").toInt();
-      confMap->insert("sessioneCorrente",idSessione);
-      confMap->remove("sessioneSalvata");
-      ordineBox->nuovoOrdine(idSessione);
-      exitTest();
-    }
-
+  } else {
+    // nuova modalià == CASSA o TEST
     ui->adminFunctBox->setVisible(false);
     ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
@@ -158,18 +150,27 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     }
 
     ui->articoliStackedWidget->setAcceptDrops(false);
-
     ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
-    ui->messaggiArea->setText("MODALITA' CASSA");
-    showMaximized();
-  }
-  if(TEST==nuovaModalita) {
-    ui->adminFunctBox->setVisible(false);
-    idSessione=confMap->value("sessioneCorrente").toInt();
-    confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
-    confMap->insert("sessioneSalvata",idSessione);
-    ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
-    enterTest();
+
+    if(CASSA==nuovaModalita) {
+      if(TEST==modalitaCorrente) {
+        idSessione=confMap->value("sessioneSalvata").toInt();
+        confMap->insert("sessioneCorrente",idSessione);
+        confMap->remove("sessioneSalvata");
+        ordineBox->nuovoOrdine(idSessione);
+        exitTest();
+      }
+
+      ui->messaggiArea->setText("MODALITA' CASSA");
+    }
+    if(TEST==nuovaModalita) {
+      ui->adminFunctBox->setVisible(false);
+      idSessione=confMap->value("sessioneCorrente").toInt();
+      confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
+      confMap->insert("sessioneSalvata",idSessione);
+      ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
+      enterTest();
+    }
   }
 
   modalitaCorrente=nuovaModalita;
