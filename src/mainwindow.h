@@ -33,9 +33,9 @@ private slots:
   void creaRepartiButtons();
   void repartoSelezionato();
   void articoloSelezionato();
-  void execConfigurazione();
-  void on_closeBtn_clicked();
-  void execReport();
+  void on_configurazioneBtn_clicked();
+  void on_funzioniBtn_clicked();
+  void on_reportBtn_clicked();
   void execStats();
   void execCassa();
   void execGestione();
@@ -47,6 +47,8 @@ private slots:
 
   void execTest();
   void execStorno();
+
+  void on_closeBtn_clicked();
 
 private:
   Ui::MainWindow *ui;
