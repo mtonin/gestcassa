@@ -103,20 +103,13 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         confMap->remove("sessioneSalvata");
         exitTest();
     }
-    /*
-    ui->configurazioneBtn->setEnabled(true);
-    ui->reportBtn->setEnabled(true);
-    ui->cassaBtn->setEnabled(true);
-    ui->gestioneBtn->setEnabled(false);
-    ui->testBtn->setEnabled(false);
-    */
+    ui->adminFunctBox->setVisible(true);
 
     ui->latoStackedWidget->setCurrentIndex(0);
     // attiva tutti i pulsanti dei reparti
     QListIterator<RepartoBtnWidget*> itReparti(repartiList);
     while(itReparti.hasNext()) {
       itReparti.next()->setVisible(true);
-      //itReparti.next()->setEnabled(true);
     }
     QListIterator<QStackedWidget*> it(articoliList);
     while(it.hasNext()) {
@@ -131,14 +124,6 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     ui->messaggiArea->setText("MODALITA' GESTIONE");
   };
   if(CASSA==nuovaModalita) {
-      /*
-    ui->configurazioneBtn->setEnabled(false);
-    ui->reportBtn->setEnabled(false);
-    ui->cassaBtn->setEnabled(false);
-    ui->gestioneBtn->setEnabled(true);
-    ui->testBtn->setEnabled(true);
-    ui->statsBtn->setEnabled(true);
-    */
     if(TEST==modalitaCorrente) {
       idSessione=confMap->value("sessioneSalvata").toInt();
       confMap->insert("sessioneCorrente",idSessione);
@@ -147,8 +132,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
       exitTest();
     }
 
-    //ui->modalitaBtn->setText("GESTIONE");
-    //ui->modalitaBtn->setIcon(QIcon(":/GestCassa/gestione"));
+    ui->adminFunctBox->setVisible(false);
     ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
     int primoRepartoAttivo=-1;
@@ -158,7 +142,6 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     while(itReparti.hasNext()) {
       RepartoBtnWidget* reparto=itReparti.next();
       reparto->setVisible(reparto->getAbilitato());
-      //reparto->setEnabled(reparto->getAbilitato());
       if(primoRepartoAttivo<0 && reparto->getAbilitato()) primoRepartoAttivo=reparto->getId();
     }
 
@@ -181,14 +164,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     showMaximized();
   }
   if(TEST==nuovaModalita) {
-      /*
-      ui->configurazioneBtn->setEnabled(false);
-      ui->reportBtn->setEnabled(false);
-      ui->cassaBtn->setEnabled(false);
-      ui->gestioneBtn->setEnabled(false);
-      ui->testBtn->setEnabled(true);
-      ui->statsBtn->setEnabled(false);
-      */
+    ui->adminFunctBox->setVisible(false);
     idSessione=confMap->value("sessioneCorrente").toInt();
     confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
     confMap->insert("sessioneSalvata",idSessione);
@@ -339,7 +315,7 @@ void MainWindow::articoloSelezionato(){
   }
 }
 
-void MainWindow::execConfigurazione()
+void MainWindow::on_configurazioneBtn_clicked()
 {
   ConfigurazioneDlg* dlg=new ConfigurazioneDlg(confMap);
   connect(dlg,SIGNAL(resetOrdini(int)),ordineBox,SLOT(nuovoOrdine(int)));
@@ -352,7 +328,7 @@ void MainWindow::execConfigurazione()
   delete dlg;
 }
 
-void MainWindow::on_closeBtn_clicked()
+void MainWindow::on_funzioniBtn_clicked()
 {
     OperazioniDlg dlg(modalitaCorrente);
     connect(&dlg,SIGNAL(operazioneSelezionata(int)),this,SLOT(esegueOperazione(int)));
@@ -360,7 +336,7 @@ void MainWindow::on_closeBtn_clicked()
     // close();
 }
 
-void MainWindow::execReport()
+void MainWindow::on_reportBtn_clicked()
 {
   ReportForm form(confMap);
   form.exec();
@@ -441,26 +417,6 @@ void MainWindow::execTest() {
     }
     gestioneModalita(TEST);
     qApp->restoreOverrideCursor();
-
-    /*
-    int idSessione=confMap->value("sessioneCorrente").toInt();
-    if(idSessione<ID_SESSIONE_TEST) {
-        gestioneModalita(TEST);
-        confMap->insert("sessioneCorrente",ID_SESSIONE_TEST);
-        confMap->insert("sessioneSalvata",idSessione);
-        ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
-        enterTest();
-        //ui->testBtn->setDown(true);
-    } else {
-        gestioneModalita(CASSA);
-        idSessione=confMap->value("sessioneSalvata").toInt();
-        confMap->insert("sessioneCorrente",idSessione);
-        confMap->remove("sessioneSalvata");
-        ordineBox->nuovoOrdine(idSessione);
-        exitTest();
-        //ui->testBtn->setDown(false);
-    }
-    */
 }
 
 void MainWindow::lampeggia() {
@@ -479,27 +435,18 @@ void MainWindow::lampeggia() {
 void MainWindow::esegueOperazione(int idx){
     switch(idx) {
     case 1:
-        close();
-        break;
-    case 2:
-        execReport();
-        break;
-    case 3:
-        execConfigurazione();
-        break;
-    case 4:
         execGestione();
         break;
-    case 5:
+    case 2:
         execCassa();
         break;
-    case 6:
+    case 3:
         execTest();
         break;
-    case 7:
+    case 4:
         execStats();
         break;
-    case 8:
+    case 5:
         execStorno();
         break;
     }
@@ -525,4 +472,9 @@ void MainWindow::execStorno() {
     StoricoOrdini dlg(idSessione);
     dlg.exec();
     return;
+}
+
+void MainWindow::on_closeBtn_clicked()
+{
+  close();
 }
