@@ -139,7 +139,7 @@
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
-             <verstretch>1</verstretch>
+             <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="maximumSize">
@@ -207,6 +207,12 @@
          </item>
          <item>
           <widget class="QGroupBox" name="adminFunctBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -242,8 +248,14 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>85</width>
+                <width>69</width>
                 <height>71</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
                </size>
               </property>
               <property name="text">
@@ -277,8 +289,14 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>85</width>
+                <width>69</width>
                 <height>71</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
                </size>
               </property>
               <property name="text">
@@ -312,8 +330,14 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>85</width>
+                <width>69</width>
                 <height>71</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
                </size>
               </property>
               <property name="text">
@@ -343,7 +367,7 @@
          <item>
           <widget class="QGroupBox" name="infoBox">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
              <horstretch>3</horstretch>
              <verstretch>1</verstretch>
             </sizepolicy>
@@ -357,7 +381,7 @@
            <property name="title">
             <string>INFO</string>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="3,1,2">
             <property name="spacing">
              <number>2</number>
             </property>
@@ -376,10 +400,16 @@
             <item>
              <widget class="QLabel" name="messaggiArea">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>1</horstretch>
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>90</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="font">
                <font>
@@ -412,7 +442,7 @@
             <item>
              <widget class="QFrame" name="clockFrame">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -421,12 +451,6 @@
                <size>
                 <width>90</width>
                 <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>500</width>
-                <height>16777215</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -440,21 +464,15 @@
             <item>
              <widget class="QFrame" name="infoFrame">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>90</width>
                 <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>150</width>
-                <height>16777215</height>
                </size>
               </property>
               <property name="styleSheet">
