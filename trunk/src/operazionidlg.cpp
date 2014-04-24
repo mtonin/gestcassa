@@ -32,9 +32,12 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, Q
     }
 
     QPoint pos=startPoint;
+    qDebug(QString("pos iniziale: x=%1,y=%2").arg(pos.x()).arg(pos.y()).toAscii());
     QPropertyAnimation *effetto=new QPropertyAnimation(this,"geometry");
-    effetto->setStartValue(QRect(pos.x(),pos.y(),geometry().width(),0));
-    effetto->setEndValue(QRect(pos.x(),pos.y()-geometry().height(),geometry().width(),geometry().height()));
+    effetto->setStartValue(QRect(pos.x(),pos.y(),minimumSize().width(),minimumSize().height()));
+    effetto->setEndValue(QRect(pos.x(),pos.y()-maximumSize().height(),maximumSize().width(),maximumSize().height()));
+    //effetto->setStartValue(QRect(pos.x(),pos.y(),geometry().width(),0));
+    //effetto->setEndValue(QRect(pos.x(),pos.y()-geometry().height(),geometry().width(),geometry().height()));
     effetto->setDuration(1000);
     effetto->setEasingCurve(QEasingCurve::OutBack);
     connect(effetto,SIGNAL(finished()),this,SLOT(init()));
@@ -83,8 +86,8 @@ void OperazioniDlg::pulsanteClicked(int idx)
 void OperazioniDlg::init()
 {
 
-  setMaximumSize(size());
-  setMinimumSize(size());
+  //setMaximumSize(size());
+  //setMinimumSize(size());
 
   QSignalMapper* mapper=new QSignalMapper(this);
   connect(ui->gestioneBtn,SIGNAL(clicked()),mapper,SLOT(map()));
@@ -105,10 +108,10 @@ void OperazioniDlg::init()
 void OperazioniDlg::on_statsBtn_2_clicked()
 {
   QRect box=geometry();
-  QPoint pos=QCursor::pos();
+  qDebug(QString("pos finale: x=%1,y=%2").arg(box.x()).arg(box.y()+box.height()).toAscii());
   QPropertyAnimation *effetto =new QPropertyAnimation(this,"geometry");
   effetto->setStartValue(this->geometry());
-  effetto->setEndValue(QRect(box.x(),box.y()+box.height(),box.width(),0));
+  effetto->setEndValue(QRect(box.x(),box.y()+box.height(),minimumSize().width(),minimumSize().height()));
   effetto->setDuration(1000);
   effetto->setEasingCurve(QEasingCurve::InBack);
   connect(effetto,SIGNAL(finished()),this,SLOT(close()));
