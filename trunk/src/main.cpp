@@ -16,8 +16,15 @@ int main(int argc, char *argv[])
     a.installTranslator(&translator);
   }
 
+  /*
+  int idFont=QFontDatabase::addApplicationFont(":/GestCassa/adventix");
+  qDebug("idFont=%d",idFont);
+  QFontDatabase::applicationFontFamilies(idFont)
+  */
+
   QFont currentFont=a.font();
   currentFont.setPointSize(10);
+  //currentFont.setFamily("adventix");
   a.setFont(currentFont);
 
   QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;

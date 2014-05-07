@@ -12,6 +12,7 @@
 #include "confermadlg.h"
 #include "operazionidlg.h"
 #include "storicoordini.h"
+//#include "basemsgbox.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -346,7 +347,8 @@ void MainWindow::on_reportBtn_clicked()
 
 void MainWindow::execStats()
 {
-  StatsForm form(confMap,this);
+  int idSessione=ID_SESSIONE_TEST==confMap->value("sessioneCorrente").toInt()?confMap->value("sessioneSalvata").toInt():ID_SESSIONE_TEST;
+  StatsForm form(idSessione,confMap,this);
   //form.setWindowState(Qt::WindowMaximized);
   form.exec();
 }
@@ -360,6 +362,11 @@ void MainWindow::execCassa()
 void MainWindow::execGestione()
 {
   if(ordineBox->isInComposizione()) {
+      /*
+      BaseMsgBox* messaggio=new BaseMsgBox;
+      messaggio->setTesto("Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
+      messaggio->show();
+      */
     QMessageBox::information(this,"ATTENZIONE","Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
     return;
   }
@@ -470,10 +477,10 @@ void MainWindow::exitTest()
 }
 
 void MainWindow::execStorno() {
-    int idSessione=confMap->value("sessioneCorrente").toInt();
-    StoricoOrdini dlg(idSessione);
-    dlg.exec();
-    return;
+  int idSessione=ID_SESSIONE_TEST==confMap->value("sessioneCorrente").toInt()?confMap->value("sessioneSalvata").toInt():ID_SESSIONE_TEST;
+  StoricoOrdini dlg(idSessione);
+  dlg.exec();
+  return;
 }
 
 void MainWindow::on_closeBtn_clicked()

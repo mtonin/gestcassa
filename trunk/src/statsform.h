@@ -11,7 +11,7 @@ class StatsForm : public QDialog, private Ui::StatsForm
   Q_OBJECT
   
 public:
-  explicit StatsForm(QMap<QString,QVariant>* par, QWidget *parent = 0);
+  explicit StatsForm(int idSessione, QMap<QString,QVariant>* par, QWidget *parent = 0);
   ~StatsForm();
 
   void stampa(const QTextDocument *doc, const QString descrReport, bool preview);
@@ -24,6 +24,9 @@ private slots:
   void ordinaByColumn(int column);
   void on_stampaBtn_clicked();
 
+  void xCheckRange(const QCPRange &newRange, const QCPRange &oldRange);
+  void yCheckRange(const QCPRange &newRange, const QCPRange &oldRange);
+
 private:
   StatsModel* statsModel;
   void caricaStats();
@@ -35,7 +38,11 @@ private:
   QString tsFine;
   int totOrdini;
   float totImporto;
+  double maxXAxis;
+  double maxYAxis;
 
+  void impostaLabel(QString valore, QCustomPlot *customPlot, qreal x, qreal y);
+  void creaGrafico(const QColor &colore, const QVector<double> chiavi, const QVector<double> valori);
 };
 
 #endif // STATSFORM_H

@@ -10,10 +10,8 @@
 #include <QTextDocumentFragment>
 #include <QTextDocumentWriter>
 
-StatsForm::StatsForm(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(par), QDialog(parent)
+StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *parent) : idSessioneCorrente(idSessione),configurazione(par), QDialog(parent)
 {
-  idSessioneCorrente=configurazione->value("sessioneCorrente").toInt();
-
   setupUi(this);
   //setWindowFlags(Qt::Tool);
   setWindowState(Qt::WindowMaximized);
@@ -31,8 +29,9 @@ StatsForm::StatsForm(QMap<QString, QVariant> *par, QWidget *parent) : configuraz
 
   statsView->setWordWrap(true);
   statsView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  statsView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
   statsView->horizontalHeader()->setStretchLastSection(false);
+
+  statsView->setAlternatingRowColors(true);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
 
@@ -59,15 +58,6 @@ void StatsForm::ordinaByColumn(int column)
 
 void StatsForm::caricaStats()
 {
-  graficoPlot->removePlottable(0);
-  QCPBars* barPlot=new QCPBars(graficoPlot->xAxis,graficoPlot->yAxis);
-  graficoPlot->addPlottable(barPlot);
-  QVector<double> keyData;
-  QVector<double> valueData;
-  QVector<QString> tickLabelsData;
-  QVector<double> tickData;
-  int numero=0;
-
   QString sql("SELECT descrizione,sum(quantita),tsstampa \
               FROM storicoordini \
               where \
@@ -107,9 +97,27 @@ void StatsForm::caricaStats()
   }
   statsModel->clear();
 
+  graficoPlot->removePlottable(0);
+
+  QVector<double> keyData1;
+  QVector<double> valueData1;
+  QVector<double> keyData2;
+  QVector<double> valueData2;
+  QVector<double> keyData3;
+  QVector<double> valueData3;
+  QVector<double> keyData4;
+  QVector<double> valueData4;
+  QVector<double> keyData5;
+  QVector<double> valueData5;
+  QVector<QString> tickLabelsData;
+  QVector<double> tickData;
+  int numero=0;
+  int maxValore=0;
   while(stmt.next()) {
     QString nomeArticolo=stmt.value(0).toString();
     int quantita=stmt.value(1).toInt();
+    if(quantita>maxValore)
+      maxValore=quantita;
     QList<QStandardItem*> riga;
     riga.append(new QStandardItem(nomeArticolo));
     QStandardItem* quantitaItem=new QStandardItem;
@@ -118,39 +126,83 @@ void StatsForm::caricaStats()
     riga.append(new QStandardItem(nomeArticolo.toUpper()));
     statsModel->appendRow(riga);
 
-    keyData.append(++numero);
-    valueData.append(quantita);
+    int resto=numero%5;
+    switch (resto) {
+      case 0:
+        keyData1.append(++numero);
+        valueData1.append(quantita);
+        break;
+      case 1:
+        keyData2.append(++numero);
+        valueData2.append(quantita);
+        break;
+      case 2:
+        keyData3.append(++numero);
+        valueData3.append(quantita);
+        break;
+      case 3:
+        keyData4.append(++numero);
+        valueData4.append(quantita);
+        break;
+      case 4:
+        keyData5.append(++numero);
+        valueData5.append(quantita);
+        break;
+    }
+
     tickLabelsData.append(nomeArticolo);
     tickData.append(numero);
+    QString testo=QString("%1").arg(quantita);
+    impostaLabel(testo,graficoPlot,numero,quantita);
   }
 
   statsView->hideColumn(2);
-
-  QFont font=graficoPlot->xAxis->tickLabelFont();
-  font.setPointSize(8);
-  graficoPlot->xAxis->setTickLabelFont(font);
-  graficoPlot->xAxis->setAutoTicks(false);
-  graficoPlot->xAxis->setAutoTickLabels(false);
-  barPlot->setData(keyData,valueData);
-  graficoPlot->xAxis->setTickVector(tickData);
-  graficoPlot->xAxis->setTickVectorLabels(tickLabelsData);
-  graficoPlot->xAxis->setTickLabelRotation(60);
-  graficoPlot->xAxis->setSubTickCount(0);
-  graficoPlot->xAxis->setTickLength(0, 4);
-  graficoPlot->xAxis->grid()->setVisible(false);
-  graficoPlot->xAxis->setRange(0, ++numero);
-  graficoPlot->xAxis->setPadding(10);
-  graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
-  graficoPlot->rescaleAxes();
-  graficoPlot->replot();
-
-  //graficoPlot->axisRect()->setRangeDrag(Qt::Horizontal|Qt::Vertical);
-  //graficoPlot->axisRect()->setRangeZoom(Qt::Horizontal|Qt::Vertical);
-  graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
-
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
+  if(numero>0)
+    statsView->horizontalHeader()->setResizeMode(0,QHeaderView::Stretch);
 
   calcolaTotali();
+
+  maxXAxis=maxValore+10;
+  maxYAxis=numero+1;
+
+  QFont font=graficoPlot->yAxis->tickLabelFont();
+  font.setPointSize(8);
+  graficoPlot->yAxis->setTickLabelFont(font);
+  graficoPlot->yAxis->setAutoTicks(false);
+  graficoPlot->yAxis->setAutoTickLabels(false);
+  graficoPlot->yAxis->setTickVector(tickData);
+  graficoPlot->yAxis->setTickVectorLabels(tickLabelsData);
+  graficoPlot->yAxis->setSubTickCount(0);
+  graficoPlot->yAxis->setTickLength(0, 4);
+  graficoPlot->yAxis->grid()->setVisible(false);
+  graficoPlot->yAxis->setRange(0, maxYAxis);
+  graficoPlot->yAxis->setPadding(0);
+  graficoPlot->xAxis->setRange(0,maxXAxis);
+  graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
+  graficoPlot->rescaleAxes();
+
+  graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+  connect(graficoPlot->xAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(xCheckRange(QCPRange,QCPRange)));
+  connect(graficoPlot->yAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(yCheckRange(QCPRange,QCPRange)));
+
+  creaGrafico(Qt::red,keyData1,valueData1);
+  creaGrafico(Qt::yellow,keyData2,valueData2);
+  creaGrafico(Qt::blue,keyData3,valueData3);
+  creaGrafico(Qt::green,keyData4,valueData4);
+  creaGrafico(Qt::magenta,keyData5,valueData5);
+
+  graficoPlot->replot();
+  graficoPlot->axisRect()->setAutoMargins(QCP::msNone);
+
+}
+
+void StatsForm::creaGrafico(const QColor &colore, const QVector<double> chiavi, const QVector<double> valori) {
+  QCPBars* barPlot=new QCPBars(graficoPlot->yAxis,graficoPlot->xAxis);
+  graficoPlot->addPlottable(barPlot);
+  barPlot->setBrush(colore);
+  barPlot->setData(chiavi,valori);
+
 }
 
 void StatsForm::calcolaTotali()
@@ -305,3 +357,26 @@ void StatsForm::formattaTabella(QTextTable* tabella)
 
 }
 
+void StatsForm::impostaLabel(QString valore,QCustomPlot* customPlot, qreal x, qreal y) {
+
+  QCPItemText *textLabel = new QCPItemText(customPlot);
+  customPlot->addItem(textLabel);
+  textLabel->setPositionAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+  textLabel->setPadding(QMargins(3,0,0,0));
+  textLabel->position->setType(QCPItemPosition::ptPlotCoords);
+  textLabel->position->setCoords(y,x);
+  textLabel->setText(valore);
+  textLabel->setFont(QFont(font().family(), 10));
+}
+
+void StatsForm::xCheckRange(const QCPRange &newRange,const QCPRange& oldRange)
+{
+  if(newRange.lower<0 || newRange.upper > maxXAxis)
+    graficoPlot->xAxis->setRange(oldRange);
+}
+
+void StatsForm::yCheckRange(const QCPRange &newRange, const QCPRange &oldRange)
+{
+  if(newRange.lower<0 || newRange.upper > maxYAxis)
+    graficoPlot->yAxis->setRange(oldRange);
+}
