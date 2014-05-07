@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     storicoordini.cpp \
     storicoordinimodel.cpp \
     operazionidlg.cpp \
-    storicoarticoliordinimodel.cpp
+    storicoarticoliordinimodel.cpp \
+    basemsgbox.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -66,7 +67,8 @@ HEADERS  += mainwindow.h \
     storicoordini.h \
     storicoordinimodel.h \
     operazionidlg.h \
-    storicoarticoliordinimodel.h
+    storicoarticoliordinimodel.h \
+    basemsgbox.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -88,7 +90,7 @@ FORMS    += mainwindow.ui \
 QMAKE_TARGET_COMPANY =
 QMAKE_TARGET_PRODUCT = GestCassa
 QMAKE_TARGET_DESCRIPTION = Gestione cassa
-QMAKE_TARGET_COPYRIGHT = copyright MT 2013
+QMAKE_TARGET_COPYRIGHT = copyright MT 2013 - 2014
 
 RESOURCES += \
     risorse.qrc
