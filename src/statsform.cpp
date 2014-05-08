@@ -97,7 +97,8 @@ void StatsForm::caricaStats()
   }
   statsModel->clear();
 
-  graficoPlot->removePlottable(0);
+  graficoPlot->clearItems();
+  graficoPlot->clearPlottables();
 
   QVector<double> keyData1;
   QVector<double> valueData1;
@@ -111,7 +112,7 @@ void StatsForm::caricaStats()
   QVector<double> valueData5;
   QVector<QString> tickLabelsData;
   QVector<double> tickData;
-  int numero=0;
+  int counter=0;
   int maxValore=0;
   while(stmt.next()) {
     QString nomeArticolo=stmt.value(0).toString();
@@ -126,45 +127,46 @@ void StatsForm::caricaStats()
     riga.append(new QStandardItem(nomeArticolo.toUpper()));
     statsModel->appendRow(riga);
 
-    int resto=numero%5;
+    int resto=counter%5;
     switch (resto) {
       case 0:
-        keyData1.append(++numero);
+        keyData1.append(++counter);
         valueData1.append(quantita);
         break;
       case 1:
-        keyData2.append(++numero);
+        keyData2.append(++counter);
         valueData2.append(quantita);
         break;
       case 2:
-        keyData3.append(++numero);
+        keyData3.append(++counter);
         valueData3.append(quantita);
         break;
       case 3:
-        keyData4.append(++numero);
+        keyData4.append(++counter);
         valueData4.append(quantita);
         break;
       case 4:
-        keyData5.append(++numero);
+        keyData5.append(++counter);
         valueData5.append(quantita);
         break;
     }
 
     tickLabelsData.append(nomeArticolo);
-    tickData.append(numero);
+    tickData.append(counter);
     QString testo=QString("%1").arg(quantita);
-    impostaLabel(testo,graficoPlot,numero,quantita);
+    impostaLabel(testo,graficoPlot,counter,quantita);
   }
 
   statsView->hideColumn(2);
   statsView->horizontalHeader()->setSortIndicator(1,Qt::DescendingOrder);
-  if(numero>0)
+  if(counter>0) {
     statsView->horizontalHeader()->setResizeMode(0,QHeaderView::Stretch);
+  }
 
   calcolaTotali();
 
   maxXAxis=maxValore+10;
-  maxYAxis=numero+1;
+  maxYAxis=counter+1;
 
   QFont font=graficoPlot->yAxis->tickLabelFont();
   font.setPointSize(8);
@@ -177,7 +179,6 @@ void StatsForm::caricaStats()
   graficoPlot->yAxis->setTickLength(0, 4);
   graficoPlot->yAxis->grid()->setVisible(false);
   graficoPlot->yAxis->setRange(0, maxYAxis);
-  graficoPlot->yAxis->setPadding(0);
   graficoPlot->xAxis->setRange(0,maxXAxis);
   graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
   graficoPlot->rescaleAxes();
