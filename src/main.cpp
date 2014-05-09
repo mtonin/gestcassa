@@ -9,36 +9,43 @@
 
 int main(int argc, char *argv[])
 {
-  QApplication a(argc, argv);
+    QApplication a(argc, argv);
 
-  QTranslator translator;
-  if(translator.load(QString("qt_it"))) {
-    a.installTranslator(&translator);
-  }
+    QDesktopWidget* desktop = QApplication::desktop();
+    if (desktop->size().width() < 1024 || desktop->size().height() < 768) {
+        if (QMessageBox::No == QMessageBox::question(0,
+                QObject::tr("Risoluzione minima"), "E' consigliabile usare una risoluzione minima di 1024x768. Continuare?", QMessageBox::Ok, QMessageBox::No))
+            return 0;
+    }
 
-  /*
-  int idFont=QFontDatabase::addApplicationFont(":/GestCassa/adventix");
-  qDebug("idFont=%d",idFont);
-  QFontDatabase::applicationFontFamilies(idFont)
-  */
+    QTranslator translator;
+    if (translator.load(QString("qt_it"))) {
+        a.installTranslator(&translator);
+    }
 
-  QFont currentFont=a.font();
-  currentFont.setPointSize(10);
-  //currentFont.setFamily("adventix");
-  a.setFont(currentFont);
+    /*
+    int idFont=QFontDatabase::addApplicationFont(":/GestCassa/adventix");
+    qDebug("idFont=%d",idFont);
+    QFontDatabase::applicationFontFamilies(idFont)
+    */
 
-  QMap<QString,QVariant>* configurazione=new QMap<QString,QVariant>;
-  DBManager dbman(configurazione);
+    QFont currentFont = a.font();
+    currentFont.setPointSize(10);
+    //currentFont.setFamily("adventix");
+    a.setFont(currentFont);
 
-  MainWindow w(configurazione);
-  w.show();
+    QMap<QString, QVariant>* configurazione = new QMap<QString, QVariant>;
+    DBManager dbman(configurazione);
 
-  //a.setStartDragDistance(50);
-  //a.setStartDragTime(1000);
+    MainWindow w(configurazione);
+    w.show();
 
-  a.exec();
-  delete configurazione;
+    //a.setStartDragDistance(50);
+    //a.setStartDragTime(1000);
 
-  //ExitWindowsEx(EWX_LOGOFF,0);
+    a.exec();
+    delete configurazione;
+
+    //ExitWindowsEx(EWX_LOGOFF,0);
 
 }
