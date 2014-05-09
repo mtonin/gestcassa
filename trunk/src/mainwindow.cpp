@@ -347,7 +347,10 @@ void MainWindow::on_reportBtn_clicked()
 
 void MainWindow::execStats()
 {
-  int idSessione=ID_SESSIONE_TEST==confMap->value("sessioneCorrente").toInt()?confMap->value("sessioneSalvata").toInt():ID_SESSIONE_TEST;
+  int idSessione=confMap->value("sessioneCorrente").toInt();
+  if(ID_SESSIONE_TEST==idSessione) {
+    idSessione=confMap->value("sessioneSalvata").toInt();
+  }
   StatsForm form(idSessione,confMap,this);
   //form.setWindowState(Qt::WindowMaximized);
   form.exec();
@@ -477,7 +480,10 @@ void MainWindow::exitTest()
 }
 
 void MainWindow::execStorno() {
-  int idSessione=ID_SESSIONE_TEST==confMap->value("sessioneCorrente").toInt()?confMap->value("sessioneSalvata").toInt():ID_SESSIONE_TEST;
+  int idSessione=confMap->value("sessioneCorrente").toInt();
+  if(ID_SESSIONE_TEST==idSessione) {
+    idSessione=confMap->value("sessioneSalvata").toInt();
+  }
   StoricoOrdini dlg(idSessione);
   dlg.exec();
   return;
