@@ -26,6 +26,7 @@ private slots:
 
   void xCheckRange(const QCPRange &newRange, const QCPRange &oldRange);
   void yCheckRange(const QCPRange &newRange, const QCPRange &oldRange);
+  void mouseClick(QMouseEvent* evt);
 
 private:
   StatsModel* statsModel;

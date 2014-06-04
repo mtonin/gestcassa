@@ -13,6 +13,8 @@
 StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *parent) : idSessioneCorrente(idSessione),configurazione(par), QDialog(parent)
 {
   setupUi(this);
+  graficoVScrollBar->setVisible(false);
+  graficoHScrollBar->setVisible(false);
   //setWindowFlags(Qt::Tool);
   setWindowState(Qt::WindowMaximized);
   setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
@@ -34,6 +36,9 @@ StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *pare
   statsView->setAlternatingRowColors(true);
 
   connect(statsView->horizontalHeader(),SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)),this,SLOT(ordinaByColumn(int)));
+  connect(graficoPlot,SIGNAL(mouseRelease(QMouseEvent*)),this,SLOT(mouseClick(QMouseEvent*)));
+  connect(graficoPlot->xAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(xCheckRange(QCPRange,QCPRange)));
+  connect(graficoPlot->yAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(yCheckRange(QCPRange,QCPRange)));
 
   caricaStats();
 }
@@ -183,9 +188,7 @@ void StatsForm::caricaStats()
   graficoPlot->axisRect()->setAutoMargins(QCP::msAll);
   graficoPlot->rescaleAxes();
 
-  graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
-  connect(graficoPlot->xAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(xCheckRange(QCPRange,QCPRange)));
-  connect(graficoPlot->yAxis,SIGNAL(rangeChanged(QCPRange,QCPRange)),this,SLOT(yCheckRange(QCPRange,QCPRange)));
+  //graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
 
   creaGrafico(Qt::red,keyData1,valueData1);
   creaGrafico(Qt::yellow,keyData2,valueData2);
@@ -380,4 +383,20 @@ void StatsForm::yCheckRange(const QCPRange &newRange, const QCPRange &oldRange)
 {
   if(newRange.lower<0 || newRange.upper > maxYAxis)
     graficoPlot->yAxis->setRange(oldRange);
+}
+
+void StatsForm::mouseClick(QMouseEvent *evt)
+{
+  QCPRange xRange=graficoPlot->xAxis->range();
+  QCPRange yRange=graficoPlot->yAxis->range();
+  if(Qt::LeftButton==evt->button()) {
+    xRange.upper-=10;
+    yRange.upper-=10;
+  } else {
+    xRange.upper+=10;
+    yRange.upper+=10;
+  }
+  graficoPlot->xAxis->setRange(xRange);
+  graficoPlot->yAxis->setRange(yRange);
+  graficoPlot->replot();
 }
