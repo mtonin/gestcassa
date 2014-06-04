@@ -9,7 +9,7 @@ enum modalitaType {
 } ;
 
 const int ID_SESSIONE_TEST = 999999;
-const QString dbFileName = "GestioneCassa/cassadb.db3";
+const QString dbFileName = "GestioneCassa/GCAS.fdb";
 
 const int NUM_REPARTI = 8;
 const int NUM_RIGHE_ART = 5;
