@@ -16,20 +16,20 @@ DBManager::DBManager(QMap<QString, QVariant> *configurazione): conf(configurazio
 
 }
 
-bool DBManager::init(const QString nomeFile)
+bool DBManager::init(const QString nomeFile,const QString modello)
 {
 
     dbFilePath = nomeFile;
+    if (!createConnection(dbFilePath, "gcas", "gcas-pwd",modello)) {
+        return false;
+    }
+
     return leggeConfigurazione();
 
 }
 
 bool DBManager::leggeConfigurazione()
 {
-
-    if (!createConnection(dbFilePath, "", "")) {
-        return false;
-    }
 
     QSqlQuery stmt("select chiave,valore from configurazione");
     if (!stmt.isActive()) {
@@ -202,21 +202,21 @@ bool DBManager::leggeConfigurazione()
     return true;
 }
 
-bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password)
+bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password, const QString modello)
 {
     if (nomeFile.isEmpty())
         return false;
     QFile dbFile(nomeFile);
     if (!dbFile.exists()) {
-        creaDb();
+        creaDb(utente,password,modello);
     }
     //QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
     //db.setHostName("10.30.102.157");
-    //db.setPort(3050);
-    db.setDatabaseName("GCAS");
-    db.setUserName("mauro");
-    db.setPassword("superpippo");
+    //db.setPort(3051);
+    db.setDatabaseName(nomeFile);
+    db.setUserName(utente);
+    db.setPassword(password);
     //db.setDatabaseName(nomeFile);
 
     // testa se il server è attivo
@@ -250,7 +250,7 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
     return true;
 }
 
-void DBManager::creaDb()
+void DBManager::creaDb(const QString user, const QString password, const QString modello)
 {
     QFile dbFile(dbFilePath);
     if (dbFile.exists()) {
@@ -259,16 +259,21 @@ void DBManager::creaDb()
         if (QDialog::Accepted != dlg->visualizza()) return;
         dbFile.remove();
     }
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    if(!QFile::copy(modello,dbFilePath)) {
+      QMessageBox::critical(0,QObject::tr("Database Error"), tr("Errore nella creazione del database"));
+      return;
+    }
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
     db.setDatabaseName(dbFilePath);
-    //db.setUserName(utente);
-    //db.setPassword(password);
+    db.setUserName(user);
+    db.setPassword(password);
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
         return;
     }
 
-    QFile sqlFile(":/GestCassa/creadb");
+    QFile sqlFile(":/GestCassa/creadb-firebird");
     if (!sqlFile.open(QIODevice::ReadOnly)) {
         QMessageBox::critical(0, QObject::tr("Database Error"), tr("Errore nella lettura della risorsa creadb"));
         return;
