@@ -34,24 +34,25 @@ int main(int argc, char *argv[])
              .arg(dbFileName));
   QDir dbParentDir(dbFileInfo.absolutePath());
   dbParentDir.mkpath(dbFileInfo.absolutePath());
-  if(dbman.init(dbFileInfo.absoluteFilePath())) {
+  QFileInfo dbFileModello(QString("%1/gcas.fdb")
+             .arg(a.applicationDirPath()));
 
-    QString nomeFile;
-    nomeFile=dbFileInfo.absoluteFilePath();
-    /*
-    nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
-    */
-    if(!nomeFile.isEmpty()) {
-        if(dbman.init(nomeFile)) {
-          MainWindow w(configurazione);
-          w.show();
 
-          //a.setStartDragDistance(50);
-          //a.setStartDragTime(1000);
+  QString nomeFile;
+  nomeFile=dbFileInfo.absoluteFilePath();
+  /*
+  nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
+  */
+  if(!nomeFile.isEmpty()) {
+      if(dbman.init(nomeFile,dbFileModello.absoluteFilePath())) {
+        MainWindow w(configurazione);
+        w.show();
 
-          a.exec();
-        }
-    }
+        //a.setStartDragDistance(50);
+        //a.setStartDragTime(1000);
+
+        a.exec();
+      }
   }
 
   delete configurazione;
