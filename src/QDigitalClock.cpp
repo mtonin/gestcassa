@@ -43,8 +43,8 @@ QDigitalClock::QDigitalClock(QWidget* parent) : QWidget(parent)
     update();
 }
 
-QDigitalClock::~QDigitalClock() 
-{   
+QDigitalClock::~QDigitalClock()
+{
     m_pTimer->stop();
     delete m_pTimer;
 }
@@ -110,12 +110,10 @@ int QDigitalClock::interval() const
 void QDigitalClock::SetInterval(int Interval)
 {
     m_Interval = Interval;
-    if(m_Interval < DIGITAL_CLOCK_INTERVAL_MIN)
-    {
+    if (m_Interval < DIGITAL_CLOCK_INTERVAL_MIN) {
         m_Interval = DIGITAL_CLOCK_INTERVAL_MIN;
     }
-    if(m_Interval > DIGITAL_CLOCK_INTERVAL_MAX)
-    {
+    if (m_Interval > DIGITAL_CLOCK_INTERVAL_MAX) {
         m_Interval = DIGITAL_CLOCK_INTERVAL_MAX;
     }
 
