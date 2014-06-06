@@ -6,7 +6,7 @@
 
 system(prebuild.cmd)
 
-QT       += core gui sql
+QT       += core gui sql network
 
 TARGET = GestCassa
 TEMPLATE = app

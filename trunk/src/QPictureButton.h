@@ -81,7 +81,7 @@ const int PICTURE_BUTTON_DEFAULT_TEXT_SPACE = 5;
 
 
 /*
-    Class that defines a picture button widget. 
+    Class that defines a picture button widget.
     The button's look is customizable with images or fore- and background colors.
 */
 class  QPictureButton : public QAbstractButton
@@ -153,8 +153,7 @@ public:
     QSize sizeHint() const;
 
     // Defines for icon positions
-    enum EButtonPosition
-    {
+    enum EButtonPosition {
         PositionTop = 0,
         PositionBottom,
         PositionLeft,

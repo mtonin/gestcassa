@@ -6,22 +6,23 @@
 
 class DBManager : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit DBManager(QObject *parent = 0);
-  explicit DBManager(QMap<QString,QVariant>* configurazione);
+    explicit DBManager(QObject *parent = 0);
+    explicit DBManager(QMap<QString, QVariant>* configurazione);
+    bool init(const QString, const QString modello);
 
 signals:
-  
-public slots:
-  
-private:
-      bool createConnection(const QString& nomeFile, const QString& utente, const QString& password);
-      void creaDb();
-      void leggeConfigurazione();
 
-      QMap<QString,QVariant>* conf;
-      QString dbFilePath;
+public slots:
+
+private:
+    bool createConnection(const QString& nomeFile, const QString& utente, const QString& password, const QString modello);
+    void creaDb(const QString user, const QString password, const QString modello);
+    bool leggeConfigurazione();
+
+    QMap<QString, QVariant>* conf;
+    QString dbFilePath;
 };
 
 #endif // DBMANAGER_H

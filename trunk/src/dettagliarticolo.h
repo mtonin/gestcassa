@@ -7,44 +7,44 @@
 #include <QStandardItemModel>
 
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
-   {
-   Q_OBJECT
+{
+    Q_OBJECT
 
 signals:
 
 public:
-   explicit DettagliArticolo(QWidget *parent = 0);
-  ~DettagliArticolo();
-   void setCurrentArticolo(const ArticoloBtnWidget*);
+    explicit DettagliArticolo(QWidget *parent = 0);
+    ~DettagliArticolo();
+    void setCurrentArticolo(const ArticoloBtnWidget*);
 
 private slots:
-   void on_testoArticolo_textEdited(const QString &arg1);
+    void on_testoArticolo_textEdited(const QString &arg1);
 
-   void on_prezzoArticolo_textEdited(const QString &arg1);
+    void on_prezzoArticolo_textEdited(const QString &arg1);
 
-   void on_disattivaFlag_stateChanged(int checked);
+    void on_disattivaFlag_stateChanged(int checked);
 
-   void on_destinazioneBox_activated(const QString &arg1);
+    void on_destinazioneBox_activated(const QString &arg1);
 
-   void on_menuBox_clicked(bool checked);
+    void on_menuBox_clicked(bool checked);
 
-   void on_nuovoBtn_clicked();
+    void on_nuovoBtn_clicked();
 
-   void on_eliminaBtn_clicked();
+    void on_eliminaBtn_clicked();
 
-   void on_articoliList_clicked(const QModelIndex &index);
-   void rimuoveArticolo();
+    void on_articoliList_clicked(const QModelIndex &index);
+    void rimuoveArticolo();
 
-   void on_prezzoArticolo_editingFinished();
+    void on_prezzoArticolo_editingFinished();
 
 private:
-   void aggiornaArticolo();
-   ArticoloBtnWidget* articoloBtn;
-   QStandardItemModel* modello;
-   QStandardItemModel* articoliMenuModello;
+    void aggiornaArticolo();
+    ArticoloBtnWidget* articoloBtn;
+    QStandardItemModel* modello;
+    QStandardItemModel* articoliMenuModello;
 
-   void reset();
-   void creaSelezioneArticoloBox();
+    void reset();
+    void creaSelezioneArticoloBox();
 };
 
 #endif // DETTAGLIARTICOLO_H

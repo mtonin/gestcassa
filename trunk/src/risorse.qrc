@@ -24,5 +24,6 @@
         <file alias="operazioni">resources/Cog.png</file>
         <file alias="esce">resources/home_go_32.png</file>
         <file alias="freccia_giu_blu">resources/Arrow Down.png</file>
+        <file alias="creadb-firebird">db/gcas-firebird.sql</file>
     </qresource>
 </RCC>
