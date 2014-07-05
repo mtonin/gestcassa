@@ -199,7 +199,7 @@ void MainWindow::creaRepartiButtons()
 {
 
     // ricarica la cache
-    caricaArticoli();
+    //caricaArticoli();
 
     // cancella i pulsanti degli articoli
     QListIterator<QStackedWidget*> itArticoli(articoliList);
@@ -265,7 +265,8 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             QStackedWidget* stackedBox = new QStackedWidget;
             int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + col;
 
-            //ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+            ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+            /*
             QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
             ArticoloBtnWidget* btn;
             if(NULL==articoloMap) {
@@ -273,6 +274,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             } else {
               btn = new ArticoloBtnWidget(idPulsante, articoloMap);
             }
+            */
             btn->SetButtonColorNormal(coloreSfondo);
             btn->SetButtonColorHot(coloreSfondo);
             btn->SetTextColorEnabled(coloreCarattere);
