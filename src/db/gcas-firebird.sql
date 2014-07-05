@@ -2,7 +2,6 @@ CREATE DOMAIN BOOLEAN
 AS SMALLINT
 CHECK (value is null or value in (0,1));
 
-
 -- BEGIN TABLE articoli
 CREATE TABLE articoli
 (

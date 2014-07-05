@@ -118,7 +118,7 @@ void DettagliArticolo::aggiornaArticolo()
 
     QSqlQuery stmt1;
     if (0 == articoloBtn->getId()) {
-        stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu) values(?,?,?,?)");
+        stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu) values(?,?,?,?) returning idarticolo");
     } else {
         stmt1.prepare("update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=? where idarticolo=?");
     }
@@ -136,6 +136,7 @@ void DettagliArticolo::aggiornaArticolo()
         return;
     }
     if (0 == articoloBtn->getId()) {
+      /*
         stmt1.exec("select last_insert_rowid()");
         stmt1.exec();
         if (!stmt1.isActive()) {
@@ -143,6 +144,7 @@ void DettagliArticolo::aggiornaArticolo()
                                   stmt1.lastError().text());
             return;
         }
+      */
         if (stmt1.next())
             articoloBtn->setId(stmt1.value(0).toInt());
     }

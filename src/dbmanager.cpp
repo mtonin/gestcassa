@@ -186,6 +186,23 @@ bool DBManager::leggeConfigurazione()
         nuovaVersioneDB = 8;
     }
 
+    if (versioneDB < 9) {
+       if (!stmt.exec("CREATE SEQUENCE SEQARTICOLI") ||
+           !stmt.exec("ALTER SEQUENCE SEQARTICOLI RESTART WITH 0") ||
+           !stmt.exec("CREATE TRIGGER articoli_t1 \
+                      ACTIVE BEFORE INSERT POSITION 0 \
+                      ON articoli \
+                      AS BEGIN \
+                         if (NEW.IDarticolo is NULL) \
+                              then NEW.IDarticolo = next value for seqarticoli; \
+                      end")) {
+           QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+           db.rollback();
+           return false;
+       }
+       nuovaVersioneDB=9;
+    }
+
     if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
