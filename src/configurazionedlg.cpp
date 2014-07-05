@@ -529,11 +529,13 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         db.rollback();
         return;
     }
-    int maxIdArticolo=stmt.value(0).toInt();
-    if (!stmt.exec(QString("alter sequence seqarticoli restart with %1").arg(maxIdArticolo))) {
+    if(stmt.next()) {
+      int maxIdArticolo=stmt.value(0).toInt();
+      if (!stmt.exec(QString("alter sequence seqarticoli restart with %1").arg(maxIdArticolo))) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
         return;
+      }
     }
 
     db.commit();
