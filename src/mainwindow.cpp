@@ -267,7 +267,12 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
 
             //ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
             QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
-            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante, articoloMap);
+            ArticoloBtnWidget* btn;
+            if(NULL==articoloMap) {
+              btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+            } else {
+              btn = new ArticoloBtnWidget(idPulsante, articoloMap);
+            }
             btn->SetButtonColorNormal(coloreSfondo);
             btn->SetButtonColorHot(coloreSfondo);
             btn->SetTextColorEnabled(coloreCarattere);
