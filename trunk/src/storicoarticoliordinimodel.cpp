@@ -14,6 +14,10 @@ QVariant storicoArticoliOrdiniModel::data(const QModelIndex &index, int role) co
         if (Qt::TextAlignmentRole == role) return Qt::AlignRight | Qt::AlignVCenter;
         break;
     case 1:
+        if(Qt::DisplayRole==role) {
+          QString descrizione=QSqlQueryModel::data(index,role).toString().simplified();
+          return QVariant(descrizione);
+        }
         break;
     default:
         break;

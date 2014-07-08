@@ -347,7 +347,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         int numArticoli = 0;
         while (stmt.next()) {
             y += textRect.height();
-            QString descrizione = stmt.value(0).toString();
+            QString descrizione = stmt.value(0).toString().simplified();
             int quantita = stmt.value(1).toInt();
             numArticoli += quantita;
             QString quantitaString = QString("%1").arg(quantita, 3, 10);
@@ -436,7 +436,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     float totale = 0;
     while (stmt.next()) {
         y += textRect.height();
-        QString descrizione = stmt.value(0).toString();
+        QString descrizione = stmt.value(0).toString().simplified();
         int quantita = stmt.value(1).toInt();
         QString quantitaString = QString("%1").arg(quantita, 3, 10);
         float prezzo = stmt.value(2).toFloat();
