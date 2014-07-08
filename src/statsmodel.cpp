@@ -10,6 +10,12 @@ QVariant StatsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) return QVariant();
 
     switch (index.column()) {
+    case 0:
+        if(Qt::DisplayRole==role) {
+          QString descrizione=QStandardItemModel::data(index,role).toString().simplified();
+          return QVariant(descrizione);
+        }
+        break;
     case 1:
         if (Qt::TextAlignmentRole == role) return QVariant(Qt::AlignRight | Qt::AlignVCenter | Qt::TextWordWrap);
         break;

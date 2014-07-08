@@ -123,7 +123,7 @@ void StatsForm::caricaStats()
     int counter = 0;
     int maxValore = 0;
     while (stmt.next()) {
-        QString nomeArticolo = stmt.value(0).toString();
+        QString nomeArticolo = stmt.value(0).toString().simplified();
         int quantita = stmt.value(1).toInt();
         if (quantita > maxValore)
             maxValore = quantita;

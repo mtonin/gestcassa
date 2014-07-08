@@ -327,7 +327,7 @@ void MainWindow::articoloSelezionato()
         dettagliArticoloBox->setCurrentArticolo(btn);
         ui->latoStackedWidget->setCurrentWidget(dettagliArticoloBox);
     } else {
-        emit aggiungeArticolo(btn->getId(), btn->getNomeArticolo(), btn->getPrezzo());
+        emit aggiungeArticolo(btn->getId(), btn->getNomeArticolo().simplified(), btn->getPrezzo());
     }
 }
 
