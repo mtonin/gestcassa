@@ -189,10 +189,10 @@ void StatsForm::caricaStats()
     graficoPlot->yAxis->setRange(0, maxYAxis);
     graficoPlot->xAxis->setRange(0, maxXAxis);
     graficoPlot->axisRect()->setAutoMargins(QCP::msLeft);
-    graficoPlot->axisRect()->setMargins(QMargins(100,5,5,50));
+    graficoPlot->axisRect()->setMargins(QMargins(100, 5, 5, 50));
     graficoPlot->rescaleAxes();
 
-    graficoPlot->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+    graficoPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     creaGrafico(Qt::red, keyData1, valueData1);
     creaGrafico(Qt::yellow, keyData2, valueData2);

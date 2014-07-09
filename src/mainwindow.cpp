@@ -265,7 +265,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             QStackedWidget* stackedBox = new QStackedWidget;
             int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + col;
 
-            ArticoloBtnWidget* btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
+            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante, repartoBtn->getId(), riga, col);
             /*
             QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
             ArticoloBtnWidget* btn;

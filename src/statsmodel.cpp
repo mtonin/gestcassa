@@ -11,9 +11,9 @@ QVariant StatsModel::data(const QModelIndex &index, int role) const
 
     switch (index.column()) {
     case 0:
-        if(Qt::DisplayRole==role) {
-          QString descrizione=QStandardItemModel::data(index,role).toString().simplified();
-          return QVariant(descrizione);
+        if (Qt::DisplayRole == role) {
+            QString descrizione = QStandardItemModel::data(index, role).toString().simplified();
+            return QVariant(descrizione);
         }
         break;
     case 1:

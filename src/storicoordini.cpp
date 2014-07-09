@@ -17,7 +17,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setTable("storicoordinitot");
     condizione = QString("idsessione=%1").arg(idSessione);
     ordiniModel->setFilter(condizione);
-    ordiniModel->setSort(3,Qt::AscendingOrder);
+    ordiniModel->setSort(3, Qt::AscendingOrder);
     ordiniModel->select();
     ordiniTable->setModel(ordiniModel);
     ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
