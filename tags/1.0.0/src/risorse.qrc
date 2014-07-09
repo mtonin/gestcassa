@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/GestCassa">
+        <file>cash_register.ico</file>
+        <file alias="cancella">resources/close_delete.png</file>
+        <file alias="configurazione">resources/options.png</file>
+        <file alias="gestione">resources/pencil_edit.png</file>
+        <file alias="cassa">resources/shopping_cart_empty.png</file>
+        <file alias="report">resources/copy.png</file>
+        <file alias="stampante">resources/Printer.png</file>
+        <file alias="money">resources/money.png</file>
+        <file alias="annulla">resources/annulla ordine.png</file>
+        <file alias="stats">resources/Chart Bar.png</file>
+        <file alias="freccia_giu">resources/arrow_down_32.png</file>
+        <file alias="freccia_su">resources/arrow_up_32.png</file>
+        <file alias="printer-1">resources/Printer-1.png</file>
+        <file alias="db_out">resources/db_out.png</file>
+        <file alias="db_in">resources/db_in.png</file>
+        <file alias="db_reset">resources/db_reset.png</file>
+        <file alias="report 2">resources/Document 2.png</file>
+        <file alias="creadb">db/creadb.sql</file>
+        <file alias="duplica">resources/duplica.png</file>
+        <file alias="drag">resources/File Send.png</file>
+        <file alias="warning">resources/Sign Warning.png</file>
+        <file alias="operazioni">resources/Cog.png</file>
+        <file alias="esce">resources/home_go_32.png</file>
+        <file alias="freccia_giu_blu">resources/Arrow Down.png</file>
+        <file alias="creadb-firebird">db/gcas-firebird.sql</file>
+    </qresource>
+</RCC>
