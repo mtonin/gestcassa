@@ -136,15 +136,15 @@ void DettagliArticolo::aggiornaArticolo()
         return;
     }
     if (0 == articoloBtn->getId()) {
-      /*
-        stmt1.exec("select last_insert_rowid()");
-        stmt1.exec();
-        if (!stmt1.isActive()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt1.lastError().text());
-            return;
-        }
-      */
+        /*
+          stmt1.exec("select last_insert_rowid()");
+          stmt1.exec();
+          if (!stmt1.isActive()) {
+              QMessageBox::critical(0, QObject::tr("Database Error"),
+                                    stmt1.lastError().text());
+              return;
+          }
+        */
         if (stmt1.next())
             articoloBtn->setId(stmt1.value(0).toInt());
     }
