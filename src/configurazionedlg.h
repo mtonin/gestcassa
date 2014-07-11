@@ -64,6 +64,8 @@ private slots:
 
     void cambiaSerieRitiro(int index);
 
+    void on_resetDbBtn_clicked();
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);
