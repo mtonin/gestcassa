@@ -31,6 +31,7 @@ public:
     }
     void setAbilitato(bool val) {
         abilitato = val;
+        update();
     }
 
 signals:
@@ -49,6 +50,10 @@ private:
     bool abilitato;
 
 private slots:
+
+protected:
+    void PaintDivieto();
+    void paintEvent(QPaintEvent *);
 
 };
 

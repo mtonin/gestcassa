@@ -41,6 +41,7 @@ public:
     }
     void setAbilitato(bool val) {
         abilitato = val;
+        update();
     }
     QString getRepartoStampa() {
         return repartoStampa;
@@ -83,6 +84,7 @@ private:
 protected:
 
     void PaintPrezzo();
+    void PaintDivieto();
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);

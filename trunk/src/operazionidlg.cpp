@@ -37,8 +37,8 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, Q
     effetto->setEndValue(QRect(pos.x(), pos.y() - maximumSize().height(), maximumSize().width(), maximumSize().height()));
     //effetto->setStartValue(QRect(pos.x(),pos.y(),geometry().width(),0));
     //effetto->setEndValue(QRect(pos.x(),pos.y()-geometry().height(),geometry().width(),geometry().height()));
-    effetto->setDuration(1000);
-    effetto->setEasingCurve(QEasingCurve::OutBack);
+    effetto->setDuration(300);
+    //effetto->setEasingCurve(QEasingCurve::OutBack);
     connect(effetto, SIGNAL(finished()), this, SLOT(init()));
 
     effetto->start(QAbstractAnimation::DeleteWhenStopped);
@@ -109,8 +109,8 @@ void OperazioniDlg::on_statsBtn_2_clicked()
     QPropertyAnimation *effetto = new QPropertyAnimation(this, "geometry");
     effetto->setStartValue(this->geometry());
     effetto->setEndValue(QRect(box.x(), box.y() + box.height(), minimumSize().width(), minimumSize().height()));
-    effetto->setDuration(1000);
-    effetto->setEasingCurve(QEasingCurve::InBack);
+    effetto->setDuration(300);
+    //effetto->setEasingCurve(QEasingCurve::InBack);
     connect(effetto, SIGNAL(finished()), this, SLOT(close()));
 
     effetto->start(QAbstractAnimation::DeleteWhenStopped);
