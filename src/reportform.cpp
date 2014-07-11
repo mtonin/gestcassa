@@ -490,7 +490,7 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
     QTextCursor cursore(documento);
     QString testo;
 
-    QString sql = "select idreparto,descrizione from reparti";
+    QString sql = "select idreparto,descrizione from reparti order by lower(descrizione)";
     QSqlQuery stmtReparti(sql);
     if (!stmtReparti.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmtReparti.lastError().text());
@@ -504,9 +504,6 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         totReparti++;
         int idReparto = stmtReparti.value(0).toInt();
         QString reparto = stmtReparti.value(1).toString();
-        testo = QString("%1").arg(reparto);
-        putHeader(cursore, testo);
-        cursore.movePosition(QTextCursor::NextRow);
 
         sql = "select a.descrizione,a.prezzo,a.destinazione,a.gestioneMenu \
         from articoli a,reparti b, pulsanti c \
@@ -514,7 +511,7 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         and c.idreparto=b.idreparto \
         and c.idreparto=? \
         and c.abilitato = 1 \
-        order by a.descrizione asc";
+        order by lower(a.descrizione) asc";
 
         QSqlQuery stmt;
         stmt.prepare(sql);
@@ -545,7 +542,7 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
 
         while (stmt.next()) {
             totArticoli++;
-            QString descrizione = stmt.value(posDescrizione).toString();
+            QString descrizione = stmt.value(posDescrizione).toString().simplified();
             QString prezzo = QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(), 4, 'f', 2);
             QString destinazione = stmt.value(posDestinazione).toString();
             bool gestioneMenu = stmt.value(posGestioneMenu).toBool();
@@ -570,6 +567,9 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         formattaTabella(tabella);
 
         if (0 != totArticoli) {
+            testo = QString("%1").arg(reparto);
+            putHeader(cursore, testo);
+            cursore.movePosition(QTextCursor::NextRow);
             cursore.insertFragment(QTextDocumentFragment(&tableDocument));
         }
     }
