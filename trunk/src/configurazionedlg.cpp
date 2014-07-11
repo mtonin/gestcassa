@@ -204,12 +204,8 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     db.transaction();
 
     QSqlQuery stmt;
-    if (!stmt.exec("delete from ordinirighe")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (!stmt.exec("delete from ordini")) {
+    if (!stmt.exec("delete from ordinirighe") &&
+        !stmt.exec("delete from ordini")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
         return;
@@ -574,4 +570,57 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 void ConfigurazioneDlg::cambiaSerieRitiro(int index)
 {
     nuovaConfigurazione->insert("serieRitiro", QChar('A' + index));
+}
+
+void ConfigurazioneDlg::on_resetDbBtn_clicked()
+{
+  ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i reparti e gli articoli censiti.\nProseguire?", "", false, this);
+  if (QDialog::Accepted != dlg->visualizza()) return;
+
+  QSqlDatabase db = QSqlDatabase::database();
+  db.transaction();
+
+  QSqlQuery stmt;
+  if (!stmt.exec("delete from pulsanti") ||
+      !stmt.exec("delete from reparti") ||
+      !stmt.exec("delete from articolimenu") ||
+      !stmt.exec("delete from articoli") ||
+      !stmt.exec("delete from destinazionistampa")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      db.rollback();
+      return;
+  }
+
+  int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
+  idSessioneCorrente++;
+
+  stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
+  stmt.addBindValue(idSessioneCorrente);
+  stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+  if (!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      db.rollback();
+      return;
+  }
+
+  configurazione->insert("sessioneCorrente", idSessioneCorrente);
+
+  db.commit();
+  emit resetOrdini(idSessioneCorrente);
+  emit resetArticoli();
+
+  nuovaConfigurazione->insert("intestazione","");
+  nuovaConfigurazione->insert("fondo","");
+  nuovaConfigurazione->insert("durataResto","5");
+  nuovaConfigurazione->insert("abilitaResto","");
+  nuovaConfigurazione->insert("stampante","");
+  nuovaConfigurazione->insert("cartellaPdf","");
+  nuovaConfigurazione->insert("stampantePdf","");
+  nuovaConfigurazione->insert("nomeCassa","");
+  nuovaConfigurazione->insert("descrManifestazione","");
+  nuovaConfigurazione->insert("visualizzazionePrezzo","");
+  nuovaConfigurazione->insert("serieRitiro","A");
+
+  on_buttonBox_accepted();
 }

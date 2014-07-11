@@ -27,5 +27,6 @@
         <file alias="creadb-firebird">db/gcas-firebird.sql</file>
         <file alias="splash">resources/splash.png</file>
         <file alias="divieto">resources/Button White Remove.png</file>
+        <file alias="db_delete">resources/db_delete.png</file>
     </qresource>
 </RCC>
