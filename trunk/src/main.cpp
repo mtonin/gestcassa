@@ -17,6 +17,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    QPixmap splashPixmap(":/GestCassa/splash");
+    QSplashScreen splash(splashPixmap);
+    splash.show();
+    splash.showMessage("Inizializzazione...");
+    a.processEvents();
+
     QDesktopWidget* desktop = QApplication::desktop();
     if (desktop->size().width() < 1024 || desktop->size().height() < 768) {
         if (QMessageBox::No == QMessageBox::question(0,
@@ -51,16 +57,22 @@ int main(int argc, char *argv[])
     QFileInfo dbFileModello(QString("%1/gcas.fdb")
                             .arg(a.applicationDirPath()));
 
-
     QString nomeFile;
     nomeFile = dbFileInfo.absoluteFilePath();
     /*
     nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
     */
     if (!nomeFile.isEmpty()) {
+        splash.showMessage("Collegamento al database...");
+        a.processEvents();
         if (dbman.init(nomeFile, dbFileModello.absoluteFilePath())) {
+            splash.showMessage("Caricamento articoli...");
+            a.processEvents();
+
             MainWindow w(configurazione);
+
             w.show();
+            splash.finish(&w);
 
             //a.setStartDragDistance(50);
             //a.setStartDragTime(1000);
