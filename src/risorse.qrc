@@ -26,5 +26,6 @@
         <file alias="freccia_giu_blu">resources/Arrow Down.png</file>
         <file alias="creadb-firebird">db/gcas-firebird.sql</file>
         <file alias="splash">resources/splash.png</file>
+        <file alias="divieto">resources/Button White Remove.png</file>
     </qresource>
 </RCC>

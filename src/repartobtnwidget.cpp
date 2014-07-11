@@ -27,6 +27,25 @@ void RepartoBtnWidget::setColoreText(const QColor &colore)
     emit cambiaColoreText(colore);
 }
 
+void RepartoBtnWidget::PaintDivieto()
+{
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
+  QRect PainterRect = painter.window();
+
+  QPixmap divieto(":/GestCassa/divieto");
+  painter.drawPixmap(0,height()-20,20,20,divieto);
+}
+
+void RepartoBtnWidget::paintEvent(QPaintEvent *evt)
+{
+  QPictureButton::paintEvent(evt);
+  if (!abilitato) {
+    PaintDivieto();
+  }
+
+}
+
 void RepartoBtnWidget::setButtonFont(const QFont &font)
 {
     //currentFont=font;
