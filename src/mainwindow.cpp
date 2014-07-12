@@ -158,9 +158,6 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
                 confMap->remove("sessioneSalvata");
                 ordineBox->nuovoOrdine(idSessione);
                 exitTest();
-            } else {
-              idSessione = confMap->value("sessioneCorrente").toInt();
-              ordineBox->nuovoOrdine(idSessione);
             }
 
             ui->messaggiArea->setText("MODALITA' CASSA");
