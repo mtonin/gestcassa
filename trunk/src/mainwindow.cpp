@@ -99,6 +99,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             idSessione = confMap->value("sessioneSalvata").toInt();
             confMap->insert("sessioneCorrente", idSessione);
             confMap->remove("sessioneSalvata");
+            ordineBox->nuovoOrdine(idSessione);
             exitTest();
         }
         ui->adminFunctBox->setVisible(true);
