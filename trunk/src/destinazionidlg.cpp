@@ -11,7 +11,7 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
     modello = new QSqlTableModel;
     modello->setEditStrategy(QSqlTableModel::OnFieldChange);
     modello->setTable("destinazionistampa");
-    modello->setSort(0,Qt::AscendingOrder);
+    //modello->setSort(0,Qt::AscendingOrder);
     modello->select();
     destinazioneTbl->setModel(modello);
     destinazioneTbl->hideColumn(1);
@@ -63,7 +63,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
     modello->setData(modello->index(numRighe, 2), true);
     modello->setData(modello->index(numRighe, 3), false);
     modello->submitAll();
-    //destinazioneTbl->setCurrentIndex(modello->index(numRighe, 0));
+    destinazioneTbl->setCurrentIndex(modello->index(numRighe, 0));
     destinazioneTxt->selectAll();
     destinazioneTxt->setFocus();
 }
