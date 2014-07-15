@@ -11,6 +11,7 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
     modello = new QSqlTableModel;
     modello->setEditStrategy(QSqlTableModel::OnFieldChange);
     modello->setTable("destinazionistampa");
+    modello->setSort(0,Qt::AscendingOrder);
     modello->select();
     destinazioneTbl->setModel(modello);
     destinazioneTbl->hideColumn(1);
@@ -47,8 +48,10 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
         QMessageBox::critical(this, "Errore", "Impossibile cancellare la destinazione. Controllare gli articoli in cui è impostata.");
         return;
     }
-    destinazioneTbl->setCurrentIndex(modello->index(currRiga - 1, 0));
-    destinazioneTxt->setFocus();
+    currRiga--;
+    if(currRiga<0) currRiga=0;
+    destinazioneTbl->setCurrentIndex(modello->index(currRiga, 0));
+    destinazioneTbl->setFocus();
 }
 
 void DestinazioniDlg::on_nuovoBtn_clicked()
@@ -60,7 +63,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
     modello->setData(modello->index(numRighe, 2), true);
     modello->setData(modello->index(numRighe, 3), false);
     modello->submitAll();
-    destinazioneTbl->setCurrentIndex(modello->index(numRighe, 0));
+    //destinazioneTbl->setCurrentIndex(modello->index(numRighe, 0));
     destinazioneTxt->selectAll();
     destinazioneTxt->setFocus();
 }
