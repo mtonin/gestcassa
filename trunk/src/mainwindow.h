@@ -30,7 +30,6 @@ public:
     explicit MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent = 0);
     ~MainWindow();
 
-
 private slots:
     void creaRepartiButtons();
     void repartoSelezionato();

@@ -182,12 +182,12 @@ void ArticoloBtnWidget::PaintPrezzo()
 
 void ArticoloBtnWidget::PaintDivieto()
 {
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  QRect PainterRect = painter.window();
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QRect PainterRect = painter.window();
 
-  QPixmap divieto(":/GestCassa/divieto");
-  painter.drawPixmap(0,height()-20,20,20,divieto);
+    QPixmap divieto(":/GestCassa/divieto");
+    painter.drawPixmap(0, height() - 20, 20, 20, divieto);
 }
 
 void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
@@ -197,7 +197,7 @@ void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
         PaintPrezzo();
     }
     if (idArticolo > 0 && !abilitato) {
-      PaintDivieto();
+        PaintDivieto();
     }
 }
 

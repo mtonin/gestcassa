@@ -49,7 +49,7 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
         return;
     }
     currRiga--;
-    if(currRiga<0) currRiga=0;
+    if (currRiga < 0) currRiga = 0;
     destinazioneTbl->setCurrentIndex(modello->index(currRiga, 0));
     destinazioneTbl->setFocus();
 }
