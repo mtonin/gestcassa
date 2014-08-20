@@ -49,19 +49,22 @@ int main(int argc, char *argv[])
     QMap<QString, QVariant>* configurazione = new QMap<QString, QVariant>;
     DBManager dbman(configurazione);
 
+    /*
     QFileInfo dbFileInfo(QString("%1/%2")
-                         .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
-                         .arg(dbFileName));
+                       .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation))
+                       .arg(dbFileName));
     QDir dbParentDir(dbFileInfo.absolutePath());
     dbParentDir.mkpath(dbFileInfo.absolutePath());
-    QFileInfo dbFileModello(QString("%1/gcas.fdb")
-                            .arg(a.applicationDirPath()));
+    QFileInfo dbFileModello(QString("%1/gcas.fdb").arg(a.applicationDirPath()));
 
     QString nomeFile;
     nomeFile = dbFileInfo.absoluteFilePath();
     /*
     nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
     */
+    QFileInfo dbFileModello(QString("%1/model.fdb").arg(a.applicationDirPath()));
+    QFileInfo dbFile(QString("%1/GCAS.fdb").arg(a.applicationDirPath()));
+    QString nomeFile = dbFile.absoluteFilePath();
     if (!nomeFile.isEmpty()) {
         splash.showMessage("Collegamento al database...");
         a.processEvents();

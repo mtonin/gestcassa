@@ -30,6 +30,7 @@ bool DBManager::init(const QString nomeFile, const QString modello)
 
 bool DBManager::leggeConfigurazione()
 {
+    QSqlDatabase db = QSqlDatabase::database();
 
     QSqlQuery stmt("select chiave,valore from configurazione");
     if (!stmt.isActive()) {
@@ -64,7 +65,6 @@ bool DBManager::leggeConfigurazione()
     int versioneDB = conf->value("versione", 1).toInt();
     int nuovaVersioneDB = versioneDB;
 
-    QSqlDatabase db = QSqlDatabase::database();
     db.transaction();
     if (versioneDB < 2) {
         if (!stmt.exec("alter table destinazionistampa add column stampaflag   BOOLEAN NOT NULL DEFAULT ( 1 ) ")) {
@@ -251,20 +251,21 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
         return false;
     }
-    QSqlQuery query("select 1 from articoli");
-    if (!query.isActive()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), "Database inesistente o inutilizzabile");
-        return false;
-    }
-
-    /*
-          query.exec("pragma foreign_keys=ON;");
-          if(!query.isActive()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+    {
+        QSqlQuery query("select 1 from articoli");
+        if (!query.isActive()) {
+            QMessageBox::critical(0, QObject::tr("Database Error"), "Database inesistente o inutilizzabile");
             return false;
-          }
-    */
+        }
 
+        /*
+              query.exec("pragma foreign_keys=ON;");
+              if(!query.isActive()) {
+                QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+                return false;
+              }
+        */
+    }
     return true;
 }
 

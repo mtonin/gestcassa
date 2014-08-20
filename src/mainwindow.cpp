@@ -149,7 +149,12 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         }
 
         ui->articoliStackedWidget->setAcceptDrops(false);
-        ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
+        if (-1 == primoRepartoAttivo) {
+            ui->articoliStackedWidget->setVisible(false);
+        } else {
+            ui->articoliStackedWidget->setVisible(true);
+            ui->articoliStackedWidget->setCurrentIndex(primoRepartoAttivo);
+        }
 
         if (CASSA == nuovaModalita) {
             if (TEST == modalitaCorrente) {
