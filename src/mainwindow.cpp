@@ -105,6 +105,8 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         ui->adminFunctBox->setVisible(true);
 
         ui->latoStackedWidget->setCurrentIndex(0);
+        ui->articoliStackedWidget->setVisible(true);
+
         // attiva tutti i pulsanti dei reparti
         QListIterator<RepartoBtnWidget*> itReparti(repartiList);
         while (itReparti.hasNext()) {
