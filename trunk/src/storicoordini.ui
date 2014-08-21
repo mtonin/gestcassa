@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>746</width>
-    <height>428</height>
+    <width>821</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0">
      <item>
       <widget class="QGroupBox" name="groupBox">
        <property name="sizePolicy">
@@ -36,14 +36,38 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <widget class="QRadioButton" name="ultimaSessioneBox">
-              <property name="text">
-               <string>Ultima sessione</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1,0">
+              <item>
+               <widget class="QRadioButton" name="sessioneBox">
+                <property name="text">
+                 <string>Sessione:</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="sessioneCombo">
+                <property name="sizeAdjustPolicy">
+                 <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -414,9 +438,6 @@ Finestra</string>
                 <width>75</width>
                 <height>16777215</height>
                </size>
-              </property>
-              <property name="maxLength">
-               <number>3</number>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

@@ -23,6 +23,7 @@ private:
     QSqlQueryModel* articoliOrdineModel;
 
     QString condizione;
+    void caricaSessioni();
 };
 
 #endif // STORICOORDINI_H
