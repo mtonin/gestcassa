@@ -40,6 +40,7 @@ StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *pare
     connect(graficoPlot->xAxis, SIGNAL(rangeChanged(QCPRange, QCPRange)), this, SLOT(xCheckRange(QCPRange, QCPRange)));
     connect(graficoPlot->yAxis, SIGNAL(rangeChanged(QCPRange, QCPRange)), this, SLOT(yCheckRange(QCPRange, QCPRange)));
 
+    caricaSessioni();
     caricaStats();
 }
 
@@ -71,7 +72,7 @@ void StatsForm::caricaStats()
               group by descrizione \
               order by 3 asc");
     QString condizione;
-    if (ultimaSessioneBox->isChecked()) {
+    if (sessioneBox->isChecked()) {
         condizione = "idsessione=?";
     } else {
         condizione = "tsstampa between ? and ?";
@@ -89,8 +90,9 @@ void StatsForm::caricaStats()
         return;
     }
 
-    if (ultimaSessioneBox->isChecked()) {
-        stmt.addBindValue(idSessioneCorrente);
+    if (sessioneBox->isChecked()) {
+        int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
+        stmt.addBindValue(sessioneSelezionata);
     } else {
         QString from = QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
         QString to = QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
@@ -223,7 +225,7 @@ void StatsForm::calcolaTotali()
                             group by idsessione||numeroordine,importo)");
 
     QString condizione;
-    if (ultimaSessioneBox->isChecked()) {
+    if (sessioneBox->isChecked()) {
         condizione = "idsessione=?";
     } else {
         condizione = "tsstampa between ? and ?";
@@ -237,8 +239,9 @@ void StatsForm::calcolaTotali()
         return;
     }
 
-    if (ultimaSessioneBox->isChecked()) {
-        stmt.addBindValue(idSessioneCorrente);
+    if (sessioneBox->isChecked()) {
+      int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
+      stmt.addBindValue(sessioneSelezionata);
     } else {
         QString from = QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
         QString to = QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
@@ -263,6 +266,76 @@ void StatsForm::calcolaTotali()
     ordineDataFrom->setText(tsInizio);
     ordineDataTo->setText(tsFine);
 
+}
+
+void StatsForm::caricaSessioni()
+{
+
+  QSqlQueryModel* sessioniModel=new QSqlQueryModel(this);
+  sessioniModel->setQuery("SELECT idsessione || ' (Inizio: ' ||     \
+  substring(100+extract(day from tsinizio) from 2 for 2)||'/'||       \
+  substring(100+extract(month from tsinizio) from 2 for 2)||'/'||   \
+  extract(year from tsinizio) || ' ' ||                                            \
+  substring(100+extract(hour from tsinizio) from 2 for 2)||':'||      \
+  substring(100+extract(minute from tsinizio) from 2 for 2)||':'||   \
+  substring(100+extract(second from tsinizio) from 2 for 2) || ')',  \
+  idsessione \
+  FROM sessione order by idsessione desc"  );
+
+  QTableView* sessioneView=new QTableView(this);
+  sessioneCombo->setView(sessioneView);
+  sessioneView->horizontalHeader()->hide();
+  sessioneView->verticalHeader()->hide();
+  sessioneView->setSelectionBehavior(QAbstractItemView::SelectRows);
+  sessioneView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  sessioneView->setShowGrid(false);
+
+  sessioneCombo->setModel(sessioniModel);
+  sessioneView->hideColumn(1);
+
+  /*
+  QString sql("SELECT descrizione,sum(quantita),max(tsstampa) \
+            FROM storicoordini \
+            where \
+            %1 \
+            and tipoArticolo <> ? \
+            group by descrizione \
+            order by 3 asc");
+  QString condizione;
+  if (sessioneBox->isChecked()) {
+      condizione = "idsessione=?";
+  } else {
+      condizione = "tsstampa between ? and ?";
+  }
+  sql = sql.arg(condizione);
+  QString tipoArticolo;
+  if (expMenuBox->isChecked()) {
+      tipoArticolo = "M";
+  } else {
+      tipoArticolo = "C";
+  }
+  QSqlQuery stmt;
+  if (!stmt.prepare(sql)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return;
+  }
+
+  if (sessioneBox->isChecked()) {
+      stmt.addBindValue(idSessioneCorrente);
+  } else {
+      QString from = QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+      QString to = QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+      stmt.addBindValue(from);
+      stmt.addBindValue(to);
+  }
+
+  stmt.addBindValue(tipoArticolo);
+  if (!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return;
+  }
+  statsModel->clear();
+  */
 }
 
 void StatsForm::on_stampaBtn_clicked()

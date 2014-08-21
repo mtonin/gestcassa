@@ -32,6 +32,7 @@ private:
     StatsModel* statsModel;
     void caricaStats();
     void calcolaTotali();
+    void caricaSessioni();
 
     int idSessioneCorrente;
     QMap<QString, QVariant>* configurazione;

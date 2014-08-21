@@ -10,6 +10,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     setWindowFlags(Qt::Tool);
     activateWindow();
 
+    caricaSessioni();
     fromData->setDate(QDate::currentDate());
     toData->setDate(QDate::currentDate());
 
@@ -45,7 +46,7 @@ void StoricoOrdini::caricaArticoliOrdine()
 {
     QString sql = QString("select quantita,descrizione \
                                 from storicoordinidett \
-                                where idsessione=%1 and idcassa=%2 and numeroordine=%3 and tipoArticolo <> 'C'")
+                                where idsessione=%1 and idcassa='%2' and numeroordine=%3 and tipoArticolo <> 'C'")
                   .arg(sessioneOrdineTxt->text()).arg(cassaOrdineTxt->text()).arg(numeroOrdineTxt->text());
     articoliOrdineModel->setQuery(sql);
     /*
@@ -62,7 +63,9 @@ void StoricoOrdini::caricaArticoliOrdine()
 
 void StoricoOrdini::on_filtraBtn_5_clicked()
 {
-    if (ultimaSessioneBox->isChecked()) {
+    if (sessioneBox->isChecked()) {
+        int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
+        condizione = QString("idsessione=%1").arg(sessioneSelezionata);
         ordiniModel->setFilter(condizione);
     } else {
         QString condDataOra = QString("tsstampa between '%1 %2' and '%3 %4'")
@@ -83,4 +86,30 @@ void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
     fromOra->setEnabled(checked);
     toData->setEnabled(checked);
     toOra->setEnabled(checked);
+}
+void StoricoOrdini::caricaSessioni()
+{
+
+  QSqlQueryModel* sessioniModel=new QSqlQueryModel(this);
+  sessioniModel->setQuery("SELECT idsessione || ' (Inizio: ' ||     \
+  substring(100+extract(day from tsinizio) from 2 for 2)||'/'||       \
+  substring(100+extract(month from tsinizio) from 2 for 2)||'/'||   \
+  extract(year from tsinizio) || ' ' ||                                            \
+  substring(100+extract(hour from tsinizio) from 2 for 2)||':'||      \
+  substring(100+extract(minute from tsinizio) from 2 for 2)||':'||   \
+  substring(100+extract(second from tsinizio) from 2 for 2) || ')',  \
+  idsessione \
+  FROM sessione order by idsessione desc"  );
+
+  QTableView* sessioneView=new QTableView(this);
+  sessioneCombo->setView(sessioneView);
+  sessioneView->horizontalHeader()->hide();
+  sessioneView->verticalHeader()->hide();
+  sessioneView->setSelectionBehavior(QAbstractItemView::SelectRows);
+  sessioneView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  sessioneView->setShowGrid(false);
+
+  sessioneCombo->setModel(sessioniModel);
+  sessioneView->hideColumn(1);
+
 }
