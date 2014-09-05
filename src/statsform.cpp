@@ -42,6 +42,7 @@ StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *pare
 
     caricaSessioni();
     caricaStats();
+
 }
 
 StatsForm::~StatsForm()
@@ -68,6 +69,7 @@ void StatsForm::caricaStats()
               FROM storicoordini \
               where \
               %1 \
+              and lower(descrizione) like ? \
               and tipoArticolo <> ? \
               group by descrizione \
               order by 3 asc");
@@ -99,6 +101,9 @@ void StatsForm::caricaStats()
         stmt.addBindValue(from);
         stmt.addBindValue(to);
     }
+
+    QString filtroNome=QString("%%%1%%").arg(filtroArticoloLbl->text().toLower());
+    stmt.addBindValue(filtroNome);
 
     stmt.addBindValue(tipoArticolo);
     if (!stmt.exec()) {
@@ -222,6 +227,7 @@ void StatsForm::calcolaTotali()
                             FROM storicoordini \
                             where \
                             %1 \
+                            and lower(descrizione) like ? \
                             group by idsessione||numeroordine,importo)");
 
     QString condizione;
@@ -248,6 +254,9 @@ void StatsForm::calcolaTotali()
         stmt.addBindValue(from);
         stmt.addBindValue(to);
     }
+
+    QString filtroNome=QString("%%%1%%").arg(filtroArticoloLbl->text().toLower());
+    stmt.addBindValue(filtroNome);
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());

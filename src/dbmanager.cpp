@@ -228,17 +228,15 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
     if (!dbFile.exists()) {
         creaDb(utente, password, modello);
     }
-    //QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
     //db.setHostName("10.30.102.157");
-    //db.setPort(3051);
+    //db.setPort(3050);
     db.setDatabaseName(nomeFile);
     db.setUserName(utente);
     db.setPassword(password);
-    //db.setDatabaseName(nomeFile);
 
-    // testa se il server è attivo
     /*
+    // testa se il server è attivo
     QTcpSocket testsock;
     testsock.connectToHost(db.hostName(),db.port());
     if(!testsock.waitForConnected(3000)) {

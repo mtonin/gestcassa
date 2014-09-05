@@ -252,11 +252,19 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     fontGrassettoCorsivo.setPointSize(14);
     fontGrassettoCorsivo.setBold(true);
     fontGrassettoCorsivo.setItalic(true);
-    fontGrassettoCorsivo.setUnderline(true);
+    //fontGrassettoCorsivo.setUnderline(true);
     QFont fontMini("lucida console");
     fontMini.setPointSize(1);
     QFont fontMaxi("lucida console");
     fontMaxi.setPointSize(50);
+
+    QBrush sfondoIntestazione;
+    sfondoIntestazione.setColor(Qt::black);
+    sfondoIntestazione.setStyle(Qt::SolidPattern);
+    QPen pennaIntestazione;
+    pennaIntestazione.setColor(Qt::white);
+    QPen pennaNormale;
+    pennaNormale.setColor(Qt::black);
 
     painter.begin(&printer);
     painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
@@ -405,14 +413,15 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     y += 5;
     painter.setFont(fontGrassetto);
-    painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestazione, &textRect);
+    painter.setPen(pennaIntestazione);
+    textRect=painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestazione);
+    painter.setPen(pennaNormale);
     y += textRect.height();
     y += 5;
-    QPen pen(Qt::black, 2);
-    painter.setPen(pen);
-    painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height());
-    pen.setWidth(1);
-    painter.setPen(pen);
+    painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height(),sfondoIntestazione);
+    painter.setPen(pennaIntestazione);
+    painter.drawText(textRect,Qt::AlignHCenter | Qt::TextWordWrap, intestazione);
+    painter.setPen(pennaNormale);
     y += 5;
     painter.setFont(fontNormale);
     painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);

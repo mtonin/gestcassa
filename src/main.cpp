@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     QFileInfo dbFileModello(QString("%1/model.fdb").arg(a.applicationDirPath()));
     QFileInfo dbFile(QString("%1/GCAS.fdb").arg(a.applicationDirPath()));
     QString nomeFile = dbFile.absoluteFilePath();
+    //nomeFile="GCAS";
     if (!nomeFile.isEmpty()) {
         splash.showMessage("Collegamento al database...");
         a.processEvents();
