@@ -103,7 +103,7 @@ QTextDocument* ReportForm::creaDocumentTutto()
         cursore.insertText(statoAbilitato);
     }
 
-    formattaTabella(tabella);
+    formattaTabella(tabella,QString("45,10,20,20,5").split(",").toVector());
 
     cursoreDoc.insertFragment(QTextDocumentFragment(&tableDocument));
     cursoreDoc.insertText("\n\n\n");
@@ -204,7 +204,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
             tableCursore.insertText(statoAbilitato);
         }
 
-        formattaTabella(tabella);
+        formattaTabella(tabella,QString("40,10,30,20").split(",").toVector());
 
         if (0 == totArticoli) {
             cursore.insertText("\nNessun articolo in questo reparto.");
@@ -336,7 +336,7 @@ QTextDocument *ReportForm::creaDocumentMenu()
         tableCursore.insertText(statoAbilitato);
     }
 
-    formattaTabella(tabella);
+    formattaTabella(tabella,QString("40,10,20,25,5").split(",").toVector());
 
     return tableDocument;
 }
@@ -403,7 +403,7 @@ QTextDocument *ReportForm::creaDocumentDestinazione(const QString& nomeDestinazi
         tableCursore.insertText(statoAbilitato);
     }
 
-    formattaTabella(tabella);
+    formattaTabella(tabella,QString("40,20,30,10").split(",").toVector());
 
     if (0 == totArticoli) {
         return NULL;
@@ -445,15 +445,21 @@ void ReportForm::putHeader(QTextCursor cursore, const QString testo)
     cursore.insertText(testo);
 }
 
-void ReportForm::formattaTabella(QTextTable* tabella)
+void ReportForm::formattaTabella(QTextTable* tabella,QVector<QString> colWidth)
 {
     QTextTableFormat formatoTabella;
     formatoTabella.setBorder(1);
     formatoTabella.setBorderStyle(QTextFrameFormat::BorderStyle_Solid);
-    formatoTabella.setHeaderRowCount(1);
+    formatoTabella.setHeaderRowCount(2);
     formatoTabella.setCellSpacing(-1);
     formatoTabella.setCellPadding(3);
     formatoTabella.setWidth(QTextLength(QTextLength::PercentageLength, 100));
+
+    QVector<QTextLength> colLen;
+    foreach (QString width,colWidth) {
+      colLen.append(QTextLength(QTextLength::PercentageLength,width.toInt()));
+    }
+    formatoTabella.setColumnWidthConstraints(colLen);
 
     tabella->setFormat(formatoTabella);
 
@@ -487,6 +493,11 @@ void ReportForm::on_prenotazioniBtn_clicked()
 QTextDocument *ReportForm::creaFoglioPrenotazioni()
 {
     QTextDocument* documento = new QTextDocument(this);
+
+    QFont font=documento->defaultFont();
+    font.setPointSize(14);
+    documento->setDefaultFont(font);
+
     QTextCursor cursore(documento);
     QString testo;
 
@@ -501,11 +512,10 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         if (totReparti > 0) {
             cursore.insertText("\n\n\n\n");
         }
-        totReparti++;
         int idReparto = stmtReparti.value(0).toInt();
         QString reparto = stmtReparti.value(1).toString();
 
-        sql = "select a.descrizione,a.prezzo,a.destinazione,a.gestioneMenu \
+        sql = "select a.descrizione,a.prezzo \
         from articoli a,reparti b, pulsanti c \
         where c.idarticolo=a.idarticolo \
         and c.idreparto=b.idreparto \
@@ -525,13 +535,15 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
 
         int posDescrizione = stmt.record().indexOf("descrizione");
         int posPrezzo = stmt.record().indexOf("prezzo");
-        int posDestinazione = stmt.record().indexOf("destinazione");
-        int posGestioneMenu = stmt.record().indexOf("gestioneMenu");
 
         QTextDocument tableDocument;
         QTextCursor tableCursore(&tableDocument);
 
-        QTextTable* tabella = tableCursore.insertTable(1, 3);
+        QTextTable* tabella = tableCursore.insertTable(2, 3);
+        testo = QString("%1").arg(reparto);
+        putHeader(tableCursore,testo);
+        tabella->mergeCells(0,0,1,3);
+        tableCursore.movePosition(QTextCursor::NextRow);
         foreach(testo, ((QString)"ARTICOLO,PREZZO,Q.TA'").split(",")) {
             putHeader(tableCursore, testo);
             tableCursore.movePosition(QTextCursor::NextCell);
@@ -544,12 +556,6 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
             totArticoli++;
             QString descrizione = stmt.value(posDescrizione).toString().simplified();
             QString prezzo = QString("%1 %L2").arg(QChar(0x20AC)).arg(stmt.value(posPrezzo).toFloat(), 4, 'f', 2);
-            QString destinazione = stmt.value(posDestinazione).toString();
-            bool gestioneMenu = stmt.value(posGestioneMenu).toBool();
-            if (gestioneMenu)
-                destinazione = "**MENU**";
-            if (destinazione.isEmpty())
-                destinazione = "**NON IMPOSTATA**";
 
             tabella->appendRows(1);
             tableCursore.movePosition(QTextCursor::PreviousCell, QTextCursor::MoveAnchor, 2);
@@ -559,18 +565,12 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
             tableCursore.insertText(prezzo);
             tableCursore.movePosition(QTextCursor::NextCell);
 
-            /*
-            tableCursore.insertText(destinazione);
-            */
         }
 
-        formattaTabella(tabella);
-
         if (0 != totArticoli) {
-            testo = QString("%1").arg(reparto);
-            putHeader(cursore, testo);
-            cursore.movePosition(QTextCursor::NextRow);
+            formattaTabella(tabella,QString("70,20,10").split(",").toVector());
             cursore.insertFragment(QTextDocumentFragment(&tableDocument));
+            totReparti++;
         }
     }
 

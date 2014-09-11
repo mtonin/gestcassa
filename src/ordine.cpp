@@ -211,11 +211,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QChar serieRitiro = configurazione->value("serieRitiro", 'A').toChar();
 
     QString intestazione;
-    intestazione.append(descrManifestazione).append("\n");
+    intestazione.append(descrManifestazione); //.append("\n");
     if (!intest.isEmpty()) {
-        intestazione.append(intest).append("\n");
+        intestazione.append("\n").append(intest);
     }
     QString rigaTest = "=   SESSIONE DI TEST   =\n= SCONTRINO NON VALIDO =";
+
+    bool logoAbilitato=configurazione->value("printLogo",false).toBool();
+    bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
+    bool footerAbilitata=configurazione->value("printFondo",false).toBool();
+
+    QPixmap logoPixmap;
+    if(logoAbilitato) {
+      logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
+    }
 
     QPrinter printer;
     bool stampantePdf = configurazione->value("stampantePdf", true).toBool();
@@ -231,32 +240,33 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         printer.setPrinterName(stampanteSelezionata);
     }
 
-    printer.setResolution(100);
+    int risoluzione = configurazione->value("printerResolution",200).toInt();
+    printer.setResolution(risoluzione);
     QSizeF foglioSize(80, 200);
     float rapportoFoglio = foglioSize.width() / foglioSize.height();
     printer.setPaperSize(foglioSize, QPrinter::Millimeter);
     printer.setPageMargins(5, 0, 5, 0, QPrinter::Millimeter);
 
     QRect textRect;
-
     QPainter painter;
 
-    int pageWidth = 300;
+    int pageWidth = configurazione->value("printerWinWidth",300).toInt();
+    int dimensioneFontNormale=configurazione->value("printerFontSize",5).toInt();
 
     QFont fontNormale("lucida console");
-    fontNormale.setPointSize(10);
+    fontNormale.setPointSize(dimensioneFontNormale);
     QFont fontGrassetto("lucida console");
-    fontGrassetto.setPointSize(14);
+    fontGrassetto.setPointSize(dimensioneFontNormale+2);
     fontGrassetto.setBold(true);
     QFont fontGrassettoCorsivo("lucida console");
-    fontGrassettoCorsivo.setPointSize(14);
+    fontGrassettoCorsivo.setPointSize(dimensioneFontNormale+2);
     fontGrassettoCorsivo.setBold(true);
     fontGrassettoCorsivo.setItalic(true);
     //fontGrassettoCorsivo.setUnderline(true);
     QFont fontMini("lucida console");
     fontMini.setPointSize(1);
     QFont fontMaxi("lucida console");
-    fontMaxi.setPointSize(50);
+    fontMaxi.setPointSize(dimensioneFontNormale*4);
 
     QBrush sfondoIntestazione;
     sfondoIntestazione.setColor(Qt::black);
@@ -267,7 +277,11 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     pennaNormale.setColor(Qt::black);
 
     painter.begin(&printer);
+    QRect vpo=painter.viewport();
+    QRect winRect=painter.window();
     painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
+    winRect=painter.window();
+    painter.setRenderHint(QPainter::Antialiasing);
 
     // stampa scontrini per destinazione
 
@@ -316,8 +330,18 @@ void Ordine::stampaScontrino(const int numeroOrdine)
             y += textRect.height() + 10;
         }
         painter.setFont(fontGrassettoCorsivo);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione, &textRect);
+        //painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione, &textRect);
+
+        painter.setPen(pennaIntestazione);
+        textRect=painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
+        painter.setPen(pennaNormale);
         y += textRect.height() + 10;
+        painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5,sfondoIntestazione);
+        painter.setPen(pennaIntestazione);
+        painter.drawText(textRect,Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
+
+        painter.setPen(pennaNormale);
+
         painter.setFont(fontGrassetto);
         painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, descrManifestazione, &textRect);
         y += textRect.height() + 10;
@@ -411,21 +435,28 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         y += textRect.height() + 10;
     }
 
-    y += 5;
-    painter.setFont(fontGrassetto);
-    painter.setPen(pennaIntestazione);
-    textRect=painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestazione);
-    painter.setPen(pennaNormale);
-    y += textRect.height();
-    y += 5;
-    painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height(),sfondoIntestazione);
-    painter.setPen(pennaIntestazione);
-    painter.drawText(textRect,Qt::AlignHCenter | Qt::TextWordWrap, intestazione);
-    painter.setPen(pennaNormale);
-    y += 5;
+    if(logoAbilitato) {
+      // stampa il logo grafico
+      painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
+      y+=90;
+    };
+    if(intestazioneAbilitata) {
+      if(0==y)
+        y+=5;
+      painter.setFont(fontGrassetto);
+      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
+      QPen pen(Qt::black, 2);
+      painter.setPen(pen);
+      painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5);
+      pen.setWidth(1);
+      painter.setPen(pen);
+      y += textRect.height()+5;
+    }
+
+    y+=5;
     painter.setFont(fontNormale);
     painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
-    y += textRect.height() + 5;
+    y += textRect.height() + 10;
 
     painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
     painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
@@ -467,7 +498,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
     y += textRect.height() + 20;
 
-    if (!fondo.isEmpty()) {
+    if(footerAbilitata && !fondo.isEmpty()) {
         painter.setFont(fontNormale);
         painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
         y += textRect.height() + 15;

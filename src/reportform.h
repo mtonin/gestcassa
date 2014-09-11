@@ -27,7 +27,7 @@ private:
     QTextDocument* creaFoglioPrenotazioni();
     void stampa(const QTextDocument* doc, const QString descrReport, bool preview);
     void putHeader(QTextCursor cursore, const QString testo);
-    void formattaTabella(QTextTable*);
+    void formattaTabella(QTextTable*, QVector<QString> colWidth);
 
     QMap<QString, QVariant>* configurazione;
 
