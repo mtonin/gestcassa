@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     storicoordinimodel.cpp \
     operazionidlg.cpp \
     storicoarticoliordinimodel.cpp \
-    basemsgbox.cpp
+    basemsgbox.cpp \
+    parametriavanzati.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -68,7 +69,8 @@ HEADERS  += mainwindow.h \
     storicoordinimodel.h \
     operazionidlg.h \
     storicoarticoliordinimodel.h \
-    basemsgbox.h
+    basemsgbox.h \
+    parametriavanzati.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -83,7 +85,8 @@ FORMS    += mainwindow.ui \
     statsform.ui \
     confermadlg.ui \
     storicoordini.ui \
-    operazionidlg.ui
+    operazionidlg.ui \
+    parametriavanzati.ui
 
 #include(version.txt)
 

@@ -65,6 +65,17 @@ bool DBManager::leggeConfigurazione()
     int versioneDB = conf->value("versione", 1).toInt();
     int nuovaVersioneDB = versioneDB;
 
+    if(versioneDB > 9) {
+      if(!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return false;
+      }
+      while(stmt.next()) {
+        QByteArray logoData=stmt.value(0).toByteArray();
+        conf->insert("logoPixmap",logoData);
+      }
+    }
+
     db.transaction();
     if (versioneDB < 2) {
         if (!stmt.exec("alter table destinazionistampa add column stampaflag   BOOLEAN NOT NULL DEFAULT ( 1 ) ")) {
@@ -201,6 +212,17 @@ bool DBManager::leggeConfigurazione()
             return false;
         }
         nuovaVersioneDB = 9;
+    }
+
+    if (versioneDB < 10) {
+        if (!stmt.exec("CREATE TABLE RISORSE ( \
+                              ID       VARCHAR(100)      NOT NULL primary key,   \
+                              OGGETTO  BLOB)")) {
+            QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+            db.rollback();
+            return false;
+        }
+        nuovaVersioneDB = 10;
     }
 
     if (versioneDB != nuovaVersioneDB) {

@@ -66,6 +66,14 @@ private slots:
 
     void on_resetDbBtn_clicked();
 
+    void on_logoIntestazioneBtn_clicked();
+
+    void on_logoCheckBox_clicked(bool checked);
+
+    void on_intestazioneCheckBox_clicked(bool checked);
+
+    void on_fondoCheckBox_clicked(bool checked);
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);
@@ -76,6 +84,8 @@ private:
     QString pwdInChiaro;
 
     QPrinter printer;
+    void keyPressEvent(QKeyEvent *);
+    void execParametriAvanzati();
 };
 
 #endif // CONFIGURAZIONEDLG_H

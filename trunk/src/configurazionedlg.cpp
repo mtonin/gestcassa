@@ -2,6 +2,7 @@
 #include "destinazionidlg.h"
 #include "confermadlg.h"
 #include "dbmanager.h"
+#include "parametriavanzati.h"
 
 #include <QPageSetupDialog>
 #include <QPrintDialog>
@@ -62,6 +63,13 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     //int num=ser.at(0).unicode();
     serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro", "A").toString().at(0).unicode() - QChar('A').unicode());
 
+    logoCheckBox->setChecked(configurazione->value("printLogo", false).toBool());
+    logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
+    intestazioneCheckBox->setChecked(configurazione->value("printIntestazione", false).toBool());
+    intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
+    fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
+    fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
+
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
 
@@ -110,9 +118,15 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
     QSqlQuery stmt;
     foreach(QString key, configurazione->keys()) {
         stmt.clear();
-        stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)");
-        stmt.addBindValue(key);
-        stmt.addBindValue(configurazione->value(key).toString());
+        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive)) {
+            stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)");
+            stmt.addBindValue(key);
+            stmt.addBindValue(configurazione->value(key).toByteArray());
+        } else {
+            stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)");
+            stmt.addBindValue(key);
+            stmt.addBindValue(configurazione->value(key).toString());
+        }
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"),
                                   stmt.lastError().text());
@@ -372,8 +386,18 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
                    .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
+    str = configurazione->value("printIntestazione").toString();
+    riga = QString("CONFIGURAZIONE#§printIntestazione#§%1")
+           .arg(str.isEmpty() ? "NULL" : str);
+    exportLista.append(riga);
+
     str = configurazione->value("intestazione").toString();
     riga = QString("CONFIGURAZIONE#§intestazione#§%1")
+           .arg(str.isEmpty() ? "NULL" : str);
+    exportLista.append(riga);
+
+    str = configurazione->value("printFondo").toString();
+    riga = QString("CONFIGURAZIONE#§printFondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
@@ -381,6 +405,24 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     riga = QString("CONFIGURAZIONE#§fondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
+
+    str = configurazione->value("printLogo").toString();
+    riga = QString("CONFIGURAZIONE#§printLogo#§%1")
+           .arg(str.isEmpty() ? "NULL" : str);
+    exportLista.append(riga);
+
+    if (!stmt.exec("select id,oggetto from risorse")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    while (stmt.next()) {
+        QString idRisorsa = stmt.value(0).toString();
+        QString objRisorsa = stmt.value(1).toByteArray().toBase64();
+        QString riga = QString("RISORSE#§%1#§%2")
+                       .arg(idRisorsa)
+                       .arg(objRisorsa);
+        exportLista.append(riga);
+    }
 
     esportaInFile(exportLista.join(separatoreRighe));
 }
@@ -414,6 +456,33 @@ QVariant ConfigurazioneDlg::valutaStringa(const QString &str)
     }
 }
 
+void ConfigurazioneDlg::keyPressEvent(QKeyEvent *evt)
+{
+  switch (evt->key()) {
+    case Qt::Key_F1: {
+        if(evt->modifiers() & Qt::ControlModifier) {
+          qDebug("CTRL+F1 pressed");
+          evt->accept();
+          execParametriAvanzati();
+        }
+    }
+  }
+
+}
+
+void ConfigurazioneDlg::execParametriAvanzati()
+{
+  ParametriAvanzati dlg;
+  dlg.setRisoluzione(configurazione->value("printerResolution",200).toInt());
+  dlg.setAmpiezzaStampa(configurazione->value("printerWinWidth",300).toInt());
+  dlg.setDimensioneFontStampa(configurazione->value("printerFontSize",5).toInt());
+  if(QDialog::Accepted==dlg.exec()) {
+    configurazione->insert("printerResolution",dlg.getRisoluzione());
+    configurazione->insert("printerWinWidth",dlg.getAmpiezzaStampa());
+    configurazione->insert("printerFontSize",dlg.getDimensioneFontStampa());
+  }
+}
+
 void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 {
     QString nomeFile;
@@ -432,7 +501,9 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         !stmt.exec("delete from articolimenu") ||
         !stmt.exec("delete from articoli") ||
         !stmt.exec("delete from destinazionistampa") ||
-        !stmt.exec("delete from reparti")) {
+        !stmt.exec("delete from reparti") ||
+        !stmt.exec("delete from risorse")
+    ) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
         return;
@@ -508,6 +579,11 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
+            if (0 == tabella.compare("risorse", Qt::CaseInsensitive)) {
+                stmt.prepare("UPDATE OR INSERT INTO RISORSE VALUES(?,?)");
+                stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
+            }
 
             qDebug(campiInput.join("#").toAscii());
             if (!stmt.exec()) {
@@ -546,6 +622,15 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         nuovaConfigurazione->insert("descrManifestazione", stmt.value(0).toString());
     }
 
+    if (!stmt.exec("select valore from configurazione where chiave='printIntestazione'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("printIntestazione", valutaStringa(stmt.value(0).toString()));
+    }
+
     if (!stmt.exec("select valore from configurazione where chiave='intestazione'")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
@@ -555,6 +640,15 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         nuovaConfigurazione->insert("intestazione", stmt.value(0).toString());
     }
 
+    if (!stmt.exec("select valore from configurazione where chiave='printFondo'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("printFondo", valutaStringa(stmt.value(0).toString()));
+    }
+
     if (!stmt.exec("select valore from configurazione where chiave='fondo'")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
@@ -562,6 +656,24 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     }
     if (stmt.next()) {
         nuovaConfigurazione->insert("fondo", stmt.value(0).toString());
+    }
+
+    if (!stmt.exec("select valore from configurazione where chiave='printLogo'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("printLogo", valutaStringa(stmt.value(0).toString()));
+    }
+
+    if (!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("logoPixmap", stmt.value(0).toByteArray());
     }
 
     on_buttonBox_accepted();
@@ -621,6 +733,41 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     nuovaConfigurazione->insert("descrManifestazione", "");
     nuovaConfigurazione->insert("visualizzazionePrezzo", "");
     nuovaConfigurazione->insert("serieRitiro", "A");
+    nuovaConfigurazione->insert("printLogo", "");
+    nuovaConfigurazione->insert("printIntestazione", "");
+    nuovaConfigurazione->insert("printFondo", "");
 
     on_buttonBox_accepted();
+}
+
+void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked()
+{
+    QString logoFileName;
+    logoFileName = QFileDialog::getOpenFileName();
+    if (logoFileName.isEmpty()) {
+        return;
+    }
+
+    QPixmap logo;
+    logo.load(logoFileName);
+    QByteArray logoData;
+    QBuffer logoBuffer(&logoData);
+    logoBuffer.open(QIODevice::WriteOnly);
+    bool rcSave = logo.save(&logoBuffer, "PNG");
+    nuovaConfigurazione->insert("logoPixmap", logoData);
+}
+
+void ConfigurazioneDlg::on_logoCheckBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printLogo", checked);
+}
+
+void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printIntestazione", checked);
+}
+
+void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printFondo", checked);
 }
