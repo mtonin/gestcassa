@@ -208,18 +208,17 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString descrManifestazione = configurazione->value("descrManifestazione", "NOME MANIFESTAZIONE").toString();
     QDateTime tsStampa = QDateTime::currentDateTime().toLocalTime();
     bool flagStampaNumeroRitiro = false;
-    QChar serieRitiro = configurazione->value("serieRitiro", 'A').toChar();
-
-    QString intestazione;
-    intestazione.append(descrManifestazione); //.append("\n");
-    if (!intest.isEmpty()) {
-        intestazione.append("\n").append(intest);
-    }
-    QString rigaTest = "=   SESSIONE DI TEST   =\n= SCONTRINO NON VALIDO =";
-
+    QChar serieRitiro = configurazione->value("serieRitiro", "A").toString().at(0);
     bool logoAbilitato=configurazione->value("printLogo",false).toBool();
     bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
     bool footerAbilitata=configurazione->value("printFondo",false).toBool();
+
+    QString intestazione;
+    intestazione.append(descrManifestazione); //.append("\n");
+    if (intestazioneAbilitata & !intest.isEmpty()) {
+        intestazione.append("\n").append(intest);
+    }
+    QString rigaTest = "=   SESSIONE DI TEST   =\n= SCONTRINO NON VALIDO =";
 
     QPixmap logoPixmap;
     if(logoAbilitato) {
@@ -440,7 +439,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
       painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
       y+=90;
     };
-    if(intestazioneAbilitata) {
+
       if(0==y)
         y+=5;
       painter.setFont(fontGrassetto);
@@ -451,7 +450,6 @@ void Ordine::stampaScontrino(const int numeroOrdine)
       pen.setWidth(1);
       painter.setPen(pen);
       y += textRect.height()+5;
-    }
 
     y+=5;
     painter.setFont(fontNormale);
