@@ -2,6 +2,7 @@
 #define COMMONS_H
 #include <QString>
 
+
 enum modalitaType {
     CASSA,
     GESTIONE,
