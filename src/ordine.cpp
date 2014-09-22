@@ -173,7 +173,7 @@ void Ordine::nuovoOrdine(const int idSessione)
     importoUltimoOrdine = importoOrdineCorrente;
     modello.clear();
     QSqlQuery query;
-    query.prepare("select max(numeroordine) from storicoordini where idsessione=?");
+    query.prepare("select max(numeroordine) from storicoordinitot where idsessione=?");
     query.addBindValue(idSessioneCorrente);
     if (!query.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
