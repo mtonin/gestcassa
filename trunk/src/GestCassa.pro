@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+include(qtsingleapplication/qtsingleapplication.pri)
 system(prebuild.cmd)
 
 QT       += core gui sql network
