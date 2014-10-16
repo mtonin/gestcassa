@@ -1,7 +1,7 @@
 #include "Windows.h"
 #include "vld/vld.h"
 
-#include <QtGui/QApplication>
+#include <QtSingleApplication>
 #include <QTranslator>
 #include <QFileInfo>
 #include <QDesktopServices>
@@ -15,7 +15,11 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QtSingleApplication a(argc, argv);
+    if(a.sendMessage("activate")) {
+      return 0;
+    }
+
 
     QPixmap splashPixmap(":/GestCassa/splash");
     QSplashScreen splash(splashPixmap);
@@ -74,7 +78,7 @@ int main(int argc, char *argv[])
             a.processEvents();
 
             MainWindow w(configurazione);
-
+            a.setActivationWindow(&w);
             w.show();
             splash.finish(&w);
 
