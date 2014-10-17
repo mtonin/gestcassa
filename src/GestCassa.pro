@@ -104,4 +104,4 @@ OTHER_FILES += \
 
 LIBS += -L"$$PWD/vld"
 
-//LIBS +=user32.lib
+LIBS +=user32.lib
