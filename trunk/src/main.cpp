@@ -15,6 +15,9 @@
 
 int main(int argc, char *argv[])
 {
+    // Permette ad altre applicazioni di tornare in primo piano
+    AllowSetForegroundWindow(ASFW_ANY);
+
     QtSingleApplication a(argc, argv);
     if(a.sendMessage("activate")) {
       return 0;
