@@ -20,7 +20,6 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
 
     articoliMenuModello = new QStandardItemModel;
     articoliBox->setModel(articoliMenuModello);
-
 }
 
 DettagliArticolo::~DettagliArticolo()
@@ -37,7 +36,21 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     reset();
     articoloBtn = (ArticoloBtnWidget*)currentArticoloBtn;
     testoArticolo->setText(articoloBtn->getNomeArticolo());
+
     QSqlQuery stmt;
+    stmt.prepare("select barcode from articoli where idarticolo=?");
+    stmt.addBindValue(articoloBtn->getId());
+    if (!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    if (stmt.next()) {
+      QString barcode=stmt.value(0).toString();
+      if(!barcode.isEmpty()) {
+        barcodeTxt->setText(stmt.value(0).toString());
+      }
+    }
+
     stmt.prepare("select 1 from articolimenu where idarticolomenu=?");
     stmt.addBindValue(articoloBtn->getId());
     if (!stmt.exec()) {
@@ -118,14 +131,19 @@ void DettagliArticolo::aggiornaArticolo()
 
     QSqlQuery stmt1;
     if (0 == articoloBtn->getId()) {
-        stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu) values(?,?,?,?) returning idarticolo");
+        stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu,barcode) values(?,?,?,?,?) returning idarticolo");
     } else {
-        stmt1.prepare("update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=? where idarticolo=?");
+        stmt1.prepare("update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=?,barcode=? where idarticolo=?");
     }
     stmt1.addBindValue(articoloBtn->getNomeArticolo());
     stmt1.addBindValue(articoloBtn->getPrezzo());
     stmt1.addBindValue(articoloBtn->getRepartoStampa());
     stmt1.addBindValue(menuBox->isChecked());
+    if(barcodeTxt->text().isEmpty()) {
+      stmt1.addBindValue(QVariant(QVariant::String));
+    } else {
+      stmt1.addBindValue(barcodeTxt->text());
+    }
     if (articoloBtn->getId() > 0) {
         stmt1.addBindValue(articoloBtn->getId());
     }
@@ -195,6 +213,7 @@ void DettagliArticolo::reset()
 {
     modello->clear();
     creaSelezioneArticoloBox();
+    barcodeTxt->setText("");
 }
 
 void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
@@ -357,4 +376,15 @@ void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
 void DettagliArticolo::on_prezzoArticolo_editingFinished()
 {
     prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
+}
+
+void DettagliArticolo::on_codiceBtn_clicked()
+{
+     bool ok;
+     QString barcode = QInputDialog::getText(this, "Codice a barre",
+                                        "Acquisisci il codice a barre", QLineEdit::Normal,"",&ok);
+     if (ok && !barcode.isEmpty()) {
+       barcodeTxt->setText(barcode);
+        aggiornaArticolo();
+     }
 }

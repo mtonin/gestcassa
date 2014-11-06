@@ -69,6 +69,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
     fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
+    stampaNoDestinazioneBox->setChecked(configurazione->value("printNoDest",true).toBool());
 
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
@@ -424,6 +425,19 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
+    if (!stmt.exec("select idarticolo,barcode from articoli where barcode <> ''")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    while (stmt.next()) {
+        QString idArticolo = stmt.value(0).toString();
+        QString barcode = stmt.value(1).toString();
+        QString riga = QString("BARCODE#§%1#§%2")
+                       .arg(barcode)
+                       .arg(idArticolo);
+        exportLista.append(riga);
+    }
+
     esportaInFile(exportLista.join(separatoreRighe));
 }
 
@@ -583,6 +597,12 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.prepare("UPDATE OR INSERT INTO RISORSE VALUES(?,?)");
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
+            }
+
+            if (0 == tabella.compare("barcode", Qt::CaseInsensitive)) {
+                stmt.prepare("UPDATE ARTICOLI SET BARCODE=? WHERE IDARTICOLO=?");
+                stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
 
             qDebug(campiInput.join("#").toAscii());
@@ -770,4 +790,9 @@ void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)
 void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 {
     nuovaConfigurazione->insert("printFondo", checked);
+}
+
+void ConfigurazioneDlg::on_stampaNoDestinazioneBox_clicked(bool checked)
+{
+  nuovaConfigurazione->insert("printNoDest",checked);
 }

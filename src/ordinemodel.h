@@ -11,6 +11,7 @@ public:
 
 signals:
     void rigaCancellata();
+    void rigaInserita();
 
 public slots:
     void incrementa(const int id);

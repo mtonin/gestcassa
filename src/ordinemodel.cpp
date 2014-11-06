@@ -66,6 +66,7 @@ bool OrdineModel::incrementa(const int id, const QString& descrizione, const flo
     rigaArticolo.prezzo = prezzo;
     articoloList.append(rigaArticolo);
     endInsertRows();
+    emit rigaInserita();
 
     emit dataChanged(QModelIndex(), QModelIndex());
     return true;

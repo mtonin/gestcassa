@@ -37,6 +37,8 @@ private slots:
 
     void on_prezzoArticolo_editingFinished();
 
+    void on_codiceBtn_clicked();
+
 private:
     void aggiornaArticolo();
     ArticoloBtnWidget* articoloBtn;

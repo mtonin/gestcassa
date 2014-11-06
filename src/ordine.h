@@ -13,6 +13,7 @@ class Ordine : public QWidget, private Ui::Ordine
 
 public:
     explicit Ordine(QMap<QString, QVariant>* par, QWidget *parent = 0);
+    void attivaCodiceTxt() { codiceTxt->setFocus();}
 
 public slots:
     void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
@@ -41,6 +42,8 @@ private slots:
 
     void on_duplicaBtn_clicked();
 
+    void on_addCodiceBtn_clicked();
+
 private:
     float importoUltimoOrdine;
     QMap<QString, QVariant>* configurazione;
@@ -50,6 +53,8 @@ private:
     OrdineModel modello;
     ControlliOrdine* controlli;
     void stampaScontrino(const int);
+    void keyPressEvent(QKeyEvent *evt);
+
 };
 
 #endif // ORDINE_H

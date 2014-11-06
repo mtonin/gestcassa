@@ -177,6 +177,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
             enterTest();
         }
+        ordineBox->attivaCodiceTxt();
     }
 
     modalitaCorrente = nuovaModalita;

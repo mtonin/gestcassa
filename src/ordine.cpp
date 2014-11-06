@@ -69,6 +69,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     pagNextBtn->SetButtonColorHot(Qt::magenta);
     ristampaBtn->SetButtonColorHot(Qt::magenta);
 
+    codiceTxt->setFocus();
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -76,6 +77,9 @@ void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, cons
     clearSelezione();
     modello.incrementa(idArticolo, descrizione, prezzo);
     articoliTab->scrollToBottom();
+
+    codiceTxt->setText("");
+    codiceTxt->setFocus();
 
 }
 
@@ -111,6 +115,9 @@ void Ordine::seleziona(const QModelIndex &indexNew)
     }
     controlli->move(pos);
     controlli->show();
+
+    codiceTxt->activateWindow();
+    codiceTxt->setFocus();
 }
 
 void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
@@ -124,6 +131,8 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 
 void Ordine::on_annullaBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     if (!isInComposizione()) return;
     ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false, this);
     if (QDialog::Accepted != dlg->visualizza()) return;
@@ -132,6 +141,8 @@ void Ordine::on_annullaBtn_clicked()
 
 void Ordine::on_ristampaBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     int numeroOrdine = numOrdineCorrente - 1;
     QSqlQuery stmt;
     stmt.prepare("select 1 from storicoordini where idsessione=? and numeroordine=?");
@@ -148,6 +159,8 @@ void Ordine::on_ristampaBtn_clicked()
 
 void Ordine::on_stampaBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     if (0 == modello.rowCount()) {
         return;
     }
@@ -192,6 +205,7 @@ void Ordine::nuovoOrdine(const int idSessione)
     } else {
         importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine, 4, 'f', 2));
     }
+
 }
 
 void Ordine::clearSelezione()
@@ -300,6 +314,9 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         repartiStampaList.append(stmt.value(0).toString());
     }
     foreach(QString destinazioneStampa, repartiStampaList) {
+
+        if(destinazioneStampa.isEmpty() && !configurazione->value("printNoDest",true).toBool())
+          continue;
 
         stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag from destinazionistampa where nome=?");
         stmt.addBindValue(destinazioneStampa);
@@ -527,8 +544,19 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
 }
 
+void Ordine::keyPressEvent(QKeyEvent *evt)
+{
+  if(Qt::Key_F12==evt->key()) {
+    on_stampaBtn_clicked();
+    evt->accept();
+  }
+
+}
+
 void Ordine::on_ultimoRestoBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     if (importoUltimoOrdine != 0) {
         RestoDlg restoDlg(importoUltimoOrdine, 0, this);
         restoDlg.exec();
@@ -538,6 +566,8 @@ void Ordine::on_ultimoRestoBtn_clicked()
 
 void Ordine::on_pagPrevBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     int primaRiga = articoliTab->rowAt(0);
     QModelIndex idx = modello.index(primaRiga - 1, 1);
     articoliTab->scrollTo(idx, QAbstractItemView::PositionAtTop);
@@ -545,6 +575,8 @@ void Ordine::on_pagPrevBtn_clicked()
 
 void Ordine::on_pagNextBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     int primaRiga = articoliTab->rowAt(1);
     QModelIndex idx = modello.index(primaRiga + 1, 1);
     articoliTab->scrollTo(idx, QAbstractItemView::PositionAtTop);
@@ -552,6 +584,8 @@ void Ordine::on_pagNextBtn_clicked()
 
 void Ordine::on_duplicaBtn_clicked()
 {
+    codiceTxt->setFocus();
+
     if (isInComposizione()) {
         ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false, this);
         if (QDialog::Accepted != dlg->visualizza()) return;
@@ -571,4 +605,28 @@ void Ordine::on_duplicaBtn_clicked()
         while (quantita-- > 0)
             nuovoArticolo(idArticolo, descrizione, prezzo);
     }
+}
+
+
+void Ordine::on_addCodiceBtn_clicked()
+{
+  QSqlQuery stmt;
+  stmt.prepare("select a.idarticolo,a.descrizione,a.prezzo from articoli a,pulsanti p \
+                 where a.idarticolo=p.idarticolo and barcode=? and a.descrizione <> '' and p.abilitato=1");
+  stmt.addBindValue(codiceTxt->text());
+  if (!stmt.exec()) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return;
+  }
+  if (stmt.next()) {
+    int idArticolo=stmt.value(0).toInt();
+    QString descrizione=stmt.value(1).toString();
+    float prezzo = stmt.value(2).toFloat();
+    nuovoArticolo(idArticolo,descrizione,prezzo);
+  } else {
+    QMessageBox::critical(0, QObject::tr("Codice non trovato"),QString("Codice %1 non censito in archivio oppure articolo disabilitato").arg(codiceTxt->text()));
+    codiceTxt->setText("");
+  }
+
+  codiceTxt->setFocus();
 }

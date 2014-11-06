@@ -225,6 +225,16 @@ bool DBManager::leggeConfigurazione()
         nuovaVersioneDB = 10;
     }
 
+    if (versioneDB < 11) {
+            if (!stmt.exec("ALTER TABLE ARTICOLI \
+                                  ADD BARCODE VARCHAR(50) UNIQUE")) {
+                QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                db.rollback();
+                return false;
+            }
+            nuovaVersioneDB = 11;
+    }
+
     if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
