@@ -126,7 +126,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     connect(disattivaFlag, SIGNAL(stateChanged(int)), this, SLOT(on_disattivaFlag_stateChanged(int)));
 }
 
-void DettagliArticolo::aggiornaArticolo()
+bool DettagliArticolo::aggiornaArticolo()
 {
 
     QSqlQuery stmt1;
@@ -149,9 +149,15 @@ void DettagliArticolo::aggiornaArticolo()
     }
     stmt1.exec();
     if (!stmt1.isActive()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt1.lastError().text());
-        return;
+        QSqlError ultimoErrore=stmt1.lastError();
+        QString msg;
+        if(-803==ultimoErrore.number()) {
+          msg="Valore già presente in archivio";
+        } else {
+          msg=ultimoErrore.text();
+        }
+        QMessageBox::critical(0, QObject::tr("Database Error"),msg);
+        return false;
     }
     if (0 == articoloBtn->getId()) {
         /*
@@ -170,7 +176,7 @@ void DettagliArticolo::aggiornaArticolo()
     if (!stmt1.prepare("update or insert into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)")) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
                               stmt1.lastError().text());
-        return;
+        return false;
     }
     stmt1.addBindValue(articoloBtn->getIdReparto());
     stmt1.addBindValue(articoloBtn->getRiga());
@@ -181,7 +187,7 @@ void DettagliArticolo::aggiornaArticolo()
     if (!stmt1.isActive()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
                               stmt1.lastError().text());
-        return;
+        return false;
     }
 
     if (articoloBtn->isGestioneMenu()) {
@@ -191,7 +197,7 @@ void DettagliArticolo::aggiornaArticolo()
         if (!stmt1.isActive()) {
             QMessageBox::critical(0, QObject::tr("Database Error"),
                                   stmt1.lastError().text());
-            return;
+            return false;
         }
         for (int i = 0; i < modello->rowCount(); i++) {
             stmt1.prepare("insert into articolimenu (idarticolo,idarticolomenu) values(?,?)");
@@ -202,11 +208,12 @@ void DettagliArticolo::aggiornaArticolo()
             if (!stmt1.isActive()) {
                 QMessageBox::critical(0, QObject::tr("Database Error"),
                                       stmt1.lastError().text());
-                return;
+                return false;
             }
         }
     }
 
+    return true;
 }
 
 void DettagliArticolo::reset()
@@ -380,11 +387,36 @@ void DettagliArticolo::on_prezzoArticolo_editingFinished()
 
 void DettagliArticolo::on_codiceBtn_clicked()
 {
+  if(0==articoloBtn->getId()) {
+    QMessageBox::critical(0, QObject::tr("Errore"), "E' necessario valorizzare la descrizione");
+    return;
+  }
+
+  while(true) {
      bool ok;
      QString barcode = QInputDialog::getText(this, "Codice a barre",
                                         "Acquisisci il codice a barre", QLineEdit::Normal,"",&ok);
-     if (ok && !barcode.isEmpty()) {
-       barcodeTxt->setText(barcode);
-        aggiornaArticolo();
+     if(!ok || barcode.isEmpty()) {
+       break;
      }
+
+     QSqlQuery stmt1;
+     stmt1.prepare("update articoli set barcode=? where idarticolo=?");
+     stmt1.addBindValue(barcode);
+     stmt1.addBindValue(articoloBtn->getId());
+     stmt1.exec();
+     if (!stmt1.isActive()) {
+         QSqlError ultimoErrore=stmt1.lastError();
+         QString msg;
+         if(-803==ultimoErrore.number()) {
+           msg="Valore già presente in archivio";
+         } else {
+           msg=ultimoErrore.text();
+         }
+         QMessageBox::critical(0, QObject::tr("Database Error"),msg);
+     } else {
+       barcodeTxt->setText(barcode);
+       break;
+     }
+  }
 }

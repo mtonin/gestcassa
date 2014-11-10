@@ -70,6 +70,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
     fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
     stampaNoDestinazioneBox->setChecked(configurazione->value("printNoDest",true).toBool());
+    doppiaCopiaCheckBox->setChecked(configurazione->value("print2Copie",false).toBool());
 
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
@@ -795,4 +796,9 @@ void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 void ConfigurazioneDlg::on_stampaNoDestinazioneBox_clicked(bool checked)
 {
   nuovaConfigurazione->insert("printNoDest",checked);
+}
+
+void ConfigurazioneDlg::on_doppiaCopiaCheckBox_clicked(bool checked)
+{
+  nuovaConfigurazione->insert("print2Copie",checked);
 }

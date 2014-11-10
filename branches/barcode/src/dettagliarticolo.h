@@ -40,7 +40,7 @@ private slots:
     void on_codiceBtn_clicked();
 
 private:
-    void aggiornaArticolo();
+    bool aggiornaArticolo();
     ArticoloBtnWidget* articoloBtn;
     QStandardItemModel* modello;
     QStandardItemModel* articoliMenuModello;
