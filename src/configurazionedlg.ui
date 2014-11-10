@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="generaleTab">
       <attribute name="title">
@@ -225,20 +225,6 @@
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="1" column="0" rowspan="2">
-             <widget class="QCheckBox" name="intestazioneCheckBox">
-              <property name="text">
-               <string>Intestazione</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="logoIntestazioneBtn">
-              <property name="text">
-               <string>Scegli</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QCheckBox" name="logoCheckBox">
               <property name="text">
@@ -259,6 +245,20 @@
               </property>
              </spacer>
             </item>
+            <item row="1" column="0" rowspan="2">
+             <widget class="QCheckBox" name="intestazioneCheckBox">
+              <property name="text">
+               <string>Intestazione</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="logoIntestazioneBtn">
+              <property name="text">
+               <string>Scegli</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1" rowspan="2" colspan="2">
              <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
             </item>
@@ -270,6 +270,13 @@
               <property name="text">
                <string>Fondo
 pagina</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QCheckBox" name="doppiaCopiaCheckBox">
+              <property name="text">
+               <string>Doppia copia</string>
               </property>
              </widget>
             </item>

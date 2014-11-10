@@ -226,6 +226,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     bool logoAbilitato=configurazione->value("printLogo",false).toBool();
     bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
     bool footerAbilitata=configurazione->value("printFondo",false).toBool();
+    int numCopieScontrino=configurazione->value("print2Copie",false).toBool()?2:1;
 
     QString intestazione;
     intestazione.append(descrManifestazione); //.append("\n");
@@ -442,104 +443,119 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     // stampa scontrino del totale
 
-    int x = 0;
-    int y = 0;
+    while(numCopieScontrino-- > 0) {
 
-    if (ID_SESSIONE_TEST == idSessioneCorrente) {
+      int x = 0;
+      int y = 0;
+
+      if (ID_SESSIONE_TEST == idSessioneCorrente) {
+          painter.setFont(fontGrassetto);
+          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
+          y += textRect.height() + 10;
+      }
+
+      if(logoAbilitato) {
+        // stampa il logo grafico
+        painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
+        y+=90;
+      };
+
+        if(0==y)
+          y+=5;
         painter.setFont(fontGrassetto);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
-        y += textRect.height() + 10;
-    }
+        painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
+        QPen pen(Qt::black, 2);
+        painter.setPen(pen);
+        painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5);
+        pen.setWidth(1);
+        painter.setPen(pen);
+        y += textRect.height()+5;
 
-    if(logoAbilitato) {
-      // stampa il logo grafico
-      painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
-      y+=90;
-    };
+      y+=5;
+      painter.setFont(fontNormale);
+      painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
+      y += textRect.height() + 10;
 
-      if(0==y)
-        y+=5;
+      painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
+      painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
+      painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
+      y += 10;
+
+      //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
+      stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'");
+      //stmt.addBindValue(idSessioneCorrente);
+      //stmt.addBindValue(numeroOrdine);
+
+      if (!stmt.exec()) {
+          QMessageBox::critical(0, QObject::tr("Database Error"),
+                                stmt.lastError().text());
+          return;
+      }
+      float totale = 0;
+      while (stmt.next()) {
+          y += textRect.height();
+          QString descrizione = stmt.value(0).toString().simplified();
+          int quantita = stmt.value(1).toInt();
+          QString quantitaString = QString("%1").arg(quantita, 3, 10);
+          float prezzo = stmt.value(2).toFloat();
+          QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 5, 'f', 2);
+
+          totale += prezzo;
+          QRect tmpRect;
+          painter.setFont(fontNormale);
+          painter.drawText(x, y, (pageWidth / 10) * 2 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
+          painter.drawText(x + (pageWidth / 10) * 2, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
+          painter.drawText(x + (pageWidth / 10) * 7, y, (pageWidth / 10) * 3, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
+      }
+      y += textRect.height() + 5;
+      painter.drawLine(x, y, pageWidth, y);
+
+      y += 5;
+      QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 5, 'f', 2);
       painter.setFont(fontGrassetto);
-      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
-      QPen pen(Qt::black, 2);
-      painter.setPen(pen);
-      painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5);
-      pen.setWidth(1);
-      painter.setPen(pen);
-      y += textRect.height()+5;
+      painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
+      y += textRect.height() + 20;
 
-    y+=5;
-    painter.setFont(fontNormale);
-    painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
-    y += textRect.height() + 10;
+      if(footerAbilitata && !fondo.isEmpty()) {
+          painter.setFont(fontNormale);
+          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
+          y += textRect.height() + 15;
+      }
 
-    painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
-    painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
-    painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
-    y += 10;
+      if (flagStampaNumeroRitiro) {
+          painter.drawLine(x, y, pageWidth, y);
+          y += 5;
+          QString testoRitiro = "CONSERVARE PER IL RITIRO";
+          painter.setFont(fontGrassetto);
+          painter.drawText(x, y, pageWidth, 20, Qt::AlignCenter, testoRitiro, &textRect);
+          y += textRect.height() + 5;
+          QString numRitiro = QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
+          painter.setFont(fontMaxi);
+          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, numRitiro, &textRect);
+          y += textRect.height() + 35;
+      }
 
-    //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
-    stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'");
-    //stmt.addBindValue(idSessioneCorrente);
-    //stmt.addBindValue(numeroOrdine);
+      if (ID_SESSIONE_TEST == idSessioneCorrente) {
+          painter.setFont(fontGrassetto);
+          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
+          y += textRect.height() + 10;
+      }
 
-    if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
-        return;
-    }
-    float totale = 0;
-    while (stmt.next()) {
-        y += textRect.height();
-        QString descrizione = stmt.value(0).toString().simplified();
-        int quantita = stmt.value(1).toInt();
-        QString quantitaString = QString("%1").arg(quantita, 3, 10);
-        float prezzo = stmt.value(2).toFloat();
-        QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 5, 'f', 2);
+      painter.setFont(fontMini);
+      painter.drawText(x, y, ".");
 
-        totale += prezzo;
-        QRect tmpRect;
-        painter.setFont(fontNormale);
-        painter.drawText(x, y, (pageWidth / 10) * 2 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
-        painter.drawText(x + (pageWidth / 10) * 2, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
-        painter.drawText(x + (pageWidth / 10) * 7, y, (pageWidth / 10) * 3, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
-    }
-    y += textRect.height() + 5;
-    painter.drawLine(x, y, pageWidth, y);
+      if(numCopieScontrino>0) {
+        if (stampantePdf) {
+            printer.newPage();
+        } else {
+            painter.end();
+            painter.begin(&printer);
+            painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
+        }
 
-    y += 5;
-    QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 5, 'f', 2);
-    painter.setFont(fontGrassetto);
-    painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
-    y += textRect.height() + 20;
-
-    if(footerAbilitata && !fondo.isEmpty()) {
-        painter.setFont(fontNormale);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
-        y += textRect.height() + 15;
+      }
     }
 
-    if (flagStampaNumeroRitiro) {
-        painter.drawLine(x, y, pageWidth, y);
-        y += 5;
-        QString testoRitiro = "CONSERVARE PER IL RITIRO";
-        painter.setFont(fontGrassetto);
-        painter.drawText(x, y, pageWidth, 20, Qt::AlignCenter, testoRitiro, &textRect);
-        y += textRect.height() + 5;
-        QString numRitiro = QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
-        painter.setFont(fontMaxi);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, numRitiro, &textRect);
-        y += textRect.height() + 35;
-    }
-
-    if (ID_SESSIONE_TEST == idSessioneCorrente) {
-        painter.setFont(fontGrassetto);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
-        y += textRect.height() + 10;
-    }
-
-    painter.setFont(fontMini);
-    painter.drawText(x, y, ".");
     painter.end();
 
 }
