@@ -223,21 +223,27 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QDateTime tsStampa = QDateTime::currentDateTime().toLocalTime();
     bool flagStampaNumeroRitiro = false;
     QChar serieRitiro = configurazione->value("serieRitiro", "A").toString().at(0);
-    bool logoAbilitato=configurazione->value("printLogo",false).toBool();
-    bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
-    bool footerAbilitata=configurazione->value("printFondo",false).toBool();
-    int numCopieScontrino=configurazione->value("print2Copie",false).toBool()?2:1;
+    bool logoAbilitato = configurazione->value("printLogo", false).toBool();
+    bool intestazioneAbilitata = configurazione->value("printIntestazione", false).toBool();
+    bool footerAbilitata = configurazione->value("printFondo", false).toBool();
+    int numCopieScontrino = configurazione->value("print2Copie", false).toBool() ? 2 : 1;
+    bool corniceIntestazione = configurazione->value("printCorniceIntestazione", true).toBool();
+    bool nomeManifIntestazione=configurazione->value("printNomeManifIntestazione",true).toBool();
 
     QString intestazione;
-    intestazione.append(descrManifestazione); //.append("\n");
-    if (intestazioneAbilitata & !intest.isEmpty()) {
-        intestazione.append("\n").append(intest);
+    if(nomeManifIntestazione) {
+      intestazione.append(descrManifestazione); //.append("\n");
+    }
+    if (intestazioneAbilitata && !intest.isEmpty()) {
+      if(!intestazione.isEmpty())
+        intestazione.append("\n");
+      intestazione.append(intest);
     }
     QString rigaTest = "=   SESSIONE DI TEST   =\n= SCONTRINO NON VALIDO =";
 
     QPixmap logoPixmap;
-    if(logoAbilitato) {
-      logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
+    if (logoAbilitato) {
+        logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
     }
 
     QPrinter printer;
@@ -254,7 +260,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         printer.setPrinterName(stampanteSelezionata);
     }
 
-    int risoluzione = configurazione->value("printerResolution",200).toInt();
+    int risoluzione = configurazione->value("printerResolution", 200).toInt();
     printer.setResolution(risoluzione);
     QSizeF foglioSize(80, 200);
     float rapportoFoglio = foglioSize.width() / foglioSize.height();
@@ -264,23 +270,23 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QRect textRect;
     QPainter painter;
 
-    int pageWidth = configurazione->value("printerWinWidth",300).toInt();
-    int dimensioneFontNormale=configurazione->value("printerFontSize",5).toInt();
+    int pageWidth = configurazione->value("printerWinWidth", 300).toInt();
+    int dimensioneFontNormale = configurazione->value("printerFontSize", 5).toInt();
 
     QFont fontNormale("lucida console");
     fontNormale.setPointSize(dimensioneFontNormale);
     QFont fontGrassetto("lucida console");
-    fontGrassetto.setPointSize(dimensioneFontNormale+2);
+    fontGrassetto.setPointSize(dimensioneFontNormale + 2);
     fontGrassetto.setBold(true);
     QFont fontGrassettoCorsivo("lucida console");
-    fontGrassettoCorsivo.setPointSize(dimensioneFontNormale+2);
+    fontGrassettoCorsivo.setPointSize(dimensioneFontNormale + 2);
     fontGrassettoCorsivo.setBold(true);
     fontGrassettoCorsivo.setItalic(true);
     //fontGrassettoCorsivo.setUnderline(true);
     QFont fontMini("lucida console");
     fontMini.setPointSize(1);
     QFont fontMaxi("lucida console");
-    fontMaxi.setPointSize(dimensioneFontNormale*4);
+    fontMaxi.setPointSize(dimensioneFontNormale * 4);
 
     QBrush sfondoIntestazione;
     sfondoIntestazione.setColor(Qt::black);
@@ -291,10 +297,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     pennaNormale.setColor(Qt::black);
 
     painter.begin(&printer);
-    QRect vpo=painter.viewport();
-    QRect winRect=painter.window();
+    QRect vpo = painter.viewport();
+    QRect winRect = painter.window();
     painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
-    winRect=painter.window();
+    winRect = painter.window();
     painter.setRenderHint(QPainter::Antialiasing);
 
     // stampa scontrini per destinazione
@@ -316,8 +322,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
     foreach(QString destinazioneStampa, repartiStampaList) {
 
-        if(destinazioneStampa.isEmpty() && !configurazione->value("printNoDest",true).toBool())
-          continue;
+        if (destinazioneStampa.isEmpty() && !configurazione->value("printNoDest", true).toBool())
+            continue;
 
         stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag from destinazionistampa where nome=?");
         stmt.addBindValue(destinazioneStampa);
@@ -350,12 +356,12 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         //painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione, &textRect);
 
         painter.setPen(pennaIntestazione);
-        textRect=painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
+        textRect = painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
         painter.setPen(pennaNormale);
         y += textRect.height() + 10;
-        painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5,sfondoIntestazione);
+        painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height() + 5, sfondoIntestazione);
         painter.setPen(pennaIntestazione);
-        painter.drawText(textRect,Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
+        painter.drawText(textRect, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
 
         painter.setPen(pennaNormale);
 
@@ -443,117 +449,119 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     // stampa scontrino del totale
 
-    while(numCopieScontrino-- > 0) {
+    while (numCopieScontrino-- > 0) {
 
-      int x = 0;
-      int y = 0;
+        int x = 0;
+        int y = 0;
 
-      if (ID_SESSIONE_TEST == idSessioneCorrente) {
-          painter.setFont(fontGrassetto);
-          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
-          y += textRect.height() + 10;
-      }
-
-      if(logoAbilitato) {
-        // stampa il logo grafico
-        painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
-        y+=90;
-      };
-
-        if(0==y)
-          y+=5;
-        painter.setFont(fontGrassetto);
-        painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
-        QPen pen(Qt::black, 2);
-        painter.setPen(pen);
-        painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5);
-        pen.setWidth(1);
-        painter.setPen(pen);
-        y += textRect.height()+5;
-
-      y+=5;
-      painter.setFont(fontNormale);
-      painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
-      y += textRect.height() + 10;
-
-      painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
-      painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
-      painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
-      y += 10;
-
-      //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
-      stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'");
-      //stmt.addBindValue(idSessioneCorrente);
-      //stmt.addBindValue(numeroOrdine);
-
-      if (!stmt.exec()) {
-          QMessageBox::critical(0, QObject::tr("Database Error"),
-                                stmt.lastError().text());
-          return;
-      }
-      float totale = 0;
-      while (stmt.next()) {
-          y += textRect.height();
-          QString descrizione = stmt.value(0).toString().simplified();
-          int quantita = stmt.value(1).toInt();
-          QString quantitaString = QString("%1").arg(quantita, 3, 10);
-          float prezzo = stmt.value(2).toFloat();
-          QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 5, 'f', 2);
-
-          totale += prezzo;
-          QRect tmpRect;
-          painter.setFont(fontNormale);
-          painter.drawText(x, y, (pageWidth / 10) * 2 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
-          painter.drawText(x + (pageWidth / 10) * 2, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
-          painter.drawText(x + (pageWidth / 10) * 7, y, (pageWidth / 10) * 3, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
-      }
-      y += textRect.height() + 5;
-      painter.drawLine(x, y, pageWidth, y);
-
-      y += 5;
-      QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 5, 'f', 2);
-      painter.setFont(fontGrassetto);
-      painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
-      y += textRect.height() + 20;
-
-      if(footerAbilitata && !fondo.isEmpty()) {
-          painter.setFont(fontNormale);
-          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
-          y += textRect.height() + 15;
-      }
-
-      if (flagStampaNumeroRitiro) {
-          painter.drawLine(x, y, pageWidth, y);
-          y += 5;
-          QString testoRitiro = "CONSERVARE PER IL RITIRO";
-          painter.setFont(fontGrassetto);
-          painter.drawText(x, y, pageWidth, 20, Qt::AlignCenter, testoRitiro, &textRect);
-          y += textRect.height() + 5;
-          QString numRitiro = QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
-          painter.setFont(fontMaxi);
-          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, numRitiro, &textRect);
-          y += textRect.height() + 35;
-      }
-
-      if (ID_SESSIONE_TEST == idSessioneCorrente) {
-          painter.setFont(fontGrassetto);
-          painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
-          y += textRect.height() + 10;
-      }
-
-      painter.setFont(fontMini);
-      painter.drawText(x, y, ".");
-
-      if(numCopieScontrino>0) {
-        if (stampantePdf) {
-            printer.newPage();
-        } else {
-            painter.end();
-            painter.begin(&printer);
-            painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
+        if (ID_SESSIONE_TEST == idSessioneCorrente) {
+            painter.setFont(fontGrassetto);
+            painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
+            y += textRect.height() + 10;
         }
 
-      }
+        if (logoAbilitato) {
+            // stampa il logo grafico
+            painter.drawPixmap(x, y, pageWidth, 80, logoPixmap);
+            y += 90;
+        };
+
+        if (0 == y)
+            y += 5;
+        painter.setFont(fontGrassetto);
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestazione, &textRect);
+
+        if (corniceIntestazione) {
+            QPen pen(Qt::black, 2);
+            painter.setPen(pen);
+            painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height() + 5);
+            pen.setWidth(1);
+            painter.setPen(pen);
+        }
+
+        y += textRect.height() + 10;
+        painter.setFont(fontNormale);
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
+        y += textRect.height() + 10;
+
+        painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
+        painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
+        painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
+        y += 10;
+
+        //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
+        stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'");
+        //stmt.addBindValue(idSessioneCorrente);
+        //stmt.addBindValue(numeroOrdine);
+
+        if (!stmt.exec()) {
+            QMessageBox::critical(0, QObject::tr("Database Error"),
+                                  stmt.lastError().text());
+            return;
+        }
+        float totale = 0;
+        while (stmt.next()) {
+            y += textRect.height();
+            QString descrizione = stmt.value(0).toString().simplified();
+            int quantita = stmt.value(1).toInt();
+            QString quantitaString = QString("%1").arg(quantita, 3, 10);
+            float prezzo = stmt.value(2).toFloat();
+            QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 5, 'f', 2);
+
+            totale += prezzo;
+            QRect tmpRect;
+            painter.setFont(fontNormale);
+            painter.drawText(x, y, (pageWidth / 10) * 2 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
+            painter.drawText(x + (pageWidth / 10) * 2, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
+            painter.drawText(x + (pageWidth / 10) * 7, y, (pageWidth / 10) * 3, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
+        }
+        y += textRect.height() + 5;
+        painter.drawLine(x, y, pageWidth, y);
+
+        y += 5;
+        QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 5, 'f', 2);
+        painter.setFont(fontGrassetto);
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
+        y += textRect.height() + 20;
+
+        if (footerAbilitata && !fondo.isEmpty()) {
+            painter.setFont(fontNormale);
+            painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
+            y += textRect.height() + 15;
+        }
+
+        if (flagStampaNumeroRitiro) {
+            painter.drawLine(x, y, pageWidth, y);
+            y += 5;
+            QString testoRitiro = "CONSERVARE PER IL RITIRO";
+            painter.setFont(fontGrassetto);
+            painter.drawText(x, y, pageWidth, 20, Qt::AlignCenter, testoRitiro, &textRect);
+            y += textRect.height() + 5;
+            QString numRitiro = QString("%1/%2").arg(serieRitiro).arg(numeroOrdine);
+            painter.setFont(fontMaxi);
+            painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, numRitiro, &textRect);
+            y += textRect.height() + 35;
+        }
+
+        if (ID_SESSIONE_TEST == idSessioneCorrente) {
+            painter.setFont(fontGrassetto);
+            painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
+            y += textRect.height() + 10;
+        }
+
+        painter.setFont(fontMini);
+        painter.drawText(x, y, ".");
+
+        if (numCopieScontrino > 0) {
+            if (stampantePdf) {
+                printer.newPage();
+            } else {
+                painter.end();
+                painter.begin(&printer);
+                painter.setWindow(0, 0, pageWidth, pageWidth / rapportoFoglio);
+            }
+
+        }
     }
 
     painter.end();
@@ -562,10 +570,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
 void Ordine::keyPressEvent(QKeyEvent *evt)
 {
-  if(Qt::Key_F12==evt->key()) {
-    on_stampaBtn_clicked();
-    evt->accept();
-  }
+    if (Qt::Key_F12 == evt->key()) {
+        on_stampaBtn_clicked();
+        evt->accept();
+    }
 
 }
 
@@ -626,23 +634,23 @@ void Ordine::on_duplicaBtn_clicked()
 
 void Ordine::on_addCodiceBtn_clicked()
 {
-  QSqlQuery stmt;
-  stmt.prepare("select a.idarticolo,a.descrizione,a.prezzo from articoli a,pulsanti p \
+    QSqlQuery stmt;
+    stmt.prepare("select a.idarticolo,a.descrizione,a.prezzo from articoli a,pulsanti p \
                  where a.idarticolo=p.idarticolo and barcode=? and a.descrizione <> '' and p.abilitato=1");
-  stmt.addBindValue(codiceTxt->text());
-  if (!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-      return;
-  }
-  if (stmt.next()) {
-    int idArticolo=stmt.value(0).toInt();
-    QString descrizione=stmt.value(1).toString();
-    float prezzo = stmt.value(2).toFloat();
-    nuovoArticolo(idArticolo,descrizione,prezzo);
-  } else {
-    QMessageBox::critical(0, QObject::tr("Codice non trovato"),QString("Codice %1 non censito in archivio oppure articolo disabilitato").arg(codiceTxt->text()));
-    codiceTxt->setText("");
-  }
+    stmt.addBindValue(codiceTxt->text());
+    if (!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    if (stmt.next()) {
+        int idArticolo = stmt.value(0).toInt();
+        QString descrizione = stmt.value(1).toString();
+        float prezzo = stmt.value(2).toFloat();
+        nuovoArticolo(idArticolo, descrizione, prezzo);
+    } else {
+        QMessageBox::critical(0, QObject::tr("Codice non trovato"), QString("Codice %1 non censito in archivio oppure articolo disabilitato").arg(codiceTxt->text()));
+        codiceTxt->setText("");
+    }
 
-  codiceTxt->setFocus();
+    codiceTxt->setFocus();
 }
