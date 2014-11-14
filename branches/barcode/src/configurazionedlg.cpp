@@ -69,8 +69,10 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
     fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
-    stampaNoDestinazioneBox->setChecked(configurazione->value("printNoDest",true).toBool());
-    doppiaCopiaCheckBox->setChecked(configurazione->value("print2Copie",false).toBool());
+    stampaNoDestinazioneBox->setChecked(configurazione->value("printNoDest", true).toBool());
+    doppiaCopiaCheckBox->setChecked(configurazione->value("print2Copie", false).toBool());
+    corniceIntestazioneBox->setChecked(configurazione->value("printCorniceIntestazione", true).toBool());
+    nomeManifIntestazioneBox->setChecked(configurazione->value("printNomeManifIntestazione", true).toBool());
 
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
@@ -473,29 +475,29 @@ QVariant ConfigurazioneDlg::valutaStringa(const QString &str)
 
 void ConfigurazioneDlg::keyPressEvent(QKeyEvent *evt)
 {
-  switch (evt->key()) {
+    switch (evt->key()) {
     case Qt::Key_F1: {
-        if(evt->modifiers() & Qt::ControlModifier) {
-          qDebug("CTRL+F1 pressed");
-          evt->accept();
-          execParametriAvanzati();
+        if (evt->modifiers() & Qt::ControlModifier) {
+            qDebug("CTRL+F1 pressed");
+            evt->accept();
+            execParametriAvanzati();
         }
     }
-  }
+    }
 
 }
 
 void ConfigurazioneDlg::execParametriAvanzati()
 {
-  ParametriAvanzati dlg;
-  dlg.setRisoluzione(configurazione->value("printerResolution",200).toInt());
-  dlg.setAmpiezzaStampa(configurazione->value("printerWinWidth",300).toInt());
-  dlg.setDimensioneFontStampa(configurazione->value("printerFontSize",5).toInt());
-  if(QDialog::Accepted==dlg.exec()) {
-    configurazione->insert("printerResolution",dlg.getRisoluzione());
-    configurazione->insert("printerWinWidth",dlg.getAmpiezzaStampa());
-    configurazione->insert("printerFontSize",dlg.getDimensioneFontStampa());
-  }
+    ParametriAvanzati dlg;
+    dlg.setRisoluzione(configurazione->value("printerResolution", 200).toInt());
+    dlg.setAmpiezzaStampa(configurazione->value("printerWinWidth", 300).toInt());
+    dlg.setDimensioneFontStampa(configurazione->value("printerFontSize", 5).toInt());
+    if (QDialog::Accepted == dlg.exec()) {
+        configurazione->insert("printerResolution", dlg.getRisoluzione());
+        configurazione->insert("printerWinWidth", dlg.getAmpiezzaStampa());
+        configurazione->insert("printerFontSize", dlg.getDimensioneFontStampa());
+    }
 }
 
 void ConfigurazioneDlg::on_importArticoliBtn_clicked()
@@ -518,7 +520,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         !stmt.exec("delete from destinazionistampa") ||
         !stmt.exec("delete from reparti") ||
         !stmt.exec("delete from risorse")
-    ) {
+       ) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
         return;
@@ -795,10 +797,20 @@ void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_stampaNoDestinazioneBox_clicked(bool checked)
 {
-  nuovaConfigurazione->insert("printNoDest",checked);
+    nuovaConfigurazione->insert("printNoDest", checked);
 }
 
 void ConfigurazioneDlg::on_doppiaCopiaCheckBox_clicked(bool checked)
 {
-  nuovaConfigurazione->insert("print2Copie",checked);
+    nuovaConfigurazione->insert("print2Copie", checked);
+}
+
+void ConfigurazioneDlg::on_corniceIntestazioneBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printCorniceIntestazione", checked);
+}
+
+void ConfigurazioneDlg::on_nomeManifIntestazioneBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printNomeManifIntestazione", checked);
 }

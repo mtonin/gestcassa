@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>406</width>
-    <height>373</height>
+    <height>396</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -225,6 +225,41 @@
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <layout class="QGridLayout" name="gridLayout_3">
+            <item row="3" column="1" colspan="2">
+             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QCheckBox" name="doppiaCopiaCheckBox">
+              <property name="text">
+               <string>Doppia copia</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="logoIntestazioneBtn">
+              <property name="text">
+               <string>Scegli</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="fondoCheckBox">
+              <property name="text">
+               <string>Fondo
+pagina</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" rowspan="2">
+             <widget class="QCheckBox" name="intestazioneCheckBox">
+              <property name="text">
+               <string>Intestazione</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" rowspan="2" colspan="2">
+             <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
+            </item>
             <item row="0" column="0">
              <widget class="QCheckBox" name="logoCheckBox">
               <property name="text">
@@ -232,7 +267,7 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
+            <item row="0" column="2" colspan="2">
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -245,38 +280,18 @@
               </property>
              </spacer>
             </item>
-            <item row="1" column="0" rowspan="2">
-             <widget class="QCheckBox" name="intestazioneCheckBox">
+            <item row="2" column="3">
+             <widget class="QCheckBox" name="corniceIntestazioneBox">
               <property name="text">
-               <string>Intestazione</string>
+               <string>Cornice</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="logoIntestazioneBtn">
+            <item row="1" column="3">
+             <widget class="QCheckBox" name="nomeManifIntestazioneBox">
               <property name="text">
-               <string>Scegli</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1" rowspan="2" colspan="2">
-             <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
-            </item>
-            <item row="3" column="1" colspan="2">
-             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="fondoCheckBox">
-              <property name="text">
-               <string>Fondo
-pagina</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QCheckBox" name="doppiaCopiaCheckBox">
-              <property name="text">
-               <string>Doppia copia</string>
+               <string>Nome
+manif.</string>
               </property>
              </widget>
             </item>
@@ -292,7 +307,7 @@ pagina</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <layout class="QGridLayout" name="gridLayout">
+           <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0">
             <item row="0" column="0">
              <widget class="QRadioButton" name="stampanteChk">
               <property name="text">
@@ -300,10 +315,16 @@ pagina</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
+            <item row="0" column="2">
              <widget class="QToolButton" name="printerSelectBtn">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="text">
                <string>Impostazioni</string>
@@ -323,8 +344,14 @@ pagina</string>
             <item row="1" column="1">
              <widget class="QLineEdit" name="cartellaPdfTxt"/>
             </item>
-            <item row="1" column="3">
+            <item row="1" column="2">
              <widget class="QToolButton" name="cartellaPdfBtn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Cambia</string>
               </property>

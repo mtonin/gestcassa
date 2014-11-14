@@ -78,6 +78,10 @@ private slots:
 
     void on_doppiaCopiaCheckBox_clicked(bool checked);
 
+    void on_corniceIntestazioneBox_clicked(bool checked);
+
+    void on_nomeManifIntestazioneBox_clicked(bool checked);
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);
