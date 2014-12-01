@@ -325,6 +325,8 @@ void MainWindow::repartoSelezionato()
         dettagliRepartoBox->setCurrentReparto(btn);
         dettagliRepartoBox->disconnect();
         ui->latoStackedWidget->setCurrentWidget(dettagliRepartoBox);
+    } else {
+      ordineBox->attivaCodiceTxt();
     }
 }
 
