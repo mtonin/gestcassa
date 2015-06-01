@@ -225,7 +225,22 @@ bool DBManager::leggeConfigurazione()
         nuovaVersioneDB = 10;
     }
 
-    if (versioneDB != nuovaVersioneDB) {
+        if (versioneDB < 11) {
+            if (!stmt.exec("CREATE TABLE buoni (  \
+                    numerobuono INTEGER, \
+                    cognome     VARCHAR, \
+                    nome     VARCHAR, \
+                    tsemissione     DATETIME, \
+                    importo      REAL, \
+                    flagannullato   BOOLEAN NOT NULL DEFAULT (0))"))  {
+                QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                db.rollback();
+                return false;
+            }
+            nuovaVersioneDB = 11;
+        }
+
+        if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
         stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)");

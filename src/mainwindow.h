@@ -48,6 +48,7 @@ private slots:
 
     void execTest();
     void execStorno();
+    void execBuoni();
 
     void on_closeBtn_clicked();
 

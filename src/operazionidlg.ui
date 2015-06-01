@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>118</width>
-    <height>468</height>
+    <height>544</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>83</width>
-    <height>456</height>
+    <width>118</width>
+    <height>544</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>118</width>
-    <height>468</height>
+    <height>544</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -182,6 +182,47 @@
     </widget>
    </item>
    <item>
+    <widget class="QToolButton" name="buoniBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>70</width>
+       <height>70</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>70</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>BUONI</string>
+     </property>
+     <property name="icon">
+      <iconset resource="risorse.qrc">
+       <normaloff>:/GestCassa/cancella</normaloff>:/GestCassa/cancella</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QToolButton" name="statsBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -223,7 +264,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QToolButton" name="statsBtn_2">
+    <widget class="QToolButton" name="chiudeBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
