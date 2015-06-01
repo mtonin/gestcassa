@@ -12,6 +12,7 @@
 #include "confermadlg.h"
 #include "operazionidlg.h"
 #include "storicoordini.h"
+#include "buonidlg.h"
 //#include "basemsgbox.h"
 
 #include <QtGui>
@@ -486,6 +487,9 @@ void MainWindow::esegueOperazione(int idx)
     case 5:
         execStorno();
         break;
+    case 6:
+        execBuoni();
+        break;
     }
 
 }
@@ -511,6 +515,13 @@ void MainWindow::execStorno()
         idSessione = confMap->value("sessioneSalvata").toInt();
     }
     StoricoOrdini dlg(idSessione);
+    dlg.exec();
+    return;
+}
+
+void MainWindow::execBuoni()
+{
+    BuoniDlg dlg;
     dlg.exec();
     return;
 }

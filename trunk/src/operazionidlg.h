@@ -28,7 +28,7 @@ private slots:
     void pulsanteClicked(int idx);
     void init();
 
-    void on_statsBtn_2_clicked();
+    void on_chiudeBtn_clicked();
 
 private:
     Ui::OperazioniDlg *ui;
