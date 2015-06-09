@@ -206,7 +206,7 @@
      </property>
      <property name="icon">
       <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/cancella</normaloff>:/GestCassa/cancella</iconset>
+       <normaloff>:/GestCassa/ticket</normaloff>:/GestCassa/ticket</iconset>
      </property>
      <property name="iconSize">
       <size>
