@@ -226,13 +226,12 @@ bool DBManager::leggeConfigurazione()
     }
 
         if (versioneDB < 11) {
-            if (!stmt.exec("CREATE TABLE buoni (  \
-                    numerobuono INTEGER, \
-                    cognome     VARCHAR, \
-                    nome     VARCHAR, \
-                    tsemissione     DATETIME, \
-                    importo      REAL, \
-                    flagannullato   BOOLEAN NOT NULL DEFAULT (0))"))  {
+            if (!stmt.exec("CREATE TABLE buoni ( \
+                         cognome     VARCHAR(100), \
+                         nome     VARCHAR(100), \
+                         tsemissione     TIMESTAMP, \
+                         flagannullato   BOOLEAN DEFAULT  0 NOT NULL, \
+                         PRIMARY KEY (cognome,nome))"))  {
                 QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
                 db.rollback();
                 return false;

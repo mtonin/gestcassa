@@ -490,3 +490,8 @@ void StatsForm::mouseClick(QMouseEvent *evt)
     graficoPlot->yAxis->setRange(yRange);
     graficoPlot->replot();
 }
+
+void StatsForm::on_sessioneBox_toggled(bool checked)
+{
+    sessioneCombo->setEnabled(checked);
+}

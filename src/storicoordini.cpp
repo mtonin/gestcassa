@@ -113,3 +113,8 @@ void StoricoOrdini::caricaSessioni()
   sessioneView->hideColumn(1);
 
 }
+
+void StoricoOrdini::on_sessioneBox_toggled(bool checked)
+{
+    sessioneCombo->setEnabled(checked);
+}

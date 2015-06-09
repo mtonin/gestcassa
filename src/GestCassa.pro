@@ -42,8 +42,8 @@ SOURCES += main.cpp\
     storicoarticoliordinimodel.cpp \
     basemsgbox.cpp \
     parametriavanzati.cpp \
-    buonimodel.cpp \
-    buonidlg.cpp
+    buonidlg.cpp \
+    buoniquerymodel.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -74,8 +74,8 @@ HEADERS  += mainwindow.h \
     storicoarticoliordinimodel.h \
     basemsgbox.h \
     parametriavanzati.h \
-    buonimodel.h \
-    buonidlg.h
+    buonidlg.h \
+    buoniquerymodel.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
