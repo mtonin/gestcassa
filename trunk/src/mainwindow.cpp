@@ -521,7 +521,7 @@ void MainWindow::execStorno()
 
 void MainWindow::execBuoni()
 {
-    BuoniDlg dlg;
+    BuoniDlg dlg(confMap,this);
     dlg.exec();
     return;
 }

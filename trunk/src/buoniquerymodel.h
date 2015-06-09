@@ -1,13 +1,13 @@
-#ifndef BUONIMODEL_H
-#define BUONIMODEL_H
+#ifndef buoniQueryModel_H
+#define buoniQueryModel_H
 
-#include <QSqlTableModel>
+#include <QSqlQueryModel>
 
-class buoniModel : public QSqlTableModel
+class buoniQueryModel : public QSqlQueryModel
 {
   Q_OBJECT
 public:
-  explicit buoniModel(QObject *parent = 0);
+  explicit buoniQueryModel(QObject *parent = 0);
 
   QVariant data(const QModelIndex &index, int role) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
@@ -20,4 +20,4 @@ public slots:
 
 };
 
-#endif // BUONIMODEL_H
+#endif // buoniQueryModel_H

@@ -740,6 +740,25 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     on_buttonBox_accepted();
 }
 
+void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
+{
+    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i buoni emessi.\nProseguire?", "", false, this);
+    if (QDialog::Accepted != dlg->visualizza()) return;
+
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
+
+    QSqlQuery stmt;
+    if (!stmt.exec("delete from buoni")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+
+    db.commit();
+}
+
+
 void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked()
 {
     QString logoFileName;
