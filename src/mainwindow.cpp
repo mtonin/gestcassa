@@ -356,9 +356,9 @@ void MainWindow::on_configurazioneBtn_clicked()
 void MainWindow::on_funzioniBtn_clicked()
 {
     QPoint btnPoint = ui->funzioniBtn->mapToGlobal(ui->funzioniBtn->pos());
-    OperazioniDlg dlg(modalitaCorrente, btnPoint);
-    connect(&dlg, SIGNAL(operazioneSelezionata(int)), this, SLOT(esegueOperazione(int)));
-    dlg.exec();
+    OperazioniDlg* dlg=new OperazioniDlg(modalitaCorrente, btnPoint,this);
+    connect(dlg, SIGNAL(operazioneSelezionata(int)), this, SLOT(esegueOperazione(int)));
+    dlg->show();
     // close();
 }
 
