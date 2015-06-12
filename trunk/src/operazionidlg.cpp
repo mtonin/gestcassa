@@ -12,7 +12,9 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, Q
     ui(new Ui::OperazioniDlg)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::Popup|Qt::FramelessWindowHint);
+    //setWindowModality(Qt::ApplicationModal);
+    //setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     activateWindow();
 
@@ -42,16 +44,6 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, Q
     connect(effetto, SIGNAL(finished()), this, SLOT(init()));
 
     effetto->start(QAbstractAnimation::DeleteWhenStopped);
-    /*
-    pos.setY(pos.y()-frameGeometry().height());
-    QDesktopWidget* desktop=QApplication::desktop();
-    int screenHeight=desktop->screenGeometry().height();
-    if(pos.y()+height()>screenHeight) {
-      pos.setY(screenHeight-height());
-    }
-    move(pos);
-    */
-
 }
 
 OperazioniDlg::~OperazioniDlg()
@@ -59,11 +51,11 @@ OperazioniDlg::~OperazioniDlg()
     delete ui;
 }
 
-void OperazioniDlg::paintEvent(QPaintEvent *)
+void OperazioniDlg::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(QPen(QBrush(Qt::white), 10));
+    painter.setPen(QPen(QBrush(Qt::white), 5));
     painter.setBrush(QBrush(Qt::black));
     painter.setOpacity(.7);
 
@@ -72,7 +64,6 @@ void OperazioniDlg::paintEvent(QPaintEvent *)
     winRect.addRect(0, 0, box.width(), box.height());
     //winRect.addRoundRect(0,0,box.width(),box.height(),15,15);
     painter.drawPath(winRect);
-
 }
 
 void OperazioniDlg::pulsanteClicked(int idx)
