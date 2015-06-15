@@ -29,5 +29,6 @@
         <file alias="divieto">resources/Button White Remove.png</file>
         <file alias="db_delete">resources/db_delete.png</file>
         <file alias="ticket">resources/News.png</file>
+        <file alias="help">resources/Button White Help.png</file>
     </qresource>
 </RCC>

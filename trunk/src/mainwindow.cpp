@@ -13,6 +13,7 @@
 #include "operazionidlg.h"
 #include "storicoordini.h"
 #include "buonidlg.h"
+#include "aboutdlg.h"
 //#include "basemsgbox.h"
 
 #include <QtGui>
@@ -490,6 +491,9 @@ void MainWindow::esegueOperazione(int idx)
     case 6:
         execBuoni();
         break;
+    case 7:
+          execAbout();
+          break;
     }
 
 }
@@ -524,6 +528,13 @@ void MainWindow::execBuoni()
     BuoniDlg dlg(confMap,this);
     dlg.exec();
     return;
+}
+
+void MainWindow::execAbout()
+{
+  AboutDlg dlg(this);
+  dlg.exec();
+  return;
 }
 
 void MainWindow::caricaArticoli()

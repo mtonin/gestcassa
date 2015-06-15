@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     basemsgbox.cpp \
     parametriavanzati.cpp \
     buonidlg.cpp \
-    buoniquerymodel.cpp
+    buoniquerymodel.cpp \
+    aboutdlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -75,7 +76,8 @@ HEADERS  += mainwindow.h \
     basemsgbox.h \
     parametriavanzati.h \
     buonidlg.h \
-    buoniquerymodel.h
+    buoniquerymodel.h \
+    aboutdlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -92,7 +94,8 @@ FORMS    += mainwindow.ui \
     storicoordini.ui \
     operazionidlg.ui \
     parametriavanzati.ui \
-    buonidlg.ui
+    buonidlg.ui \
+    aboutdlg.ui
 
 #include(version.txt)
 

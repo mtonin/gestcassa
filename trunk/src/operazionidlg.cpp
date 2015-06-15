@@ -91,6 +91,8 @@ void OperazioniDlg::init()
     mapper->setMapping(ui->stornoBtn, 5);
     connect(ui->buoniBtn, SIGNAL(clicked()), mapper, SLOT(map()));
     mapper->setMapping(ui->buoniBtn, 6);
+    connect(ui->aboutBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->aboutBtn, 7);
 
     connect(mapper, SIGNAL(mapped(int)), this, SLOT(pulsanteClicked(int)));
 
