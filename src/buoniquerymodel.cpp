@@ -73,7 +73,12 @@ bool buoniQueryModel::setData(const QModelIndex &index, const QVariant &value, i
         int flagAnnullato=Qt::Checked == value.toInt() ? 1 : 0;
         QString sql("update buoni set flagannullato=? where cognome=? and nome=?");
         QSqlQuery query;
-        query.prepare(sql);
+        if(!query.prepare(sql)) {
+          QSqlError errore=query.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(0,"Errore",msg);
+          return false;
+        }
         query.addBindValue(flagAnnullato);
         query.addBindValue(cognome);
         query.addBindValue(nome);

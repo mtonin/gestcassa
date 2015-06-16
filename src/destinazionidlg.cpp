@@ -64,7 +64,12 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
 
     QString query("insert into destinazionistampa values (?,'INTESTAZIONE TAGLIANDO',1,0)");
     QSqlQuery sql;
-    sql.prepare(query);
+    if(!sql.prepare(query)) {
+      QSqlError errore=sql.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     sql.addBindValue(nuovaDestinazione);
     if(!sql.exec()) {
       QSqlError errore=sql.lastError();

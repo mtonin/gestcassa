@@ -43,7 +43,12 @@ void BuoniDlg::on_nuovoBuonoBtn_clicked()
 
   QString query("insert into buoni (cognome, nome, tsemissione,flagannullato) values(?,?,?,0)");
   QSqlQuery sql;
-  sql.prepare(query);
+  if(!sql.prepare(query)) {
+    QSqlError errore=sql.lastError();
+    msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+    QMessageBox::critical(this,"Errore",msg);
+    return;
+  }
   sql.addBindValue(cognome);
   sql.addBindValue(nome);
   QDateTime ts = QDateTime::currentDateTime();

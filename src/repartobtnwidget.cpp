@@ -58,7 +58,12 @@ RepartoBtnWidget::RepartoBtnWidget(int id, QWidget *parent) :
     QPictureButton(parent)
 {
     QSqlQuery stmt;
-    stmt.prepare("select descrizione,font,coloreSfondo,coloreCarattere,abilitato from reparti where idreparto=?");
+    if(!stmt.prepare("select descrizione,font,coloreSfondo,coloreCarattere,abilitato from reparti where idreparto=?")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          return;
+    }
     stmt.addBindValue(idReparto);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
