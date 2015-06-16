@@ -347,7 +347,10 @@ Finestra</string>
   <tabstop>cognomeTxt</tabstop>
   <tabstop>nomeTxt</tabstop>
   <tabstop>nuovoBuonoBtn</tabstop>
+  <tabstop>tuttiBox</tabstop>
   <tabstop>nonAnnullatiBox</tabstop>
+  <tabstop>totaleTxt</tabstop>
+  <tabstop>stampaBtn</tabstop>
   <tabstop>chiudeBtn</tabstop>
   <tabstop>buoniTable</tabstop>
  </tabstops>

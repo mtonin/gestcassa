@@ -13,7 +13,12 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id, int idRep, int numRiga, int numColo
 {
 
     QSqlQuery stmt;
-    stmt.prepare("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo and a.idreparto=? and a.riga=? and a.colonna=?");
+    if(!stmt.prepare("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo and a.idreparto=? and a.riga=? and a.colonna=?")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(idReparto);
     stmt.addBindValue(riga);
     stmt.addBindValue(colonna);
@@ -112,12 +117,22 @@ void ArticoloBtnWidget::setPos(int r, int c)
     QSqlQuery stmt;
     if (0 == idArticolo) {
         // posizione scambiata con un pulsante vuoto
-        stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?");
+        if(!stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          return;
+        }
         stmt.addBindValue(idReparto);
         stmt.addBindValue(r);
         stmt.addBindValue(c);
     } else {
-        stmt.prepare("update or insert into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)");
+        if(!stmt.prepare("update or insert into pulsanti (idreparto,riga,colonna,idarticolo,abilitato) values(?,?,?,?,?)")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          return;
+        }
         stmt.addBindValue(idReparto);
         stmt.addBindValue(r);
         stmt.addBindValue(c);

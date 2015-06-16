@@ -119,11 +119,21 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
     foreach(QString key, configurazione->keys()) {
         stmt.clear();
         if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive)) {
-            stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)");
+            if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return;
+            }
             stmt.addBindValue(key);
             stmt.addBindValue(configurazione->value(key).toByteArray());
         } else {
-            stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)");
+            if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return;
+            }
             stmt.addBindValue(key);
             stmt.addBindValue(configurazione->value(key).toString());
         }
@@ -228,7 +238,12 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
@@ -528,7 +543,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             QString tabella = campiInput.at(idx);
             QString sql;
             if (0 == tabella.compare("destinazionistampa", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)");
+                sql="INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 if (idx >= campiInput.size() - 2)
@@ -542,7 +564,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 
             }
             if (0 == tabella.compare("pulsanti", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)");
+                sql="INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -550,7 +579,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("reparti", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato) VALUES(?,?,?,?,?,?)");
+                sql="INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato) VALUES(?,?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -562,7 +598,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                     stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("articoli", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO ARTICOLI (idArticolo,descrizione,prezzo,destinazione,gestioneMenu) VALUES(?,?,?,?,?)");
+                sql="INSERT INTO ARTICOLI (idArticolo,descrizione,prezzo,destinazione,gestioneMenu) VALUES(?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -570,17 +613,38 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("articolimenu", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO ARTICOLIMENU (idArticolo,idArticoloMenu) VALUES(?,?)");
+                sql="INSERT INTO ARTICOLIMENU (idArticolo,idArticoloMenu) VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("configurazione", Qt::CaseInsensitive)) {
-                stmt.prepare("UPDATE OR INSERT INTO CONFIGURAZIONE VALUES(?,?)");
+                sql="UPDATE OR INSERT INTO CONFIGURAZIONE VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("risorse", Qt::CaseInsensitive)) {
-                stmt.prepare("UPDATE OR INSERT INTO RISORSE VALUES(?,?)");
+                sql="UPDATE OR INSERT INTO RISORSE VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
             }
@@ -706,7 +770,13 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      db.rollback();
+      return;
+    }
     stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 

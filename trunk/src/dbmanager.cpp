@@ -242,7 +242,13 @@ bool DBManager::leggeConfigurazione()
         if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
-        stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)");
+        if(!stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(0,"Errore",msg);
+          db.rollback();
+          return false;
+        }
         stmt.addBindValue(nuovaVersioneDB);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
