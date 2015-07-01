@@ -55,7 +55,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
 
     QString pwdCifrata = configurazione->value("adminPassword").toString();
-    pwdInChiaro = cifratore->decryptToString(pwdCifrata);
+    pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
     adminPasswordTxt->setText(pwdInChiaro);
 
     dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
@@ -74,6 +74,8 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     descrManifestazioneTxt->setFocus();
 
     connect(serieRitiroTxt, SIGNAL(currentIndexChanged(int)), this, SLOT(cambiaSerieRitiro(int)));
+
+    setCaratteriRimanenti();
 }
 
 ConfigurazioneDlg::~ConfigurazioneDlg()
@@ -201,6 +203,7 @@ void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
     nuovaConfigurazione->insert("descrManifestazione", arg1);
+    setCaratteriRimanenti();
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
@@ -496,6 +499,14 @@ void ConfigurazioneDlg::execParametriAvanzati()
     configurazione->insert("printerWinWidth",dlg.getAmpiezzaStampa());
     configurazione->insert("printerFontSize",dlg.getDimensioneFontStampa());
   }
+}
+
+void ConfigurazioneDlg::setCaratteriRimanenti(){
+
+  int carRimanenti=descrManifestazioneTxt->maxLength()-descrManifestazioneTxt->text().size();
+  QString label=QString("%1 caratteri rimanenti").arg(carRimanenti);
+  rimanentiLbl->setText(label);
+
 }
 
 void ConfigurazioneDlg::on_importArticoliBtn_clicked()

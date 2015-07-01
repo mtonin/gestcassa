@@ -87,6 +87,7 @@ private:
     QPrinter printer;
     void keyPressEvent(QKeyEvent *);
     void execParametriAvanzati();
+    void setCaratteriRimanenti();
 };
 
 #endif // CONFIGURAZIONEDLG_H
