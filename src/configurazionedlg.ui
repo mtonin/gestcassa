@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="generaleTab">
       <attribute name="title">
@@ -37,11 +37,33 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="descrManifestazioneTxt">
-           <property name="maxLength">
-            <number>100</number>
+          <layout class="QVBoxLayout">
+           <property name="spacing">
+            <number>2</number>
            </property>
-          </widget>
+           <item>
+            <widget class="QLineEdit" name="descrManifestazioneTxt">
+             <property name="maxLength">
+              <number>25</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="rimanentiLbl">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_5">
@@ -342,19 +364,6 @@ pagina</string>
               <string>Path del database</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </item>
