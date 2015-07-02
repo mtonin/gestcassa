@@ -11,6 +11,19 @@ QVariant buoniQueryModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) return QVariant();
     QModelIndex tmpIdx = QSqlQueryModel::index(index.row(), 2);
     bool flagAnnullato = QSqlQueryModel::data(tmpIdx).toBool();
+    if (flagAnnullato) {
+        if (Qt::ForegroundRole == role) {
+            QBrush brush(Qt::SolidPattern);
+            brush.setColor(Qt::black);
+            return QVariant(brush);
+        }
+        if (Qt::BackgroundRole == role) {
+            QBrush brush(Qt::Dense3Pattern);
+            brush.setColor(Qt::lightGray);
+            return QVariant(brush);
+        }
+    }
+
     QVariant rigaArticolo = QSqlQueryModel::data(index, role);
     switch (index.column()) {
     case 0:

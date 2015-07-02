@@ -18,9 +18,11 @@ private slots:
   void aggiornaUI();
 
   void on_stampaBtn_clicked();
+  void ordinaByColumn(int column, Qt::SortOrder sortOrder);
 
 private:
   buoniQueryModel* modello;
+  QString ordine;
 
   void stampa(const QTextDocument *doc, const QString descrReport, bool preview);
   void putHeader(QTextCursor cursore, const QString testo);

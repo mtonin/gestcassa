@@ -8,8 +8,8 @@
 #include "textprinter.h"
 #include "buonidlg.h"
 
-const QString QUERYALL("select cognome || ' ' || nome, tsemissione,flagannullato,cognome,nome from buoni order by tsemissione");
-const QString QUERYNONANNULLATI("select cognome || ' ' || nome, tsemissione,flagannullato,cognome,nome from buoni where flagannullato=0 order by tsemissione");
+const QString QUERYALL("select cognome || ' ' || nome, tsemissione,flagannullato,cognome,nome from buoni %1");
+const QString QUERYNONANNULLATI("select cognome || ' ' || nome, tsemissione,flagannullato,cognome,nome from buoni where flagannullato=0 %1");
 
 BuoniDlg::BuoniDlg(QMap<QString, QVariant> *par, QWidget *parent) :configurazione(par),QDialog(parent)
 {
@@ -18,7 +18,8 @@ BuoniDlg::BuoniDlg(QMap<QString, QVariant> *par, QWidget *parent) :configurazion
   activateWindow();
 
   modello = new buoniQueryModel(this);
-  modello->setQuery(QUERYALL);
+  ordine=QString("order by tsemissione asc");
+  aggiornaUI();
   buoniTable->setModel(modello);
 
   totaleTxt->setText(QString("%1").arg(modello->rowCount()));
@@ -26,15 +27,19 @@ BuoniDlg::BuoniDlg(QMap<QString, QVariant> *par, QWidget *parent) :configurazion
   buoniTable->hideColumn(4);
   buoniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
   buoniTable->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+  buoniTable->horizontalHeader()->setSortIndicatorShown(true);
+  buoniTable->setSortingEnabled(true);
+  buoniTable->horizontalHeader()->setSortIndicator(1,Qt::AscendingOrder);
 
   connect(modello,SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(aggiornaUI()));
+  connect(buoniTable->horizontalHeader(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(ordinaByColumn(int,Qt::SortOrder)));
 }
 
 void BuoniDlg::on_nuovoBuonoBtn_clicked()
 {
   QString msg;
-  QString cognome=cognomeTxt->text().toUpper();
-  QString nome=nomeTxt->text().toUpper();
+  QString cognome=cognomeTxt->text().toUpper().trimmed();
+  QString nome=nomeTxt->text().toUpper().trimmed();
 
   if(cognome.isEmpty() || nome.isEmpty()) {
     QMessageBox::critical(this,"Errore","E' obbligatorio indicare nome e cognome");
@@ -85,9 +90,9 @@ void BuoniDlg::on_nonAnnullatiBox_clicked()
 void BuoniDlg::aggiornaUI()
 {
   if(tuttiBox->isChecked())
-    modello->setQuery(QUERYALL);
+    modello->setQuery(QUERYALL.arg(ordine));
   else
-    modello->setQuery(QUERYNONANNULLATI);
+    modello->setQuery(QUERYNONANNULLATI.arg(ordine));
   totaleTxt->setText(QString("%1").arg(modello->rowCount()));
 
 }
@@ -108,9 +113,9 @@ void BuoniDlg::on_stampaBtn_clicked()
 
   QTextDocument tableDocument;
   QTextCursor cursore(&tableDocument);
-  QTextTable* tabella = cursore.insertTable(1, 3);
+  QTextTable* tabella = cursore.insertTable(1, 4);
 
-  foreach(testo, ((QString)"NUMERO,NOMINATIVO,EMESSO IL").split(",")) {
+  foreach(testo, ((QString)"NUMERO,NOMINATIVO,EMESSO IL,ANNULL.").split(",")) {
       putHeader(cursore, testo);
       cursore.movePosition(QTextCursor::NextCell);
   }
@@ -120,17 +125,20 @@ void BuoniDlg::on_stampaBtn_clicked()
       num++;
       QString nominativo = modello->index(i, 0).data(Qt::DisplayRole).toString();
       QDateTime tsEmissione = modello->index(i, 1).data(Qt::DisplayRole).toDateTime();
+      QVariant flagAnnullato = modello->index(i,2).data(Qt::CheckStateRole);
       tabella->appendRows(1);
-      cursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,2);
+      cursore.movePosition(QTextCursor::PreviousCell,QTextCursor::MoveAnchor,3);
       cursore.setBlockFormat(rightAlignFormat);
       cursore.insertText(QString("%1").arg(num));
       cursore.movePosition(QTextCursor::NextCell);
       cursore.insertText(nominativo);
       cursore.movePosition(QTextCursor::NextCell);
       cursore.insertText(tsEmissione.toString("dd/MM/yyyy hh:mm:ss"));
+      cursore.movePosition(QTextCursor::NextCell);
+      cursore.insertText(Qt::Checked==flagAnnullato.toInt()?"ANNULL.":"");
   }
 
-  formattaTabella(tabella, QString("20,50,30").split(",").toVector());
+  formattaTabella(tabella, QString("10,50,30,10").split(",").toVector());
   cursoreDoc.insertFragment(QTextDocumentFragment(&tableDocument));
 
   QString descrReport = QString("Buoni emessi - &date;");
@@ -190,4 +198,9 @@ void BuoniDlg::formattaTabella(QTextTable* tabella, QVector<QString> colWidth)
 
     tabella->setFormat(formatoTabella);
 
+}
+
+void BuoniDlg::ordinaByColumn(int column,Qt::SortOrder sortOrder){
+  ordine=QString("order by %1 %2").arg(++column).arg(Qt::AscendingOrder==sortOrder?"ASC":"DESC");
+  aggiornaUI();
 }
