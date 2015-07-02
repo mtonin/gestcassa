@@ -31,9 +31,9 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,0,0,0">
           <item>
-           <widget class="QRadioButton" name="tuttiBox">
+           <widget class="QRadioButton" name="nonAnnullatiBox">
             <property name="text">
-             <string>Tutti</string>
+             <string>Solo non annullati</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -41,9 +41,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="nonAnnullatiBox">
+           <widget class="QRadioButton" name="tuttiBox">
             <property name="text">
-             <string>Solo non annullati</string>
+             <string>Tutti</string>
             </property>
             <property name="checked">
              <bool>false</bool>
@@ -348,7 +348,6 @@ Finestra</string>
   <tabstop>nomeTxt</tabstop>
   <tabstop>nuovoBuonoBtn</tabstop>
   <tabstop>tuttiBox</tabstop>
-  <tabstop>nonAnnullatiBox</tabstop>
   <tabstop>totaleTxt</tabstop>
   <tabstop>stampaBtn</tabstop>
   <tabstop>chiudeBtn</tabstop>
