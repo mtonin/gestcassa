@@ -146,7 +146,7 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
         and c.idreparto=b.idreparto \
         and c.idreparto=?";
         if (ordineAlfabeticoBox->isChecked()) {
-            sql.append(" order by a.descrizione asc");
+            sql.append(" order by lower(a.descrizione) asc");
         } else {
             sql.append(" order by a.prezzo asc");
         }
