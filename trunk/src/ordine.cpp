@@ -460,15 +460,17 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
 
     if(logoAbilitato) {
+        float rapporto=logoPixmap.width()/pageWidth;
+        float logoHeight=logoPixmap.height()/rapporto;
       // stampa il logo grafico
-      painter.drawPixmap(x,y,pageWidth,80,logoPixmap);
-      y+=90;
+      painter.drawPixmap(x,y,pageWidth,logoHeight,logoPixmap);
+      y+=logoHeight+10;
     };
 
       if(0==y)
         y+=5;
       painter.setFont(fontGrassetto);
-      painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
+      painter.drawText(x,y,pageWidth,200,Qt::AlignHCenter | Qt::TextWordWrap, intestazione,&textRect);
       QPen pen(Qt::black, 2);
       painter.setPen(pen);
       painter.drawRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5);
