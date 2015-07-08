@@ -534,6 +534,7 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         and c.idreparto=b.idreparto \
         and c.idreparto=? \
         and c.abilitato = 1 \
+        and a.descrizione <> '' \
         order by lower(a.descrizione) asc";
 
         QSqlQuery stmt;
