@@ -284,7 +284,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     }
     while (stmt.next()) {
         QString numeroOrdine = stmt.value(0).toString();
-        QString tsStampaOrdine = stmt.value(1).toString();
+        QString tsStampaOrdine = stmt.value(1).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
         QString importoOrdine = stmt.value(2).toString();
         QString descrizioneArticoloOrdine = stmt.value(3).toString();
         QString quantitaArticoloOrdine = stmt.value(4).toString();
