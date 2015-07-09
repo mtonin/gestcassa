@@ -65,6 +65,8 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     logoCheckBox->setChecked(configurazione->value("printLogo", false).toBool());
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
+    logoFondoCheckBox->setChecked(configurazione->value("printLogoFondo", false).toBool());
+    logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     intestazioneCheckBox->setChecked(configurazione->value("printIntestazione", false).toBool());
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
@@ -120,7 +122,8 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
     QSqlQuery stmt;
     foreach(QString key, configurazione->keys()) {
         stmt.clear();
-        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive)) {
+        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive) ||
+            0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
@@ -426,6 +429,11 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
 
     str = configurazione->value("printLogo").toString();
     riga = QString("CONFIGURAZIONE#§printLogo#§%1")
+           .arg(str.isEmpty() ? "NULL" : str);
+    exportLista.append(riga);
+
+    str = configurazione->value("printLogoFondo").toString();
+    riga = QString("CONFIGURAZIONE#§printLogoFondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
@@ -751,6 +759,24 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         nuovaConfigurazione->insert("logoPixmap", stmt.value(0).toByteArray());
     }
 
+    if (!stmt.exec("select valore from configurazione where chiave='printLogoFondo'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("printLogoFondo", valutaStringa(stmt.value(0).toString()));
+    }
+
+    if (!stmt.exec("select oggetto from risorse where id='logoFondoPixmap'")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return;
+    }
+    if (stmt.next()) {
+        nuovaConfigurazione->insert("logoFondoPixmap", stmt.value(0).toByteArray());
+    }
+
     on_buttonBox_accepted();
 }
 
@@ -839,27 +865,38 @@ void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
     db.commit();
 }
 
+void ConfigurazioneDlg::selezionaLogo(const QString nomePar) {
+  QString logoFileName;
+  logoFileName = QFileDialog::getOpenFileName();
+  if (logoFileName.isEmpty()) {
+      return;
+  }
 
-void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked()
-{
-    QString logoFileName;
-    logoFileName = QFileDialog::getOpenFileName();
-    if (logoFileName.isEmpty()) {
-        return;
-    }
+  QPixmap logo;
+  logo.load(logoFileName);
+  QByteArray logoData;
+  QBuffer logoBuffer(&logoData);
+  logoBuffer.open(QIODevice::WriteOnly);
+  bool rcSave = logo.save(&logoBuffer, "PNG");
+  nuovaConfigurazione->insert(nomePar, logoData);
+}
 
-    QPixmap logo;
-    logo.load(logoFileName);
-    QByteArray logoData;
-    QBuffer logoBuffer(&logoData);
-    logoBuffer.open(QIODevice::WriteOnly);
-    bool rcSave = logo.save(&logoBuffer, "PNG");
-    nuovaConfigurazione->insert("logoPixmap", logoData);
+void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked(){
+  selezionaLogo("logoPixmap");
+}
+
+void ConfigurazioneDlg::on_logoFondoBtn_clicked(){
+  selezionaLogo("logoFondoPixmap");
 }
 
 void ConfigurazioneDlg::on_logoCheckBox_clicked(bool checked)
 {
     nuovaConfigurazione->insert("printLogo", checked);
+}
+
+void ConfigurazioneDlg::on_logoFondoCheckBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printLogoFondo", checked);
 }
 
 void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)
