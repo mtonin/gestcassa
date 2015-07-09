@@ -66,13 +66,14 @@ bool DBManager::leggeConfigurazione()
     int nuovaVersioneDB = versioneDB;
 
     if(versioneDB > 9) {
-      if(!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
+      if(!stmt.exec("select id,oggetto from risorse")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return false;
       }
       while(stmt.next()) {
-        QByteArray logoData=stmt.value(0).toByteArray();
-        conf->insert("logoPixmap",logoData);
+        QString key=stmt.value(0).toString();
+        QByteArray logoData=stmt.value(1).toByteArray();
+        conf->insert(key,logoData);
       }
     }
 

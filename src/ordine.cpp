@@ -220,6 +220,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     bool flagStampaNumeroRitiro = false;
     QChar serieRitiro = configurazione->value("serieRitiro", "A").toString().at(0);
     bool logoAbilitato=configurazione->value("printLogo",false).toBool();
+    bool logoFondoAbilitato=configurazione->value("printLogoFondo",false).toBool();
     bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
     bool footerAbilitata=configurazione->value("printFondo",false).toBool();
 
@@ -233,6 +234,10 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QPixmap logoPixmap;
     if(logoAbilitato) {
       logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
+    }
+    QPixmap logoFondoPixmap;
+    if(logoFondoAbilitato) {
+      logoFondoPixmap.loadFromData(configurazione->value("logoFondoPixmap").toByteArray());
     }
 
     QPrinter printer;
@@ -460,7 +465,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
 
     if(logoAbilitato) {
-        float rapporto=logoPixmap.width()/pageWidth;
+        float rapporto=(float)logoPixmap.width()/pageWidth;
         float logoHeight=logoPixmap.height()/rapporto;
       // stampa il logo grafico
       painter.drawPixmap(x,y,pageWidth,logoHeight,logoPixmap);
@@ -533,6 +538,14 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, fondo, &textRect);
         y += textRect.height() + 15;
     }
+
+    if(logoFondoAbilitato) {
+            float rapporto=(float)logoFondoPixmap.width()/pageWidth;
+            float logoHeight=logoFondoPixmap.height()/rapporto;
+          // stampa il logo grafico
+          painter.drawPixmap(x,y,pageWidth,logoHeight,logoFondoPixmap);
+          y+=logoHeight+10;
+    };
 
     if (flagStampaNumeroRitiro) {
         painter.drawLine(x, y, pageWidth, y);
