@@ -3,6 +3,7 @@
 #include "storicoarticoliordinimodel.h"
 #include <QtSql>
 #include <QDataWidgetMapper>
+#include <QMessageBox>
 
 StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(parent)
 {
@@ -20,11 +21,12 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setFilter(condizione);
     ordiniModel->setSort(3, Qt::AscendingOrder);
     ordiniModel->select();
+    while(ordiniModel->canFetchMore())
+      ordiniModel->fetchMore();
     ordiniTable->setModel(ordiniModel);
     ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
     ordiniTable->horizontalHeader()->setResizeMode(3, QHeaderView::Stretch);
     ordiniTable->verticalHeader()->setVisible(false);
-    //ordiniTable->selectRow(0);
 
     articoliOrdineModel = new storicoArticoliOrdiniModel(this);
     articoliOrdineTbl->setModel(articoliOrdineModel);
@@ -63,6 +65,8 @@ void StoricoOrdini::caricaArticoliOrdine()
 
 void StoricoOrdini::on_filtraBtn_5_clicked()
 {
+    ordiniModel->submitAll();
+
     if (sessioneBox->isChecked()) {
         int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
         condizione = QString("idsessione=%1").arg(sessioneSelezionata);
@@ -73,6 +77,9 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
                               .arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
         ordiniModel->setFilter(condDataOra);
     }
+    while(ordiniModel->canFetchMore())
+      ordiniModel->fetchMore();
+
     ordiniTable->scrollToTop();
     sessioneOrdineTxt->clear();
     numeroOrdineTxt->clear();
@@ -116,7 +123,11 @@ void StoricoOrdini::caricaSessioni()
 
 }
 
-void StoricoOrdini::on_sessioneBox_toggled(bool checked)
-{
+void StoricoOrdini::on_sessioneBox_toggled(bool checked){
   sessioneCombo->setEnabled(checked);
+}
+
+void StoricoOrdini::on_chiudeBtn_clicked(){
+    ordiniModel->submitAll();
+    close();
 }
