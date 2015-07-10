@@ -3,7 +3,7 @@
 storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
     QSqlTableModel(parent)
 {
-    setEditStrategy(QSqlTableModel::OnFieldChange);
+    setEditStrategy(QSqlTableModel::OnManualSubmit);
 }
 
 QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
