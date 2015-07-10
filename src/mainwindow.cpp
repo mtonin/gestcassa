@@ -74,6 +74,8 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent)
 
     blinkTimer = new QTimer(this);
     connect(blinkTimer, SIGNAL(timeout()), this, SLOT(lampeggia()));
+
+    richiestaChiusura=false;
 }
 
 MainWindow::~MainWindow()
@@ -187,22 +189,26 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     switch (evt->key()) {
-    case Qt::Key_F11: {
-        if (isMaximized()) {
+      case Qt::Key_F11: {
+          if (isMaximized()) {
             //setWindowFlags(Qt::Window);
             showNormal();
-        } else {
+          } else {
             //setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
             showMaximized();
+          }
         }
-    }
     }
 }
 
 void MainWindow::closeEvent(QCloseEvent *evt)
 {
-    ConfermaDlg dlg("Confermi l'uscita?");
-    if (QDialog::Accepted != dlg.visualizza()) evt->ignore();
+    if(richiestaChiusura) {
+      ConfermaDlg dlg("Confermi l'uscita?");
+      if (QDialog::Accepted != dlg.visualizza()) evt->ignore();
+    } else {
+      evt->ignore();
+    }
 }
 
 void MainWindow::creaRepartiButtons()
@@ -577,5 +583,6 @@ void MainWindow::caricaArticoli()
 
 void MainWindow::on_closeBtn_clicked()
 {
-    close();
+    richiestaChiusura=true;
+    richiestaChiusura=close();
 }

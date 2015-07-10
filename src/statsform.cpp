@@ -72,7 +72,7 @@ void StatsForm::caricaStats()
               and lower(descrizione) like ? \
               and tipoArticolo <> ? \
               group by descrizione \
-              order by 3 asc");
+              order by 2 asc");
     QString condizione;
     if (sessioneBox->isChecked()) {
         condizione = "idsessione=?";
