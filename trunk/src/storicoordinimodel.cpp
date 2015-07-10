@@ -105,7 +105,7 @@ bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value
     if (5 == index.column()) {
         if (Qt::CheckStateRole == role) {
             QSqlTableModel::setData(index, Qt::Checked == value.toInt() ? "1" : "0", Qt::EditRole);
-            emit dataChanged(index, index);
+            //emit dataChanged(index, index);
         }
     }
     return true;

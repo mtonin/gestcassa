@@ -65,6 +65,8 @@ private:
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
 
+    bool richiestaChiusura;
+
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;
     QList<QStackedWidget*> articoliList;

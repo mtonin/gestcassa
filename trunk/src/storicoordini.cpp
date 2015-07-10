@@ -39,7 +39,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     connect(ordiniModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), ordiniTable, SLOT(setCurrentIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), mapper, SLOT(setCurrentModelIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(caricaArticoliOrdine()));
-
+    ordiniTable->selectRow(0);
 }
 
 void StoricoOrdini::caricaArticoliOrdine()
@@ -78,6 +78,8 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
     numeroOrdineTxt->clear();
     importoOrdineTxt->clear();
     cassaOrdineTxt->clear();
+
+    ordiniTable->selectRow(0);
 }
 
 void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
@@ -116,5 +118,5 @@ void StoricoOrdini::caricaSessioni()
 
 void StoricoOrdini::on_sessioneBox_toggled(bool checked)
 {
-    sessioneCombo->setEnabled(checked);
+  sessioneCombo->setEnabled(checked);
 }
