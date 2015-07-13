@@ -37,7 +37,8 @@ private slots:
     void on_configurazioneBtn_clicked();
     void on_funzioniBtn_clicked();
     void on_reportBtn_clicked();
-    void execStats();
+    void on_statsBtn_clicked();
+    void on_stornoBtn_clicked();
     void execCassa();
     void execGestione();
     void decodificaPassword();
@@ -47,7 +48,6 @@ private slots:
     void esegueOperazione(int idx);
 
     void execTest();
-    void execStorno();
     void execBuoni();
     void execAbout();
 

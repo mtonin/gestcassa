@@ -375,15 +375,16 @@ void MainWindow::on_reportBtn_clicked()
     form.exec();
 }
 
-void MainWindow::execStats()
+void MainWindow::on_statsBtn_clicked()
 {
-    int idSessione = confMap->value("sessioneCorrente").toInt();
-    if (ID_SESSIONE_TEST == idSessione) {
-        idSessione = confMap->value("sessioneSalvata").toInt();
-    }
-    StatsForm form(idSessione, confMap, this);
-    //form.setWindowState(Qt::WindowMaximized);
-    form.exec();
+  int idSessione = confMap->value("sessioneCorrente").toInt();
+  if (ID_SESSIONE_TEST == idSessione) {
+      idSessione = confMap->value("sessioneSalvata").toInt();
+  }
+  StatsForm form(idSessione, confMap, this);
+  //form.setWindowState(Qt::WindowMaximized);
+  form.exec();
+
 }
 
 void MainWindow::execCassa()
@@ -489,10 +490,8 @@ void MainWindow::esegueOperazione(int idx)
         execTest();
         break;
     case 4:
-        execStats();
         break;
     case 5:
-        execStorno();
         break;
     case 6:
         execBuoni();
@@ -518,7 +517,7 @@ void MainWindow::exitTest()
     ui->messaggiArea->setStyleSheet("background-color: white; color: black;");
 }
 
-void MainWindow::execStorno()
+void MainWindow::on_stornoBtn_clicked()
 {
     int idSessione = confMap->value("sessioneCorrente").toInt();
     if (ID_SESSIONE_TEST == idSessione) {

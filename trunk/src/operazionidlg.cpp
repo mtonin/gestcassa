@@ -85,10 +85,6 @@ void OperazioniDlg::init()
     mapper->setMapping(ui->cassaBtn, 2);
     connect(ui->testBtn, SIGNAL(clicked()), mapper, SLOT(map()));
     mapper->setMapping(ui->testBtn, 3);
-    connect(ui->statsBtn, SIGNAL(clicked()), mapper, SLOT(map()));
-    mapper->setMapping(ui->statsBtn, 4);
-    connect(ui->stornoBtn, SIGNAL(clicked()), mapper, SLOT(map()));
-    mapper->setMapping(ui->stornoBtn, 5);
     connect(ui->buoniBtn, SIGNAL(clicked()), mapper, SLOT(map()));
     mapper->setMapping(ui->buoniBtn, 6);
     connect(ui->aboutBtn, SIGNAL(clicked()), mapper, SLOT(map()));
