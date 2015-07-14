@@ -13,7 +13,9 @@
 ReportForm::ReportForm(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
     setupUi(this);
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::Tool);
+    activateWindow();
+    //setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 }
 
 void ReportForm::stampa(bool preview)
