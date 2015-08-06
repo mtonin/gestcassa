@@ -13,6 +13,9 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
+#include <QSettings>
+
+const QStringList chiaviConfLocale=QStringList() << "visualizzazionePrezzo" << "abilitaResto" << "durataResto" << "stampantePdf" << "stampante" << "nomeCassa";
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
@@ -52,6 +55,7 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     }
     nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
     descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
+    QString valore=configurazione->value("visualizzazionePrezzo").toString();
     visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
 
     QString pwdCifrata = configurazione->value("adminPassword").toString();
@@ -119,8 +123,14 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         configurazione->insert(key, nuovaConfigurazione->value(key));
     }
 
+    QSettings confLocale(configurazione->value("iniFile").toString(),QSettings::IniFormat);
+    confLocale.beginGroup("CONFIGURAZIONE");
     QSqlQuery stmt;
     foreach(QString key, configurazione->keys()) {
+      if(chiaviConfLocale.contains(key,Qt::CaseInsensitive)) {
+        confLocale.setValue(key,configurazione->value(key).toString());
+        continue;
+      }
         stmt.clear();
         if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive) ||
             0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
@@ -148,6 +158,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         }
     }
 
+    confLocale.sync();
     return accept();
 }
 

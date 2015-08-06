@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     parametriavanzati.cpp \
     buonidlg.cpp \
     buoniquerymodel.cpp \
-    aboutdlg.cpp
+    aboutdlg.cpp \
+    dbparamdlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -77,7 +78,8 @@ HEADERS  += mainwindow.h \
     parametriavanzati.h \
     buonidlg.h \
     buoniquerymodel.h \
-    aboutdlg.h
+    aboutdlg.h \
+    dbparamdlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -95,7 +97,8 @@ FORMS    += mainwindow.ui \
     operazionidlg.ui \
     parametriavanzati.ui \
     buonidlg.ui \
-    aboutdlg.ui
+    aboutdlg.ui \
+    dbparamdlg.ui
 
 #include(version.txt)
 
