@@ -1,11 +1,14 @@
 #include "commons.h"
 #include "dbmanager.h"
 #include "confermadlg.h"
+#include "dbparamdlg.h"
+#include "simplecrypt.h"
 
 #include <QFile>
 #include <QtSql>
 #include <QMessageBox>
 #include <QTcpSocket>
+#include <QSettings>
 
 DBManager::DBManager(QObject *parent) : QObject(parent)
 {
@@ -16,16 +19,33 @@ DBManager::DBManager(QMap<QString, QVariant> *configurazione): conf(configurazio
 
 }
 
-bool DBManager::init(const QString nomeFile, const QString modello)
+bool DBManager::init(const QString percorso)
 {
 
-    dbFilePath = nomeFile;
-    if (!createConnection(dbFilePath, "gcas", "gcas-pwd", modello)) {
+  if (percorso.isEmpty())
+      return false;
+
+  dbFilePath=QString("%1/GCAS.fdb").arg(percorso);
+  QString dbFileModelloName=QString("%1/model.fdb").arg(percorso);
+  QString iniFileName=QString("%1/GCAS.ini").arg(percorso);
+
+  QFile iniFile(iniFileName);
+  if (!iniFile.exists()) {
+      DBParamDlg dlg;
+      dlg.setNomeFile(iniFileName);
+      dlg.setDBLocalePath(dbFilePath);
+      if(!dlg.exec())
+          return false;
+  }
+
+    if (!createConnection(iniFileName,dbFileModelloName)) {
         return false;
     }
 
-    return leggeConfigurazione();
+    leggeConfigurazione();
+    leggeConfigurazioneLocale(iniFileName);
 
+    return true;
 }
 
 bool DBManager::leggeConfigurazione()
@@ -263,30 +283,37 @@ bool DBManager::leggeConfigurazione()
     return true;
 }
 
-bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password, const QString modello)
+bool DBManager::createConnection(const QString &nomeFile,const QString& modello)
 {
     if (nomeFile.isEmpty())
         return false;
-    QFile dbFile(nomeFile);
-    if (!dbFile.exists()) {
-        creaDb(utente, password, modello);
+
+    QSettings iniSettings(nomeFile,QSettings::IniFormat);
+    QString utente=iniSettings.value("DATABASE/DBUTENTE").toString();
+    SimpleCrypt* cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    QString password=cifratore->decryptToString(iniSettings.value("DATABASE/DBPASSWORD").toString());
+    delete cifratore;
+
+    bool dbLocaleFlag=iniSettings.value("DATABASE/DBLOCALE").toBool();
+    if(dbLocaleFlag) {
+        dbFilePath=iniSettings.value("DATABASE/DBLOCALEPATH").toString();
+        QFile dbFile(dbFilePath);
+         if (!dbFile.exists()) {
+           creaDb(utente,password,modello);
+        }
     }
     QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
-    //db.setHostName("10.30.102.157");
-    //db.setPort(3050);
-    db.setDatabaseName(nomeFile);
+
+    if(dbLocaleFlag) {
+        db.setDatabaseName(dbFilePath);
+    } else {
+        db.setHostName(iniSettings.value("DATABASE/DBSERVER").toString());
+        db.setPort(iniSettings.value("DATABASE/DBPORT").toInt());
+        db.setDatabaseName(iniSettings.value("DATABASE/DBNOME").toString());
+        dbFilePath=QString("%1:%2/%3").arg(db.hostName()).arg(db.port()).arg(db.databaseName());
+    }
     db.setUserName(utente);
     db.setPassword(password);
-
-    /*
-    // testa se il server è attivo
-    QTcpSocket testsock;
-    testsock.connectToHost(db.hostName(),db.port());
-    if(!testsock.waitForConnected(3000)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),testsock.errorString());
-      return false;
-    }
-    */
 
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
@@ -355,4 +382,19 @@ void DBManager::creaDb(const QString user, const QString password, const QString
         return;
     }
 
+    //db.close();
+
 }
+
+void DBManager::leggeConfigurazioneLocale(const QString &nomeFile)
+{
+        conf->insert("iniFile",nomeFile);
+        QSettings iniSettings(nomeFile,QSettings::IniFormat);
+        iniSettings.beginGroup("CONFIGURAZIONE");
+        QStringList chiavi=iniSettings.childKeys();
+        foreach (QString chiave,chiavi) {
+           conf->insert(chiave,iniSettings.value(chiave).toString());
+        }
+
+}
+

@@ -69,28 +69,22 @@ int main(int argc, char *argv[])
     /*
     nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
     */
-    QFileInfo dbFileModello(QString("%1/model.fdb").arg(a.applicationDirPath()));
-    QFileInfo dbFile(QString("%1/GCAS.fdb").arg(a.applicationDirPath()));
-    QString nomeFile = dbFile.absoluteFilePath();
-    //nomeFile="GCAS";
-    if (!nomeFile.isEmpty()) {
-        splash.showMessage("Collegamento al database...");
-        a.processEvents();
-        if (dbman.init(nomeFile, dbFileModello.absoluteFilePath())) {
-            splash.showMessage("Caricamento articoli...");
-            a.processEvents();
+    splash.showMessage("Collegamento al database...");
+    a.processEvents();
+    if (dbman.init(a.applicationDirPath())) {
+       splash.showMessage("Caricamento articoli...");
+       a.processEvents();
 
-            MainWindow w(configurazione);
-            a.setActivationWindow(&w);
-            w.show();
-            splash.finish(&w);
+       MainWindow w(configurazione);
+       a.setActivationWindow(&w);
+       w.show();
+       splash.finish(&w);
 
-            //a.setStartDragDistance(50);
-            //a.setStartDragTime(1000);
+    //a.setStartDragDistance(50);
+    //a.setStartDragTime(1000);
 
-            a.exec();
-        }
-    }
+       a.exec();
+}
 
     delete configurazione;
 
