@@ -15,7 +15,16 @@
 #include <QTextStream>
 #include <QSettings>
 
-const QStringList chiaviConfLocale=QStringList() << "visualizzazionePrezzo" << "abilitaResto" << "durataResto" << "stampantePdf" << "stampante" << "nomeCassa";
+const QStringList chiaviConfLocale=QStringList()
+                                    << "visualizzazionePrezzo"
+                                    << "abilitaResto"
+                                    << "durataResto"
+                                    << "stampantePdf"
+                                    << "stampante"
+                                    << "nomeCassa"
+                                    << "inifile"
+                                    << "dbFilePath"
+                                    << "serieRitiro";
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
