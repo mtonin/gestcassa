@@ -13,6 +13,7 @@
 #include <QMap>
 #include <QTimer>
 #include <QCache>
+#include <QSplashScreen>
 
 namespace Ui
 {
@@ -25,9 +26,10 @@ class MainWindow : public QMainWindow
 
 signals:
     void aggiungeArticolo(const int idArticolo, const QString& nomeArticolo, float prezzo);
+    void avanzaStato(const QString msg);
 
 public:
-    explicit MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent = 0);
+    explicit MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen& splashScreen,QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -64,6 +66,7 @@ private:
     QTimer* blinkTimer;
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
+    QSplashScreen& splash;
 
     bool richiestaChiusura;
 

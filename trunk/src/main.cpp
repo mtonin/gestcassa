@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
        splash.showMessage("Caricamento articoli...");
        a.processEvents();
 
-       MainWindow w(configurazione);
+       MainWindow w(configurazione,splash);
        a.setActivationWindow(&w);
        w.show();
        splash.finish(&w);

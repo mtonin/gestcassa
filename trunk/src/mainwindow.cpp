@@ -21,10 +21,12 @@
 #include <QHBoxLayout>
 #include <QtSql>
 
-MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent) : confMap(configurazione), QMainWindow(parent),
+MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &splashScreen, QWidget *parent) : confMap(configurazione), splash(splashScreen),QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(this,SIGNAL(avanzaStato(QString)),&splash,SLOT(showMessage(QString)));
 
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setWindowState(Qt::WindowFullScreen);
@@ -76,6 +78,7 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent)
     connect(blinkTimer, SIGNAL(timeout()), this, SLOT(lampeggia()));
 
     richiestaChiusura=false;
+
 }
 
 MainWindow::~MainWindow()
@@ -215,7 +218,7 @@ void MainWindow::creaRepartiButtons()
 {
 
     // ricarica la cache
-    //caricaArticoli();
+    caricaArticoli();
 
     // cancella i pulsanti degli articoli
     QListIterator<QStackedWidget*> itArticoli(articoliList);
@@ -247,7 +250,10 @@ void MainWindow::creaRepartiButtons()
     }
 
     for (int i = 0; i < NUM_REPARTI; i++) {
+
         RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i, ui->repartiBox);
+        QString msg=QString("Caricamento reparto %1...").arg(reparto01Btn->getNomeReparto());
+        emit(avanzaStato(msg));
 
         repartiList.append(reparto01Btn);
         hboxLayout->addWidget(reparto01Btn);
@@ -281,16 +287,9 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             QStackedWidget* stackedBox = new QStackedWidget;
             int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + col;
 
-            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante, repartoBtn->getId(), riga, col);
-            /*
             QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
-            ArticoloBtnWidget* btn;
-            if(NULL==articoloMap) {
-              btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
-            } else {
-              btn = new ArticoloBtnWidget(idPulsante, articoloMap);
-            }
-            */
+            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col, articoloMap);
+
             btn->SetButtonColorNormal(coloreSfondo);
             btn->SetButtonColorHot(coloreSfondo);
             btn->SetTextColorEnabled(coloreCarattere);
