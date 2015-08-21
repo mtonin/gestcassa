@@ -306,21 +306,23 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     QString separatoreRighe = "#§EOL#§";
     QStringList listaSql;
 
-    QSqlQuery stmt("select numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
+    QSqlQuery stmt("select nomecassa,numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
     if (!stmt.isActive()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
     while (stmt.next()) {
-        QString numeroOrdine = stmt.value(0).toString();
-        QString tsStampaOrdine = stmt.value(1).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        QString importoOrdine = stmt.value(2).toString();
-        QString descrizioneArticoloOrdine = stmt.value(3).toString();
-        QString quantitaArticoloOrdine = stmt.value(4).toString();
-        QString destinazioneArticoloOrdine = stmt.value(5).toString();
-        QString prezzoArticoloOrdine = stmt.value(6).toString();
-        QString tipoArticoloOrdine = stmt.value(7).toString();
-        QString riga = QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8")
+        QString nomeCassaOrdine = stmt.value(0).toString();
+        QString numeroOrdine = stmt.value(1).toString();
+        QString tsStampaOrdine = stmt.value(2).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        QString importoOrdine = stmt.value(3).toString();
+        QString descrizioneArticoloOrdine = stmt.value(4).toString();
+        QString quantitaArticoloOrdine = stmt.value(5).toString();
+        QString destinazioneArticoloOrdine = stmt.value(6).toString();
+        QString prezzoArticoloOrdine = stmt.value(7).toString();
+        QString tipoArticoloOrdine = stmt.value(8).toString();
+        QString riga = QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8#§%9")
+                       .arg(nomeCassaOrdine)
                        .arg(numeroOrdine)
                        .arg(tsStampaOrdine)
                        .arg(importoOrdine)

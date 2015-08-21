@@ -218,7 +218,8 @@ CREATE VIEW dettagliordine AS
 -- BEGIN VIEW storicoordini
 CREATE VIEW storicoordini AS
           SELECT tot.idsessione, 
-                 tot.idcassa, 
+                 tot.idcassa,
+                 tot.nomecassa, 
                  tot.numeroordine, 
                  tot.tsstampa, 
                  tot.importo, 

@@ -176,7 +176,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
             return false;
         }
 
-        if(!stmt.prepare("insert into storicoordinidett select ?,?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=?")) {
+        if(!stmt.prepare("insert into storicoordinidett select ?,?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=? and idcassa=?")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
               QMessageBox::critical(0,"Errore",msg);
@@ -186,6 +186,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         stmt.addBindValue(idSessione);
         stmt.addBindValue(idCassa);
         stmt.addBindValue(numeroOrdine);
+        stmt.addBindValue(idCassa);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"),
                                   stmt.lastError().text());
