@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     //a.setStartDragTime(1000);
 
        a.exec();
-}
+    }
 
     delete configurazione;
 

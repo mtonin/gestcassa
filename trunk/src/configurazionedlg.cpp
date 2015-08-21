@@ -21,7 +21,7 @@ const QStringList chiaviConfLocale=QStringList()
                                     << "durataResto"
                                     << "stampantePdf"
                                     << "stampante"
-                                    << "nomeCassa"
+                                    << "idCassa"
                                     << "inifile"
                                     << "dbFilePath"
                                     << "serieRitiro";
@@ -151,6 +151,15 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             }
             stmt.addBindValue(key);
             stmt.addBindValue(configurazione->value(key).toByteArray());
+        } else if(0==QString::compare(key,"nomeCassa",Qt::CaseInsensitive)) {
+          if(!stmt.prepare("update postazioni set nome=? where id=?")) {
+            QSqlError errore=stmt.lastError();
+            QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+            QMessageBox::critical(this,"Errore",msg);
+            return;
+          }
+          stmt.addBindValue(configurazione->value(key).toString());
+          stmt.addBindValue(configurazione->value("IDCASSA").toString());
         } else {
             if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
               QSqlError errore=stmt.lastError();

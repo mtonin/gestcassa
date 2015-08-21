@@ -46,9 +46,11 @@ CREATE TABLE destinazionistampa
 -- BEGIN TABLE ordini
 CREATE TABLE ordini
 (
-   numero    INTEGER PRIMARY KEY,
+   idcassa       VARCHAR(38),
+   numero    INTEGER,
    tsstampa  TIMESTAMP,
-   importo   DECIMAL(5,2)       DEFAULT 0
+   importo   DECIMAL(5,2)       DEFAULT 0,
+   PRIMARY KEY ( idcassa, numero ) 
 );
 
 -- END TABLE ordini
@@ -56,6 +58,7 @@ CREATE TABLE ordini
 -- BEGIN TABLE ordinirighe
 CREATE TABLE ordinirighe
 (
+   idcassa       VARCHAR(38),
    numeroordine  INTEGER,
    idarticolo    INTEGER,
    quantita      INTEGER
@@ -100,7 +103,7 @@ CREATE TABLE sessione
 CREATE TABLE storicoordinidett
 (
    idsessione    INTEGER,
-   idcassa       VARCHAR(10),
+   idcassa       VARCHAR(38),
    numeroordine  INTEGER,
    descrizione   VARCHAR(1000),
    quantita      INTEGER,
@@ -114,7 +117,8 @@ CREATE TABLE storicoordinidett
 CREATE TABLE storicoordinitot
 (
    idsessione    INTEGER,
-   idcassa       VARCHAR(10),
+   idcassa       VARCHAR(38),
+   nomecassa     VARCHAR(10),
    numeroordine  INTEGER,
    tsstampa      TIMESTAMP,
    importo       DECIMAL(5,2),
@@ -122,6 +126,15 @@ CREATE TABLE storicoordinitot
    primary key (idsessione, idcassa, numeroordine)
 );
 -- END TABLE storicoordinitot
+
+-- BEGIN TABLE postazioni
+CREATE TABLE postazioni
+(
+   ID         VARCHAR(38)   NOT NULL primary key,
+   NOME       VARCHAR(10)   default '' NOT NULL,
+   IPADDRESS  VARCHAR(15)   NOT NULL
+);
+-- END TABLE postazioni
 
 -- BEGIN FOREIGN KEYS --
 ALTER TABLE articoli
@@ -145,8 +158,8 @@ ALTER TABLE articolimenu
 ;
 
 ALTER TABLE ordinirighe
-  ADD CONSTRAINT ordinirighefk FOREIGN KEY (numeroordine)
-  REFERENCES ordini (numero)
+  ADD CONSTRAINT ordinirighefk FOREIGN KEY (idcassa,numeroordine)
+  REFERENCES ordini (idcassa,numero)
   ON UPDATE NO ACTION
   ON DELETE NO ACTION
 ;
@@ -161,7 +174,8 @@ ALTER TABLE pulsanti
 
 -- BEGIN VIEW dettagliordine
 CREATE VIEW dettagliordine AS
-       SELECT ordinirighe.numeroordine,
+       SELECT ordinirighe.idcassa,
+              ordinirighe.numeroordine,
               ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
@@ -174,7 +188,8 @@ CREATE VIEW dettagliordine AS
               AND
               articolimenu.idarticolomenu = articoli.idarticolo
        UNION ALL
-       SELECT ordinirighe.numeroordine,
+       SELECT ordinirighe.idcassa,
+              ordinirighe.numeroordine,
               ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,
@@ -186,7 +201,8 @@ CREATE VIEW dettagliordine AS
               AND
               articoli.gestioneMenu = 0
        UNION ALL
-       SELECT ordinirighe.numeroordine,
+       SELECT ordinirighe.idcassa,
+              ordinirighe.numeroordine,
               ordinirighe.quantita,
               articoli.descrizione,
               articoli.destinazione,

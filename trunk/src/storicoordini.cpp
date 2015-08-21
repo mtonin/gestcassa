@@ -19,14 +19,15 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setTable("storicoordinitot");
     condizione = QString("idsessione=%1").arg(idSessione);
     ordiniModel->setFilter(condizione);
-    ordiniModel->setSort(3, Qt::AscendingOrder);
+    ordiniModel->setSort(4, Qt::AscendingOrder);
     ordiniModel->select();
     while(ordiniModel->canFetchMore())
       ordiniModel->fetchMore();
     ordiniTable->setModel(ordiniModel);
     ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-    ordiniTable->horizontalHeader()->setResizeMode(3, QHeaderView::Stretch);
+    ordiniTable->horizontalHeader()->setResizeMode(4, QHeaderView::Stretch);
     ordiniTable->verticalHeader()->setVisible(false);
+    ordiniTable->hideColumn(1);
 
     articoliOrdineModel = new storicoArticoliOrdiniModel(this);
     articoliOrdineTbl->setModel(articoliOrdineModel);
@@ -34,14 +35,17 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     QDataWidgetMapper* mapper = new QDataWidgetMapper(this);
     mapper->setModel(ordiniModel);
     mapper->addMapping(sessioneOrdineTxt, 0);
-    mapper->addMapping(cassaOrdineTxt, 1);
-    mapper->addMapping(numeroOrdineTxt, 2);
-    mapper->addMapping(importoOrdineTxt, 4);
+    mapper->addMapping(idCassaOrdineTxt, 1);
+    mapper->addMapping(cassaOrdineTxt, 2);
+    mapper->addMapping(numeroOrdineTxt, 3);
+    mapper->addMapping(importoOrdineTxt, 5);
 
     connect(ordiniModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), ordiniTable, SLOT(setCurrentIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), mapper, SLOT(setCurrentModelIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(caricaArticoliOrdine()));
     ordiniTable->selectRow(0);
+
+    idCassaOrdineTxt->setVisible(false);
 }
 
 void StoricoOrdini::caricaArticoliOrdine()
@@ -49,7 +53,7 @@ void StoricoOrdini::caricaArticoliOrdine()
     QString sql = QString("select quantita,descrizione \
                                 from storicoordinidett \
                                 where idsessione=%1 and idcassa='%2' and numeroordine=%3 and tipoArticolo <> 'C'")
-                  .arg(sessioneOrdineTxt->text()).arg(cassaOrdineTxt->text()).arg(numeroOrdineTxt->text());
+                  .arg(sessioneOrdineTxt->text()).arg(idCassaOrdineTxt->text()).arg(numeroOrdineTxt->text());
     articoliOrdineModel->setQuery(sql);
     /*
     articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"Q.TA'",Qt::DisplayRole);
