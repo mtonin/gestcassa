@@ -17,10 +17,11 @@ signals:
 public slots:
 
 private:
-    bool createConnection(const QString& nomeFile, const QString &modello);
+    bool createConnection(const QString& nomeFile, const QString &modello, QString &localIpAddress);
     void creaDb(const QString user, const QString password, const QString modello);
     bool leggeConfigurazione();
     void leggeConfigurazioneLocale(const QString& nomeFile);
+    void aggiornaPostazione(const QString& ipAddress);
 
     QMap<QString, QVariant>* conf;
     QString dbFilePath;

@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QTcpSocket>
 #include <QSettings>
+#include <QHostAddress>
 
 DBManager::DBManager(QObject *parent) : QObject(parent)
 {
@@ -38,14 +39,17 @@ bool DBManager::init(const QString percorso)
           return false;
   }
 
-    if (!createConnection(iniFileName,dbFileModelloName)) {
-        return false;
-    }
+  QString ipAddress;
+  if (!createConnection(iniFileName,dbFileModelloName,ipAddress)) {
+    return false;
+  }
 
-    leggeConfigurazione();
-    leggeConfigurazioneLocale(iniFileName);
+  leggeConfigurazione();
+  leggeConfigurazioneLocale(iniFileName);
 
-    return true;
+  aggiornaPostazione(ipAddress);
+
+  return true;
 }
 
 bool DBManager::leggeConfigurazione()
@@ -283,7 +287,7 @@ bool DBManager::leggeConfigurazione()
     return true;
 }
 
-bool DBManager::createConnection(const QString &nomeFile,const QString& modello)
+bool DBManager::createConnection(const QString &nomeFile,const QString& modello, QString& localIpAddress)
 {
     if (nomeFile.isEmpty())
         return false;
@@ -311,9 +315,18 @@ bool DBManager::createConnection(const QString &nomeFile,const QString& modello)
         db.setPort(iniSettings.value("DATABASE/DBPORT").toInt());
         db.setDatabaseName(iniSettings.value("DATABASE/DBNOME").toString());
         dbFilePath=QString("%1:%2/%3").arg(db.hostName()).arg(db.port()).arg(db.databaseName());
+        // testa se il server è attivo
+        QTcpSocket testsock;
+        testsock.connectToHost(db.hostName(),db.port());
+        if(!testsock.waitForConnected(3000)) {
+          QMessageBox::critical(0, QObject::tr("Database Error"),"Impossibile connettersi al database");
+          return false;
+        }
+        localIpAddress=testsock.localAddress().toString();
     }
     db.setUserName(utente);
     db.setPassword(password);
+    //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
@@ -355,6 +368,8 @@ void DBManager::creaDb(const QString user, const QString password, const QString
     db.setDatabaseName(dbFilePath);
     db.setUserName(user);
     db.setPassword(password);
+    //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
+
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
         return;
@@ -395,6 +410,25 @@ void DBManager::leggeConfigurazioneLocale(const QString &nomeFile)
         foreach (QString chiave,chiavi) {
            conf->insert(chiave,iniSettings.value(chiave).toString());
         }
-
 }
 
+void DBManager::aggiornaPostazione(const QString& ipAddress) {
+
+    QString idCassa=conf->value("IDCASSA").toString();
+    QSqlQuery stmt;
+    if (!stmt.prepare("update or insert into postazioni (id,ipaddress) values (?,?) returning nome")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    stmt.addBindValue(idCassa);
+    stmt.addBindValue(ipAddress);
+    if (!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    if(stmt.next()) {
+        QString nomeCassa=stmt.value(0).toString();
+        conf->insert("nomeCassa",nomeCassa);
+    }
+
+}

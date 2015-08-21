@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QMessageBox>
 #include <QSettings>
+#include <QUuid>
 
 DBParamDlg::DBParamDlg(QWidget *parent) :
 QDialog(parent)
@@ -26,6 +27,7 @@ void DBParamDlg::on_dbReteFlg_clicked()
 
 void DBParamDlg::accept()
 {
+  QUuid idCassa=QUuid::createUuid();
   if(dbReteFlg->isChecked()) {
     if(!openDBRemoto())
       return;
@@ -47,6 +49,7 @@ void DBParamDlg::accept()
   iniSettings.setValue("DATABASE/DBPASSWORD",cifratore->encryptToString(dbPasswordTxt->text()));
   delete cifratore;
 
+  iniSettings.setValue("CONFIGURAZIONE/IDCASSA",idCassa.toString());
   iniSettings.sync();
 
   QDialog::accept();
@@ -60,12 +63,13 @@ bool DBParamDlg::openDBRemoto()
   db.setDatabaseName(dbNomeTxt->text());
   db.setUserName(dbUtenteTxt->text());
   db.setPassword(dbPasswordTxt->text());
+  //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
-  // testa se il server Ã¨ attivo
+  // testa se il server è attivo
   QTcpSocket testsock;
   testsock.connectToHost(db.hostName(),db.port());
   if(!testsock.waitForConnected(3000)) {
-    QMessageBox::critical(0, QObject::tr("Database Error"),testsock.errorString());
+    QMessageBox::critical(0, QObject::tr("Database Error"),"Impossibile connettersi al database");
     return false;
   }
 

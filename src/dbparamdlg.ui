@@ -168,20 +168,17 @@
      <property name="bottomMargin">
       <number>5</number>
      </property>
-     <item row="1" column="1" colspan="2">
-      <widget class="QLineEdit" name="dbUtenteTxt">
-       <property name="text">
-        <string>GCAS</string>
-       </property>
-       <property name="maxLength">
-        <number>256</number>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Utente</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Nome DB</string>
        </property>
       </widget>
      </item>
@@ -198,17 +195,20 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Nome DB</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="dbUtenteTxt">
+       <property name="text">
+        <string>GCAS</string>
+       </property>
+       <property name="maxLength">
+        <number>256</number>
        </property>
       </widget>
      </item>

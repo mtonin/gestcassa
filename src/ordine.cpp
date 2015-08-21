@@ -29,6 +29,8 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     importoUltimoOrdine = 0;
     importoOrdineCorrente = 0;
     idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
+    idCassa = configurazione->value("IDCASSA").toString();
+
     nuovoOrdine(idSessioneCorrente);
 
     stampaBtn->SetIconSpace(20);
@@ -134,7 +136,7 @@ void Ordine::on_ristampaBtn_clicked()
 {
     int numeroOrdine = numOrdineCorrente - 1;
     QSqlQuery stmt;
-    if(!stmt.prepare("select 1 from storicoordini where idsessione=? and numeroordine=?")) {
+    if(!stmt.prepare("select 1 from storicoordini where idsessione=? and numeroordine=? and idcassa=?")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
@@ -142,6 +144,7 @@ void Ordine::on_ristampaBtn_clicked()
     }
     stmt.addBindValue(idSessioneCorrente);
     stmt.addBindValue(numeroOrdine);
+    stmt.addBindValue(idCassa);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
@@ -157,9 +160,8 @@ void Ordine::on_stampaBtn_clicked()
         return;
     }
 
-    QString nomeCassa = configurazione->value("nomeCassa", "000").toString();
-
-    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, nomeCassa)) {
+    nomeCassa = configurazione->value("nomeCassa", "000").toString();
+    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa)) {
 
         stampaScontrino(numOrdineCorrente);
 
@@ -178,13 +180,14 @@ void Ordine::nuovoOrdine(const int idSessione)
     importoUltimoOrdine = importoOrdineCorrente;
     modello.clear();
     QSqlQuery query;
-    if(!query.prepare("select max(numeroordine) from storicoordinitot where idsessione=?")) {
+    if(!query.prepare("select max(numeroordine) from storicoordinitot where idsessione=? and idcassa=?")) {
       QSqlError errore=query.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
       return;
     }
     query.addBindValue(idSessioneCorrente);
+    query.addBindValue(idCassa);
     if (!query.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
                               query.lastError().text());
@@ -214,7 +217,6 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 {
     QString intest = configurazione->value("intestazione").toString();
     QString fondo = configurazione->value("fondo").toString();
-    QString nomeCassa = configurazione->value("nomeCassa", "000").toString();
     QString descrManifestazione = configurazione->value("descrManifestazione", "NOME MANIFESTAZIONE").toString();
     QDateTime tsStampa = QDateTime::currentDateTime().toLocalTime();
     bool flagStampaNumeroRitiro = false;
@@ -301,7 +303,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     QSqlQuery stmt;
     //stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
-    if(!stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo <> 'M'")) {
+    if(!stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo <> 'M' and idcassa=?")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
@@ -309,6 +311,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
     //stmt.addBindValue(idSessioneCorrente);
     //stmt.addBindValue(numeroOrdine);
+    stmt.addBindValue(idCassa);
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -390,6 +393,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
                  FROM dettagliordine \
                  where numeroordine=? \
                  and coalesce(destinazione,'')=? \
+                 and idcassa=? \
                  group by numeroordine,descrizione")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
@@ -399,6 +403,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         //stmt.addBindValue(idSessioneCorrente);
         stmt.addBindValue(numeroOrdine);
         stmt.addBindValue(destinazioneStampa.isEmpty() ? "" : destinazioneStampa);
+        stmt.addBindValue(idCassa);
 
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -494,7 +499,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     y += 10;
 
     //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
-    if(!stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C'")) {
+    if(!stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C' and idcassa=?")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(this,"Errore",msg);
@@ -502,6 +507,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
     //stmt.addBindValue(idSessioneCorrente);
     //stmt.addBindValue(numeroOrdine);
+    stmt.addBindValue(idCassa);
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -603,12 +609,13 @@ void Ordine::on_duplicaBtn_clicked()
         modello.clear();
     }
     QSqlQuery stmt;
-    if(!stmt.prepare("select a.idarticolo,a.quantita,b.descrizione,b.prezzo from ordinirighe a,articoli b where a.idarticolo=b.idarticolo")) {
+    if(!stmt.prepare("select a.idarticolo,a.quantita,b.descrizione,b.prezzo from ordinirighe a,articoli b where a.idcassa=? and a.idarticolo=b.idarticolo")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(this,"Errore",msg);
           return;
     }
+    stmt.addBindValue(idCassa);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
