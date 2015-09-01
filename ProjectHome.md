@@ -1,0 +1,1 @@
+Applicazione per gestione cassa e emissione ordini durante una sagra
