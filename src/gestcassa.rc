@@ -1,4 +1,42 @@
 IDI_ICON1               ICON    DISCARDABLE     "cash_register.ico"
 
 #include <windows.h>
-#include "version.rc2"
+#include "versione.h"
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION GEN_VER_DIGITAL_VERSION
+ PRODUCTVERSION GEN_VER_DIGITAL_VERSION
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041004b0"
+        BEGIN
+            VALUE "CompanyName", ""
+            VALUE "FileDescription", "Gestione Cassa"
+            VALUE "FileVersion", GEN_VER_DIGITAL_VERSION_STRING
+            VALUE "InternalName", "gestcassa"
+            VALUE "LegalCopyright", "copyright MT 2013-2015"
+            VALUE "OriginalFilename", ""
+            VALUE "ProductName", "gestcassa"
+            VALUE "ProductVersion", GEN_VER_DIGITAL_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x410, 1200
+    END
+END
+

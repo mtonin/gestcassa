@@ -1,7 +1,5 @@
 @echo off
 
-for /r %%f in (*.tmpl) do (
-  subwcrev . "%%f" "%%~pf%%~nf"
-)
+call GIT-VS-VERSION-GEN.cmd . versione.h
 
 exit 0
