@@ -411,7 +411,7 @@ GOTO :EOF
 :: --------------------
 :OUT_HEADER
 :: --------------------
-ECHO SET GIT_VERSION="%strFILE_VERSION%"     > env.cmd
+ECHO SET GIT_VERSION="%strFILE_VERSION%"> env.cmd
 
 ECHO //GIT-VS-VERSION-GEN.bat generated resource header.>"%HEADER_OUT_FILE%"
 ECHO #define GEN_VER_VERSION_STRING   "%strFILE_VERSION%\0" >> "%HEADER_OUT_FILE%"
