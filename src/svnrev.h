@@ -1,9 +1,8 @@
 #ifndef SVNREV_H
 #define SVNREV_H
 
-#include <string>
+#include <QString>
 #include "versione.h"
 
-const std::string SVN_REV(GEN_VER_DIGITAL_VERSION_STRING);
-const std::string VERSIONE(GEN_VER_DIGITAL_VERSION_STRING);
+const QString VERSIONE(QString(GEN_VER_DIGITAL_VERSION_STRING).replace(',','.'));
 #endif // SVNREV_H

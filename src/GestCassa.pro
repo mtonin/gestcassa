@@ -111,7 +111,7 @@ RESOURCES += \
     risorse.qrc
 RC_FILE = gestcassa.rc
 OTHER_FILES += \
-    gestcassa.rc version.rc2.tmpl version.txt.tmpl svnrev.h.tmpl
+    gestcassa.rc version.rc2.tmpl
 
 LIBS += -L"$$PWD/vld"
 

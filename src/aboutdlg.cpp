@@ -13,6 +13,6 @@ QDialog(parent)
   setupUi(this);
 
   QString msg(ABOUTMSG);
-  msg.replace(QString("$VERSIONE"),QString(VERSIONE.c_str()),Qt::CaseInsensitive);
+  msg.replace(QString("$VERSIONE"),QString(VERSIONE),Qt::CaseInsensitive);
   aboutTxt->setHtml(msg);
 }

@@ -314,7 +314,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
 
 void MainWindow::creaInfoMessaggi()
 {
-    QStringList messaggi = QString("GESTIONE\nCASSA,versione\n%1").arg(VERSIONE.c_str()).split(",");
+    QStringList messaggi = QString("GESTIONE\nCASSA,versione\n%1").arg(VERSIONE).split(",");
     QString descrizione = confMap->value("descrManifestazione").toString();
     if (!descrizione.isEmpty()) {
         messaggi.insert(0, descrizione);
