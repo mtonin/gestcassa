@@ -273,14 +273,13 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)")) {
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
       return;
     }
     stmt.addBindValue(idSessioneCorrente);
-    stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -838,7 +837,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)")) {
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
@@ -846,7 +845,6 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
       return;
     }
     stmt.addBindValue(idSessioneCorrente);
-    stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());

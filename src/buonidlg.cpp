@@ -46,7 +46,7 @@ void BuoniDlg::on_nuovoBuonoBtn_clicked()
     return;
   }
 
-  QString query("insert into buoni (cognome, nome, tsemissione,flagannullato) values(?,?,?,0)");
+  QString query("insert into buoni (cognome, nome, tsemissione,flagannullato) values(?,?,'now',0)");
   QSqlQuery sql;
   if(!sql.prepare(query)) {
     QSqlError errore=sql.lastError();
@@ -56,8 +56,6 @@ void BuoniDlg::on_nuovoBuonoBtn_clicked()
   }
   sql.addBindValue(cognome);
   sql.addBindValue(nome);
-  QDateTime ts = QDateTime::currentDateTime();
-  sql.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
   if(!sql.exec()) {
     QSqlError errore=sql.lastError();
     if(-803==errore.number()) {

@@ -218,7 +218,6 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString intest = configurazione->value("intestazione").toString();
     QString fondo = configurazione->value("fondo").toString();
     QString descrManifestazione = configurazione->value("descrManifestazione", "NOME MANIFESTAZIONE").toString();
-    QDateTime tsStampa = QDateTime::currentDateTime().toLocalTime();
     bool flagStampaNumeroRitiro = false;
     QChar serieRitiro = configurazione->value("serieRitiro", "A").toString().at(0);
     bool logoAbilitato=configurazione->value("printLogo",false).toBool();
@@ -299,9 +298,27 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     winRect=painter.window();
     painter.setRenderHint(QPainter::Antialiasing);
 
+    QSqlQuery stmt;
+
+    // recupera ts dell'ordine
+
+    if(!stmt.prepare("select tsstampa from ordini where idcassa=?")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore nella lettura dei dati dell'ordine\ncodice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Database Error",msg);
+      return;
+    }
+    stmt.addBindValue(idCassa);
+    if (!(stmt.exec() && stmt.next())) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore nella lettura dei dati dell'ordine\ncodice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Database Error",msg);
+      return;
+    }
+    QDateTime tsOrdine = stmt.record().value(0).toDateTime();
+
     // stampa scontrini per destinazione
 
-    QSqlQuery stmt;
     //stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
     if(!stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo <> 'M' and idcassa=?")) {
       QSqlError errore=stmt.lastError();
@@ -374,7 +391,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         y += textRect.height() + 10;
 
         painter.setFont(fontNormale);
-        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsOrdine.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
         y += textRect.height() + 10;
         painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
         painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
@@ -490,7 +507,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     y+=5;
     painter.setFont(fontNormale);
-    painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsStampa.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
+    painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsOrdine.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
     y += textRect.height() + 10;
 
     painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);

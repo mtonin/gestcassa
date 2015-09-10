@@ -116,7 +116,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         return false;
     }
 
-    if(!stmt.prepare("insert into ordini(idcassa,numero,tsstampa,importo) values(?,?,?,?)")) {
+    if(!stmt.prepare("insert into ordini(idcassa,numero,tsstampa,importo) values(?,?,'now',?) returning tsstampa")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(0,"Errore",msg);
@@ -125,8 +125,6 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
     }
     stmt.addBindValue(idCassa);
     stmt.addBindValue(numeroOrdine);
-    QDateTime ts = QDateTime::currentDateTime();
-    stmt.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
     stmt.addBindValue(importo);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -134,6 +132,13 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         db.rollback();
         return false;
     }
+    if (!stmt.next()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),
+                              stmt.lastError().text());
+        db.rollback();
+        return false;
+    }
+    QDateTime tsOrdine = stmt.record().value(0).toDateTime();
 
     foreach(rigaArticoloClass rigaArticolo, articoloList) {
         if(!stmt.prepare("insert into ordinirighe(idcassa,numeroordine,idarticolo,quantita) values(?,?,?,?)")) {
@@ -167,7 +172,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         stmt.addBindValue(idCassa);
         stmt.addBindValue(nomeCassa);
         stmt.addBindValue(numeroOrdine);
-        stmt.addBindValue(ts.toString("yyyy-MM-dd hh:mm:ss"));
+        stmt.addBindValue(tsOrdine.toString("yyyy-MM-dd hh:mm:ss"));
         stmt.addBindValue(importo);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"),
