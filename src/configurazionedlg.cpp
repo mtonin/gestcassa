@@ -26,6 +26,18 @@ const QStringList chiaviConfLocale=QStringList()
                                     << "dbFilePath"
                                     << "serieRitiro";
 
+const QStringList chiaviConfRemote=QStringList()
+                                    << "descrManifestazione"
+                                    << "printIntestazione"
+                                    << "intestazione"
+                                    << "printFondo"
+                                    << "fondo"
+                                    << "printLogo"
+                                    << "logoPixmap"
+                                    << "printLogoFondo"
+                                    << "logoFondoPixmap";
+
+
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
     setupUi(this);
@@ -726,85 +738,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     db.commit();
     emit resetArticoli();
 
-    if (!stmt.exec("select valore from configurazione where chiave='descrManifestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("descrManifestazione", stmt.value(0).toString());
-    }
+    const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
 
-    if (!stmt.exec("select valore from configurazione where chiave='printIntestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    foreach (QString nomePar,chiaviConfRemote.split(',')) {
+      if(!aggiornaConfigurazioneDaDB(nomePar)) {
         db.rollback();
         return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printIntestazione", valutaStringa(stmt.value(0).toString()));
-    }
+      }
 
-    if (!stmt.exec("select valore from configurazione where chiave='intestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("intestazione", stmt.value(0).toString());
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='printFondo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printFondo", valutaStringa(stmt.value(0).toString()));
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='fondo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("fondo", stmt.value(0).toString());
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='printLogo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printLogo", valutaStringa(stmt.value(0).toString()));
-    }
-
-    if (!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("logoPixmap", stmt.value(0).toByteArray());
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='printLogoFondo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printLogoFondo", valutaStringa(stmt.value(0).toString()));
-    }
-
-    if (!stmt.exec("select oggetto from risorse where id='logoFondoPixmap'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("logoFondoPixmap", stmt.value(0).toByteArray());
     }
 
     on_buttonBox_accepted();
@@ -908,6 +849,28 @@ void ConfigurazioneDlg::selezionaLogo(const QString nomePar) {
   logoBuffer.open(QIODevice::WriteOnly);
   bool rcSave = logo.save(&logoBuffer, "PNG");
   nuovaConfigurazione->insert(nomePar, logoData);
+}
+
+bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
+
+  QSqlQuery stmt;
+  if (!stmt.prepare("select valore from configurazione where chiave=?")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return false;
+  }
+  stmt.addBindValue(nomePar);
+  if (!(stmt.exec() && stmt.next())) {
+    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    return false;
+  }
+
+  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+    nuovaConfigurazione->insert(nomePar, stmt.value(0).toByteArray());
+  } else {
+    nuovaConfigurazione->insert(nomePar, stmt.value(0).toString());
+  }
+
+  return true;
 }
 
 void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked(){

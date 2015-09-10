@@ -55,6 +55,8 @@ private slots:
 
     void on_closeBtn_clicked();
 
+    void on_ricaricaBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     Ordine* ordineBox;
@@ -86,6 +88,7 @@ private:
     void exitTest();
     void caricaArticoli();
 
+    bool aggiornaConfigurazioneDaDB(const QString nomePar);
 };
 
 #endif // MAINWINDOW_H

@@ -584,3 +584,45 @@ void MainWindow::on_closeBtn_clicked()
     richiestaChiusura=true;
     richiestaChiusura=close();
 }
+
+void MainWindow::on_ricaricaBtn_clicked()
+{
+  creaRepartiButtons();
+  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
+
+  foreach (QString nomePar,chiaviConfRemote.split(',')) {
+    if(!aggiornaConfigurazioneDaDB(nomePar)) {
+      return;
+    }
+  }
+  creaInfoMessaggi();
+
+  QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
+  return;
+
+}
+
+bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
+
+  QSqlQuery stmt;
+  if (!stmt.prepare("select valore from configurazione where chiave=?")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return false;
+  }
+  stmt.addBindValue(nomePar);
+  if (!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    return false;
+  }
+
+  if(stmt.next()) {
+    if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+      confMap->insert(nomePar, stmt.value(0).toByteArray());
+    } else {
+      confMap->insert(nomePar, stmt.value(0).toString());
+    }
+  }
+
+  return true;
+}
+

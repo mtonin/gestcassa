@@ -94,6 +94,7 @@ private:
     void setCaratteriRimanenti();
 
     void selezionaLogo(const QString nomePar);
+    bool aggiornaConfigurazioneDaDB(const QString nomePar);
 };
 
 #endif // CONFIGURAZIONEDLG_H
