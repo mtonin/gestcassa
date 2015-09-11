@@ -93,6 +93,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     if (GESTIONE == nuovaModalita) {
 
+      if(GESTIONE != modalitaCorrente) {
         ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
         while (true) {
             if (QDialog::Accepted != dlg.visualizza()) return;
@@ -101,6 +102,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             }
             QMessageBox::critical(this, "Accesso", "Password errata");
         }
+      }
 
         if (TEST == modalitaCorrente) {
             idSessione = confMap->value("sessioneSalvata").toInt();
@@ -263,7 +265,7 @@ void MainWindow::creaRepartiButtons()
     }
 
     ui->repartiBox->setLayout(hboxLayout);
-    ui->latoStackedWidget->setCurrentIndex(0);
+    //ui->latoStackedWidget->setCurrentIndex(0);
 
 }
 
@@ -489,6 +491,7 @@ void MainWindow::esegueOperazione(int idx)
         execTest();
         break;
     case 4:
+        ricaricaArchivio();
         break;
     case 5:
         break;
@@ -585,11 +588,12 @@ void MainWindow::on_closeBtn_clicked()
     richiestaChiusura=close();
 }
 
-void MainWindow::on_ricaricaBtn_clicked()
+void MainWindow::ricaricaArchivio()
 {
   creaRepartiButtons();
-  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
+  gestioneModalita(modalitaCorrente);
 
+  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
       return;

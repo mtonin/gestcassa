@@ -85,6 +85,8 @@ void OperazioniDlg::init()
     mapper->setMapping(ui->cassaBtn, 2);
     connect(ui->testBtn, SIGNAL(clicked()), mapper, SLOT(map()));
     mapper->setMapping(ui->testBtn, 3);
+    connect(ui->ricaricaBtn, SIGNAL(clicked()), mapper, SLOT(map()));
+    mapper->setMapping(ui->ricaricaBtn, 4);
     connect(ui->buoniBtn, SIGNAL(clicked()), mapper, SLOT(map()));
     mapper->setMapping(ui->buoniBtn, 6);
     connect(ui->aboutBtn, SIGNAL(clicked()), mapper, SLOT(map()));
@@ -94,15 +96,15 @@ void OperazioniDlg::init()
 
 }
 
-void OperazioniDlg::on_chiudeBtn_clicked()
-{
-    QRect box = geometry();
-    QPropertyAnimation *effetto = new QPropertyAnimation(this, "geometry");
-    effetto->setStartValue(this->geometry());
-    effetto->setEndValue(QRect(box.x(), box.y() + box.height(), minimumSize().width(), minimumSize().height()));
-    effetto->setDuration(300);
-    //effetto->setEasingCurve(QEasingCurve::InBack);
-    connect(effetto, SIGNAL(finished()), this, SLOT(close()));
+//void OperazioniDlg::on_chiudeBtn_clicked()
+//{
+//    QRect box = geometry();
+//    QPropertyAnimation *effetto = new QPropertyAnimation(this, "geometry");
+//    effetto->setStartValue(this->geometry());
+//    effetto->setEndValue(QRect(box.x(), box.y() + box.height(), minimumSize().width(), minimumSize().height()));
+//    effetto->setDuration(300);
+//    //effetto->setEasingCurve(QEasingCurve::InBack);
+//    connect(effetto, SIGNAL(finished()), this, SLOT(close()));
 
-    effetto->start(QAbstractAnimation::DeleteWhenStopped);
-}
+//    effetto->start(QAbstractAnimation::DeleteWhenStopped);
+//}

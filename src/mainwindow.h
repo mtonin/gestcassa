@@ -55,7 +55,7 @@ private slots:
 
     void on_closeBtn_clicked();
 
-    void on_ricaricaBtn_clicked();
+    void ricaricaArchivio();
 
 private:
     Ui::MainWindow *ui;

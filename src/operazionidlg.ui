@@ -26,45 +26,7 @@
    <string>Gestione Cassa</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="1">
-    <widget class="QToolButton" name="cassaBtn">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>70</width>
-       <height>70</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>70</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>CASSA</string>
-     </property>
-     <property name="icon">
-      <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/cassa</normaloff>:/GestCassa/cassa</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <property name="toolButtonStyle">
-      <enum>Qt::ToolButtonTextUnderIcon</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QToolButton" name="gestioneBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -102,7 +64,45 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="0" column="1">
+    <widget class="QToolButton" name="cassaBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>70</width>
+       <height>70</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>70</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>CASSA</string>
+     </property>
+     <property name="icon">
+      <iconset resource="risorse.qrc">
+       <normaloff>:/GestCassa/cassa</normaloff>:/GestCassa/cassa</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
     <widget class="QToolButton" name="testBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -140,7 +140,48 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="1" column="0">
+    <widget class="QToolButton" name="ricaricaBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>69</width>
+       <height>71</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>RICARICA</string>
+     </property>
+     <property name="icon">
+      <iconset resource="risorse.qrc">
+       <normaloff>:/GestCassa/reload</normaloff>:/GestCassa/reload</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
     <widget class="QToolButton" name="buoniBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -181,7 +222,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="1" column="2">
     <widget class="QToolButton" name="aboutBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -207,48 +248,6 @@
      <property name="icon">
       <iconset resource="risorse.qrc">
        <normaloff>:/GestCassa/help</normaloff>:/GestCassa/help</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <property name="autoExclusive">
-      <bool>false</bool>
-     </property>
-     <property name="toolButtonStyle">
-      <enum>Qt::ToolButtonTextUnderIcon</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QToolButton" name="chiudeBtn">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>70</width>
-       <height>70</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>100</width>
-       <height>70</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>CHIUDE
-MENU'</string>
-     </property>
-     <property name="icon">
-      <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/freccia_giu_blu</normaloff>:/GestCassa/freccia_giu_blu</iconset>
      </property>
      <property name="iconSize">
       <size>
