@@ -859,15 +859,17 @@ bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
       return false;
   }
   stmt.addBindValue(nomePar);
-  if (!(stmt.exec() && stmt.next())) {
+  if (!stmt.exec()) {
     QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
     return false;
   }
 
-  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
-    nuovaConfigurazione->insert(nomePar, stmt.value(0).toByteArray());
-  } else {
-    nuovaConfigurazione->insert(nomePar, stmt.value(0).toString());
+  if(stmt.next()) {
+    if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+      nuovaConfigurazione->insert(nomePar, stmt.value(0).toByteArray());
+    } else {
+      nuovaConfigurazione->insert(nomePar, stmt.value(0).toString());
+    }
   }
 
   return true;
