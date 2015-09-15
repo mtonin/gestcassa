@@ -15,9 +15,28 @@ QDialog(parent)
   setupUi(this);
 }
 
+void DBParamDlg::setNomeFile(const QString val) {
+
+  nomeFile=val;
+
+  QFile iniFile(nomeFile);
+  if (iniFile.exists()) {
+    QSettings iniSettings(nomeFile,QSettings::IniFormat);
+    dbUtenteTxt->setText(iniSettings.value("DATABASE/DBUTENTE").toString());
+    SimpleCrypt* cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    dbPasswordTxt->setText(cifratore->decryptToString(iniSettings.value("DATABASE/DBPASSWORD").toString()));
+    dbServerTxt->setText(iniSettings.value("DATABASE/DBSERVER").toString());
+    dbPortaTxt->setValue(iniSettings.value("DATABASE/DBPORT").toInt());
+    dbLocalePathTxt->setText(iniSettings.value("DATABASE/DBLOCALEPATH").toString());
+    if(!iniSettings.value("DATABASE/DBLOCALE").toBool())
+      dbReteFlg->click();
+    delete cifratore;
+  }
+}
+
 void DBParamDlg::on_dbLocaleFlg_clicked()
 {
-    dbStackedWidget->setCurrentIndex(0);
+  dbStackedWidget->setCurrentIndex(0);
 }
 
 void DBParamDlg::on_dbReteFlg_clicked()
@@ -68,10 +87,13 @@ bool DBParamDlg::openDBRemoto()
   // testa se il server è attivo
   QTcpSocket testsock;
   testsock.connectToHost(db.hostName(),db.port());
+  setCursor(Qt::WaitCursor);
   if(!testsock.waitForConnected(3000)) {
+    setCursor(Qt::ArrowCursor);
     QMessageBox::critical(0, QObject::tr("Database Error"),"Impossibile connettersi al database");
     return false;
   }
+  setCursor(Qt::ArrowCursor);
 
   if (!db.open()) {
       QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
@@ -84,13 +106,6 @@ bool DBParamDlg::openDBRemoto()
           return false;
       }
 
-      /*
-            query.exec("pragma foreign_keys=ON;");
-            if(!query.isActive()) {
-              QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
-              return false;
-            }
-      */
   }
 
   return true;

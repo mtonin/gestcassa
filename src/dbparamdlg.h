@@ -9,8 +9,7 @@ class DBParamDlg : public QDialog, private Ui::DBParamDlg
 
 public:
   explicit DBParamDlg(QWidget *parent = 0);
-  void setNomeFile(const QString val) {nomeFile=val;}
-  void setDBLocalePath(const QString val) {dbLocalePathTxt->setText(val);}
+  void setNomeFile(const QString val);
 
 private slots:
   void on_dbLocaleFlg_clicked();

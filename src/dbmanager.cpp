@@ -30,18 +30,13 @@ bool DBManager::init(const QString percorso)
   QString dbFileModelloName=QString("%1/model.fdb").arg(percorso);
   QString iniFileName=QString("%1/GCAS.ini").arg(percorso);
 
-  QFile iniFile(iniFileName);
-  if (!iniFile.exists()) {
-      DBParamDlg dlg;
-      dlg.setNomeFile(iniFileName);
-      dlg.setDBLocalePath(dbFilePath);
-      if(!dlg.exec())
-          return false;
-  }
-
   QString ipAddress;
-  if (!createConnection(iniFileName,dbFileModelloName,ipAddress)) {
-    return false;
+  DBParamDlg dlg;
+  dlg.setNomeFile(iniFileName);
+  while(!createConnection(iniFileName,dbFileModelloName,ipAddress)) {
+    dlg.activateWindow();
+    if(!dlg.exec())
+      return false;
   }
 
   leggeConfigurazione();
@@ -291,6 +286,9 @@ bool DBManager::createConnection(const QString &nomeFile,const QString& modello,
 {
     if (nomeFile.isEmpty())
         return false;
+    QFile iniFile(nomeFile);
+    if (!iniFile.exists())
+        return false;
 
     QSettings iniSettings(nomeFile,QSettings::IniFormat);
     QString utente=iniSettings.value("DATABASE/DBUTENTE").toString();
@@ -338,14 +336,6 @@ bool DBManager::createConnection(const QString &nomeFile,const QString& modello,
             QMessageBox::critical(0, QObject::tr("Database Error"), "Database inesistente o inutilizzabile");
             return false;
         }
-
-        /*
-              query.exec("pragma foreign_keys=ON;");
-              if(!query.isActive()) {
-                QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
-                return false;
-              }
-        */
     }
     return true;
 }

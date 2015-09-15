@@ -239,6 +239,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>dbLocaleFlg</tabstop>
+  <tabstop>dbReteFlg</tabstop>
+  <tabstop>dbLocalePathTxt</tabstop>
+  <tabstop>dbServerTxt</tabstop>
+  <tabstop>dbPortaTxt</tabstop>
+  <tabstop>dbNomeTxt</tabstop>
+  <tabstop>dbUtenteTxt</tabstop>
+  <tabstop>dbPasswordTxt</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -248,8 +258,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>227</x>
-     <y>282</y>
+     <x>232</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -264,8 +274,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>288</y>
+     <x>252</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
