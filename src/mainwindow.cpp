@@ -608,8 +608,14 @@ void MainWindow::ricaricaArchivio()
 
 bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
 
+  QString sql;
+  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+    sql="select oggetto from risorse where id=?";
+  } else {
+    sql="select valore from configurazione where chiave=?";
+  }
   QSqlQuery stmt;
-  if (!stmt.prepare("select valore from configurazione where chiave=?")) {
+  if (!stmt.prepare(sql)) {
       QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
       return false;
   }
