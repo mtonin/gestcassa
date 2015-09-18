@@ -252,7 +252,11 @@
         </size>
        </property>
        <property name="text">
-        <string>Elimina pulsante</string>
+        <string>Elimina articolo</string>
+       </property>
+       <property name="icon">
+        <iconset resource="risorse.qrc">
+         <normaloff>:/GestCassa/cancella</normaloff>:/GestCassa/cancella</iconset>
        </property>
       </widget>
      </item>
@@ -286,6 +290,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="risorse.qrc"/>
+ </resources>
  <connections/>
 </ui>
