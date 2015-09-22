@@ -35,7 +35,6 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     setAcceptDrops(true);
 
     cifratore = new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-    decodificaPassword();
 
     dettagliRepartoBox = new DettagliReparto;
     dettagliArticoloBox = new DettagliArticolo;
@@ -97,7 +96,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
         while (true) {
             if (QDialog::Accepted != dlg.visualizza()) return;
-            if (adminPassword == dlg.getValore()) {
+            if(isPasswordOK(dlg.getValore())) {
                 break;
             }
             QMessageBox::critical(this, "Accesso", "Password errata");
@@ -353,7 +352,6 @@ void MainWindow::on_configurazioneBtn_clicked()
     ConfigurazioneDlg* dlg = new ConfigurazioneDlg(confMap);
     connect(dlg, SIGNAL(resetOrdini(int)), ordineBox, SLOT(nuovoOrdine(int)));
     connect(dlg, SIGNAL(resetArticoli()), this, SLOT(creaRepartiButtons()));
-    connect(dlg, SIGNAL(passwordCambiata()), this, SLOT(decodificaPassword()));
     connect(dlg, SIGNAL(cambiaVisualizzaPrezzo(bool)), this, SLOT(visualizzaPrezzo(bool)));
     dlg->exec();
 
@@ -409,14 +407,18 @@ void MainWindow::execGestione()
     gestioneModalita(GESTIONE);
 }
 
-void MainWindow::decodificaPassword()
-{
-    adminPassword = confMap->value("adminPassword").toString();
+bool MainWindow::isPasswordOK(const QString pwd) {
+    aggiornaConfigurazioneDaDB("adminPassword");
+    QString adminPassword = confMap->value("adminPassword").toString();
     if (adminPassword.isEmpty()) {
         adminPassword = "12345";
     } else {
         adminPassword = cifratore->decryptToString(adminPassword);
     }
+    if(0==pwd.compare(adminPassword))
+      return true;
+    else
+      return false;
 }
 
 void MainWindow::visualizzaPrezzo(bool visualizza)
@@ -599,6 +601,7 @@ void MainWindow::ricaricaArchivio()
       return;
     }
   }
+
   creaInfoMessaggi();
 
   QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");

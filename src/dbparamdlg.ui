@@ -86,8 +86,8 @@
               <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="readOnly">
-               <bool>true</bool>
+              <property name="text">
+               <string>GCAS.fbd</string>
               </property>
              </widget>
             </item>

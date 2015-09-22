@@ -43,7 +43,6 @@ private slots:
     void on_stornoBtn_clicked();
     void execCassa();
     void execGestione();
-    void decodificaPassword();
     void visualizzaPrezzo(bool visualizza);
     void scambia(int id1, int id2);
     void lampeggia();
@@ -64,7 +63,6 @@ private:
     DettagliArticolo* dettagliArticoloBox;
     infoWidget* info;
     SimpleCrypt* cifratore;
-    QString adminPassword;
     QTimer* blinkTimer;
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
@@ -89,6 +87,7 @@ private:
     void caricaArticoli();
 
     bool aggiornaConfigurazioneDaDB(const QString nomePar);
+    bool isPasswordOK(const QString pwd);
 };
 
 #endif // MAINWINDOW_H

@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSettings>
 #include <QUuid>
+#include <QApplication>
 
 DBParamDlg::DBParamDlg(QWidget *parent) :
 QDialog(parent)
@@ -18,6 +19,9 @@ QDialog(parent)
 void DBParamDlg::setNomeFile(const QString val) {
 
   nomeFile=val;
+  QString dbLocalePath=QString("%1/GCAS.fbd").arg(QCoreApplication::applicationDirPath());
+  QFile f(dbLocalePath);
+  dbLocalePathTxt->setText(f.fileName());
 
   QFile iniFile(nomeFile);
   if (iniFile.exists()) {
