@@ -592,17 +592,24 @@ void MainWindow::on_closeBtn_clicked()
 
 void MainWindow::ricaricaArchivio()
 {
-  creaRepartiButtons();
-  gestioneModalita(modalitaCorrente);
+  if (ordineBox->isInComposizione()) {
+      QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di ricaricare l'archivio");
+      return;
+  }
 
-  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
+  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
       return;
     }
   }
 
+  creaRepartiButtons();
+  gestioneModalita(CASSA);
+
   creaInfoMessaggi();
+  int idSessione = confMap->value("sessioneCorrente").toInt();
+  ordineBox->nuovoOrdine(idSessione);
 
   QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
   return;
