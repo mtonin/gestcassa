@@ -21,7 +21,7 @@ SET DEFAULT_VERSION=v1.0.0-rc0
 ::                   major - count from earliest Major.0.0* tag.
 ::                   minor - count from earliest Major.Minor.0* tag.
 ::                   fix   - count from earliest Major.Minor.Fix tag.
-SET COUNT_PATCHES_FROM=fix
+SET COUNT_PATCHES_FROM=minor
 
 :: USES_PRERELEASE_TAGS - numeric bool value to determine if GET_GIT_PATCHES
 ::                function should read the number of patches in the format of

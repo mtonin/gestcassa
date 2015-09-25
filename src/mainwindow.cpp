@@ -100,7 +100,6 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             if(isPasswordOK(dlg.getValore())) {
                 break;
             }
-            QMessageBox::critical(this, "Accesso", "Password errata");
         }
       }
 
@@ -203,6 +202,12 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
             showMaximized();
           }
         }
+      case Qt::Key_X: {
+          if(evt->modifiers() & Qt::ControlModifier) {
+            qDebug("CTRL+X pressed");
+            on_closeBtn_clicked();
+          }
+      }
     }
 }
 
@@ -404,22 +409,25 @@ void MainWindow::execGestione()
         QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
         return;
     }
-    qApp->restoreOverrideCursor();
+    //qApp->restoreOverrideCursor();
     gestioneModalita(GESTIONE);
 }
 
 bool MainWindow::isPasswordOK(const QString pwd) {
-    aggiornaConfigurazioneDaDB("adminPassword");
+    if(!aggiornaConfigurazioneDaDB("adminPassword"))
+      return false;
     QString adminPassword = confMap->value("adminPassword").toString();
     if (adminPassword.isEmpty()) {
         adminPassword = "12345";
     } else {
         adminPassword = cifratore->decryptToString(adminPassword);
     }
-    if(0==pwd.compare(adminPassword))
+    if(0==pwd.compare(adminPassword)) {
       return true;
-    else
+    } else {
+      QMessageBox::critical(this, "Accesso", "Password errata");
       return false;
+    }
 }
 
 void MainWindow::visualizzaPrezzo(bool visualizza)
@@ -598,15 +606,19 @@ void MainWindow::ricaricaArchivio()
       return;
   }
 
+  qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
   QSqlDatabase db=QSqlDatabase::database();
-  if(-902==db.lastError().number()) {
+  QSqlError lastError=db.lastError();
+  if(-902==lastError.number()) {
     db.close();
     if(!db.open()) {
+      qApp->restoreOverrideCursor();
       QString msg=QString("Impossibile connettersi al database.\nCodice %1 - %2").arg(db.lastError().number()).arg(db.lastError().text());
       QMessageBox::critical(0, QObject::tr("Database Error"),msg);
       return;
     }
   }
+  qApp->restoreOverrideCursor();
 
   const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
@@ -615,12 +627,15 @@ void MainWindow::ricaricaArchivio()
     }
   }
 
+  qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
   creaRepartiButtons();
   gestioneModalita(CASSA);
 
   creaInfoMessaggi();
   int idSessione = confMap->value("sessioneCorrente").toInt();
   ordineBox->nuovoOrdine(idSessione);
+
+  qApp->restoreOverrideCursor();
 
   QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
   return;
@@ -637,6 +652,7 @@ bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
   }
   QSqlQuery stmt;
   if (!stmt.prepare(sql)) {
+    QSqlError err=stmt.lastError();
       QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
       return false;
   }
