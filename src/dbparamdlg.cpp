@@ -5,7 +5,6 @@
 #include <QTcpSocket>
 #include <QMessageBox>
 #include <QSettings>
-#include <QUuid>
 #include <QApplication>
 
 DBParamDlg::DBParamDlg(QWidget *parent) :
@@ -35,6 +34,9 @@ void DBParamDlg::setNomeFile(const QString val) {
     if(!iniSettings.value("DATABASE/DBLOCALE").toBool())
       dbReteFlg->click();
     delete cifratore;
+    idCassa=iniSettings.value("CONFIGURAZIONE/IDCASSA").toString();
+  } else {
+    idCassa=QUuid::createUuid();
   }
 }
 
@@ -50,7 +52,6 @@ void DBParamDlg::on_dbReteFlg_clicked()
 
 void DBParamDlg::accept()
 {
-  QUuid idCassa=QUuid::createUuid();
   if(dbReteFlg->isChecked()) {
     if(!openDBRemoto())
       return;

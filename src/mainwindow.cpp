@@ -15,6 +15,7 @@
 #include "buonidlg.h"
 #include "aboutdlg.h"
 //#include "basemsgbox.h"
+#include "dbparamdlg.h"
 
 #include <QtGui>
 #include <QMessageBox>
@@ -595,6 +596,16 @@ void MainWindow::ricaricaArchivio()
   if (ordineBox->isInComposizione()) {
       QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di ricaricare l'archivio");
       return;
+  }
+
+  QSqlDatabase db=QSqlDatabase::database();
+  if(-902==db.lastError().number()) {
+    db.close();
+    if(!db.open()) {
+      QString msg=QString("Impossibile connettersi al database.\nCodice %1 - %2").arg(db.lastError().number()).arg(db.lastError().text());
+      QMessageBox::critical(0, QObject::tr("Database Error"),msg);
+      return;
+    }
   }
 
   const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";

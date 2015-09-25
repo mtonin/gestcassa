@@ -29,6 +29,7 @@ bool DBManager::init(const QString percorso)
   dbFilePath=QString("%1/GCAS.fdb").arg(percorso);
   QString dbFileModelloName=QString("%1/model.fdb").arg(percorso);
   QString iniFileName=QString("%1/GCAS.ini").arg(percorso);
+  conf->insert("iniFile",iniFileName);
 
   QString ipAddress;
   DBParamDlg dlg;

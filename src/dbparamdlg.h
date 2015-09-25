@@ -1,6 +1,8 @@
 #ifndef DBPARAMDLG_H
 #define DBPARAMDLG_H
 
+#include <QUuid>
+
 #include "ui_dbparamdlg.h"
 
 class DBParamDlg : public QDialog, private Ui::DBParamDlg
@@ -22,7 +24,7 @@ private:
 
 private:
   QString nomeFile;
-
+  QUuid idCassa;
 };
 
 #endif // DBPARAMDLG_H
