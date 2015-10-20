@@ -12,17 +12,22 @@
 #include "confermadlg.h"
 #include "operazionidlg.h"
 #include "storicoordini.h"
+#include "buonidlg.h"
+#include "aboutdlg.h"
 //#include "basemsgbox.h"
+#include "dbparamdlg.h"
 
 #include <QtGui>
 #include <QMessageBox>
 #include <QHBoxLayout>
 #include <QtSql>
 
-MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent) : confMap(configurazione), QMainWindow(parent),
+MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &splashScreen, QWidget *parent) : confMap(configurazione), splash(splashScreen),QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(this,SIGNAL(avanzaStato(QString)),&splash,SLOT(showMessage(QString)));
 
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setWindowState(Qt::WindowFullScreen);
@@ -31,7 +36,6 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent)
     setAcceptDrops(true);
 
     cifratore = new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
-    decodificaPassword();
 
     dettagliRepartoBox = new DettagliReparto;
     dettagliArticoloBox = new DettagliArticolo;
@@ -72,6 +76,9 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent)
 
     blinkTimer = new QTimer(this);
     connect(blinkTimer, SIGNAL(timeout()), this, SLOT(lampeggia()));
+
+    richiestaChiusura=false;
+
 }
 
 MainWindow::~MainWindow()
@@ -86,14 +93,15 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     if (GESTIONE == nuovaModalita) {
 
+      if(GESTIONE != modalitaCorrente) {
         ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
         while (true) {
             if (QDialog::Accepted != dlg.visualizza()) return;
-            if (adminPassword == dlg.getValore()) {
+            if(isPasswordOK(dlg.getValore())) {
                 break;
             }
-            QMessageBox::critical(this, "Accesso", "Password errata");
         }
+      }
 
         if (TEST == modalitaCorrente) {
             idSessione = confMap->value("sessioneSalvata").toInt();
@@ -186,29 +194,39 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     switch (evt->key()) {
-    case Qt::Key_F11: {
-        if (isMaximized()) {
+      case Qt::Key_F11: {
+          if (isMaximized()) {
             //setWindowFlags(Qt::Window);
             showNormal();
-        } else {
+          } else {
             //setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
             showMaximized();
+          }
         }
-    }
+      case Qt::Key_X: {
+          if(evt->modifiers() & Qt::ControlModifier) {
+            qDebug("CTRL+X pressed");
+            on_closeBtn_clicked();
+          }
+      }
     }
 }
 
 void MainWindow::closeEvent(QCloseEvent *evt)
 {
-    ConfermaDlg dlg("Confermi l'uscita?");
-    if (QDialog::Accepted != dlg.visualizza()) evt->ignore();
+    if(richiestaChiusura) {
+      ConfermaDlg dlg("Confermi l'uscita?");
+      if (QDialog::Accepted != dlg.visualizza()) evt->ignore();
+    } else {
+      evt->ignore();
+    }
 }
 
 void MainWindow::creaRepartiButtons()
 {
 
     // ricarica la cache
-    //caricaArticoli();
+    caricaArticoli();
 
     // cancella i pulsanti degli articoli
     QListIterator<QStackedWidget*> itArticoli(articoliList);
@@ -240,7 +258,10 @@ void MainWindow::creaRepartiButtons()
     }
 
     for (int i = 0; i < NUM_REPARTI; i++) {
+
         RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i, ui->repartiBox);
+        QString msg=QString("Caricamento reparto %1...").arg(reparto01Btn->getNomeReparto());
+        emit(avanzaStato(msg));
 
         repartiList.append(reparto01Btn);
         hboxLayout->addWidget(reparto01Btn);
@@ -250,7 +271,7 @@ void MainWindow::creaRepartiButtons()
     }
 
     ui->repartiBox->setLayout(hboxLayout);
-    ui->latoStackedWidget->setCurrentIndex(0);
+    //ui->latoStackedWidget->setCurrentIndex(0);
 
 }
 
@@ -274,16 +295,9 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             QStackedWidget* stackedBox = new QStackedWidget;
             int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + col;
 
-            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante, repartoBtn->getId(), riga, col);
-            /*
             QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
-            ArticoloBtnWidget* btn;
-            if(NULL==articoloMap) {
-              btn=new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col);
-            } else {
-              btn = new ArticoloBtnWidget(idPulsante, articoloMap);
-            }
-            */
+            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col, articoloMap);
+
             btn->SetButtonColorNormal(coloreSfondo);
             btn->SetButtonColorHot(coloreSfondo);
             btn->SetTextColorEnabled(coloreCarattere);
@@ -308,7 +322,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
 
 void MainWindow::creaInfoMessaggi()
 {
-    QStringList messaggi = QString("GESTIONE\nCASSA,versione\n%1").arg(VERSIONE.c_str()).split(",");
+    QStringList messaggi = QString("GESTIONE\nCASSA,versione\n%1").arg(VERSIONE).split(",");
     QString descrizione = confMap->value("descrManifestazione").toString();
     if (!descrizione.isEmpty()) {
         messaggi.insert(0, descrizione);
@@ -347,7 +361,6 @@ void MainWindow::on_configurazioneBtn_clicked()
     ConfigurazioneDlg* dlg = new ConfigurazioneDlg(confMap);
     connect(dlg, SIGNAL(resetOrdini(int)), ordineBox, SLOT(nuovoOrdine(int)));
     connect(dlg, SIGNAL(resetArticoli()), this, SLOT(creaRepartiButtons()));
-    connect(dlg, SIGNAL(passwordCambiata()), this, SLOT(decodificaPassword()));
     connect(dlg, SIGNAL(cambiaVisualizzaPrezzo(bool)), this, SLOT(visualizzaPrezzo(bool)));
     dlg->exec();
 
@@ -358,9 +371,9 @@ void MainWindow::on_configurazioneBtn_clicked()
 void MainWindow::on_funzioniBtn_clicked()
 {
     QPoint btnPoint = ui->funzioniBtn->mapToGlobal(ui->funzioniBtn->pos());
-    OperazioniDlg dlg(modalitaCorrente, btnPoint);
-    connect(&dlg, SIGNAL(operazioneSelezionata(int)), this, SLOT(esegueOperazione(int)));
-    dlg.exec();
+    OperazioniDlg* dlg=new OperazioniDlg(modalitaCorrente, btnPoint,this);
+    connect(dlg, SIGNAL(operazioneSelezionata(int)), this, SLOT(esegueOperazione(int)));
+    dlg->show();
     // close();
 }
 
@@ -370,15 +383,16 @@ void MainWindow::on_reportBtn_clicked()
     form.exec();
 }
 
-void MainWindow::execStats()
+void MainWindow::on_statsBtn_clicked()
 {
-    int idSessione = confMap->value("sessioneCorrente").toInt();
-    if (ID_SESSIONE_TEST == idSessione) {
-        idSessione = confMap->value("sessioneSalvata").toInt();
-    }
-    StatsForm form(idSessione, confMap, this);
-    //form.setWindowState(Qt::WindowMaximized);
-    form.exec();
+  int idSessione = confMap->value("sessioneCorrente").toInt();
+  if (ID_SESSIONE_TEST == idSessione) {
+      idSessione = confMap->value("sessioneSalvata").toInt();
+  }
+  StatsForm form(idSessione, confMap, this);
+  //form.setWindowState(Qt::WindowMaximized);
+  form.exec();
+
 }
 
 void MainWindow::execCassa()
@@ -398,17 +412,24 @@ void MainWindow::execGestione()
         QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
         return;
     }
-    qApp->restoreOverrideCursor();
+    //qApp->restoreOverrideCursor();
     gestioneModalita(GESTIONE);
 }
 
-void MainWindow::decodificaPassword()
-{
-    adminPassword = confMap->value("adminPassword").toString();
+bool MainWindow::isPasswordOK(const QString pwd) {
+    if(!aggiornaConfigurazioneDaDB("adminPassword"))
+      return false;
+    QString adminPassword = confMap->value("adminPassword").toString();
     if (adminPassword.isEmpty()) {
         adminPassword = "12345";
     } else {
         adminPassword = cifratore->decryptToString(adminPassword);
+    }
+    if(0==pwd.compare(adminPassword)) {
+      return true;
+    } else {
+      QMessageBox::critical(this, "Accesso", "Password errata");
+      return false;
     }
 }
 
@@ -484,11 +505,16 @@ void MainWindow::esegueOperazione(int idx)
         execTest();
         break;
     case 4:
-        execStats();
+        ricaricaArchivio();
         break;
     case 5:
-        execStorno();
         break;
+    case 6:
+        execBuoni();
+        break;
+    case 7:
+          execAbout();
+          break;
     }
 
 }
@@ -507,7 +533,7 @@ void MainWindow::exitTest()
     ui->messaggiArea->setStyleSheet("background-color: white; color: black;");
 }
 
-void MainWindow::execStorno()
+void MainWindow::on_stornoBtn_clicked()
 {
     int idSessione = confMap->value("sessioneCorrente").toInt();
     if (ID_SESSIONE_TEST == idSessione) {
@@ -516,6 +542,20 @@ void MainWindow::execStorno()
     StoricoOrdini dlg(idSessione);
     dlg.exec();
     return;
+}
+
+void MainWindow::execBuoni()
+{
+    BuoniDlg dlg(confMap,this);
+    dlg.exec();
+    return;
+}
+
+void MainWindow::execAbout()
+{
+  AboutDlg dlg(this);
+  dlg.exec();
+  return;
 }
 
 void MainWindow::caricaArticoli()
@@ -558,5 +598,81 @@ void MainWindow::caricaArticoli()
 
 void MainWindow::on_closeBtn_clicked()
 {
-    close();
+    richiestaChiusura=true;
+    richiestaChiusura=close();
 }
+
+void MainWindow::ricaricaArchivio()
+{
+  if (ordineBox->isInComposizione()) {
+      QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di ricaricare l'archivio");
+      return;
+  }
+
+  qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+  QSqlDatabase db=QSqlDatabase::database();
+  QSqlError lastError=db.lastError();
+  if(-902==lastError.number()) {
+    db.close();
+    if(!db.open()) {
+      qApp->restoreOverrideCursor();
+      QString msg=QString("Impossibile connettersi al database.\nCodice %1 - %2").arg(db.lastError().number()).arg(db.lastError().text());
+      QMessageBox::critical(0, QObject::tr("Database Error"),msg);
+      return;
+    }
+  }
+  qApp->restoreOverrideCursor();
+
+  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
+  foreach (QString nomePar,chiaviConfRemote.split(',')) {
+    if(!aggiornaConfigurazioneDaDB(nomePar)) {
+      return;
+    }
+  }
+
+  qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+  creaRepartiButtons();
+  gestioneModalita(CASSA);
+
+  creaInfoMessaggi();
+  int idSessione = confMap->value("sessioneCorrente").toInt();
+  ordineBox->nuovoOrdine(idSessione);
+
+  qApp->restoreOverrideCursor();
+
+  QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
+  return;
+
+}
+
+bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
+
+  QString sql;
+  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+    sql="select oggetto from risorse where id=?";
+  } else {
+    sql="select valore from configurazione where chiave=?";
+  }
+  QSqlQuery stmt;
+  if (!stmt.prepare(sql)) {
+    QSqlError err=stmt.lastError();
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return false;
+  }
+  stmt.addBindValue(nomePar);
+  if (!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    return false;
+  }
+
+  if(stmt.next()) {
+    if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+      confMap->insert(nomePar, stmt.value(0).toByteArray());
+    } else {
+      confMap->insert(nomePar, stmt.value(0).toString());
+    }
+  }
+
+  return true;
+}
+

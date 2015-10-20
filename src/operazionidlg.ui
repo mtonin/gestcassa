@@ -6,27 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>118</width>
-    <height>468</height>
+    <width>240</width>
+    <height>164</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>83</width>
-    <height>456</height>
+    <width>240</width>
+    <height>164</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>118</width>
-    <height>468</height>
+    <width>240</width>
+    <height>164</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Gestione Cassa</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <widget class="QToolButton" name="gestioneBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -64,7 +64,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
     <widget class="QToolButton" name="cassaBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -102,7 +102,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item row="0" column="2">
     <widget class="QToolButton" name="testBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -140,8 +140,8 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QToolButton" name="stornoBtn">
+   <item row="1" column="0">
+    <widget class="QToolButton" name="ricaricaBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -150,22 +150,22 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>70</width>
-       <height>70</height>
+       <width>69</width>
+       <height>71</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>100</width>
-       <height>70</height>
+       <height>100</height>
       </size>
      </property>
      <property name="text">
-      <string>STORNO</string>
+      <string>RICARICA</string>
      </property>
      <property name="icon">
       <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/cancella</normaloff>:/GestCassa/cancella</iconset>
+       <normaloff>:/GestCassa/reload</normaloff>:/GestCassa/reload</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -181,8 +181,8 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QToolButton" name="statsBtn">
+   <item row="1" column="1">
+    <widget class="QToolButton" name="buoniBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -202,11 +202,11 @@
       </size>
      </property>
      <property name="text">
-      <string>STATS</string>
+      <string>BUONI</string>
      </property>
      <property name="icon">
       <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/stats</normaloff>:/GestCassa/stats</iconset>
+       <normaloff>:/GestCassa/ticket</normaloff>:/GestCassa/ticket</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -222,8 +222,8 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QToolButton" name="statsBtn_2">
+   <item row="1" column="2">
+    <widget class="QToolButton" name="aboutBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -243,12 +243,11 @@
       </size>
      </property>
      <property name="text">
-      <string>CHIUDE
-MENU'</string>
+      <string>ABOUT</string>
      </property>
      <property name="icon">
       <iconset resource="risorse.qrc">
-       <normaloff>:/GestCassa/freccia_giu_blu</normaloff>:/GestCassa/freccia_giu_blu</iconset>
+       <normaloff>:/GestCassa/help</normaloff>:/GestCassa/help</iconset>
      </property>
      <property name="iconSize">
       <size>

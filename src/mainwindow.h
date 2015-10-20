@@ -13,6 +13,7 @@
 #include <QMap>
 #include <QTimer>
 #include <QCache>
+#include <QSplashScreen>
 
 namespace Ui
 {
@@ -25,9 +26,10 @@ class MainWindow : public QMainWindow
 
 signals:
     void aggiungeArticolo(const int idArticolo, const QString& nomeArticolo, float prezzo);
+    void avanzaStato(const QString msg);
 
 public:
-    explicit MainWindow(QMap<QString, QVariant>* configurazione, QWidget *parent = 0);
+    explicit MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen& splashScreen,QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -37,19 +39,22 @@ private slots:
     void on_configurazioneBtn_clicked();
     void on_funzioniBtn_clicked();
     void on_reportBtn_clicked();
-    void execStats();
+    void on_statsBtn_clicked();
+    void on_stornoBtn_clicked();
     void execCassa();
     void execGestione();
-    void decodificaPassword();
     void visualizzaPrezzo(bool visualizza);
     void scambia(int id1, int id2);
     void lampeggia();
     void esegueOperazione(int idx);
 
     void execTest();
-    void execStorno();
+    void execBuoni();
+    void execAbout();
 
     void on_closeBtn_clicked();
+
+    void ricaricaArchivio();
 
 private:
     Ui::MainWindow *ui;
@@ -58,10 +63,12 @@ private:
     DettagliArticolo* dettagliArticoloBox;
     infoWidget* info;
     SimpleCrypt* cifratore;
-    QString adminPassword;
     QTimer* blinkTimer;
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
+    QSplashScreen& splash;
+
+    bool richiestaChiusura;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;
@@ -79,6 +86,8 @@ private:
     void exitTest();
     void caricaArticoli();
 
+    bool aggiornaConfigurazioneDaDB(const QString nomePar);
+    bool isPasswordOK(const QString pwd);
 };
 
 #endif // MAINWINDOW_H

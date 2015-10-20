@@ -41,7 +41,11 @@ SOURCES += main.cpp\
     operazionidlg.cpp \
     storicoarticoliordinimodel.cpp \
     basemsgbox.cpp \
-    parametriavanzati.cpp
+    parametriavanzati.cpp \
+    buonidlg.cpp \
+    buoniquerymodel.cpp \
+    aboutdlg.cpp \
+    dbparamdlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -71,7 +75,11 @@ HEADERS  += mainwindow.h \
     operazionidlg.h \
     storicoarticoliordinimodel.h \
     basemsgbox.h \
-    parametriavanzati.h
+    parametriavanzati.h \
+    buonidlg.h \
+    buoniquerymodel.h \
+    aboutdlg.h \
+    dbparamdlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -87,7 +95,10 @@ FORMS    += mainwindow.ui \
     confermadlg.ui \
     storicoordini.ui \
     operazionidlg.ui \
-    parametriavanzati.ui
+    parametriavanzati.ui \
+    buonidlg.ui \
+    aboutdlg.ui \
+    dbparamdlg.ui
 
 #include(version.txt)
 
@@ -100,7 +111,7 @@ RESOURCES += \
     risorse.qrc
 RC_FILE = gestcassa.rc
 OTHER_FILES += \
-    gestcassa.rc version.rc2.tmpl version.txt.tmpl svnrev.h.tmpl
+    gestcassa.rc version.rc2.tmpl
 
 LIBS += -L"$$PWD/vld"
 

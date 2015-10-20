@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     QSplashScreen splash(splashPixmap);
     splash.show();
     splash.showMessage("Inizializzazione...");
-    a.processEvents();
+    QCoreApplication::processEvents();
 
     QDesktopWidget* desktop = QApplication::desktop();
     if (desktop->size().width() < 1024 || desktop->size().height() < 768) {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     QTranslator translator;
     if (translator.load(QString("qt_it"))) {
-        a.installTranslator(&translator);
+        QtSingleApplication::installTranslator(&translator);
     }
 
     /*
@@ -48,10 +48,10 @@ int main(int argc, char *argv[])
     QFontDatabase::applicationFontFamilies(idFont)
     */
 
-    QFont currentFont = a.font();
+    QFont currentFont = QApplication::font();
     currentFont.setPointSize(10);
     //currentFont.setFamily("adventix");
-    a.setFont(currentFont);
+    QApplication::setFont(currentFont);
 
     QMap<QString, QVariant>* configurazione = new QMap<QString, QVariant>;
     DBManager dbman(configurazione);
@@ -69,27 +69,21 @@ int main(int argc, char *argv[])
     /*
     nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
     */
-    QFileInfo dbFileModello(QString("%1/model.fdb").arg(a.applicationDirPath()));
-    QFileInfo dbFile(QString("%1/GCAS.fdb").arg(a.applicationDirPath()));
-    QString nomeFile = dbFile.absoluteFilePath();
-    //nomeFile="GCAS";
-    if (!nomeFile.isEmpty()) {
-        splash.showMessage("Collegamento al database...");
-        a.processEvents();
-        if (dbman.init(nomeFile, dbFileModello.absoluteFilePath())) {
-            splash.showMessage("Caricamento articoli...");
-            a.processEvents();
+    splash.showMessage("Collegamento al database...");
+    QCoreApplication::processEvents();
+    if (dbman.init(QCoreApplication::applicationDirPath())) {
+       splash.showMessage("Caricamento articoli...");
+       QCoreApplication::processEvents();
 
-            MainWindow w(configurazione);
-            a.setActivationWindow(&w);
-            w.show();
-            splash.finish(&w);
+       MainWindow w(configurazione,splash);
+       a.setActivationWindow(&w);
+       w.show();
+       splash.finish(&w);
 
-            //a.setStartDragDistance(50);
-            //a.setStartDragTime(1000);
+    //a.setStartDragDistance(50);
+    //a.setStartDragTime(1000);
 
-            a.exec();
-        }
+       QApplication::exec();
     }
 
     delete configurazione;

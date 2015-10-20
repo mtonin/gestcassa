@@ -70,10 +70,15 @@ private slots:
 
     void on_logoCheckBox_clicked(bool checked);
 
+    void on_logoFondoBtn_clicked();
+
+    void on_logoFondoCheckBox_clicked(bool checked);
+
     void on_intestazioneCheckBox_clicked(bool checked);
 
     void on_fondoCheckBox_clicked(bool checked);
 
+    void on_resetBuoniBtn_clicked();
     void on_stampaNoDestinazioneBox_clicked(bool checked);
 
     void on_doppiaCopiaCheckBox_clicked(bool checked);
@@ -94,6 +99,10 @@ private:
     QPrinter printer;
     void keyPressEvent(QKeyEvent *);
     void execParametriAvanzati();
+    void setCaratteriRimanenti();
+
+    void selezionaLogo(const QString nomePar);
+    bool aggiornaConfigurazioneDaDB(const QString nomePar);
 };
 
 #endif // CONFIGURAZIONEDLG_H

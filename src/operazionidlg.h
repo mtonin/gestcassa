@@ -28,8 +28,6 @@ private slots:
     void pulsanteClicked(int idx);
     void init();
 
-    void on_statsBtn_2_clicked();
-
 private:
     Ui::OperazioniDlg *ui;
 };

@@ -38,7 +38,12 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     testoArticolo->setText(articoloBtn->getNomeArticolo());
 
     QSqlQuery stmt;
-    stmt.prepare("select barcode from articoli where idarticolo=?");
+    if(!stmt.prepare("select barcode from articoli where idarticolo=?")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(articoloBtn->getId());
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -51,7 +56,12 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
       }
     }
 
-    stmt.prepare("select 1 from articolimenu where idarticolomenu=?");
+    if(!stmt.prepare("select 1 from articolimenu where idarticolomenu=?")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(articoloBtn->getId());
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -99,7 +109,12 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
     menuBox->setChecked(articoloBtn->isGestioneMenu());
     destinazioneBox->setEnabled(!articoloBtn->isGestioneMenu());
-    stmt.prepare("select a.idarticolomenu,b.descrizione from articolimenu a, articoli b where a.idarticolomenu=b.idarticolo and a.idarticolo=?");
+    if(!stmt.prepare("select a.idarticolomenu,b.descrizione from articolimenu a, articoli b where a.idarticolomenu=b.idarticolo and a.idarticolo=?")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(articoloBtn->getId());
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -130,10 +145,17 @@ bool DettagliArticolo::aggiornaArticolo()
 {
 
     QSqlQuery stmt1;
+    QString sql;
     if (0 == articoloBtn->getId()) {
-        stmt1.prepare("insert into articoli (descrizione,prezzo,destinazione,gestioneMenu,barcode) values(?,?,?,?,?) returning idarticolo");
+        sql="insert into articoli (descrizione,prezzo,destinazione,gestioneMenu,barcode) values(?,?,?,?,?) returning idarticolo";
     } else {
-        stmt1.prepare("update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=?,barcode=? where idarticolo=?");
+        sql="update articoli set descrizione=?,prezzo=?,destinazione=?,gestioneMenu=?,barcode=? where idarticolo=?";
+    }
+    if(!stmt1.prepare(sql)) {
+      QSqlError errore=stmt1.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return false;
     }
     stmt1.addBindValue(articoloBtn->getNomeArticolo());
     stmt1.addBindValue(articoloBtn->getPrezzo());
@@ -155,7 +177,7 @@ bool DettagliArticolo::aggiornaArticolo()
           msg="Valore già presente in archivio";
         } else {
           msg=ultimoErrore.text();
-        }
+    }
         QMessageBox::critical(0, QObject::tr("Database Error"),msg);
         return false;
     }
@@ -191,7 +213,12 @@ bool DettagliArticolo::aggiornaArticolo()
     }
 
     if (articoloBtn->isGestioneMenu()) {
-        stmt1.prepare("delete from articolimenu where idarticolo=?");
+        if(!stmt1.prepare("delete from articolimenu where idarticolo=?")) {
+          QSqlError errore=stmt1.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          return false;
+        }
         stmt1.addBindValue(articoloBtn->getId());
         stmt1.exec();
         if (!stmt1.isActive()) {
@@ -200,7 +227,12 @@ bool DettagliArticolo::aggiornaArticolo()
             return false;
         }
         for (int i = 0; i < modello->rowCount(); i++) {
-            stmt1.prepare("insert into articolimenu (idarticolo,idarticolomenu) values(?,?)");
+            if(!stmt1.prepare("insert into articolimenu (idarticolo,idarticolomenu) values(?,?)")) {
+              QSqlError errore=stmt1.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return false;
+            }
             int idarticolo = modello->index(i, 1).data().toInt();
             stmt1.addBindValue(articoloBtn->getId());
             stmt1.addBindValue(idarticolo);
@@ -328,7 +360,13 @@ void DettagliArticolo::on_eliminaBtn_clicked()
             return;
         }
 
-        stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?");
+        if(!stmt.prepare("delete from pulsanti where idreparto=? and riga=? and colonna=?")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          db.rollback();
+          return;
+        }
         stmt.addBindValue(articoloBtn->getIdReparto());
         stmt.addBindValue(articoloBtn->getRiga());
         stmt.addBindValue(articoloBtn->getColonna());
@@ -338,7 +376,13 @@ void DettagliArticolo::on_eliminaBtn_clicked()
             return;
         }
 
-        stmt.prepare("delete from articoli where idarticolo=?");
+        if(!stmt.prepare("delete from articoli where idarticolo=?")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(this,"Errore",msg);
+          db.rollback();
+          return;
+        }
         stmt.addBindValue(articoloBtn->getId());
         if (!stmt.exec()) {
             QMessageBox::critical(this, "Errore", "Impossibile cancellare l'articolo. Verificare se è inserito in un menù.");

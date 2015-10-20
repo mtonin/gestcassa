@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>396</height>
+    <width>407</width>
+    <height>425</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,11 +37,33 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="descrManifestazioneTxt">
-           <property name="maxLength">
-            <number>100</number>
+          <layout class="QVBoxLayout">
+           <property name="spacing">
+            <number>2</number>
            </property>
-          </widget>
+           <item>
+            <widget class="QLineEdit" name="descrManifestazioneTxt">
+             <property name="maxLength">
+              <number>25</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="rimanentiLbl">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_5">
@@ -225,16 +247,6 @@
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="3" column="1" colspan="2">
-             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QCheckBox" name="doppiaCopiaCheckBox">
-              <property name="text">
-               <string>Doppia copia</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="logoIntestazioneBtn">
               <property name="text">
@@ -242,7 +254,7 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="4" column="0">
              <widget class="QCheckBox" name="fondoCheckBox">
               <property name="text">
                <string>Fondo
@@ -263,7 +275,7 @@ pagina</string>
             <item row="0" column="0">
              <widget class="QCheckBox" name="logoCheckBox">
               <property name="text">
-               <string>Logo</string>
+               <string>Logo intest.</string>
               </property>
              </widget>
             </item>
@@ -294,6 +306,43 @@ pagina</string>
 manif.</string>
               </property>
              </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="logoFondoBtn">
+              <property name="text">
+               <string>Scegli</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="logoFondoCheckBox">
+              <property name="text">
+               <string>Logo fondo</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QCheckBox" name="doppiaCopiaCheckBox">
+              <property name="text">
+               <string>Doppia copia</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2" colspan="2">
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="4" column="1" colspan="2">
+             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
             </item>
            </layout>
           </item>
@@ -387,19 +436,6 @@ manif.</string>
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </item>
          <item>
@@ -469,76 +505,7 @@ manif.</string>
           <string>Operazioni sul database</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="exportArticoliBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Esporta Reparti ed Articoli</string>
-            </property>
-            <property name="icon">
-             <iconset resource="risorse.qrc">
-              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="exportOrdiniBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Esporta storico ordini</string>
-            </property>
-            <property name="icon">
-             <iconset resource="risorse.qrc">
-              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="importArticoliBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Importa Reparti ed Articoli</string>
-            </property>
-            <property name="icon">
-             <iconset resource="risorse.qrc">
-              <normaloff>:/GestCassa/db_in</normaloff>:/GestCassa/db_in</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QPushButton" name="cancellaOrdiniBtn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -561,7 +528,76 @@ manif.</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="importArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Importa Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_in</normaloff>:/GestCassa/db_in</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="exportArticoliBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Esporta Reparti ed Articoli</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="exportOrdiniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Esporta storico ordini</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_out</normaloff>:/GestCassa/db_out</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
            <widget class="QPushButton" name="resetDbBtn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -571,6 +607,29 @@ manif.</string>
             </property>
             <property name="text">
              <string>Reset archivio</string>
+            </property>
+            <property name="icon">
+             <iconset resource="risorse.qrc">
+              <normaloff>:/GestCassa/db_delete</normaloff>:/GestCassa/db_delete</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="resetBuoniBtn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Reset Buoni</string>
             </property>
             <property name="icon">
              <iconset resource="risorse.qrc">
@@ -676,6 +735,22 @@ manif.</string>
     <hint type="destinationlabel">
      <x>148</x>
      <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logoFondoCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>logoFondoBtn</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>139</x>
+     <y>165</y>
     </hint>
    </hints>
   </connection>

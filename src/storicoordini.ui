@@ -213,7 +213,7 @@ filtri</string>
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="filtraBtn_6">
+      <widget class="QPushButton" name="chiudeBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -372,14 +372,14 @@ Finestra</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
                <string>Numero</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="QLineEdit" name="numeroOrdineTxt">
               <property name="maximumSize">
                <size>
@@ -398,14 +398,14 @@ Finestra</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="4" column="0">
              <widget class="QLabel" name="label_2">
               <property name="text">
                <string>Importo</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="1">
+            <item row="4" column="1">
              <widget class="QLineEdit" name="importoOrdineTxt">
               <property name="maximumSize">
                <size>
@@ -447,6 +447,25 @@ Finestra</string>
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="idCassaOrdineTxt">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>75</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -470,7 +489,7 @@ Finestra</string>
            <enum>QAbstractItemView::NoSelection</enum>
           </property>
           <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
+           <bool>false</bool>
           </attribute>
           <attribute name="verticalHeaderVisible">
            <bool>false</bool>
@@ -485,22 +504,5 @@ Finestra</string>
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>filtraBtn_6</sender>
-   <signal>clicked()</signal>
-   <receiver>StoricoOrdini</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>834</x>
-     <y>81</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1009</x>
-     <y>95</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

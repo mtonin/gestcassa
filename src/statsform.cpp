@@ -72,7 +72,7 @@ void StatsForm::caricaStats()
               and lower(descrizione) like ? \
               and tipoArticolo <> ? \
               group by descrizione \
-              order by 3 asc");
+              order by 2 asc");
     QString condizione;
     if (sessioneBox->isChecked()) {
         condizione = "idsessione=?";
@@ -489,4 +489,9 @@ void StatsForm::mouseClick(QMouseEvent *evt)
     graficoPlot->xAxis->setRange(xRange);
     graficoPlot->yAxis->setRange(yRange);
     graficoPlot->replot();
+}
+
+void StatsForm::on_sessioneBox_toggled(bool checked)
+{
+    sessioneCombo->setEnabled(checked);
 }

@@ -13,6 +13,30 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
+#include <QSettings>
+
+const QStringList chiaviConfLocale=QStringList()
+                                    << "visualizzazionePrezzo"
+                                    << "abilitaResto"
+                                    << "durataResto"
+                                    << "stampantePdf"
+                                    << "stampante"
+                                    << "idCassa"
+                                    << "inifile"
+                                    << "dbFilePath"
+                                    << "serieRitiro";
+
+const QStringList chiaviConfRemote=QStringList()
+                                    << "descrManifestazione"
+                                    << "printIntestazione"
+                                    << "intestazione"
+                                    << "printFondo"
+                                    << "fondo"
+                                    << "printLogo"
+                                    << "logoPixmap"
+                                    << "printLogoFondo"
+                                    << "logoFondoPixmap";
+
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
@@ -52,10 +76,11 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     }
     nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
     descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
+    QString valore=configurazione->value("visualizzazionePrezzo").toString();
     visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
 
     QString pwdCifrata = configurazione->value("adminPassword").toString();
-    pwdInChiaro = cifratore->decryptToString(pwdCifrata);
+    pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
     adminPasswordTxt->setText(pwdInChiaro);
 
     dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
@@ -65,6 +90,8 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     logoCheckBox->setChecked(configurazione->value("printLogo", false).toBool());
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
+    logoFondoCheckBox->setChecked(configurazione->value("printLogoFondo", false).toBool());
+    logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     intestazioneCheckBox->setChecked(configurazione->value("printIntestazione", false).toBool());
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
@@ -78,6 +105,8 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     descrManifestazioneTxt->setFocus();
 
     connect(serieRitiroTxt, SIGNAL(currentIndexChanged(int)), this, SLOT(cambiaSerieRitiro(int)));
+
+    setCaratteriRimanenti();
 }
 
 ConfigurazioneDlg::~ConfigurazioneDlg()
@@ -119,15 +148,41 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         configurazione->insert(key, nuovaConfigurazione->value(key));
     }
 
+    QSettings confLocale(configurazione->value("iniFile").toString(),QSettings::IniFormat);
+    confLocale.beginGroup("CONFIGURAZIONE");
     QSqlQuery stmt;
     foreach(QString key, configurazione->keys()) {
+      if(chiaviConfLocale.contains(key,Qt::CaseInsensitive)) {
+        confLocale.setValue(key,configurazione->value(key).toString());
+        continue;
+      }
         stmt.clear();
-        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive)) {
-            stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)");
+        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive) ||
+            0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
+            if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return;
+            }
             stmt.addBindValue(key);
             stmt.addBindValue(configurazione->value(key).toByteArray());
+        } else if(0==QString::compare(key,"nomeCassa",Qt::CaseInsensitive)) {
+          if(!stmt.prepare("update postazioni set nome=? where id=?")) {
+            QSqlError errore=stmt.lastError();
+            QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+            QMessageBox::critical(this,"Errore",msg);
+            return;
+          }
+          stmt.addBindValue(configurazione->value(key).toString());
+          stmt.addBindValue(configurazione->value("IDCASSA").toString());
         } else {
-            stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)");
+            if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return;
+            }
             stmt.addBindValue(key);
             stmt.addBindValue(configurazione->value(key).toString());
         }
@@ -137,6 +192,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         }
     }
 
+    confLocale.sync();
     return accept();
 }
 
@@ -195,6 +251,7 @@ void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
     nuovaConfigurazione->insert("descrManifestazione", arg1);
+    setCaratteriRimanenti();
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
@@ -232,9 +289,13 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      return;
+    }
     stmt.addBindValue(idSessioneCorrente);
-    stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -260,21 +321,23 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
     QString separatoreRighe = "#§EOL#§";
     QStringList listaSql;
 
-    QSqlQuery stmt("select numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
+    QSqlQuery stmt("select nomecassa,numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
     if (!stmt.isActive()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
     while (stmt.next()) {
-        QString numeroOrdine = stmt.value(0).toString();
-        QString tsStampaOrdine = stmt.value(1).toString();
-        QString importoOrdine = stmt.value(2).toString();
-        QString descrizioneArticoloOrdine = stmt.value(3).toString();
-        QString quantitaArticoloOrdine = stmt.value(4).toString();
-        QString destinazioneArticoloOrdine = stmt.value(5).toString();
-        QString prezzoArticoloOrdine = stmt.value(6).toString();
-        QString tipoArticoloOrdine = stmt.value(7).toString();
-        QString riga = QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8")
+        QString nomeCassaOrdine = stmt.value(0).toString();
+        QString numeroOrdine = stmt.value(1).toString();
+        QString tsStampaOrdine = stmt.value(2).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        QString importoOrdine = stmt.value(3).toString();
+        QString descrizioneArticoloOrdine = stmt.value(4).toString();
+        QString quantitaArticoloOrdine = stmt.value(5).toString();
+        QString destinazioneArticoloOrdine = stmt.value(6).toString();
+        QString prezzoArticoloOrdine = stmt.value(7).toString();
+        QString tipoArticoloOrdine = stmt.value(8).toString();
+        QString riga = QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8#§%9")
+                       .arg(nomeCassaOrdine)
                        .arg(numeroOrdine)
                        .arg(tsStampaOrdine)
                        .arg(importoOrdine)
@@ -415,6 +478,11 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
+    str = configurazione->value("printLogoFondo").toString();
+    riga = QString("CONFIGURAZIONE#§printLogoFondo#§%1")
+           .arg(str.isEmpty() ? "NULL" : str);
+    exportLista.append(riga);
+
     if (!stmt.exec("select id,oggetto from risorse")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
@@ -500,6 +568,14 @@ void ConfigurazioneDlg::execParametriAvanzati()
     }
 }
 
+void ConfigurazioneDlg::setCaratteriRimanenti(){
+
+  int carRimanenti=descrManifestazioneTxt->maxLength()-descrManifestazioneTxt->text().size();
+  QString label=QString("%1 caratteri rimanenti").arg(carRimanenti);
+  rimanentiLbl->setText(label);
+
+}
+
 void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 {
     QString nomeFile;
@@ -545,7 +621,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             QString tabella = campiInput.at(idx);
             QString sql;
             if (0 == tabella.compare("destinazionistampa", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)");
+                sql="INSERT INTO DESTINAZIONISTAMPA (nome,intestazione,stampaflag,stampanumeroritiroflag) VALUES(?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 if (idx >= campiInput.size() - 2)
@@ -559,7 +642,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 
             }
             if (0 == tabella.compare("pulsanti", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)");
+                sql="INSERT INTO PULSANTI (idReparto,riga,colonna,idArticolo,abilitato) VALUES(?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -567,7 +657,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("reparti", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato) VALUES(?,?,?,?,?,?)");
+                sql="INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato) VALUES(?,?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -579,7 +676,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                     stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("articoli", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO ARTICOLI (idArticolo,descrizione,prezzo,destinazione,gestioneMenu) VALUES(?,?,?,?,?)");
+                sql="INSERT INTO ARTICOLI (idArticolo,descrizione,prezzo,destinazione,gestioneMenu) VALUES(?,?,?,?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
@@ -587,17 +691,38 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("articolimenu", Qt::CaseInsensitive)) {
-                stmt.prepare("INSERT INTO ARTICOLIMENU (idArticolo,idArticoloMenu) VALUES(?,?)");
+                sql="INSERT INTO ARTICOLIMENU (idArticolo,idArticoloMenu) VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("configurazione", Qt::CaseInsensitive)) {
-                stmt.prepare("UPDATE OR INSERT INTO CONFIGURAZIONE VALUES(?,?)");
+                sql="UPDATE OR INSERT INTO CONFIGURAZIONE VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("risorse", Qt::CaseInsensitive)) {
-                stmt.prepare("UPDATE OR INSERT INTO RISORSE VALUES(?,?)");
+                sql="UPDATE OR INSERT INTO RISORSE VALUES(?,?)";
+                if(!stmt.prepare(sql)) {
+                  QSqlError errore=stmt.lastError();
+                  QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                  QMessageBox::critical(this,"Errore",msg);
+                  db.rollback();
+                  return;
+                }
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
             }
@@ -636,67 +761,14 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     db.commit();
     emit resetArticoli();
 
-    if (!stmt.exec("select valore from configurazione where chiave='descrManifestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("descrManifestazione", stmt.value(0).toString());
-    }
+    const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
 
-    if (!stmt.exec("select valore from configurazione where chiave='printIntestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    foreach (QString nomePar,chiaviConfRemote.split(',')) {
+      if(!aggiornaConfigurazioneDaDB(nomePar)) {
         db.rollback();
         return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printIntestazione", valutaStringa(stmt.value(0).toString()));
-    }
+      }
 
-    if (!stmt.exec("select valore from configurazione where chiave='intestazione'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("intestazione", stmt.value(0).toString());
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='printFondo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printFondo", valutaStringa(stmt.value(0).toString()));
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='fondo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("fondo", stmt.value(0).toString());
-    }
-
-    if (!stmt.exec("select valore from configurazione where chiave='printLogo'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("printLogo", valutaStringa(stmt.value(0).toString()));
-    }
-
-    if (!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-        db.rollback();
-        return;
-    }
-    if (stmt.next()) {
-        nuovaConfigurazione->insert("logoPixmap", stmt.value(0).toByteArray());
     }
 
     on_buttonBox_accepted();
@@ -729,9 +801,14 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
-    stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,?)");
+    if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
+      QSqlError errore=stmt.lastError();
+      QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+      QMessageBox::critical(this,"Errore",msg);
+      db.rollback();
+      return;
+    }
     stmt.addBindValue(idSessioneCorrente);
-    stmt.addBindValue(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
 
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -763,26 +840,86 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     on_buttonBox_accepted();
 }
 
-void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked()
+void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
 {
-    QString logoFileName;
-    logoFileName = QFileDialog::getOpenFileName();
-    if (logoFileName.isEmpty()) {
+    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i buoni emessi.\nProseguire?", "", false, this);
+    if (QDialog::Accepted != dlg->visualizza()) return;
+
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
+
+    QSqlQuery stmt;
+    if (!stmt.exec("delete from buoni")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
         return;
     }
 
-    QPixmap logo;
-    logo.load(logoFileName);
-    QByteArray logoData;
-    QBuffer logoBuffer(&logoData);
-    logoBuffer.open(QIODevice::WriteOnly);
-    bool rcSave = logo.save(&logoBuffer, "PNG");
-    nuovaConfigurazione->insert("logoPixmap", logoData);
+    db.commit();
+}
+
+void ConfigurazioneDlg::selezionaLogo(const QString nomePar) {
+  QString logoFileName;
+  logoFileName = QFileDialog::getOpenFileName();
+  if (logoFileName.isEmpty()) {
+      return;
+  }
+
+  QPixmap logo;
+  logo.load(logoFileName);
+  QByteArray logoData;
+  QBuffer logoBuffer(&logoData);
+  logoBuffer.open(QIODevice::WriteOnly);
+  bool rcSave = logo.save(&logoBuffer, "PNG");
+  nuovaConfigurazione->insert(nomePar, logoData);
+}
+
+bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
+
+  QString sql;
+  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+    sql="select oggetto from risorse where id=?";
+  } else {
+    sql="select valore from configurazione where chiave=?";
+  }
+  QSqlQuery stmt;
+  if (!stmt.prepare(sql)) {
+      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      return false;
+  }
+  stmt.addBindValue(nomePar);
+  if (!stmt.exec()) {
+    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+    return false;
+  }
+
+  if(stmt.next()) {
+    if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+      nuovaConfigurazione->insert(nomePar, stmt.value(0).toByteArray());
+    } else {
+      nuovaConfigurazione->insert(nomePar, stmt.value(0).toString());
+    }
+  }
+
+  return true;
+}
+
+void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked(){
+  selezionaLogo("logoPixmap");
+}
+
+void ConfigurazioneDlg::on_logoFondoBtn_clicked(){
+  selezionaLogo("logoFondoPixmap");
 }
 
 void ConfigurazioneDlg::on_logoCheckBox_clicked(bool checked)
 {
     nuovaConfigurazione->insert("printLogo", checked);
+}
+
+void ConfigurazioneDlg::on_logoFondoCheckBox_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("printLogoFondo", checked);
 }
 
 void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)

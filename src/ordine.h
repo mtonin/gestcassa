@@ -48,6 +48,8 @@ private:
     float importoUltimoOrdine;
     QMap<QString, QVariant>* configurazione;
     int idSessioneCorrente;
+    QString idCassa;
+    QString nomeCassa;
     int numOrdineCorrente;
     float importoOrdineCorrente;
     OrdineModel modello;

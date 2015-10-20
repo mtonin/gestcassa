@@ -18,6 +18,10 @@ private slots:
     void on_filtraBtn_5_clicked();
     void on_filtroDateBox_toggled(bool checked);
 
+    void on_sessioneBox_toggled(bool checked);
+
+    void on_chiudeBtn_clicked();
+
 private:
     storicoOrdiniModel* ordiniModel;
     QSqlQueryModel* articoliOrdineModel;

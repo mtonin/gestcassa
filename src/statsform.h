@@ -28,6 +28,8 @@ private slots:
     void yCheckRange(const QCPRange &newRange, const QCPRange &oldRange);
     void mouseClick(QMouseEvent* evt);
 
+    void on_sessioneBox_toggled(bool checked);
+
 private:
     StatsModel* statsModel;
     void caricaStats();

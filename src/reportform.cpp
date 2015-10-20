@@ -13,7 +13,9 @@
 ReportForm::ReportForm(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
 {
     setupUi(this);
-    setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+    setWindowFlags(Qt::Tool);
+    activateWindow();
+    //setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
 }
 
 void ReportForm::stampa(bool preview)
@@ -146,13 +148,18 @@ QTextDocument* ReportForm::creaDocumentPerReparti()
         and c.idreparto=b.idreparto \
         and c.idreparto=?";
         if (ordineAlfabeticoBox->isChecked()) {
-            sql.append(" order by a.descrizione asc");
+            sql.append(" order by lower(a.descrizione) asc");
         } else {
             sql.append(" order by a.prezzo asc");
         }
 
         QSqlQuery stmt;
-        stmt.prepare(sql);
+        if(!stmt.prepare(sql)) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return NULL;
+        }
         stmt.addBindValue(idReparto);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -316,10 +323,15 @@ QTextDocument *ReportForm::creaDocumentMenu()
         tableCursore.movePosition(QTextCursor::NextCell);
 
         QSqlQuery stmt1;
-        stmt1.prepare("select a.descrizione \
+        if(!stmt1.prepare("select a.descrizione \
                   from articoli a,articolimenu b \
                   where a.idarticolo=b.idarticolomenu \
-                  and b.idarticolo=?");
+                  and b.idarticolo=?")) {
+              QSqlError errore=stmt1.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return NULL;
+        }
         stmt1.addBindValue(idArticolo);
         if (!stmt1.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -360,7 +372,12 @@ QTextDocument *ReportForm::creaDocumentDestinazione(const QString& nomeDestinazi
     }
 
     QSqlQuery stmt;
-    stmt.prepare(sql);
+    if(!stmt.prepare(sql)) {
+         QSqlError errore=stmt.lastError();
+         QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+         QMessageBox::critical(this,"Errore",msg);
+         return NULL;
+    }
     stmt.addBindValue(nomeDestinazione);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -519,10 +536,16 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
         and c.idreparto=b.idreparto \
         and c.idreparto=? \
         and c.abilitato = 1 \
+        and a.descrizione <> '' \
         order by lower(a.descrizione) asc";
 
         QSqlQuery stmt;
-        stmt.prepare(sql);
+        if(!stmt.prepare(sql)) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(this,"Errore",msg);
+              return NULL;
+        }
         stmt.addBindValue(idReparto);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());

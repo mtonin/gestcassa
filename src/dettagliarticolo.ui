@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>178</width>
-    <height>437</height>
+    <width>286</width>
+    <height>497</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>286</width>
+    <height>497</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -28,6 +40,13 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="disattivaFlag">
+     <property name="text">
+      <string>Disattivato</string>
      </property>
     </widget>
    </item>
@@ -178,8 +197,8 @@
          </property>
         </spacer>
        </item>
-      </layout>
-     </item>
+    </layout>
+   </item>
      <item row="3" column="0">
       <widget class="QPushButton" name="codiceBtn">
        <property name="text">
@@ -190,14 +209,16 @@
     </layout>
    </item>
    <item>
-    <widget class="QCheckBox" name="disattivaFlag">
-     <property name="text">
-      <string>Disattivato</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QGroupBox" name="menuBox">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>Gestione Menù</string>
      </property>
@@ -208,8 +229,26 @@
       <bool>false</bool>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
       <item>
        <widget class="QTableView" name="articoliList">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
         </property>
@@ -268,7 +307,11 @@
         </size>
        </property>
        <property name="text">
-        <string>Elimina pulsante</string>
+        <string>Elimina articolo</string>
+       </property>
+       <property name="icon">
+        <iconset resource="risorse.qrc">
+         <normaloff>:/GestCassa/cancella</normaloff>:/GestCassa/cancella</iconset>
        </property>
       </widget>
      </item>
@@ -302,6 +345,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="risorse.qrc"/>
+ </resources>
  <connections/>
 </ui>

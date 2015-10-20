@@ -3,6 +3,7 @@
 #include "storicoarticoliordinimodel.h"
 #include <QtSql>
 #include <QDataWidgetMapper>
+#include <QMessageBox>
 
 StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(parent)
 {
@@ -18,13 +19,15 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setTable("storicoordinitot");
     condizione = QString("idsessione=%1").arg(idSessione);
     ordiniModel->setFilter(condizione);
-    ordiniModel->setSort(3, Qt::AscendingOrder);
+    ordiniModel->setSort(4, Qt::AscendingOrder);
     ordiniModel->select();
+    while(ordiniModel->canFetchMore())
+      ordiniModel->fetchMore();
     ordiniTable->setModel(ordiniModel);
     ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-    ordiniTable->horizontalHeader()->setResizeMode(3, QHeaderView::Stretch);
+    ordiniTable->horizontalHeader()->setResizeMode(4, QHeaderView::Stretch);
     ordiniTable->verticalHeader()->setVisible(false);
-    //ordiniTable->selectRow(0);
+    ordiniTable->hideColumn(1);
 
     articoliOrdineModel = new storicoArticoliOrdiniModel(this);
     articoliOrdineTbl->setModel(articoliOrdineModel);
@@ -32,14 +35,17 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     QDataWidgetMapper* mapper = new QDataWidgetMapper(this);
     mapper->setModel(ordiniModel);
     mapper->addMapping(sessioneOrdineTxt, 0);
-    mapper->addMapping(cassaOrdineTxt, 1);
-    mapper->addMapping(numeroOrdineTxt, 2);
-    mapper->addMapping(importoOrdineTxt, 4);
+    mapper->addMapping(idCassaOrdineTxt, 1);
+    mapper->addMapping(cassaOrdineTxt, 2);
+    mapper->addMapping(numeroOrdineTxt, 3);
+    mapper->addMapping(importoOrdineTxt, 5);
 
     connect(ordiniModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), ordiniTable, SLOT(setCurrentIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), mapper, SLOT(setCurrentModelIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(caricaArticoliOrdine()));
+    ordiniTable->selectRow(0);
 
+    idCassaOrdineTxt->setVisible(false);
 }
 
 void StoricoOrdini::caricaArticoliOrdine()
@@ -47,7 +53,7 @@ void StoricoOrdini::caricaArticoliOrdine()
     QString sql = QString("select quantita,descrizione \
                                 from storicoordinidett \
                                 where idsessione=%1 and idcassa='%2' and numeroordine=%3 and tipoArticolo <> 'C'")
-                  .arg(sessioneOrdineTxt->text()).arg(cassaOrdineTxt->text()).arg(numeroOrdineTxt->text());
+                  .arg(sessioneOrdineTxt->text()).arg(idCassaOrdineTxt->text()).arg(numeroOrdineTxt->text());
     articoliOrdineModel->setQuery(sql);
     /*
     articoliOrdineModel->setHeaderData(0,Qt::Horizontal,"Q.TA'",Qt::DisplayRole);
@@ -63,6 +69,8 @@ void StoricoOrdini::caricaArticoliOrdine()
 
 void StoricoOrdini::on_filtraBtn_5_clicked()
 {
+    ordiniModel->submitAll();
+
     if (sessioneBox->isChecked()) {
         int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
         condizione = QString("idsessione=%1").arg(sessioneSelezionata);
@@ -73,11 +81,16 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
                               .arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
         ordiniModel->setFilter(condDataOra);
     }
+    while(ordiniModel->canFetchMore())
+      ordiniModel->fetchMore();
+
     ordiniTable->scrollToTop();
     sessioneOrdineTxt->clear();
     numeroOrdineTxt->clear();
     importoOrdineTxt->clear();
     cassaOrdineTxt->clear();
+
+    ordiniTable->selectRow(0);
 }
 
 void StoricoOrdini::on_filtroDateBox_toggled(bool checked)
@@ -112,4 +125,13 @@ void StoricoOrdini::caricaSessioni()
   sessioneCombo->setModel(sessioniModel);
   sessioneView->hideColumn(1);
 
+}
+
+void StoricoOrdini::on_sessioneBox_toggled(bool checked){
+  sessioneCombo->setEnabled(checked);
+}
+
+void StoricoOrdini::on_chiudeBtn_clicked(){
+    ordiniModel->submitAll();
+    close();
 }

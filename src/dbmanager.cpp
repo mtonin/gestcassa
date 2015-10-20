@@ -1,11 +1,15 @@
 #include "commons.h"
 #include "dbmanager.h"
 #include "confermadlg.h"
+#include "dbparamdlg.h"
+#include "simplecrypt.h"
 
 #include <QFile>
 #include <QtSql>
 #include <QMessageBox>
 #include <QTcpSocket>
+#include <QSettings>
+#include <QHostAddress>
 
 DBManager::DBManager(QObject *parent) : QObject(parent)
 {
@@ -16,16 +20,32 @@ DBManager::DBManager(QMap<QString, QVariant> *configurazione): conf(configurazio
 
 }
 
-bool DBManager::init(const QString nomeFile, const QString modello)
+bool DBManager::init(const QString percorso)
 {
 
-    dbFilePath = nomeFile;
-    if (!createConnection(dbFilePath, "gcas", "gcas-pwd", modello)) {
-        return false;
-    }
+  if (percorso.isEmpty())
+      return false;
 
-    return leggeConfigurazione();
+  dbFilePath=QString("%1/GCAS.fdb").arg(percorso);
+  QString dbFileModelloName=QString("%1/model.fdb").arg(percorso);
+  QString iniFileName=QString("%1/GCAS.ini").arg(percorso);
+  conf->insert("iniFile",iniFileName);
 
+  QString ipAddress;
+  DBParamDlg dlg;
+  dlg.setNomeFile(iniFileName);
+  while(!createConnection(iniFileName,dbFileModelloName,ipAddress)) {
+    dlg.activateWindow();
+    if(!dlg.exec())
+      return false;
+  }
+
+  leggeConfigurazione();
+  leggeConfigurazioneLocale(iniFileName);
+
+  aggiornaPostazione(ipAddress);
+
+  return true;
 }
 
 bool DBManager::leggeConfigurazione()
@@ -66,13 +86,14 @@ bool DBManager::leggeConfigurazione()
     int nuovaVersioneDB = versioneDB;
 
     if(versioneDB > 9) {
-      if(!stmt.exec("select oggetto from risorse where id='logoPixmap'")) {
+      if(!stmt.exec("select id,oggetto from risorse")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return false;
       }
       while(stmt.next()) {
-        QByteArray logoData=stmt.value(0).toByteArray();
-        conf->insert("logoPixmap",logoData);
+        QString key=stmt.value(0).toString();
+        QByteArray logoData=stmt.value(1).toByteArray();
+        conf->insert(key,logoData);
       }
     }
 
@@ -225,20 +246,40 @@ bool DBManager::leggeConfigurazione()
         nuovaVersioneDB = 10;
     }
 
-    if (versioneDB < 11) {
+        if (versioneDB < 11) {
+            if (!stmt.exec("CREATE TABLE buoni ( \
+                         cognome     VARCHAR(100), \
+                         nome     VARCHAR(100), \
+                         tsemissione     TIMESTAMP, \
+                         flagannullato   BOOLEAN DEFAULT  0 NOT NULL, \
+                         PRIMARY KEY (cognome,nome))"))  {
+                QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                db.rollback();
+                return false;
+            }
+            nuovaVersioneDB = 11;
+        }
+
+    if (versioneDB < 12) {
             if (!stmt.exec("ALTER TABLE ARTICOLI \
                                   ADD BARCODE VARCHAR(50) UNIQUE")) {
                 QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
                 db.rollback();
                 return false;
             }
-            nuovaVersioneDB = 11;
+            nuovaVersioneDB = 12;
     }
 
-    if (versioneDB != nuovaVersioneDB) {
+        if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
-        stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)");
+        if(!stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)")) {
+          QSqlError errore=stmt.lastError();
+          QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+          QMessageBox::critical(0,"Errore",msg);
+          db.rollback();
+          return false;
+        }
         stmt.addBindValue(nuovaVersioneDB);
         if (!stmt.exec()) {
             QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
@@ -252,30 +293,49 @@ bool DBManager::leggeConfigurazione()
     return true;
 }
 
-bool DBManager::createConnection(const QString &nomeFile, const QString &utente, const QString &password, const QString modello)
+bool DBManager::createConnection(const QString &nomeFile,const QString& modello, QString& localIpAddress)
 {
     if (nomeFile.isEmpty())
         return false;
-    QFile dbFile(nomeFile);
-    if (!dbFile.exists()) {
-        creaDb(utente, password, modello);
+    QFile iniFile(nomeFile);
+    if (!iniFile.exists())
+        return false;
+
+    QSettings iniSettings(nomeFile,QSettings::IniFormat);
+    QString utente=iniSettings.value("DATABASE/DBUTENTE").toString();
+    SimpleCrypt* cifratore=new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
+    QString password=cifratore->decryptToString(iniSettings.value("DATABASE/DBPASSWORD").toString());
+    delete cifratore;
+
+    bool dbLocaleFlag=iniSettings.value("DATABASE/DBLOCALE").toBool();
+    if(dbLocaleFlag) {
+        dbFilePath=iniSettings.value("DATABASE/DBLOCALEPATH").toString();
+        QFile dbFile(dbFilePath);
+         if (!dbFile.exists()) {
+           creaDb(utente,password,modello);
+        }
     }
     QSqlDatabase db = QSqlDatabase::addDatabase("QIBASE");
-    //db.setHostName("10.30.102.157");
-    //db.setPort(3050);
-    db.setDatabaseName(nomeFile);
+
+    if(dbLocaleFlag) {
+        db.setDatabaseName(dbFilePath);
+    } else {
+        db.setHostName(iniSettings.value("DATABASE/DBSERVER").toString());
+        db.setPort(iniSettings.value("DATABASE/DBPORT").toInt());
+        db.setDatabaseName(iniSettings.value("DATABASE/DBNOME").toString());
+        dbFilePath=QString("%1:%2/%3").arg(db.hostName()).arg(db.port()).arg(db.databaseName());
+        // testa se il server è attivo
+        QTcpSocket testsock;
+        testsock.connectToHost(db.hostName(),db.port());
+        if(!testsock.waitForConnected(3000)) {
+          QMessageBox::critical(0, QObject::tr("Database Error"),"Impossibile connettersi al database");
+          return false;
+        }
+        localIpAddress=testsock.localAddress().toString();
+    }
     db.setUserName(utente);
     db.setPassword(password);
-
-    /*
-    // testa se il server è attivo
-    QTcpSocket testsock;
-    testsock.connectToHost(db.hostName(),db.port());
-    if(!testsock.waitForConnected(3000)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"),testsock.errorString());
-      return false;
-    }
-    */
+    //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
@@ -287,14 +347,6 @@ bool DBManager::createConnection(const QString &nomeFile, const QString &utente,
             QMessageBox::critical(0, QObject::tr("Database Error"), "Database inesistente o inutilizzabile");
             return false;
         }
-
-        /*
-              query.exec("pragma foreign_keys=ON;");
-              if(!query.isActive()) {
-                QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
-                return false;
-              }
-        */
     }
     return true;
 }
@@ -317,6 +369,8 @@ void DBManager::creaDb(const QString user, const QString password, const QString
     db.setDatabaseName(dbFilePath);
     db.setUserName(user);
     db.setPassword(password);
+    //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
+
     if (!db.open()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), db.lastError().text());
         return;
@@ -342,6 +396,40 @@ void DBManager::creaDb(const QString user, const QString password, const QString
     if (!stmt.exec("insert into sessione (idsessione,tsinizio) values ('1',current_timestamp)")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
+    }
+
+    //db.close();
+
+}
+
+void DBManager::leggeConfigurazioneLocale(const QString &nomeFile)
+{
+        conf->insert("iniFile",nomeFile);
+        QSettings iniSettings(nomeFile,QSettings::IniFormat);
+        iniSettings.beginGroup("CONFIGURAZIONE");
+        QStringList chiavi=iniSettings.childKeys();
+        foreach (QString chiave,chiavi) {
+           conf->insert(chiave,iniSettings.value(chiave).toString());
+        }
+}
+
+void DBManager::aggiornaPostazione(const QString& ipAddress) {
+
+    QString idCassa=conf->value("IDCASSA").toString();
+    QSqlQuery stmt;
+    if (!stmt.prepare("update or insert into postazioni (id,ipaddress) values (?,?) returning nome")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    stmt.addBindValue(idCassa);
+    stmt.addBindValue(ipAddress);
+    if (!stmt.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
+    if(stmt.next()) {
+        QString nomeCassa=stmt.value(0).toString();
+        conf->insert("nomeCassa",nomeCassa);
     }
 
 }

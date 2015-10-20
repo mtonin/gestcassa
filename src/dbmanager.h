@@ -10,16 +10,18 @@ class DBManager : public QObject
 public:
     explicit DBManager(QObject *parent = 0);
     explicit DBManager(QMap<QString, QVariant>* configurazione);
-    bool init(const QString, const QString modello);
+    bool init(const QString percorso);
 
 signals:
 
 public slots:
 
 private:
-    bool createConnection(const QString& nomeFile, const QString& utente, const QString& password, const QString modello);
+    bool createConnection(const QString& nomeFile, const QString &modello, QString &localIpAddress);
     void creaDb(const QString user, const QString password, const QString modello);
     bool leggeConfigurazione();
+    void leggeConfigurazioneLocale(const QString& nomeFile);
+    void aggiornaPostazione(const QString& ipAddress);
 
     QMap<QString, QVariant>* conf;
     QString dbFilePath;
