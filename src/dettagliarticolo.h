@@ -5,6 +5,7 @@
 #include "articolobtnwidget.h"
 
 #include <QStandardItemModel>
+#include <QSqlTableModel>
 
 class DettagliArticolo : public QWidget, private Ui::DettagliArticolo
 {
@@ -39,11 +40,16 @@ private slots:
 
     void on_codiceBtn_clicked();
 
+    void on_addBarcodeBtn_clicked();
+
+    void on_delBarcodeBtn_clicked();
+
 private:
     bool aggiornaArticolo();
     ArticoloBtnWidget* articoloBtn;
     QStandardItemModel* modello;
     QStandardItemModel* articoliMenuModello;
+    QSqlTableModel* barcodeModel;
 
     void reset();
     void creaSelezioneArticoloBox();

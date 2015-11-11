@@ -270,6 +270,31 @@ bool DBManager::leggeConfigurazione()
             nuovaVersioneDB = 12;
     }
 
+        if (versioneDB < 13) {
+                if (!stmt.exec("CREATE TABLE BARCODEARTICOLI ( \
+                     BARCODE     VARCHAR(50), \
+                     DESCRIZIONE    VARCHAR(100), \
+                     IDARTICOLO    INTEGER, \
+                     PRIMARY KEY (BARCODE))")) {
+                       QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                       db.rollback();
+                       return false;
+                }
+                db.commit();
+                db.transaction();
+                if(!stmt.exec("INSERT INTO BARCODEARTICOLI (BARCODE,DESCRIZIONE,IDARTICOLO) \
+                                             SELECT BARCODE,DESCRIZIONE,IDARTICOLO \
+                                             FROM ARTICOLI WHERE BARCODE IS NOT NULL")
+                  ||  !stmt.exec("ALTER TABLE ARTICOLI \
+                                             DROP BARCODE")
+                  )  {
+                    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                    db.rollback();
+                    return false;
+                }
+                nuovaVersioneDB = 13;
+        }
+
         if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);

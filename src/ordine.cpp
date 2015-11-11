@@ -710,8 +710,11 @@ void Ordine::on_duplicaBtn_clicked()
 void Ordine::on_addCodiceBtn_clicked()
 {
     QSqlQuery stmt;
-    stmt.prepare("select a.idarticolo,a.descrizione,a.prezzo from articoli a,pulsanti p \
-                 where a.idarticolo=p.idarticolo and barcode=? and a.descrizione <> '' and p.abilitato=1");
+    if(!stmt.prepare("select a.idarticolo,a.descrizione,a.prezzo from articoli a,pulsanti p,barcodearticoli b \
+                 where a.idarticolo=p.idarticolo and a.idarticolo=b.idarticolo and b.barcode=? and a.descrizione <> '' and p.abilitato=1")) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        return;
+    }
     stmt.addBindValue(codiceTxt->text());
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
