@@ -431,15 +431,6 @@ void DettagliArticolo::on_prezzoArticolo_editingFinished()
     prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
 }
 
-void DettagliArticolo::on_codiceBtn_clicked()
-{
-//  if(0==articoloBtn->getId()) {
-//    QMessageBox::critical(0, QObject::tr("Errore"), "E' necessario valorizzare la descrizione");
-//    return;
-//  }
-
-}
-
 void DettagliArticolo::on_addBarcodeBtn_clicked()
 {
     while(true) {

@@ -18,7 +18,7 @@ QDialog(parent)
 void DBParamDlg::setNomeFile(const QString val) {
 
   nomeFile=val;
-  QString dbLocalePath=QString("%1/GCAS.fbd").arg(QCoreApplication::applicationDirPath());
+  QString dbLocalePath=QString("%1/GCAS.fdb").arg(QCoreApplication::applicationDirPath());
   QFile f(dbLocalePath);
   dbLocalePathTxt->setText(f.fileName());
 

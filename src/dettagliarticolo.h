@@ -38,8 +38,6 @@ private slots:
 
     void on_prezzoArticolo_editingFinished();
 
-    void on_codiceBtn_clicked();
-
     void on_addBarcodeBtn_clicked();
 
     void on_delBarcodeBtn_clicked();

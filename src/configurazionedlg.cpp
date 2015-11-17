@@ -496,16 +496,18 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
-    if (!stmt.exec("select idarticolo,barcode from articoli where barcode <> ''")) {
+    if (!stmt.exec("select idarticolo,barcode,descrizione from barcodearticoli")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
     while (stmt.next()) {
         QString idArticolo = stmt.value(0).toString();
         QString barcode = stmt.value(1).toString();
-        QString riga = QString("BARCODE#§%1#§%2")
+        QString descrizione = stmt.value(2).toString();
+        QString riga = QString("BARCODE#§%1#§%2#§%3")
                        .arg(barcode)
-                       .arg(idArticolo);
+                       .arg(idArticolo)
+                       .arg(descrizione);
         exportLista.append(riga);
     }
 
@@ -591,6 +593,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 
     QSqlQuery stmt;
     if (!stmt.exec("delete from pulsanti") ||
+        !stmt.exec("delete from barcodearticoli") ||
         !stmt.exec("delete from articolimenu") ||
         !stmt.exec("delete from articoli") ||
         !stmt.exec("delete from destinazionistampa") ||
@@ -728,9 +731,13 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
             }
 
             if (0 == tabella.compare("barcode", Qt::CaseInsensitive)) {
-                stmt.prepare("UPDATE ARTICOLI SET BARCODE=? WHERE IDARTICOLO=?");
+                stmt.prepare("INSERT INTO BARCODEARTICOLI (barcode, idarticolo, descrizione) values (?,?,?)");
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                if (idx >= campiInput.size() - 1)
+                    stmt.addBindValue(valutaStringa(""));
+                else
+                    stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
 
             qDebug(campiInput.join("#").toAscii());
@@ -789,6 +796,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
 
     QSqlQuery stmt;
     if (!stmt.exec("delete from pulsanti") ||
+        !stmt.exec("delete from barcodearticoli") ||
         !stmt.exec("delete from reparti") ||
         !stmt.exec("delete from articolimenu") ||
         !stmt.exec("delete from articoli") ||
