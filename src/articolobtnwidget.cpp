@@ -11,7 +11,7 @@ ArticoloBtnWidget::ArticoloBtnWidget(int id, int idRep, int numRiga, int numColo
     visualizzaPrezzo(false),
     QPictureButton(parent)
 {
-    if (NULL != articoloMap) {
+    if (!articoloMap->isEmpty()) {
         idArticolo = articoloMap->value("idarticolo").toInt();
         nomeArticolo = articoloMap->value("nome").toString();
         prezzo = articoloMap->value("prezzo").toFloat();
@@ -140,14 +140,24 @@ void ArticoloBtnWidget::PaintPrezzo()
     painter.drawRect(bottomFontRect);
 }
 
-void ArticoloBtnWidget::PaintDivieto()
+void ArticoloBtnWidget::PaintDivieto(int posX)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     QRect PainterRect = painter.window();
 
     QPixmap divieto(":/GestCassa/divieto");
-    painter.drawPixmap(0, height() - 20, 20, 20, divieto);
+    painter.drawPixmap(posX, height() - 20, 20, 20, divieto);
+}
+
+void ArticoloBtnWidget::PaintAttenzione(int posX)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QRect PainterRect = painter.window();
+
+    QPixmap warning(":/GestCassa/warning");
+    painter.drawPixmap(posX, height() - 20, 20, 20, warning);
 }
 
 void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
@@ -156,8 +166,14 @@ void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
     if (idArticolo > 0 && visualizzaPrezzo) {
         PaintPrezzo();
     }
+
+    int posSimboli=0;
     if (idArticolo > 0 && !abilitato) {
-        PaintDivieto();
+        PaintDivieto(posSimboli);
+        posSimboli+=20;
+    }
+    if (idArticolo > 0 && nomeArticolo.isEmpty()) {
+        PaintAttenzione(posSimboli);
     }
 }
 

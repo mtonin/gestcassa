@@ -180,8 +180,10 @@ bool DettagliArticolo::aggiornaArticolo()
               return;
           }
         */
-        if (stmt1.next())
+        if (stmt1.next()) {
             articoloBtn->setId(stmt1.value(0).toInt());
+            barcodeModel->setFilter(QString("IDARTICOLO=%1").arg(articoloBtn->getId()));
+        }
     }
 
     if (!stmt1.prepare("update or insert into pulsanti (idreparto,riga,colonna,abilitato,idarticolo) values(?,?,?,?,?)")) {

@@ -12,7 +12,7 @@
 #include <QList>
 #include <QMap>
 #include <QTimer>
-#include <QCache>
+#include <QHash>
 #include <QSplashScreen>
 
 namespace Ui
@@ -65,7 +65,7 @@ private:
     SimpleCrypt* cifratore;
     QTimer* blinkTimer;
     QString colore;
-    QCache<int, QMap<QString, QVariant>> articoliCache;
+    QHash<int, QMap<QString, QVariant>> articoliCache;
     QSplashScreen& splash;
 
     bool richiestaChiusura;

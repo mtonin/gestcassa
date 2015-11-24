@@ -83,7 +83,8 @@ private:
 protected:
 
     void PaintPrezzo();
-    void PaintDivieto();
+    void PaintDivieto(int posX);
+    void PaintAttenzione(int posX);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);

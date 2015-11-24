@@ -71,6 +71,7 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     infoLayout->addWidget(info);
     ui->infoFrame->setLayout(infoLayout);
 
+    //articoliCache.setMaxCost(1000);
     creaRepartiButtons();
     gestioneModalita(CASSA);
 
@@ -295,8 +296,8 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             QStackedWidget* stackedBox = new QStackedWidget;
             int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + col;
 
-            QMap<QString, QVariant>* articoloMap = articoliCache.object(idPulsante);
-            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col, articoloMap);
+            QMap<QString, QVariant> articoloMap = articoliCache[idPulsante];
+            ArticoloBtnWidget* btn = new ArticoloBtnWidget(idPulsante,repartoBtn->getId(),riga,col, &articoloMap);
 
             btn->SetButtonColorNormal(coloreSfondo);
             btn->SetButtonColorHot(coloreSfondo);
@@ -577,22 +578,27 @@ void MainWindow::caricaArticoli()
     int numColDestStampa = stmt.record().indexOf("destinazione");
     int numColGestioneMenu = stmt.record().indexOf("gestioneMenu");
     while (stmt.next()) {
-        QMap<QString, QVariant>* articoloMap = new QMap<QString, QVariant>();
+        QMap<QString, QVariant> articoloMap;
         int numReparto = stmt.value(numColReparto).toInt();
         int riga = stmt.value(numColRiga).toInt();
         int colonna = stmt.value(numColColonna).toInt();
         int idPulsante = numReparto * NUM_RIGHE_ART * NUM_COLONNE_ART + riga * NUM_COLONNE_ART + colonna;
-        articoloMap->insert("idarticolo", stmt.value(numColIdArticolo));
-        articoloMap->insert("nome", stmt.value(numColDescr));
-        articoloMap->insert("prezzo", stmt.value(numColprezzo));
-        articoloMap->insert("abilitato", stmt.value(numColAbilitato));
-        articoloMap->insert("repartoStampa", stmt.value(numColDestStampa));
-        articoloMap->insert("gestioneMenu", stmt.value(numColGestioneMenu));
-        articoloMap->insert("riga", stmt.value(numColRiga));
-        articoloMap->insert("colonna", stmt.value(numColColonna));
-        articoloMap->insert("reparto", stmt.value(numColReparto));
-        articoliCache.insert(idPulsante, articoloMap);
+        articoloMap.insert("idarticolo", stmt.value(numColIdArticolo));
+        articoloMap.insert("nome", stmt.value(numColDescr));
+        articoloMap.insert("prezzo", stmt.value(numColprezzo));
+        articoloMap.insert("abilitato", stmt.value(numColAbilitato));
+        articoloMap.insert("repartoStampa", stmt.value(numColDestStampa));
+        articoloMap.insert("gestioneMenu", stmt.value(numColGestioneMenu));
+        articoloMap.insert("riga", stmt.value(numColRiga));
+        articoloMap.insert("colonna", stmt.value(numColColonna));
+        articoloMap.insert("reparto", stmt.value(numColReparto));
+        articoliCache[idPulsante]=articoloMap;
+        QString msg=QString("%1: %2").arg(articoloMap.value("nome").toString()).arg(idPulsante);
+        qDebug(msg.toLatin1());
     }
+
+    QString msg=QString("articoliCache.size()=%1").arg(articoliCache.size());
+    qDebug(msg.toLatin1());
 
 }
 
