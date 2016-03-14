@@ -538,20 +538,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         int quantita = stmt.value(1).toInt();
         QString quantitaString = QString("%1").arg(quantita, 3, 10);
         float prezzo = stmt.value(2).toFloat();
-        QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 5, 'f', 2);
+        QString prezzoString = QString("%1 %L2").arg(QChar(0x20AC)).arg(prezzo, 6, 'f', 2);
 
         totale += prezzo;
         QRect tmpRect;
         painter.setFont(fontNormale);
-        painter.drawText(x, y, (pageWidth / 10) * 2 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
-        painter.drawText(x + (pageWidth / 10) * 2, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
-        painter.drawText(x + (pageWidth / 10) * 7, y, (pageWidth / 10) * 3, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
+        painter.drawText(x, y, (pageWidth / 10) * 1 - 5, 100, Qt::AlignLeft | Qt::AlignTop, quantitaString, &tmpRect);
+        painter.drawText(x + (pageWidth / 10) * 1+5, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
+        painter.drawText(x + (pageWidth / 10) * 6, y, (pageWidth / 10) * 4, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
     }
     y += textRect.height() + 5;
     painter.drawLine(x, y, pageWidth, y);
 
     y += 5;
-    QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 5, 'f', 2);
+    QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 6, 'f', 2);
     painter.setFont(fontGrassetto);
     painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
     y += textRect.height() + 20;

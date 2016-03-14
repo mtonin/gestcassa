@@ -32,6 +32,7 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setWindowState(Qt::WindowFullScreen);
     //showMaximized();
+    isHiddenCursor=false;
 
     setAcceptDrops(true);
 
@@ -194,12 +195,20 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     switch (evt->key()) {
       case Qt::Key_F11: {
+          /*
           if (isMaximized()) {
             //setWindowFlags(Qt::Window);
             showNormal();
           } else {
             //setWindowFlags(Qt::Window|Qt::FramelessWindowHint);
             showMaximized();
+          }
+          */
+          isHiddenCursor=!isHiddenCursor;
+          if(isHiddenCursor) {
+            qApp->setOverrideCursor(Qt::BlankCursor);
+          } else {
+            qApp->setOverrideCursor(Qt::ArrowCursor);
           }
         }
       case Qt::Key_X: {

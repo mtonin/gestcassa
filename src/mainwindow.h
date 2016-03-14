@@ -67,6 +67,7 @@ private:
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
     QSplashScreen& splash;
+    bool isHiddenCursor;
 
     bool richiestaChiusura;
 
