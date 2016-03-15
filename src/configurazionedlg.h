@@ -79,6 +79,10 @@ private slots:
     void on_fondoCheckBox_clicked(bool checked);
 
     void on_resetBuoniBtn_clicked();
+    void on_cancellaLogoBtn_clicked();
+
+    void on_cancellaLogoFondoBtn_clicked();
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);

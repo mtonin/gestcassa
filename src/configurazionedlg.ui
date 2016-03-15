@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>373</height>
+    <width>471</width>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -234,85 +234,139 @@
          <property name="title">
           <string>Scontrino</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="1" column="0" rowspan="2">
-             <widget class="QCheckBox" name="intestazioneCheckBox">
-              <property name="text">
-               <string>Intestazione</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="logoCheckBox">
+            <property name="text">
+             <string>Logo intest.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
              <widget class="QPushButton" name="logoIntestazioneBtn">
               <property name="text">
                <string>Scegli</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QCheckBox" name="logoCheckBox">
+            <item>
+             <widget class="QPushButton" name="cancellaLogoBtn">
               <property name="text">
-               <string>Logo intest.</string>
+               <string>Cancella</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="4" column="1" colspan="2">
-             <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
-            </item>
-            <item row="4" column="0">
-             <widget class="QCheckBox" name="fondoCheckBox">
-              <property name="text">
-               <string>Fondo
-pagina</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="logoFondoCheckBox">
-              <property name="text">
-               <string>Logo fondo</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
+           </layout>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="logoPreview">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="intestazioneCheckBox">
+            <property name="text">
+             <string>Intestazione</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="logoFondoCheckBox">
+            <property name="text">
+             <string>Logo fondo</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
              <widget class="QPushButton" name="logoFondoBtn">
               <property name="text">
                <string>Scegli</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="2">
-             <spacer name="horizontalSpacer_5">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item>
+             <widget class="QPushButton" name="cancellaLogoFondoBtn">
+              <property name="text">
+               <string>Cancella</string>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="1" colspan="2">
-             <widget class="QPlainTextEdit" name="intestazioneScontrinoTxt"/>
+             </widget>
             </item>
            </layout>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="logoFondoPreview">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>100</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="fondoCheckBox">
+            <property name="text">
+             <string>Fondo
+pagina</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QPlainTextEdit" name="fondoScontrinoTxt"/>
           </item>
          </layout>
         </widget>
@@ -380,7 +434,7 @@ pagina</string>
       <attribute name="title">
        <string>Database</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8" stretch="1,1,3">
+      <layout class="QVBoxLayout" name="verticalLayout_8" stretch="1,1,3,0">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
@@ -602,6 +656,19 @@ pagina</string>
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="destinazioniTab">
@@ -653,12 +720,12 @@ pagina</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>69</x>
-     <y>77</y>
+     <x>90</x>
+     <y>120</y>
     </hint>
     <hint type="destinationlabel">
-     <x>146</x>
-     <y>84</y>
+     <x>193</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
@@ -669,12 +736,12 @@ pagina</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>47</x>
-     <y>125</y>
+     <x>68</x>
+     <y>209</y>
     </hint>
     <hint type="destinationlabel">
-     <x>148</x>
-     <y>128</y>
+     <x>258</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>
@@ -685,12 +752,12 @@ pagina</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>190</y>
+     <x>77</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>148</x>
-     <y>202</y>
+     <x>258</x>
+     <y>413</y>
     </hint>
    </hints>
   </connection>
@@ -701,12 +768,44 @@ pagina</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>161</y>
+     <x>88</x>
+     <y>298</y>
     </hint>
     <hint type="destinationlabel">
-     <x>139</x>
-     <y>165</y>
+     <x>193</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logoFondoCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>logoFondoPreview</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logoCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>logoPreview</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>

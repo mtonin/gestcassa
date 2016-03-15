@@ -92,6 +92,13 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
     logoFondoCheckBox->setChecked(configurazione->value("printLogoFondo", false).toBool());
     logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
+    QPixmap logo;
+    logo.loadFromData(configurazione->value("logoPixmap").toByteArray());
+    logoPreview->setPixmap(logo);
+    QPixmap logoFondo;
+    logoFondo.loadFromData(configurazione->value("logoFondoPixmap").toByteArray());
+    logoFondoPreview->setPixmap(logoFondo);
+
     intestazioneCheckBox->setChecked(configurazione->value("printIntestazione", false).toBool());
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
     fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
@@ -153,7 +160,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         continue;
       }
         stmt.clear();
-        if (0 == QString::compare(key, "logoPixmap", Qt::CaseInsensitive) ||
+        if (0 == QString::compare(key,"logoPixmap", Qt::CaseInsensitive) ||
             0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
               QSqlError errore=stmt.lastError();
@@ -769,7 +776,8 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         !stmt.exec("delete from reparti") ||
         !stmt.exec("delete from articolimenu") ||
         !stmt.exec("delete from articoli") ||
-        !stmt.exec("delete from destinazionistampa")) {
+        !stmt.exec("delete from destinazionistampa") ||
+        !stmt.exec("delete from risorse")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         db.rollback();
         return;
@@ -812,7 +820,10 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     nuovaConfigurazione->insert("serieRitiro", "A");
     nuovaConfigurazione->insert("printLogo", "");
     nuovaConfigurazione->insert("printIntestazione", "");
+    nuovaConfigurazione->insert("logoPixmap", "");
+    nuovaConfigurazione->insert("printLogoFondo", "");
     nuovaConfigurazione->insert("printFondo", "");
+    nuovaConfigurazione->insert("logoFondoPixmap", "");
 
     on_buttonBox_accepted();
 }
@@ -844,6 +855,10 @@ void ConfigurazioneDlg::selezionaLogo(const QString nomePar) {
 
   QPixmap logo;
   logo.load(logoFileName);
+  if(nomePar.compare("logoPixmap")==0)
+    logoPreview->setPixmap(logo);
+  if(nomePar.compare("logoFondoPixmap")==0)
+    logoFondoPreview->setPixmap(logo);
   QByteArray logoData;
   QBuffer logoBuffer(&logoData);
   logoBuffer.open(QIODevice::WriteOnly);
@@ -876,6 +891,8 @@ bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
     } else {
       nuovaConfigurazione->insert(nomePar, stmt.value(0).toString());
     }
+  } else {
+      nuovaConfigurazione->insert(nomePar,NULL);
   }
 
   return true;
@@ -907,4 +924,16 @@ void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)
 void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 {
     nuovaConfigurazione->insert("printFondo", checked);
+}
+
+void ConfigurazioneDlg::on_cancellaLogoBtn_clicked()
+{
+    logoPreview->setPixmap(NULL);
+    nuovaConfigurazione->insert("logoPixmap",NULL);
+}
+
+void ConfigurazioneDlg::on_cancellaLogoFondoBtn_clicked()
+{
+  logoFondoPreview->setPixmap(NULL);
+  nuovaConfigurazione->insert("logoFondoPixmap",NULL);
 }

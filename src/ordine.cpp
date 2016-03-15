@@ -235,10 +235,12 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QPixmap logoPixmap;
     if(logoAbilitato) {
       logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
+      if(logoPixmap.isNull()) logoAbilitato=false;
     }
     QPixmap logoFondoPixmap;
     if(logoFondoAbilitato) {
       logoFondoPixmap.loadFromData(configurazione->value("logoFondoPixmap").toByteArray());
+      if(logoFondoPixmap.isNull()) logoFondoAbilitato=false;
     }
 
     QPrinter printer;
