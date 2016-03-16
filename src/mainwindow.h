@@ -68,7 +68,6 @@ private:
     QCache<int, QMap<QString, QVariant>> articoliCache;
     QSplashScreen& splash;
     bool isHiddenCursor;
-
     bool richiestaChiusura;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;

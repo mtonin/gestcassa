@@ -133,6 +133,11 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
         ui->articoliStackedWidget->setAcceptDrops(true);
         ui->messaggiArea->setText("MODALITA' GESTIONE");
+        if(isHiddenCursor) {
+          qApp->setOverrideCursor(Qt::ArrowCursor);
+          isHiddenCursor=false;
+        }
+
     } else {
         // nuova modalità == CASSA o TEST
         ui->adminFunctBox->setVisible(false);
@@ -187,6 +192,11 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
             enterTest();
         }
+        if(confMap->value("nascondeCursore").toBool()) {
+          qApp->setOverrideCursor(Qt::BlankCursor);
+          isHiddenCursor=true;
+        }
+
     }
 
     modalitaCorrente = nuovaModalita;

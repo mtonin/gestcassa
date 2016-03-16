@@ -24,7 +24,8 @@ const QStringList chiaviConfLocale=QStringList()
                                     << "idCassa"
                                     << "inifile"
                                     << "dbFilePath"
-                                    << "serieRitiro";
+                                    << "serieRitiro"
+                                    << "nascondeCursore";
 
 const QStringList chiaviConfRemote=QStringList()
                                     << "descrManifestazione"
@@ -71,13 +72,11 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     intestazioneScontrinoTxt->setPlainText(configurazione->value("intestazione").toString());
     fondoScontrinoTxt->setPlainText(configurazione->value("fondo").toString());
     durataRestoTxt->setText(configurazione->value("durataResto", 5).toString());
-    if (configurazione->value("abilitaResto", false).toBool()) {
-        attivaRestoCheck->setChecked(true);
-    }
+    attivaRestoCheck->setChecked(configurazione->value("abilitaResto", false).toBool());
     nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
     descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
-    QString valore=configurazione->value("visualizzazionePrezzo").toString();
-    visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo").toBool());
+    visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo",false).toBool());
+    nascondeCursoreBox->setChecked(configurazione->value("nascondeCursore",false).toBool());
 
     QString pwdCifrata = configurazione->value("adminPassword").toString();
     pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
@@ -90,8 +89,10 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     logoCheckBox->setChecked(configurazione->value("printLogo", false).toBool());
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
+    cancellaLogoBtn->setEnabled(logoCheckBox->isChecked());
     logoFondoCheckBox->setChecked(configurazione->value("printLogoFondo", false).toBool());
     logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
+    cancellaLogoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     QPixmap logo;
     logo.loadFromData(configurazione->value("logoPixmap").toByteArray());
     logoPreview->setPixmap(logo);
@@ -817,6 +818,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     nuovaConfigurazione->insert("nomeCassa", "");
     nuovaConfigurazione->insert("descrManifestazione", "");
     nuovaConfigurazione->insert("visualizzazionePrezzo", "");
+    nuovaConfigurazione->insert("nascondeCursore", "");
     nuovaConfigurazione->insert("serieRitiro", "A");
     nuovaConfigurazione->insert("printLogo", "");
     nuovaConfigurazione->insert("printIntestazione", "");
@@ -936,4 +938,9 @@ void ConfigurazioneDlg::on_cancellaLogoFondoBtn_clicked()
 {
   logoFondoPreview->setPixmap(NULL);
   nuovaConfigurazione->insert("logoFondoPixmap",NULL);
+}
+
+void ConfigurazioneDlg::on_nascondeCursoreBox_clicked(bool checked)
+{
+  nuovaConfigurazione->insert("nascondeCursore", checked);
 }

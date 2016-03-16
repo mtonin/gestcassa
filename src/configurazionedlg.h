@@ -83,6 +83,8 @@ private slots:
 
     void on_cancellaLogoFondoBtn_clicked();
 
+    void on_nascondeCursoreBox_clicked(bool checked);
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);
