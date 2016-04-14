@@ -130,7 +130,7 @@ void TitoloBar::resizeEvent(QResizeEvent *event)
     delete m_cache;
 
     m_cache =  new  QPixmap(size());
-    qDebug(QString("size=%1x%2").arg(m_cache->size().width()).arg(m_cache->size().height()).toAscii());
+    qDebug(QString("size=%1x%2").arg(m_cache->size().width()).arg(m_cache->size().height()).toLatin1());
 
     m_cache -> fill(Qt :: transparent);
 

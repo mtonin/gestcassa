@@ -17,7 +17,7 @@
 //#include "basemsgbox.h"
 #include "dbparamdlg.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QMessageBox>
 #include <QHBoxLayout>
 #include <QtSql>
@@ -469,7 +469,7 @@ void MainWindow::visualizzaPrezzo(bool visualizza)
 void MainWindow::scambia(int id1, int id2)
 {
     QString msg = QString("Scambia %1 e %2").arg(id1).arg(id2);
-    qDebug(msg.toAscii());
+    qDebug(msg.toLatin1());
 
     QStackedWidget* box1 = articoliList.value(id1);
     ArticoloBtnWidget* btnWidget1 = (ArticoloBtnWidget*)box1->widget(0);

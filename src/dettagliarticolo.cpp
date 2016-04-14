@@ -15,7 +15,7 @@ DettagliArticolo::DettagliArticolo(QWidget *parent) :
     modello = new QStandardItemModel;
 
     articoliList->setModel(modello);
-    articoliList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    articoliList->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     articoliList->setContextMenuPolicy(Qt::CustomContextMenu);
 
     articoliMenuModello = new QStandardItemModel;

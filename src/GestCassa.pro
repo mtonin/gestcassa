@@ -7,7 +7,7 @@
 include(qtsingleapplication/qtsingleapplication.pri)
 system(prebuild.cmd)
 
-QT       += core gui sql network
+QT       += widgets sql network printsupport
 
 TARGET = GestCassa
 TEMPLATE = app

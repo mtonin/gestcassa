@@ -22,7 +22,8 @@ ConfermaDlg::ConfermaDlg(const QString &descrizione, const QString &descrizioneC
 
 int ConfermaDlg::visualizza()
 {
-    setWindowFlags(Qt::Tool);
+    setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+    //setWindowFlags(Qt::Tool);
     activateWindow();
     valoreInputTxt->selectAll();
     valoreInputTxt->setFocus();

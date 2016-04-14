@@ -17,10 +17,10 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     articoliTab->setModel(&modello);
     articoliTab->setWordWrap(true);
     articoliTab->setAlternatingRowColors(true);
-    articoliTab->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    articoliTab->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     articoliTab->horizontalHeader()->setDefaultSectionSize(70);
-    articoliTab->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
-    articoliTab->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+    articoliTab->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    articoliTab->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     articoliTab->hideColumn(0);
     connect(&modello, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(ricalcolaTotale(QModelIndex, QModelIndex)));
     connect(articoliTab, SIGNAL(clicked(QModelIndex)), this, SLOT(seleziona(QModelIndex)));
@@ -127,7 +127,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 void Ordine::on_annullaBtn_clicked()
 {
     if (!isInComposizione()) return;
-    ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false, this);
+    ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
     modello.clear();
 }
@@ -623,7 +623,7 @@ void Ordine::on_pagNextBtn_clicked()
 void Ordine::on_duplicaBtn_clicked()
 {
     if (isInComposizione()) {
-        ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false, this);
+        ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false);
         if (QDialog::Accepted != dlg->visualizza()) return;
         modello.clear();
     }

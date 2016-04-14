@@ -19,7 +19,7 @@ DestinazioniDlg::DestinazioniDlg(QWidget *parent) :
     destinazioneTbl->hideColumn(1);
     destinazioneTbl->hideColumn(2);
     destinazioneTbl->hideColumn(3);
-    destinazioneTbl->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+    destinazioneTbl->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
     mapper = new QDataWidgetMapper;
     mapper->setModel(modello);

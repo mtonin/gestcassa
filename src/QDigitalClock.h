@@ -27,8 +27,7 @@
 #ifndef QDIGITALCLOCK_H
 #define QDIGITALCLOCK_H
 
-#include <QtGui>
-#include <QtDesigner/QDesignerExportWidget>
+#include <QtWidgets>
 
 
 // Height

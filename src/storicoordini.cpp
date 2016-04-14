@@ -24,8 +24,8 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     while(ordiniModel->canFetchMore())
       ordiniModel->fetchMore();
     ordiniTable->setModel(ordiniModel);
-    ordiniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-    ordiniTable->horizontalHeader()->setResizeMode(4, QHeaderView::Stretch);
+    ordiniTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ordiniTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Stretch);
     ordiniTable->verticalHeader()->setVisible(false);
     ordiniTable->hideColumn(1);
 
@@ -60,10 +60,10 @@ void StoricoOrdini::caricaArticoliOrdine()
     articoliOrdineModel->setHeaderData(1,Qt::Horizontal,"DESCRIZIONE",Qt::DisplayRole);
     */
     articoliOrdineTbl->setWordWrap(true);
-    articoliOrdineTbl->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    articoliOrdineTbl->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     articoliOrdineTbl->horizontalHeader()->setDefaultSectionSize(70);
-    articoliOrdineTbl->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
-    articoliOrdineTbl->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+    articoliOrdineTbl->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    articoliOrdineTbl->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
 }
 
@@ -119,7 +119,7 @@ void StoricoOrdini::caricaSessioni()
   sessioneView->horizontalHeader()->hide();
   sessioneView->verticalHeader()->hide();
   sessioneView->setSelectionBehavior(QAbstractItemView::SelectRows);
-  sessioneView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  sessioneView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   sessioneView->setShowGrid(false);
 
   sessioneCombo->setModel(sessioniModel);

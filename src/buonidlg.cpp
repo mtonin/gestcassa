@@ -25,8 +25,8 @@ BuoniDlg::BuoniDlg(QMap<QString, QVariant> *par, QWidget *parent) :configurazion
   totaleTxt->setText(QString("%1").arg(modello->rowCount()));
   buoniTable->hideColumn(3);
   buoniTable->hideColumn(4);
-  buoniTable->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-  buoniTable->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+  buoniTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+  buoniTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   buoniTable->horizontalHeader()->setSortIndicatorShown(true);
   buoniTable->setSortingEnabled(true);
   buoniTable->horizontalHeader()->setSortIndicator(1,Qt::AscendingOrder);

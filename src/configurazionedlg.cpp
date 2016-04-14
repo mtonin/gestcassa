@@ -276,7 +276,7 @@ void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 {
-    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione azzera il contatore degli ordini.\nProseguire?", "", false, this);
+    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione azzera il contatore degli ordini.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
     QSqlDatabase db = QSqlDatabase::database();
@@ -718,7 +718,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
             }
 
-            qDebug(campiInput.join("#").toAscii());
+            qDebug(campiInput.join("#").toStdString().c_str());
             if (!stmt.exec()) {
                 QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
                 db.rollback();
@@ -766,7 +766,7 @@ void ConfigurazioneDlg::cambiaSerieRitiro(int index)
 
 void ConfigurazioneDlg::on_resetDbBtn_clicked()
 {
-    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i reparti e gli articoli censiti.\nProseguire?", "", false, this);
+    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i reparti e gli articoli censiti.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
     QSqlDatabase db = QSqlDatabase::database();
@@ -832,7 +832,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
 
 void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
 {
-    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i buoni emessi.\nProseguire?", "", false, this);
+    ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i buoni emessi.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
     QSqlDatabase db = QSqlDatabase::database();
@@ -930,13 +930,13 @@ void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 
 void ConfigurazioneDlg::on_cancellaLogoBtn_clicked()
 {
-    logoPreview->setPixmap(NULL);
+    logoPreview->setPixmap(QPixmap());
     nuovaConfigurazione->insert("logoPixmap",NULL);
 }
 
 void ConfigurazioneDlg::on_cancellaLogoFondoBtn_clicked()
 {
-  logoFondoPreview->setPixmap(NULL);
+  logoFondoPreview->setPixmap(QPixmap());
   nuovaConfigurazione->insert("logoFondoPixmap",NULL);
 }
 

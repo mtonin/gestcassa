@@ -30,7 +30,7 @@ StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *pare
     statsView->horizontalHeader()->setSortIndicatorShown(true);
 
     statsView->setWordWrap(true);
-    statsView->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    statsView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     statsView->horizontalHeader()->setStretchLastSection(false);
 
     statsView->setAlternatingRowColors(true);
@@ -175,7 +175,7 @@ void StatsForm::caricaStats()
     statsView->hideColumn(2);
     statsView->horizontalHeader()->setSortIndicator(1, Qt::DescendingOrder);
     if (counter > 0) {
-        statsView->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+        statsView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     }
 
     calcolaTotali();
@@ -296,7 +296,7 @@ void StatsForm::caricaSessioni()
   sessioneView->horizontalHeader()->hide();
   sessioneView->verticalHeader()->hide();
   sessioneView->setSelectionBehavior(QAbstractItemView::SelectRows);
-  sessioneView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  sessioneView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
   sessioneView->setShowGrid(false);
 
   sessioneCombo->setModel(sessioniModel);
