@@ -89,7 +89,7 @@ bool DBParamDlg::openDBRemoto()
   db.setPassword(dbPasswordTxt->text());
   //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
-  // testa se il server è attivo
+  // testa se il server Ã¨ attivo
   QTcpSocket testsock;
   testsock.connectToHost(db.hostName(),db.port());
   setCursor(Qt::WaitCursor);

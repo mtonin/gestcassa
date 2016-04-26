@@ -314,7 +314,7 @@ bool DBManager::createConnection(const QString &nomeFile,const QString& modello,
         db.setPort(iniSettings.value("DATABASE/DBPORT").toInt());
         db.setDatabaseName(iniSettings.value("DATABASE/DBNOME").toString());
         dbFilePath=QString("%1:%2/%3").arg(db.hostName()).arg(db.port()).arg(db.databaseName());
-        // testa se il server è attivo
+        // testa se il server Ã¨ attivo
         QTcpSocket testsock;
         testsock.connectToHost(db.hostName(),db.port());
         if(!testsock.waitForConnected(3000)) {
@@ -345,7 +345,7 @@ void DBManager::creaDb(const QString user, const QString password, const QString
 {
     QFile dbFile(dbFilePath);
     if (dbFile.exists()) {
-        QString descrizione = QString("Il file %1 esiste già. Lo cancello?").arg(dbFilePath);
+        QString descrizione = QString("Il file %1 esiste giÃ . Lo cancello?").arg(dbFilePath);
         ConfermaDlg* dlg = new ConfermaDlg(descrizione, "", false, 0);
         if (QDialog::Accepted != dlg->visualizza()) return;
         dbFile.remove();

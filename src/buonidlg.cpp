@@ -59,7 +59,7 @@ void BuoniDlg::on_nuovoBuonoBtn_clicked()
   if(!sql.exec()) {
     QSqlError errore=sql.lastError();
     if(-803==errore.number()) {
-      msg="Nominativo gi‡ presente.";
+      msg="Nominativo gi√† presente.";
     } else {
       msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.text());
     }

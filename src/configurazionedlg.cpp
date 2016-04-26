@@ -322,7 +322,7 @@ void ConfigurazioneDlg::on_stampanteBox_activated(const QString &arg1)
 void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 {
 
-    QString separatoreRighe = "#§EOL#§";
+    QString separatoreRighe = "#Â§EOL#Â§";
     QStringList listaSql;
 
     QSqlQuery stmt("select nomecassa,numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
@@ -340,7 +340,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
         QString destinazioneArticoloOrdine = stmt.value(6).toString();
         QString prezzoArticoloOrdine = stmt.value(7).toString();
         QString tipoArticoloOrdine = stmt.value(8).toString();
-        QString riga = QString("ORDINI#§%1#§%2#§%3#§%4#§%5#§%6#§%7#§%8#§%9")
+        QString riga = QString("ORDINI#Â§%1#Â§%2#Â§%3#Â§%4#Â§%5#Â§%6#Â§%7#Â§%8#Â§%9")
                        .arg(nomeCassaOrdine)
                        .arg(numeroOrdine)
                        .arg(tsStampaOrdine)
@@ -359,7 +359,7 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 
 void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
 {
-    QString separatoreRighe = "#§EOL#§";
+    QString separatoreRighe = "#Â§EOL#Â§";
     QStringList exportLista;
     QSqlQuery stmt;
 
@@ -372,7 +372,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         QString intestazioneDest = stmt.value(1).toString();
         bool stampaFlag = stmt.value(2).toBool();
         bool stampaNumeroRitiroFlag = stmt.value(3).toBool();
-        QString riga = QString("DESTINAZIONISTAMPA#§%1#§%2#§%3#§%4")
+        QString riga = QString("DESTINAZIONISTAMPA#Â§%1#Â§%2#Â§%3#Â§%4")
                        .arg(nomeDest)
                        .arg(intestazioneDest)
                        .arg(stampaFlag)
@@ -391,7 +391,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         QString coloreSfondo = stmt.value(3).toString();
         QString coloreCarattere = stmt.value(4).toString();
         bool abilitato = stmt.value(5).toBool();
-        QString riga = QString("REPARTI#§%1#§%2#§%3#§%4#§%5#§%6")
+        QString riga = QString("REPARTI#Â§%1#Â§%2#Â§%3#Â§%4#Â§%5#Â§%6")
                        .arg(idreparto)
                        .arg(descrizioneReparto)
                        .arg(font)
@@ -411,7 +411,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         QString prezzo = stmt.value(2).toString();
         QString destinazioneStampa = stmt.value(3).toString();
         QString gestioneMenu = stmt.value(4).toString();
-        QString riga = QString("ARTICOLI#§%1#§%2#§%3#§%4#§%5")
+        QString riga = QString("ARTICOLI#Â§%1#Â§%2#Â§%3#Â§%4#Â§%5")
                        .arg(idArticolo)
                        .arg(descrizioneArticolo)
                        .arg(prezzo)
@@ -427,7 +427,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     while (stmt.next()) {
         QString idArticolo = stmt.value(0).toString();
         QString idArticoloMenu = stmt.value(1).toString();
-        QString riga = QString("ARTICOLIMENU#§%1#§%2")
+        QString riga = QString("ARTICOLIMENU#Â§%1#Â§%2")
                        .arg(idArticolo)
                        .arg(idArticoloMenu);
         exportLista.append(riga);
@@ -443,7 +443,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         QString colonnaPulsante = stmt.value(2).toString();
         QString idArticolo = stmt.value(3).toString();
         QString flagAbilitato = stmt.value(4).toString();
-        QString riga = QString("PULSANTI#§%1#§%2#§%3#§%4#§%5")
+        QString riga = QString("PULSANTI#Â§%1#Â§%2#Â§%3#Â§%4#Â§%5")
                        .arg(idReparto)
                        .arg(rigaPulsante)
                        .arg(colonnaPulsante)
@@ -453,37 +453,37 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     }
 
     QString str = configurazione->value("descrManifestazione").toString();
-    QString riga = QString("CONFIGURAZIONE#§descrManifestazione#§%1")
+    QString riga = QString("CONFIGURAZIONE#Â§descrManifestazione#Â§%1")
                    .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("printIntestazione").toString();
-    riga = QString("CONFIGURAZIONE#§printIntestazione#§%1")
+    riga = QString("CONFIGURAZIONE#Â§printIntestazione#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("intestazione").toString();
-    riga = QString("CONFIGURAZIONE#§intestazione#§%1")
+    riga = QString("CONFIGURAZIONE#Â§intestazione#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("printFondo").toString();
-    riga = QString("CONFIGURAZIONE#§printFondo#§%1")
+    riga = QString("CONFIGURAZIONE#Â§printFondo#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("fondo").toString();
-    riga = QString("CONFIGURAZIONE#§fondo#§%1")
+    riga = QString("CONFIGURAZIONE#Â§fondo#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("printLogo").toString();
-    riga = QString("CONFIGURAZIONE#§printLogo#§%1")
+    riga = QString("CONFIGURAZIONE#Â§printLogo#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
     str = configurazione->value("printLogoFondo").toString();
-    riga = QString("CONFIGURAZIONE#§printLogoFondo#§%1")
+    riga = QString("CONFIGURAZIONE#Â§printLogoFondo#Â§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
@@ -494,7 +494,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     while (stmt.next()) {
         QString idRisorsa = stmt.value(0).toString();
         QString objRisorsa = stmt.value(1).toByteArray().toBase64();
-        QString riga = QString("RISORSE#§%1#§%2")
+        QString riga = QString("RISORSE#Â§%1#Â§%2")
                        .arg(idRisorsa)
                        .arg(objRisorsa);
         exportLista.append(riga);
@@ -594,15 +594,15 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     }
 
     QString inputText = importFile.readAll();
-    QString separatoreRighe = "#§EOL#§";
+    QString separatoreRighe = "#Â§EOL#Â§";
     if (-1 == inputText.indexOf(separatoreRighe)) {
-        QMessageBox::critical(0, QObject::tr("Import Error"), "Il formato del file è obsoleto.\nImpossibile eseguire l'importazione");
+        QMessageBox::critical(0, QObject::tr("Import Error"), "Il formato del file Ã¨ obsoleto.\nImpossibile eseguire l'importazione");
         db.rollback();
         return;
     }
-    QString separatoreCampi = "#§";
-    if (inputText.indexOf("Â§") > 0) {
-        separatoreCampi = "Â§";
+    QString separatoreCampi = "#Â§";
+    if (inputText.indexOf("Ã‚Â§") > 0) {
+        separatoreCampi = "Ã‚Â§";
     }
     QStringList righeInput = inputText.split(separatoreRighe);
     foreach(QString rigaSingola, righeInput) {

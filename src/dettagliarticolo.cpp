@@ -51,7 +51,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     }
     if (stmt.next()) {
         testoArticolo->setEnabled(false);
-        testoArticolo->setToolTip("Questo articolo è inserito in un menù.\nPer modificare la descrizione, rimuoverlo dal menù.");
+        testoArticolo->setToolTip("Questo articolo Ã¨ inserito in un menÃ¹.\nPer modificare la descrizione, rimuoverlo dal menÃ¹.");
     } else {
         testoArticolo->setEnabled(true);
         testoArticolo->setToolTip("");
@@ -354,7 +354,7 @@ void DettagliArticolo::on_eliminaBtn_clicked()
         }
         stmt.addBindValue(articoloBtn->getId());
         if (!stmt.exec()) {
-            QMessageBox::critical(this, "Errore", "Impossibile cancellare l'articolo. Verificare se è inserito in un menù.");
+            QMessageBox::critical(this, "Errore", "Impossibile cancellare l'articolo. Verificare se Ã¨ inserito in un menÃ¹.");
             db.rollback();
             return;
         }

@@ -96,7 +96,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     if (GESTIONE == nuovaModalita) {
 
       if(GESTIONE != modalitaCorrente) {
-        ConfermaDlg dlg("Inserire la password per accedere alla modalit‡ amministrativa.", "Password", true);
+        ConfermaDlg dlg("Inserire la password per accedere alla modalit√† amministrativa.", "Password", true);
         while (true) {
             if (QDialog::Accepted != dlg.visualizza()) return;
             if(isPasswordOK(dlg.getValore())) {
@@ -139,7 +139,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         }
 
     } else {
-        // nuova modalit‡ == CASSA o TEST
+        // nuova modalit√† == CASSA o TEST
         ui->adminFunctBox->setVisible(false);
         ui->latoStackedWidget->setCurrentWidget(ordineBox);
 
@@ -423,10 +423,10 @@ void MainWindow::execGestione()
     if (ordineBox->isInComposizione()) {
         /*
         BaseMsgBox* messaggio=new BaseMsgBox;
-        messaggio->setTesto("Completare o annullare l'ordine corrente prima di cambiare modalit‡ operativa");
+        messaggio->setTesto("Completare o annullare l'ordine corrente prima di cambiare modalit√† operativa");
         messaggio->show();
         */
-        QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalit‡ operativa");
+        QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalit√† operativa");
         return;
     }
     //qApp->restoreOverrideCursor();
@@ -494,7 +494,7 @@ void MainWindow::scambia(int id1, int id2)
 void MainWindow::execTest()
 {
     if (ordineBox->isInComposizione()) {
-        QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalit‡ operativa");
+        QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalit√† operativa");
         return;
     }
     gestioneModalita(TEST);

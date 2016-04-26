@@ -47,7 +47,7 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
 {
     int currRiga = destinazioneTbl->currentIndex().row();
     if (!modello->removeRow(currRiga)) {
-        QMessageBox::critical(this, "Errore", "Impossibile cancellare la destinazione. Controllare gli articoli in cui Ë impostata.");
+        QMessageBox::critical(this, "Errore", "Impossibile cancellare la destinazione. Controllare gli articoli in cui √® impostata.");
         return;
     }
     currRiga--;
@@ -75,7 +75,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
       QSqlError errore=sql.lastError();
       QString msg;
       if(-803==errore.number()) {
-        msg="Destinazione gi‡ presente.";
+        msg="Destinazione gi√† presente.";
       } else {
         msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.text());
       }
@@ -96,7 +96,7 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
       QSqlError errore=modello->lastError();
       QString msg;
       if(-803==errore.number()) {
-        msg="Destinazione gi‡ presente.";
+        msg="Destinazione gi√† presente.";
       } else {
         msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.text());
       }
