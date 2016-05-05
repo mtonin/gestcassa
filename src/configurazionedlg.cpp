@@ -593,7 +593,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         return;
     }
 
-    QString inputText = importFile.readAll();
+    QString inputText =QString::fromLatin1(importFile.readAll());
     QString separatoreRighe = "#§EOL#§";
     if (-1 == inputText.indexOf(separatoreRighe)) {
         QMessageBox::critical(0, QObject::tr("Import Error"), "Il formato del file è obsoleto.\nImpossibile eseguire l'importazione");
