@@ -380,7 +380,7 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
-    if (!stmt.exec("select idreparto,descrizione,coalesce(font,'NULL'),coalesce(coloresfondo,'NULL'),coalesce(colorecarattere,'NULL'),abilitato from reparti")) {
+    if (!stmt.exec("select idreparto,descrizione,coalesce(font,'NULL'),coalesce(coloresfondo,'NULL'),coalesce(colorecarattere,'NULL'),abilitato,adattafont from reparti")) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
@@ -391,13 +391,15 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         QString coloreSfondo = stmt.value(3).toString();
         QString coloreCarattere = stmt.value(4).toString();
         bool abilitato = stmt.value(5).toBool();
-        QString riga = QString("REPARTI#§%1#§%2#§%3#§%4#§%5#§%6")
+        bool adattaFlag = stmt.value(6).toBool();
+        QString riga = QString("REPARTI#§%1#§%2#§%3#§%4#§%5#§%6#§%7")
                        .arg(idreparto)
                        .arg(descrizioneReparto)
                        .arg(font)
                        .arg(coloreSfondo)
                        .arg(coloreCarattere)
-                       .arg(abilitato);
+                       .arg(abilitato)
+                       .arg(adattaFlag);
         exportLista.append(riga);
     }
 
@@ -648,7 +650,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("reparti", Qt::CaseInsensitive)) {
-                sql="INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato) VALUES(?,?,?,?,?,?)";
+                sql="INSERT INTO REPARTI (idReparto,descrizione,font,coloreSfondo,coloreCarattere,abilitato,adattafont) VALUES(?,?,?,?,?,?,?)";
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
@@ -663,6 +665,10 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
                 if (idx >= campiInput.size() - 1)
                     stmt.addBindValue(valutaStringa("true"));
+                else
+                    stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                if (idx >= campiInput.size() - 1)
+                    stmt.addBindValue(valutaStringa("false"));
                 else
                     stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
