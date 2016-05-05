@@ -29,6 +29,9 @@ public:
     bool getAbilitato() {
         return abilitato;
     }
+    bool getAdattaFont() {
+        return adjustFont();
+    }
     void setAbilitato(bool val) {
         abilitato = val;
         update();
@@ -38,11 +41,13 @@ signals:
     void cambiaColore(const QColor& colore);
     void cambiaFont(const QFont& font);
     void cambiaColoreText(const QColor& colore);
+    void adattaFont(const bool flag);
 
 public slots:
     void setColore(const QColor& colore);
     void setButtonFont(const QFont& font);
     void setColoreText(const QColor& colore);
+    void setAdattaFont(const bool flag);
 
 private:
     int idReparto;

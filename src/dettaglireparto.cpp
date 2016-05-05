@@ -20,22 +20,24 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn)
     carattereBtn->SetButtonColorNormal(colore);
     fontBtn->setFont(repartoBtn->getFont());
     disattivaFlag->setChecked(!repartoBtn->getAbilitato());
+    adattaFontFlag->setChecked(repartoBtn->getAdattaFont());
 
     testoReparto->selectAll();
     testoReparto->setFocus();
 
-    connect(disattivaFlag, SIGNAL(stateChanged(int)), this, SLOT(on_disattivaFlag_stateChanged(int)));
+    //connect(disattivaFlag, SIGNAL(stateChanged(int)), this, SLOT(on_disattivaFlag_stateChanged(int)));
 }
 
 void DettagliReparto::aggiornaReparto()
 {
-    QSqlQuery query("update or insert into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato) values(?,?,?,?,?,?)");
+    QSqlQuery query("update or insert into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato,adattafont) values(?,?,?,?,?,?,?)");
     query.addBindValue(repartoBtn->getId());
     query.addBindValue(testoReparto->text());
     query.addBindValue(repartoBtn->getFont());
     query.addBindValue(repartoBtn->getColore().toRgb());
     query.addBindValue(repartoBtn->getColoreText().toRgb());
     query.addBindValue(repartoBtn->getAbilitato());
+    query.addBindValue(repartoBtn->getAdattaFont());
     query.exec();
     if (!query.isActive()) {
         QMessageBox::critical(0, QObject::tr("Database Error"),
@@ -96,3 +98,9 @@ void DettagliReparto::on_disattivaFlag_stateChanged(int checked)
     aggiornaReparto();
 }
 
+
+void DettagliReparto::on_adattaFontFlag_stateChanged(int checked)
+{
+    repartoBtn->setAdattaFont(checked);
+    aggiornaReparto();
+}

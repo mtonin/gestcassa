@@ -300,6 +300,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
     QColor coloreSfondo = repartoBtn->buttonColorNormal();
     QColor coloreCarattere = repartoBtn->textColorEnabled();
     QFont currentFont = repartoBtn->getFont();
+    bool adattaFont=repartoBtn->getAdattaFont();
     QGridLayout* griglia = new QGridLayout;
     griglia->setSpacing(2);
 
@@ -322,6 +323,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             btn->SetTextColorEnabled(coloreCarattere);
             btn->setFont(currentFont);
             btn->setVisualizzaPrezzo(visualizzaPrezzo);
+            btn->SetAdjustFont(adattaFont);
             connect(btn, SIGNAL(swapSignal(int, int)), this, SLOT(scambia(int, int)));
             stackedBox->addWidget(btn);
             QFrame* blankFrame = new QFrame;
@@ -333,6 +335,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
             connect(repartoBtn, SIGNAL(cambiaColore(QColor)), btn, SLOT(setColore(QColor)));
             connect(repartoBtn, SIGNAL(cambiaFont(QFont)), btn, SLOT(setButtonFont(QFont)));
             connect(repartoBtn, SIGNAL(cambiaColoreText(QColor)), btn, SLOT(setColoreText(QColor)));
+            connect(repartoBtn,SIGNAL(adattaFont(bool)),btn,SLOT(SetAdjustFont(bool)));
 
             //articoliBtnList.append(btn);
         }

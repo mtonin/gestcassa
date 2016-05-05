@@ -226,7 +226,23 @@ void QPictureButton::PaintText()
     Width -= 2 * m_TextSpace;
     Height -= 2 * m_TextSpace;
     QRect FontRect(Left, Top, Width, Height);
-    painter.drawText(FontRect, Align, this->text());
+    QRect boundingRect;
+
+    if(m_adattaFont) {
+        QFont textFont=painter.font();
+        int pointSize=textFont.pointSize();
+        boundingRect=painter.boundingRect(FontRect, Align, this->text());
+        while(((boundingRect.top()<Top) ||
+               (boundingRect.left()<Left) ||
+               (boundingRect.height()>Height) ||
+               (boundingRect.width()>Width)) &&
+              pointSize > 4) {
+            textFont.setPointSize(--pointSize);
+            painter.setFont(textFont);
+            boundingRect=painter.boundingRect(FontRect, Align, this->text());
+        }
+    }
+    painter.drawText(FontRect, Align, this->text(),&boundingRect);
 }
 
 // Property "textColorEnabled"
@@ -523,9 +539,20 @@ int QPictureButton::textSpace() const
     return m_TextSpace;
 }
 
+bool QPictureButton::adjustFont() const
+{
+    return m_adattaFont;
+}
+
 void QPictureButton::SetTextSpace(int Space)
 {
     m_TextSpace = Space;
+    update();
+}
+
+void QPictureButton::SetAdjustFont(bool adatta)
+{
+    m_adattaFont=adatta;
     update();
 }
 

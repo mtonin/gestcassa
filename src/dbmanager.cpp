@@ -246,21 +246,30 @@ bool DBManager::leggeConfigurazione()
         nuovaVersioneDB = 10;
     }
 
-        if (versioneDB < 11) {
+    if (versioneDB < 11) {
             if (!stmt.exec("CREATE TABLE buoni ( \
                          cognome     VARCHAR(100), \
                          nome     VARCHAR(100), \
                          tsemissione     TIMESTAMP, \
                          flagannullato   BOOLEAN DEFAULT  0 NOT NULL, \
-                         PRIMARY KEY (cognome,nome))"))  {
+                           PRIMARY KEY (cognome,nome))"))  {
                 QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
                 db.rollback();
                 return false;
             }
             nuovaVersioneDB = 11;
-        }
+    }
 
-        if (versioneDB != nuovaVersioneDB) {
+    if (versioneDB < 12) {
+       if (!stmt.exec("alter table reparti add adattafont BOOLEAN DEFAULT 0 NOT NULL"))  {
+          QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+          db.rollback();
+          return false;
+       }
+       nuovaVersioneDB = 12;
+    }
+
+    if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("versione", versioneDB);
         if(!stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)")) {

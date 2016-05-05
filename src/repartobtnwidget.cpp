@@ -27,6 +27,12 @@ void RepartoBtnWidget::setColoreText(const QColor &colore)
     emit cambiaColoreText(colore);
 }
 
+void RepartoBtnWidget::setAdattaFont(const bool flag)
+{
+    SetAdjustFont(flag);
+    emit adattaFont(flag);
+}
+
 void RepartoBtnWidget::PaintDivieto()
 {
     QPainter painter(this);
@@ -58,7 +64,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id, QWidget *parent) :
     QPictureButton(parent)
 {
     QSqlQuery stmt;
-    if(!stmt.prepare("select descrizione,font,coloreSfondo,coloreCarattere,abilitato from reparti where idreparto=?")) {
+    if(!stmt.prepare("select descrizione,font,coloreSfondo,coloreCarattere,abilitato,adattafont from reparti where idreparto=?")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(this,"Errore",msg);
@@ -75,6 +81,7 @@ RepartoBtnWidget::RepartoBtnWidget(int id, QWidget *parent) :
     int numColColoreSfondo = stmt.record().indexOf("coloresfondo");
     int numColColoreCarattere = stmt.record().indexOf("colorecarattere");
     int numColAbilitato = stmt.record().indexOf("abilitato");
+    int numColAdattaFont = stmt.record().indexOf("adattafont");
     if (stmt.next()) {
         nomeReparto = stmt.value(numColDescr).toString();
         QFont currentFont;
@@ -85,9 +92,11 @@ RepartoBtnWidget::RepartoBtnWidget(int id, QWidget *parent) :
         QString coloreCarattere = stmt.value(numColColoreCarattere).toString();
         SetTextColorEnabled(coloreCarattere);
         setAbilitato(stmt.value(numColAbilitato).toBool());
+        setAdattaFont(stmt.value(numColAdattaFont).toBool());
     } else {
         nomeReparto = QString("REPARTO %1").arg(idReparto);
         setAbilitato(false);
+        setAdattaFont(false);
     }
     setText(nomeReparto);
     SetButtonColorHot(buttonColorNormal());

@@ -177,6 +177,7 @@ public:
     EButtonPosition iconPosition() const;
     int iconSpace() const;
     int textSpace() const;
+    bool adjustFont() const;
 
 public slots:
 
@@ -198,6 +199,7 @@ public slots:
     void SetIconPosition(EButtonPosition);
     void SetIconSpace(int);
     void SetTextSpace(int);
+    void SetAdjustFont(bool);
 
     // Property resetter
     void ResetTextColorEnabled();
@@ -255,6 +257,7 @@ private:
     EButtonPosition m_IconPosition;
     int m_IconSpace;
     int m_TextSpace;
+    bool m_adattaFont;
 };
 
 #endif // QPICTUREBUTTON_H
