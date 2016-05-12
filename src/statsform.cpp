@@ -223,12 +223,12 @@ void StatsForm::calcolaTotali()
 {
 
     QString sql("select count(*),sum(importoordine),min(minTs),max(maxTs) \
-              from (SELECT idsessione||numeroordine as keyordine,importo as importoordine, min(tsstampa) as minTs,max(tsstampa) as maxTs \
+              from (SELECT idcassa||idsessione||numeroordine as keyordine,importo as importoordine, min(tsstampa) as minTs,max(tsstampa) as maxTs \
                             FROM storicoordini \
                             where \
                             %1 \
                             and lower(descrizione) like ? \
-                            group by idsessione||numeroordine,importo)");
+                            group by keyordine,importo)");
 
     QString condizione;
     if (sessioneBox->isChecked()) {
