@@ -257,12 +257,19 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         printer.setPrinterName(stampanteSelezionata);
     }
 
+    QPageLayout pageLayout=printer.pageLayout();
+    QMarginsF margineOriginale=pageLayout.margins();
+    QPageSize pageSizeOriginale=pageLayout.pageSize();
+    qDebug("pagina originale - width=%f,height=%f",pageSizeOriginale.size(QPageSize::Millimeter).width(),pageSizeOriginale.size(QPageSize::Millimeter).height());
+
     int risoluzione = configurazione->value("printerResolution",200).toInt();
     printer.setResolution(risoluzione);
-    QSizeF foglioSize(80, 200);
+    const QSizeF foglioSize(80, 200);
     float rapportoFoglio = foglioSize.width() / foglioSize.height();
-    printer.setPaperSize(foglioSize, QPrinter::Millimeter);
-    printer.setPageMargins(5, 0, 5, 0, QPrinter::Millimeter);
+    QPageSize pageSize(foglioSize,QPageSize::Millimeter);
+    //printer.setPageSize(pageSize);
+    QMargins margineSize(5,0,5,0);
+    printer.setPageMargins(margineSize, QPageLayout::Millimeter);
 
     QRect textRect;
     QPainter painter;
