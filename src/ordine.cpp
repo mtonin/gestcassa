@@ -263,19 +263,27 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     qDebug("pagina originale - width=%f,height=%f",pageSizeOriginale.size(QPageSize::Millimeter).width(),pageSizeOriginale.size(QPageSize::Millimeter).height());
 
     int risoluzione = configurazione->value("printerResolution",200).toInt();
+    int margineSX=configurazione->value("margineSX",5).toInt();
+    int margineDX=configurazione->value("margineDX",5).toInt();
+    int pageWidth = configurazione->value("printerWinWidth",300).toInt();
+    int dimensioneFontNormale=configurazione->value("printerFontSize",5).toInt();
+    int larghezzaFoglio=configurazione->value("larghezzaFoglio",80).toInt();
+    int lunghezzaFoglio=configurazione->value("lunghezzaFoglio",200).toInt();
+
     printer.setResolution(risoluzione);
-    const QSizeF foglioSize(80, 200);
+    QSizeF foglioSize=pageSizeOriginale.size(QPageSize::Millimeter);
+    if(larghezzaFoglio>0 && lunghezzaFoglio > 0) {
+        QSizeF nuovaSize(larghezzaFoglio,lunghezzaFoglio);
+        QPageSize pageSize(nuovaSize,QPageSize::Millimeter);
+        printer.setPageSize(pageSize);
+        foglioSize=nuovaSize;
+    }
     float rapportoFoglio = foglioSize.width() / foglioSize.height();
-    QPageSize pageSize(foglioSize,QPageSize::Millimeter);
-    //printer.setPageSize(pageSize);
-    QMargins margineSize(5,0,5,0);
+    QMargins margineSize(margineSX,0,margineDX,0);
     printer.setPageMargins(margineSize, QPageLayout::Millimeter);
 
     QRect textRect;
     QPainter painter;
-
-    int pageWidth = configurazione->value("printerWinWidth",300).toInt();
-    int dimensioneFontNormale=configurazione->value("printerFontSize",5).toInt();
 
     QFont fontNormale("lucida console");
     fontNormale.setPointSize(dimensioneFontNormale);
