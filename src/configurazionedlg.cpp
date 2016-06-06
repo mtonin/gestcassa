@@ -30,7 +30,7 @@ const QStringList chiaviConfLocale=QStringList()
                                     << "lunghezzaFoglio"
                                     << "margineDX"
                                     << "margineSX"
-                                    << "printerFontSize"
+                                    << "printerFont"
                                     << "printerResolution"
                                     << "printerWinWidth";
 
@@ -557,23 +557,8 @@ void ConfigurazioneDlg::keyPressEvent(QKeyEvent *evt)
 
 void ConfigurazioneDlg::execParametriAvanzati()
 {
-  ParametriAvanzati dlg;
-  dlg.setRisoluzione(configurazione->value("printerResolution",200).toInt());
-  dlg.setAmpiezzaStampa(configurazione->value("printerWinWidth",300).toInt());
-  dlg.setDimensioneFontStampa(configurazione->value("printerFontSize",5).toInt());
-  dlg.setMargineSX(configurazione->value("margineSX",5).toInt());
-  dlg.setMargineDX(configurazione->value("margineDX",5).toInt());
-  dlg.setLarghezzaFoglio(configurazione->value("larghezzaFoglio",80).toInt());
-  dlg.setLunghezzaFoglio(configurazione->value("lunghezzaFoglio",200).toInt());
-  if(QDialog::Accepted==dlg.exec()) {
-    configurazione->insert("printerResolution",dlg.getRisoluzione());
-    configurazione->insert("printerWinWidth",dlg.getAmpiezzaStampa());
-    configurazione->insert("printerFontSize",dlg.getDimensioneFontStampa());
-    configurazione->insert("margineSX",dlg.getMargineSX());
-    configurazione->insert("margineDX",dlg.getMargineDX());
-    configurazione->insert("larghezzaFoglio",dlg.getLarghezzaFoglio());
-    configurazione->insert("lunghezzaFoglio",dlg.getLunghezzaFoglio());
-  }
+  ParametriAvanzati dlg(configurazione);
+  dlg.exec();
 }
 
 void ConfigurazioneDlg::setCaratteriRimanenti(){

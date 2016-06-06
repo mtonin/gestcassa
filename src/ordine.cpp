@@ -266,9 +266,9 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     int margineSX=configurazione->value("margineSX",5).toInt();
     int margineDX=configurazione->value("margineDX",5).toInt();
     int pageWidth = configurazione->value("printerWinWidth",300).toInt();
-    int dimensioneFontNormale=configurazione->value("printerFontSize",5).toInt();
     int larghezzaFoglio=configurazione->value("larghezzaFoglio",80).toInt();
     int lunghezzaFoglio=configurazione->value("lunghezzaFoglio",200).toInt();
+    QString nomeFontNormale=configurazione->value("printerFont","lucida console,5").toString();
 
     printer.setResolution(risoluzione);
     QSizeF foglioSize=pageSizeOriginale.size(QPageSize::Millimeter);
@@ -285,20 +285,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QRect textRect;
     QPainter painter;
 
-    QFont fontNormale("lucida console");
-    fontNormale.setPointSize(dimensioneFontNormale);
-    QFont fontGrassetto("lucida console");
-    fontGrassetto.setPointSize(dimensioneFontNormale+2);
+    QFont fontNormale;
+    fontNormale.fromString(nomeFontNormale);
+    QFont fontGrassetto(nomeFontNormale);
+    fontGrassetto.setPointSize(fontNormale.pointSize()+2);
     fontGrassetto.setBold(true);
-    QFont fontGrassettoCorsivo("lucida console");
-    fontGrassettoCorsivo.setPointSize(dimensioneFontNormale+2);
+    QFont fontGrassettoCorsivo(nomeFontNormale);
+    fontGrassettoCorsivo.setPointSize(fontNormale.pointSize()+2);
     fontGrassettoCorsivo.setBold(true);
     fontGrassettoCorsivo.setItalic(true);
     //fontGrassettoCorsivo.setUnderline(true);
-    QFont fontMini("lucida console");
+    QFont fontMini(nomeFontNormale);
     fontMini.setPointSize(1);
-    QFont fontMaxi("lucida console");
-    fontMaxi.setPointSize(dimensioneFontNormale*4);
+    QFont fontMaxi(nomeFontNormale);
+    fontMaxi.setPointSize(fontNormale.pointSize()*4);
 
     QBrush sfondoIntestazione;
     sfondoIntestazione.setColor(Qt::black);
@@ -390,16 +390,14 @@ void Ordine::stampaScontrino(const int numeroOrdine)
             painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, rigaTest, &textRect);
             y += textRect.height() + 10;
         }
-        painter.setFont(fontGrassettoCorsivo);
-        //painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione, &textRect);
 
+        painter.setFont(fontGrassetto);
         painter.setPen(pennaIntestazione);
-        textRect=painter.boundingRect(x, y, pageWidth, 100, Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
-        painter.setPen(pennaNormale);
+        painter.setBackgroundMode(Qt::OpaqueMode);
+        painter.setBackground(sfondoIntestazione);
+        painter.drawText(x,y,pageWidth,100,Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione,&textRect);
+        painter.setBackgroundMode(Qt::TransparentMode);
         y += textRect.height() + 10;
-        painter.fillRect(textRect.x() - 5, textRect.y() - 5, textRect.width() + 10, textRect.height()+5,sfondoIntestazione);
-        painter.setPen(pennaIntestazione);
-        painter.drawText(textRect,Qt::AlignHCenter | Qt::TextWordWrap, intestDestinazione);
 
         painter.setPen(pennaNormale);
 

@@ -2,27 +2,21 @@
 #define PARAMETRIAVANZATI_H
 
 #include "ui_parametriavanzati.h"
+#include <QMap>
 
 class ParametriAvanzati : public QDialog, private Ui::ParametriAvanzati
 {
   Q_OBJECT
 
+private slots:
+    void on_fontBtn_clicked();
+    void accept();
+
 public:
-  explicit ParametriAvanzati(QWidget *parent = 0);
-  void setRisoluzione(int arg) {risoluzioneBox->setValue(arg);}
-  int getRisoluzione() {return risoluzioneBox->value();}
-  void setAmpiezzaStampa(int arg) {ampiezzaBox->setValue(arg);}
-  int getAmpiezzaStampa() {return ampiezzaBox->value();}
-  void setDimensioneFontStampa(int arg) {dimFontBox->setValue(arg);}
-  int getDimensioneFontStampa() {return dimFontBox->value();}
-  void setMargineSX(int arg) {margineSXBox->setValue(arg);}
-  int getMargineSX() {return margineSXBox->value();}
-  void setMargineDX(int arg) {margineDXBox->setValue(arg);}
-  int getMargineDX() {return margineDXBox->value();}
-  void setLarghezzaFoglio(int arg) {larghezzaFoglioBox->setValue(arg);}
-  int getLarghezzaFoglio() {return larghezzaFoglioBox->value();}
-  void setLunghezzaFoglio(int arg) {lunghezzaFoglioBox->setValue(arg);}
-  int getLunghezzaFoglio() {return lunghezzaFoglioBox->value();}
+  explicit ParametriAvanzati(QMap<QString, QVariant>* conf,QWidget *parent = 0);
+
+private:
+  QMap<QString, QVariant>* configurazione;
 };
 
 #endif // PARAMETRIAVANZATI_H

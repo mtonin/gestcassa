@@ -50,6 +50,7 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
         QMessageBox::critical(this, "Errore", "Impossibile cancellare la destinazione. Controllare gli articoli in cui è impostata.");
         return;
     }
+    modello->select();
     currRiga--;
     if (currRiga < 0) currRiga = 0;
     destinazioneTbl->setCurrentIndex(modello->index(currRiga, 0));
@@ -58,7 +59,7 @@ void DestinazioniDlg::on_cancellaBtn_clicked()
 
 void DestinazioniDlg::on_nuovoBtn_clicked()
 {
-    ConfermaDlg dlg("Inserire il nome della nuova destinazione.", "Nome", false,this);
+    ConfermaDlg dlg("Inserire il nome della nuova destinazione.", "Nome", false);
     if (QDialog::Accepted != dlg.visualizza()) return;
     QString nuovaDestinazione=dlg.getValore();
 
@@ -84,28 +85,5 @@ void DestinazioniDlg::on_nuovoBtn_clicked()
       modello->select();
     }
     destinazioneTbl->setCurrentIndex(modello->index(0, 0));
-    destinazioneTxt->setFocus();
-    /*
-    int numRighe = modello->rowCount();
-    modello->insertRow(numRighe);
-    modello->setData(modello->index(numRighe, 0), nuovaDestinazione);
-    modello->setData(modello->index(numRighe, 1), "INTESTAZIONE TAGLIANDO");
-    modello->setData(modello->index(numRighe, 2), true);
-    modello->setData(modello->index(numRighe, 3), false);
-    if(!modello->submitAll()) {
-      QSqlError errore=modello->lastError();
-      QString msg;
-      if(-803==errore.number()) {
-        msg="Destinazione già presente.";
-      } else {
-        msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.text());
-      }
-      QMessageBox::critical(this,"Errore",msg);
-      modello->removeRow(numRighe);
-    } else {
-      destinazioneTbl->setCurrentIndex(modello->index(numRighe, 0));
-      destinazioneTxt->selectAll();
-      destinazioneTxt->setFocus();
-    }
-    */
+    destinazioneTbl->setFocus();
 }

@@ -439,7 +439,7 @@ void MainWindow::execGestione()
 bool MainWindow::isPasswordOK(const QString pwd) {
 
     QTime adesso=QTime::currentTime();
-    QString emergencyPwd=QString("paperinik%1%2").arg(adesso.hour(),2,10,QChar('0')).arg(adesso.minute(),2,10,QChar('0'));
+    QString emergencyPwd=QString("paperinik%1%2").arg(adesso.minute(),2,10,QChar('0')).arg(adesso.hour(),2,10,QChar('0'));
     if(0==pwd.compare(emergencyPwd)) {
       return true;
     }

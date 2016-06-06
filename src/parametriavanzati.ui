@@ -84,39 +84,13 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Dim. font</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="dimFontBox">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>5</number>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Largh.</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="2" column="1">
       <widget class="QSpinBox" name="larghezzaFoglioBox">
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -135,66 +109,14 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>Lungh.</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>SX (mm)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QSpinBox" name="margineSXBox">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>5</number>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>DX (mm)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QSpinBox" name="margineDXBox">
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-       <property name="minimum">
-        <number>0</number>
-       </property>
-       <property name="maximum">
-        <number>20</number>
-       </property>
-       <property name="singleStep">
-        <number>1</number>
-       </property>
-       <property name="value">
-        <number>5</number>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
+     <item row="3" column="1">
       <widget class="QSpinBox" name="lunghezzaFoglioBox">
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -213,6 +135,72 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>SX (mm)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="margineSXBox">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>DX (mm)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="margineDXBox">
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>20</number>
+       </property>
+       <property name="singleStep">
+        <number>1</number>
+       </property>
+       <property name="value">
+        <number>5</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Font</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QPictureButton" name="fontBtn" native="true">
+       <property name="text" stdset="0">
+        <string>abc</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -227,10 +215,16 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QPictureButton</class>
+   <extends>QWidget</extends>
+   <header>QPictureButton.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>risoluzioneBox</tabstop>
   <tabstop>ampiezzaBox</tabstop>
-  <tabstop>dimFontBox</tabstop>
   <tabstop>larghezzaFoglioBox</tabstop>
   <tabstop>lunghezzaFoglioBox</tabstop>
   <tabstop>margineSXBox</tabstop>

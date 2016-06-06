@@ -98,7 +98,6 @@ void DettagliReparto::on_disattivaFlag_stateChanged(int checked)
     aggiornaReparto();
 }
 
-
 void DettagliReparto::on_adattaFontFlag_stateChanged(int checked)
 {
     repartoBtn->setAdattaFont(checked);
