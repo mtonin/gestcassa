@@ -6,11 +6,12 @@ RestoDlg::RestoDlg(float valore, int durata, QWidget *parent) : QDialog(parent)
 {
     setupUi(this);
     //setWindowFlags(Qt::Dialog|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
-    setWindowFlags(Qt::Tool);
+    //setWindowFlags(Qt::Tool);
+    setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+    activateWindow();
 
     importoOrdine = valore;
     _durata = 1000 * durata;
-    activateWindow();
     effetto = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(this, "windowOpacity"));
 
     if (_durata > 0) {
