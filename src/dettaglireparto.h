@@ -11,6 +11,9 @@ class DettagliReparto : public QWidget, private Ui::dettagliReparto
 {
     Q_OBJECT
 
+signals:
+    void repartoAggiornato();
+
 public:
     explicit DettagliReparto(QWidget *parent = 0);
 

@@ -49,6 +49,8 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     ui->latoStackedWidget->addWidget(ordineBox);
 
     connect(this, SIGNAL(aggiungeArticolo(int, QString, float)), ordineBox, SLOT(nuovoArticolo(int, QString, float)));
+    connect(dettagliArticoloBox,SIGNAL(articoloAggiornato()),this,SLOT(impostaUltimoAggiornamentoDB()));
+    connect(dettagliRepartoBox,SIGNAL(repartoAggiornato()),this,SLOT(impostaUltimoAggiornamentoDB()));
 
     QDigitalClock* orologio = new QDigitalClock;
     orologio->SetFormat("dd/MM/yyyy\nHH:mm:ss");
@@ -81,6 +83,10 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
 
     richiestaChiusura=false;
 
+    checkDBTimer=new QTimer(this);
+    connect(checkDBTimer,SIGNAL(timeout()),this,SLOT(controllaUltimoAggiornamentoDB()));
+    checkDBTimer->setInterval(2000);
+    checkDBTimer->start();
 }
 
 MainWindow::~MainWindow()
@@ -359,7 +365,7 @@ void MainWindow::repartoSelezionato()
     ui->articoliStackedWidget->setCurrentIndex(btn->getId());
     if (GESTIONE == modalitaCorrente) {
         dettagliRepartoBox->setCurrentReparto(btn);
-        dettagliRepartoBox->disconnect();
+        //dettagliRepartoBox->disconnect();
         ui->latoStackedWidget->setCurrentWidget(dettagliRepartoBox);
     }
 }
@@ -587,9 +593,23 @@ void MainWindow::execAbout()
 void MainWindow::caricaArticoli()
 {
 
+    QString sql;
+    QSqlQuery stmt;
+    sql="select valore from configurazione where chiave='ultimoaggiornamento'";
+    if (!stmt.exec(sql)) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        return;
+    }
+    if (stmt.next()) {
+        confMap->insert("%ultimaLetturaArchivio",stmt.value(0).toDateTime());
+    }
+
+    ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
+    ui->statoDBLbl->setToolTip("Stato archivio: OK");
     articoliCache.clear();
-    QSqlQuery stmt("select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo");
-    if (!stmt.isActive()) {
+
+    sql="select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo";
+    if (!stmt.exec(sql)) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
@@ -657,6 +677,7 @@ void MainWindow::ricaricaArchivio()
   }
 
   qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+
   creaRepartiButtons();
   gestioneModalita(CASSA);
 
@@ -668,6 +689,42 @@ void MainWindow::ricaricaArchivio()
 
   QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
   return;
+
+}
+
+void MainWindow::impostaUltimoAggiornamentoDB(){
+
+    QString sql;
+    QSqlQuery stmt;
+    sql="update or insert into configurazione (chiave,valore) values('ultimoaggiornamento',current_timestamp) returning valore";
+    if (!stmt.exec(sql)) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        return;
+    }
+    if (stmt.next()) {
+        QString ultimoAggiornamento=stmt.value(0).toDateTime().toString();
+        qDebug(ultimoAggiornamento.toStdString().c_str());
+    }
+
+}
+
+void MainWindow::controllaUltimoAggiornamentoDB(){
+    QString sql;
+    QSqlQuery stmt;
+    QDateTime ultimoAggiornamentoDB;
+    sql="select valore from configurazione where chiave='ultimoaggiornamento'";
+    if (!stmt.exec(sql)) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        return;
+    }
+    if (stmt.next()) {
+        ultimoAggiornamentoDB=stmt.value(0).toDateTime();
+    }
+    QDateTime ultimaLetturaDB=confMap->value("%ultimaLetturaArchivio").toDateTime();
+    if(ultimoAggiornamentoDB > ultimaLetturaDB) {
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
+        ui->statoDBLbl->setToolTip("Ricaricare l'archivio");
+    }
 
 }
 

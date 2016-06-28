@@ -163,10 +163,12 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
     confLocale.beginGroup("CONFIGURAZIONE");
     QSqlQuery stmt;
     foreach(QString key, configurazione->keys()) {
-      if(chiaviConfLocale.contains(key,Qt::CaseInsensitive)) {
-        confLocale.setValue(key,configurazione->value(key).toString());
-        continue;
-      }
+        if(key.startsWith('%'))
+            continue;
+        if(chiaviConfLocale.contains(key,Qt::CaseInsensitive)) {
+            confLocale.setValue(key,configurazione->value(key).toString());
+            continue;
+        }
         stmt.clear();
         if (0 == QString::compare(key,"logoPixmap", Qt::CaseInsensitive) ||
             0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {

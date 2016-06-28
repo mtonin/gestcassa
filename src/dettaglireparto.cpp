@@ -44,6 +44,8 @@ void DettagliReparto::aggiornaReparto()
                               query.lastError().text());
         return;
     }
+
+    emit repartoAggiornato();
 }
 
 void DettagliReparto::on_sfondoBtn_clicked()

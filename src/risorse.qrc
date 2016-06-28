@@ -31,5 +31,7 @@
         <file alias="ticket">resources/News.png</file>
         <file alias="help">resources/Button White Help.png</file>
         <file alias="reload">resources/Button White Load.png</file>
+        <file alias="db_ok">resources/db_ok.png</file>
+        <file alias="db_reload">resources/db_reload.png</file>
     </qresource>
 </RCC>

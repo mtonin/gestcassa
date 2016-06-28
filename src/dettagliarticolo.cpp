@@ -216,6 +216,8 @@ void DettagliArticolo::aggiornaArticolo()
         }
     }
 
+    emit articoloAggiornato();
+
 }
 
 void DettagliArticolo::reset()

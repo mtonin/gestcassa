@@ -55,6 +55,8 @@ private slots:
     void on_closeBtn_clicked();
 
     void ricaricaArchivio();
+    void impostaUltimoAggiornamentoDB();
+    void controllaUltimoAggiornamentoDB();
 
 private:
     Ui::MainWindow *ui;
@@ -64,6 +66,7 @@ private:
     infoWidget* info;
     SimpleCrypt* cifratore;
     QTimer* blinkTimer;
+    QTimer* checkDBTimer;
     QString colore;
     QCache<int, QMap<QString, QVariant>> articoliCache;
     QSplashScreen& splash;
