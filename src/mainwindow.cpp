@@ -714,7 +714,8 @@ void MainWindow::controllaUltimoAggiornamentoDB(){
     QDateTime ultimoAggiornamentoDB;
     sql="select valore from configurazione where chiave='ultimoaggiornamento'";
     if (!stmt.exec(sql)) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/cancella"));
+        ui->statoDBLbl->setToolTip(stmt.lastError().text());
         return;
     }
     if (stmt.next()) {
@@ -724,6 +725,9 @@ void MainWindow::controllaUltimoAggiornamentoDB(){
     if(ultimoAggiornamentoDB > ultimaLetturaDB) {
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
         ui->statoDBLbl->setToolTip("Ricaricare l'archivio");
+    } else {
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
+        ui->statoDBLbl->setToolTip("Stato archivio: OK");
     }
 
 }
