@@ -47,7 +47,7 @@ void BackgroundController::controllaDatabase(){
                 testo="Ricaricare l'archivio";
             } else {
                 statoCorrente=Connesso;
-                testo="Stato archivio: OK";
+                testo=QString("Database: %1/%2, stato: OK").arg(db.hostName()).arg(db.databaseName());
             }
         }
     }
