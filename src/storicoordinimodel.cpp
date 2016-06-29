@@ -38,10 +38,8 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
     case 4:
         break;
     case 5:
-        if (Qt::DisplayRole == role) {
+        if (Qt::DisplayRole == role || Qt::EditRole==role) {
             float importo = rigaArticolo.toFloat();
-            QString msg=QString("importo=%1").arg(importo);
-            qDebug(msg.toLocal8Bit());
             return QString("%1 %L2").arg(QChar(0x20AC)).arg(importo, 4, 'f', 2);
         }
         if (Qt::TextAlignmentRole == role) return (QVariant)(Qt::AlignRight | Qt::AlignVCenter);
