@@ -319,7 +319,7 @@ void DettagliArticolo::creaSelezioneArticoloBox()
 
 void DettagliArticolo::on_eliminaBtn_clicked()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db =QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
     if (articoloBtn->getId() > 0) {

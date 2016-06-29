@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
       return 0;
     }
 
-
     QPixmap splashPixmap(":/GestCassa/splash");
     QSplashScreen splash(splashPixmap);
     splash.show();

@@ -50,7 +50,7 @@ bool DBManager::init(const QString percorso)
 
 bool DBManager::leggeConfigurazione()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db =QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
 
     QSqlQuery stmt("select chiave,valore from configurazione");
     if (!stmt.isActive()) {

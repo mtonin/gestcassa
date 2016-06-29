@@ -288,7 +288,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     ConfermaDlg* dlg = new ConfermaDlg("Questa operazione azzera il contatore degli ordini.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
     QSqlQuery stmt;
@@ -581,7 +581,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     QFile importFile(nomeFile);
     importFile.open(QIODevice::ReadOnly | QIODevice::Text);
 
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
     QSqlQuery stmt;
@@ -777,7 +777,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i reparti e gli articoli censiti.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
     QSqlQuery stmt;
@@ -843,7 +843,7 @@ void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
     ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i buoni emessi.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
     QSqlQuery stmt;

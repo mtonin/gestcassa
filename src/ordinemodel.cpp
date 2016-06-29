@@ -81,7 +81,7 @@ void OrdineModel::clear()
 
 bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa)
 {
-    QSqlDatabase db(QSqlDatabase::database());
+    QSqlDatabase db=QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     if(!db.transaction()) {
       QSqlError errore=db.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());

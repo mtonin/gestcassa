@@ -7,6 +7,7 @@
 #include "ordine.h"
 #include "infowidget.h"
 #include "simplecrypt.h"
+#include "backgroundcontroller.h"
 
 #include <QMainWindow>
 #include <QList>
@@ -56,8 +57,8 @@ private slots:
 
     void ricaricaArchivio();
     void impostaUltimoAggiornamentoDB();
-    void controllaUltimoAggiornamentoDB();
 
+    void setStato(int stato, QString testo);
 private:
     Ui::MainWindow *ui;
     Ordine* ordineBox;
@@ -72,6 +73,7 @@ private:
     QSplashScreen& splash;
     bool isHiddenCursor;
     bool richiestaChiusura;
+    BackgroundController* dbCheck;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;

@@ -16,6 +16,7 @@
 #include "aboutdlg.h"
 //#include "basemsgbox.h"
 #include "dbparamdlg.h"
+#include "backgroundcontroller.h"
 
 #include <QtWidgets>
 #include <QMessageBox>
@@ -75,6 +76,8 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     infoLayout->addWidget(info);
     ui->infoFrame->setLayout(infoLayout);
 
+    dbCheck=new BackgroundController;
+
     creaRepartiButtons();
     gestioneModalita(CASSA);
 
@@ -83,10 +86,8 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
 
     richiestaChiusura=false;
 
-    checkDBTimer=new QTimer(this);
-    connect(checkDBTimer,SIGNAL(timeout()),this,SLOT(controllaUltimoAggiornamentoDB()));
-    checkDBTimer->setInterval(2000);
-    checkDBTimer->start();
+    connect(dbCheck,SIGNAL(messaggioDB(int,QString)),this,SLOT(setStato(int,QString)));
+    dbCheck->start();
 }
 
 MainWindow::~MainWindow()
@@ -601,11 +602,9 @@ void MainWindow::caricaArticoli()
         return;
     }
     if (stmt.next()) {
-        confMap->insert("%ultimaLetturaArchivio",stmt.value(0).toDateTime());
+        dbCheck->setUltimaLetturaDB(stmt.value(0).toDateTime());
     }
 
-    ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
-    ui->statoDBLbl->setToolTip("Stato archivio: OK");
     articoliCache.clear();
 
     sql="select a.idreparto,a.riga,a.colonna,a.idarticolo,a.abilitato,b.descrizione,b.prezzo,b.destinazione,b.gestionemenu from pulsanti a,articoli b where a.idarticolo=b.idarticolo";
@@ -656,18 +655,6 @@ void MainWindow::ricaricaArchivio()
   }
 
   qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
-  QSqlDatabase db=QSqlDatabase::database();
-  QSqlError lastError=db.lastError();
-  if(-902==lastError.number()) {
-    db.close();
-    if(!db.open()) {
-      qApp->restoreOverrideCursor();
-      QString msg=QString("Impossibile connettersi al database.\nCodice %1 - %2").arg(db.lastError().number()).arg(db.lastError().text());
-      QMessageBox::critical(0, QObject::tr("Database Error"),msg);
-      return;
-    }
-  }
-  qApp->restoreOverrideCursor();
 
   const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
@@ -708,30 +695,6 @@ void MainWindow::impostaUltimoAggiornamentoDB(){
 
 }
 
-void MainWindow::controllaUltimoAggiornamentoDB(){
-    QString sql;
-    QSqlQuery stmt;
-    QDateTime ultimoAggiornamentoDB;
-    sql="select valore from configurazione where chiave='ultimoaggiornamento'";
-    if (!stmt.exec(sql)) {
-        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/cancella"));
-        ui->statoDBLbl->setToolTip(stmt.lastError().text());
-        return;
-    }
-    if (stmt.next()) {
-        ultimoAggiornamentoDB=stmt.value(0).toDateTime();
-    }
-    QDateTime ultimaLetturaDB=confMap->value("%ultimaLetturaArchivio").toDateTime();
-    if(ultimoAggiornamentoDB > ultimaLetturaDB) {
-        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
-        ui->statoDBLbl->setToolTip("Ricaricare l'archivio");
-    } else {
-        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
-        ui->statoDBLbl->setToolTip("Stato archivio: OK");
-    }
-
-}
-
 bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
 
   QString sql;
@@ -763,3 +726,19 @@ bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
   return true;
 }
 
+void MainWindow::setStato(int stato, QString testo) {
+
+    switch (stato) {
+    case BackgroundController::Disconnesso:
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/cancella"));
+        break;
+    case BackgroundController::DaAggiornare:
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
+        break;
+    default:
+        ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
+        break;
+    }
+    ui->statoDBLbl->setToolTip(testo);
+
+}

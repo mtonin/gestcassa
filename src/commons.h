@@ -15,5 +15,4 @@ const int NUM_REPARTI = 8;
 const int NUM_RIGHE_ART = 5;
 const int NUM_COLONNE_ART = 6;
 
-
 #endif // COMMONS_H
