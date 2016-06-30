@@ -13,7 +13,7 @@
 #include <QList>
 #include <QMap>
 #include <QTimer>
-#include <QCache>
+#include <QHash>
 #include <QSplashScreen>
 
 namespace Ui
@@ -69,7 +69,7 @@ private:
     QTimer* blinkTimer;
     QTimer* checkDBTimer;
     QString colore;
-    QCache<int, QMap<QString, QVariant>> articoliCache;
+    QHash<int, QMap<QString, QVariant>> articoliCache;
     QSplashScreen& splash;
     bool isHiddenCursor;
     bool richiestaChiusura;
