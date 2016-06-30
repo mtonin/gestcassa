@@ -13,14 +13,14 @@ class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
 signals:
     void resetOrdini(const int);
     void resetArticoli();
-    void passwordCambiata();
+    void configurazioneCambiata();
     void cambiaVisualizzaPrezzo(bool);
 
 public:
     explicit ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent = 0);
     ~ConfigurazioneDlg();
     QMap<QString, QVariant> getConfigurazione() {
-        return *configurazione;
+        return *configurazioneAttuale;
     }
 
 private slots:
@@ -38,13 +38,13 @@ private slots:
 
     void on_cartellaPdfBtn_clicked();
 
-    void on_cartellaPdfTxt_textEdited(const QString &arg1);
+    void on_cartellaPdfTxt_editingFinished();
 
-    void on_nomeCassaTxt_textEdited(const QString &arg1);
+    void on_nomeCassaTxt_editingFinished();
 
-    void on_durataRestoTxt_textEdited(const QString &arg1);
+    void on_durataRestoTxt_editingFinished();
 
-    void on_descrManifestazioneTxt_textEdited(const QString &arg1);
+    void on_descrManifestazioneTxt_editingFinished();
 
     void on_intestazioneScontrinoTxt_textChanged();
 
@@ -62,8 +62,6 @@ private slots:
 
     void on_importArticoliBtn_clicked();
 
-    void cambiaSerieRitiro(int index);
-
     void on_resetDbBtn_clicked();
 
     void on_logoIntestazioneBtn_clicked();
@@ -79,22 +77,29 @@ private slots:
     void on_fondoCheckBox_clicked(bool checked);
 
     void on_resetBuoniBtn_clicked();
+
     void on_cancellaLogoBtn_clicked();
 
     void on_cancellaLogoFondoBtn_clicked();
 
     void on_nascondeCursoreBox_clicked(bool checked);
 
+    void on_adminPasswordTxt_editingFinished();
+
+    void on_serieRitiroTxt_currentIndexChanged(int index);
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);
 
-    QMap<QString, QVariant>* configurazione;
+    QMap<QString, QVariant>* configurazioneAttuale;
     QMap<QString, QVariant>* nuovaConfigurazione;
     SimpleCrypt* cifratore;
     QString pwdInChiaro;
 
     QPrinter printer;
+    bool isChanged;
+
     void keyPressEvent(QKeyEvent *);
     void execParametriAvanzati();
     void setCaratteriRimanenti();

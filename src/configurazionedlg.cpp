@@ -45,12 +45,14 @@ const QStringList chiaviConfRemote=QStringList()
                                     << "printLogoFondo"
                                     << "logoFondoPixmap";
 
-
-ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
+ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazioneAttuale(par), QDialog(parent)
 {
     setupUi(this);
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+
+    isChanged=false;
     nuovaConfigurazione = new QMap<QString, QVariant>;
+    nuovaConfigurazione->unite(*configurazioneAttuale);
 
     char serie = 'A';
     while (serie <= 'Z') {
@@ -59,14 +61,14 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     cifratore = new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 
-    cartellaPdfTxt->setText(configurazione->value("cartellaPdf", "").toString());
-    if (configurazione->value("stampantePdf", true).toBool()) {
+    cartellaPdfTxt->setText(nuovaConfigurazione->value("cartellaPdf", "").toString());
+    if (nuovaConfigurazione->value("stampantePdf", true).toBool()) {
         pdfChk->setChecked(true);
     } else {
         stampanteChk->setChecked(true);
     }
 
-    QString stampanteSelezionata = configurazione->value("stampante").toString();
+    QString stampanteSelezionata = nuovaConfigurazione->value("stampante").toString();
     QList<QPrinterInfo> listaStampanti = QPrinterInfo::availablePrinters();
     int idx = 0;
     foreach(QPrinterInfo stampante, listaStampanti) {
@@ -76,46 +78,44 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
         }
         idx++;
     }
-    intestazioneScontrinoTxt->setPlainText(configurazione->value("intestazione").toString());
-    fondoScontrinoTxt->setPlainText(configurazione->value("fondo").toString());
-    durataRestoTxt->setText(configurazione->value("durataResto", 5).toString());
-    attivaRestoCheck->setChecked(configurazione->value("abilitaResto", false).toBool());
-    nomeCassaTxt->setText(configurazione->value("nomeCassa").toString());
-    descrManifestazioneTxt->setText(configurazione->value("descrManifestazione").toString());
-    visualizzaPrezzoBox->setChecked(configurazione->value("visualizzazionePrezzo",false).toBool());
-    nascondeCursoreBox->setChecked(configurazione->value("nascondeCursore",false).toBool());
+    intestazioneScontrinoTxt->setPlainText(nuovaConfigurazione->value("intestazione").toString());
+    fondoScontrinoTxt->setPlainText(nuovaConfigurazione->value("fondo").toString());
+    durataRestoTxt->setText(nuovaConfigurazione->value("durataResto", 5).toString());
+    attivaRestoCheck->setChecked(nuovaConfigurazione->value("abilitaResto", false).toBool());
+    nomeCassaTxt->setText(nuovaConfigurazione->value("nomeCassa").toString());
+    descrManifestazioneTxt->setText(nuovaConfigurazione->value("descrManifestazione").toString());
+    visualizzaPrezzoBox->setChecked(nuovaConfigurazione->value("visualizzazionePrezzo",false).toBool());
+    nascondeCursoreBox->setChecked(nuovaConfigurazione->value("nascondeCursore",false).toBool());
 
-    QString pwdCifrata = configurazione->value("adminPassword").toString();
+    QString pwdCifrata = nuovaConfigurazione->value("adminPassword").toString();
     pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
     adminPasswordTxt->setText(pwdInChiaro);
 
-    dbPathTxt->setPlainText(configurazione->value("dbFilePath").toString());
+    dbPathTxt->setPlainText(nuovaConfigurazione->value("dbFilePath").toString());
     //QString ser=configurazione->value("serieRitiro","Z").toString();
     //int num=ser.at(0).unicode();
-    serieRitiroTxt->setCurrentIndex(configurazione->value("serieRitiro", "A").toString().at(0).unicode() - QChar('A').unicode());
+    serieRitiroTxt->setCurrentIndex(nuovaConfigurazione->value("serieRitiro", "A").toString().at(0).unicode() - QChar('A').unicode());
 
-    logoCheckBox->setChecked(configurazione->value("printLogo", false).toBool());
+    logoCheckBox->setChecked(nuovaConfigurazione->value("printLogo", false).toBool());
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
     cancellaLogoBtn->setEnabled(logoCheckBox->isChecked());
-    logoFondoCheckBox->setChecked(configurazione->value("printLogoFondo", false).toBool());
+    logoFondoCheckBox->setChecked(nuovaConfigurazione->value("printLogoFondo", false).toBool());
     logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     cancellaLogoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     QPixmap logo;
-    logo.loadFromData(configurazione->value("logoPixmap").toByteArray());
+    logo.loadFromData(nuovaConfigurazione->value("logoPixmap").toByteArray());
     logoPreview->setPixmap(logo);
     QPixmap logoFondo;
-    logoFondo.loadFromData(configurazione->value("logoFondoPixmap").toByteArray());
+    logoFondo.loadFromData(nuovaConfigurazione->value("logoFondoPixmap").toByteArray());
     logoFondoPreview->setPixmap(logoFondo);
 
-    intestazioneCheckBox->setChecked(configurazione->value("printIntestazione", false).toBool());
+    intestazioneCheckBox->setChecked(nuovaConfigurazione->value("printIntestazione", false).toBool());
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
-    fondoCheckBox->setChecked(configurazione->value("printFondo", false).toBool());
+    fondoCheckBox->setChecked(nuovaConfigurazione->value("printFondo", false).toBool());
     fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
 
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
-
-    connect(serieRitiroTxt, SIGNAL(currentIndexChanged(int)), this, SLOT(cambiaSerieRitiro(int)));
 
     setCaratteriRimanenti();
 }
@@ -149,47 +149,48 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
 
 void ConfigurazioneDlg::on_buttonBox_accepted()
 {
-    if (pwdInChiaro != adminPasswordTxt->text()) {
-        QString pwdCifrata = cifratore->encryptToString(adminPasswordTxt->text());
-        configurazione->insert("adminPassword", pwdCifrata);
-        emit passwordCambiata();
-    }
-
-    foreach(QString key, nuovaConfigurazione->keys()) {
-        configurazione->insert(key, nuovaConfigurazione->value(key));
-    }
-
-    QSettings confLocale(configurazione->value("iniFile").toString(),QSettings::IniFormat);
+    QSettings confLocale(configurazioneAttuale->value("iniFile").toString(),QSettings::IniFormat);
     confLocale.beginGroup("CONFIGURAZIONE");
     QSqlQuery stmt;
-    foreach(QString key, configurazione->keys()) {
+    foreach(QString key, nuovaConfigurazione->keys()) {
         if(key.startsWith('%'))
             continue;
+        QVariant nuovoValore=nuovaConfigurazione->value(key);
         if(chiaviConfLocale.contains(key,Qt::CaseInsensitive)) {
-            confLocale.setValue(key,configurazione->value(key).toString());
+            confLocale.setValue(key,nuovoValore.toString());
+            configurazioneAttuale->insert(key,nuovoValore.toString());
             continue;
         }
         stmt.clear();
         if (0 == QString::compare(key,"logoPixmap", Qt::CaseInsensitive) ||
             0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
+            if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
+                continue;
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
               QMessageBox::critical(this,"Errore",msg);
               return;
             }
+            configurazioneAttuale->insert(key,nuovoValore.toByteArray());
             stmt.addBindValue(key);
-            stmt.addBindValue(configurazione->value(key).toByteArray());
+            stmt.addBindValue(nuovoValore.toByteArray());
         } else if(0==QString::compare(key,"nomeCassa",Qt::CaseInsensitive)) {
-          if(!stmt.prepare("update postazioni set nome=? where id=?")) {
-            QSqlError errore=stmt.lastError();
-            QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-            QMessageBox::critical(this,"Errore",msg);
-            return;
-          }
-          stmt.addBindValue(configurazione->value(key).toString());
-          stmt.addBindValue(configurazione->value("IDCASSA").toString());
+            if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
+                continue;
+            configurazioneAttuale->insert(key,nuovoValore.toString());
+            if(!stmt.prepare("update postazioni set nome=? where id=?")) {
+                QSqlError errore=stmt.lastError();
+                QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+                QMessageBox::critical(this,"Errore",msg);
+                return;
+            }
+            stmt.addBindValue(nuovoValore.toString());
+            stmt.addBindValue(configurazioneAttuale->value("IDCASSA").toString());
         } else {
+            if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
+                continue;
+            configurazioneAttuale->insert(key,nuovoValore.toString());
             if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
@@ -197,15 +198,20 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
               return;
             }
             stmt.addBindValue(key);
-            stmt.addBindValue(configurazione->value(key).toString());
+            stmt.addBindValue(nuovoValore.toString());
         }
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         }
+        isChanged=true;
     }
 
     confLocale.sync();
+
+    if(isChanged) {
+        emit configurazioneCambiata();
+    }
+
     return accept();
 }
 
@@ -246,24 +252,24 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
 
 }
 
-void ConfigurazioneDlg::on_cartellaPdfTxt_textEdited(const QString &arg1)
+void ConfigurazioneDlg::on_cartellaPdfTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("cartellaPdf", arg1);
+    nuovaConfigurazione->insert("cartellaPdf", cartellaPdfTxt->text());
 }
 
-void ConfigurazioneDlg::on_nomeCassaTxt_textEdited(const QString &arg1)
+void ConfigurazioneDlg::on_nomeCassaTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("nomeCassa", arg1);
+    nuovaConfigurazione->insert("nomeCassa", nomeCassaTxt->text());
 }
 
-void ConfigurazioneDlg::on_durataRestoTxt_textEdited(const QString &arg1)
+void ConfigurazioneDlg::on_durataRestoTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("durataResto", arg1);
+    nuovaConfigurazione->insert("durataResto", durataRestoTxt->text());
 }
 
-void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
+void ConfigurazioneDlg::on_descrManifestazioneTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("descrManifestazione", arg1);
+    nuovaConfigurazione->insert("descrManifestazione", descrManifestazioneTxt->text());
     setCaratteriRimanenti();
 }
 
@@ -299,7 +305,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
         return;
     }
 
-    int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
+    int idSessioneCorrente = nuovaConfigurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
@@ -316,7 +322,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
         return;
     }
 
-    configurazione->insert("sessioneCorrente", idSessioneCorrente);
+    nuovaConfigurazione->insert("sessioneCorrente", idSessioneCorrente);
 
     db.commit();
     emit resetOrdini(idSessioneCorrente);
@@ -463,37 +469,37 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
-    QString str = configurazione->value("descrManifestazione").toString();
+    QString str = nuovaConfigurazione->value("descrManifestazione").toString();
     QString riga = QString("CONFIGURAZIONE#§descrManifestazione#§%1")
                    .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("printIntestazione").toString();
+    str = nuovaConfigurazione->value("printIntestazione").toString();
     riga = QString("CONFIGURAZIONE#§printIntestazione#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("intestazione").toString();
+    str = nuovaConfigurazione->value("intestazione").toString();
     riga = QString("CONFIGURAZIONE#§intestazione#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("printFondo").toString();
+    str = nuovaConfigurazione->value("printFondo").toString();
     riga = QString("CONFIGURAZIONE#§printFondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("fondo").toString();
+    str = nuovaConfigurazione->value("fondo").toString();
     riga = QString("CONFIGURAZIONE#§fondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("printLogo").toString();
+    str = nuovaConfigurazione->value("printLogo").toString();
     riga = QString("CONFIGURAZIONE#§printLogo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = configurazione->value("printLogoFondo").toString();
+    str = nuovaConfigurazione->value("printLogoFondo").toString();
     riga = QString("CONFIGURAZIONE#§printLogoFondo#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
@@ -559,7 +565,7 @@ void ConfigurazioneDlg::keyPressEvent(QKeyEvent *evt)
 
 void ConfigurazioneDlg::execParametriAvanzati()
 {
-  ParametriAvanzati dlg(configurazione);
+  ParametriAvanzati dlg(nuovaConfigurazione);
   dlg.exec();
 }
 
@@ -754,9 +760,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     db.commit();
     emit resetArticoli();
 
-    const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap";
-
-    foreach (QString nomePar,chiaviConfRemote.split(',')) {
+    foreach (QString nomePar,chiaviConfRemote) {
       if(!aggiornaConfigurazioneDaDB(nomePar)) {
         db.rollback();
         return;
@@ -765,11 +769,6 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     }
 
     on_buttonBox_accepted();
-}
-
-void ConfigurazioneDlg::cambiaSerieRitiro(int index)
-{
-    nuovaConfigurazione->insert("serieRitiro", QChar('A' + index));
 }
 
 void ConfigurazioneDlg::on_resetDbBtn_clicked()
@@ -792,7 +791,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         return;
     }
 
-    int idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
+    int idSessioneCorrente = nuovaConfigurazione->value("sessioneCorrente").toInt();
     idSessioneCorrente++;
 
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
@@ -810,7 +809,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         return;
     }
 
-    configurazione->insert("sessioneCorrente", idSessioneCorrente);
+    nuovaConfigurazione->insert("sessioneCorrente", idSessioneCorrente);
 
     db.commit();
     emit resetOrdini(idSessioneCorrente);
@@ -951,4 +950,17 @@ void ConfigurazioneDlg::on_cancellaLogoFondoBtn_clicked()
 void ConfigurazioneDlg::on_nascondeCursoreBox_clicked(bool checked)
 {
   nuovaConfigurazione->insert("nascondeCursore", checked);
+}
+
+void ConfigurazioneDlg::on_adminPasswordTxt_editingFinished()
+{
+    if (pwdInChiaro != adminPasswordTxt->text()) {
+        QString pwdCifrata = cifratore->encryptToString(adminPasswordTxt->text());
+        nuovaConfigurazione->insert("adminPassword", pwdCifrata);
+    }
+}
+
+void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index)
+{
+    nuovaConfigurazione->insert("serieRitiro", QChar('A' + index));
 }
