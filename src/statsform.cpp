@@ -13,13 +13,12 @@
 StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *parent) : idSessioneCorrente(idSessione), configurazione(par), QDialog(parent)
 {
     setupUi(this);
-    graficoVScrollBar->setVisible(false);
-    graficoHScrollBar->setVisible(false);
-    //setWindowFlags(Qt::Tool);
+    //graficoVScrollBar->setVisible(false);
+    //graficoHScrollBar->setVisible(false);
     setWindowState(Qt::WindowMaximized);
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     activateWindow();
-    showMaximized();
+    showFullScreen();
 
     fromData->setDate(QDate::currentDate());
     toData->setDate(QDate::currentDate());
@@ -208,6 +207,9 @@ void StatsForm::caricaStats()
     creaGrafico(Qt::magenta, keyData5, valueData5);
 
     graficoPlot->replot();
+
+    graficoHScrollBar->setRange(0,maxXAxis);
+    graficoVScrollBar->setRange(0,maxYAxis);
 }
 
 void StatsForm::creaGrafico(const QColor &colore, const QVector<double> chiavi, const QVector<double> valori)
@@ -302,49 +304,6 @@ void StatsForm::caricaSessioni()
   sessioneCombo->setModel(sessioniModel);
   sessioneView->hideColumn(1);
 
-  /*
-  QString sql("SELECT descrizione,sum(quantita),max(tsstampa) \
-            FROM storicoordini \
-            where \
-            %1 \
-            and tipoArticolo <> ? \
-            group by descrizione \
-            order by 3 asc");
-  QString condizione;
-  if (sessioneBox->isChecked()) {
-      condizione = "idsessione=?";
-  } else {
-      condizione = "tsstampa between ? and ?";
-  }
-  sql = sql.arg(condizione);
-  QString tipoArticolo;
-  if (expMenuBox->isChecked()) {
-      tipoArticolo = "M";
-  } else {
-      tipoArticolo = "C";
-  }
-  QSqlQuery stmt;
-  if (!stmt.prepare(sql)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-      return;
-  }
-
-  if (sessioneBox->isChecked()) {
-      stmt.addBindValue(idSessioneCorrente);
-  } else {
-      QString from = QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
-      QString to = QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
-      stmt.addBindValue(from);
-      stmt.addBindValue(to);
-  }
-
-  stmt.addBindValue(tipoArticolo);
-  if (!stmt.exec()) {
-      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
-      return;
-  }
-  statsModel->clear();
-  */
 }
 
 void StatsForm::on_stampaBtn_clicked()
@@ -467,12 +426,17 @@ void StatsForm::xCheckRange(const QCPRange &newRange, const QCPRange& oldRange)
 {
     if (newRange.lower < 0 || newRange.upper > maxXAxis)
         graficoPlot->xAxis->setRange(oldRange);
+    else
+        xAxisChanged(newRange);
 }
 
 void StatsForm::yCheckRange(const QCPRange &newRange, const QCPRange &oldRange)
 {
     if (newRange.lower < 0 || newRange.upper > maxYAxis)
         graficoPlot->yAxis->setRange(oldRange);
+    else
+        yAxisChanged(newRange);
+
 }
 
 void StatsForm::mouseClick(QMouseEvent *evt)
@@ -494,4 +458,18 @@ void StatsForm::mouseClick(QMouseEvent *evt)
 void StatsForm::on_sessioneBox_toggled(bool checked)
 {
     sessioneCombo->setEnabled(checked);
+}
+
+void StatsForm::xAxisChanged(QCPRange range)
+{
+    graficoHScrollBar->setMaximum(maxXAxis-qRound(range.size()));
+    graficoHScrollBar->setValue(qRound(range.lower)); // adjust position of scroll bar slider
+    graficoHScrollBar->setPageStep(qRound(range.size())); // adjust size of scroll bar slider
+}
+
+void StatsForm::yAxisChanged(QCPRange range)
+{
+    graficoVScrollBar->setMaximum(maxYAxis-qRound(range.size()));
+    graficoVScrollBar->setValue(maxYAxis-qRound(range.lower)-qRound(range.size())); // adjust position of scroll bar slider
+    graficoVScrollBar->setPageStep(qRound(range.size())); // adjust size of scroll bar slider
 }

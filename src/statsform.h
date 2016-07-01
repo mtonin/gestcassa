@@ -30,6 +30,8 @@ private slots:
 
     void on_sessioneBox_toggled(bool checked);
 
+    void xAxisChanged(QCPRange range);
+    void yAxisChanged(QCPRange range);
 private:
     StatsModel* statsModel;
     void caricaStats();
