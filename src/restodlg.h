@@ -3,8 +3,8 @@
 
 #include <QDialog>
 #include <QPropertyAnimation>
-#include <QSharedPointer>
 #include <QKeyEvent>
+#include <QTimer>
 
 #include "ui_restodlg.h"
 
@@ -32,9 +32,10 @@ private slots:
     void cancellaUltimoCarattere();
 
 private:
-    QSharedPointer<QPropertyAnimation> effetto;
-    int _durata;
+    QPropertyAnimation* effetto;
+    QTimer* timer;
 
+    int _durata;
     float importoOrdine;
 
     void keyPressEvent(QKeyEvent *);

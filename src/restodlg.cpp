@@ -12,15 +12,19 @@ RestoDlg::RestoDlg(float valore, int durata, QWidget *parent) : QDialog(parent)
 
     importoOrdine = valore;
     _durata = 1000 * durata;
-    effetto = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(this, "windowOpacity"));
 
-    if (_durata > 0) {
-        connect(effetto.data(), SIGNAL(finished()), this, SLOT(close()));
+    if(durata>0) {
+        effetto = new QPropertyAnimation(this, "windowOpacity");
+        connect(effetto, SIGNAL(finished()), this, SLOT(close()));
         effetto->setStartValue("1");
         effetto->setEndValue("0");
-        effetto->setDuration(_durata);
-        effetto->setEasingCurve(QEasingCurve::InQuint);
-        effetto->start();
+        effetto->setDuration(1000);
+        effetto->setEasingCurve(QEasingCurve::Linear);
+        timer=new QTimer(this);
+        timer->setSingleShot(true);
+        timer->setInterval(_durata);
+        connect(timer,SIGNAL(timeout()),effetto,SLOT(start()));
+        timer->start();
     }
 
     setFocus();
@@ -93,18 +97,21 @@ void RestoDlg::cancellaUltimoCarattere()
 
 void RestoDlg::ricalcolaResto()
 {
-    float totale = importoRicevutoTxt->text().toFloat();
+    QLocale locale;
+    float totale = locale.toFloat(importoRicevutoTxt->text());
+
     float resto = totale - importoOrdine;
     restoCalcolatoTxt->setText(QString("%L1").arg(resto, 4, 'f', 2));
 
     if (_durata > 0) {
         effetto->stop();
-        effetto->start();
+        setWindowOpacity(1);
+        timer->stop();
+        timer->start();
     }
 }
 
-void RestoDlg::keyPressEvent(QKeyEvent *evt)
-{
+void RestoDlg::keyPressEvent(QKeyEvent *evt) {
     switch (evt->key()) {
     case Qt::Key_0: {
         on_tasto0Btn_clicked();
@@ -156,6 +163,6 @@ void RestoDlg::keyPressEvent(QKeyEvent *evt)
         cancellaUltimoCarattere();
         break;
     }
-
     }
+
 }

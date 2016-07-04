@@ -6,7 +6,6 @@ ConfermaDlg::ConfermaDlg(QWidget *parent) :
     setupUi(this);
 }
 
-
 ConfermaDlg::ConfermaDlg(const QString &descrizione, const QString &descrizioneCampoInput, bool isPassword, QWidget *parent) : QDialog(parent)
 {
     setupUi(this);

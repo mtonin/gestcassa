@@ -235,11 +235,10 @@ void DettagliArticolo::on_testoArticolo_textEdited(const QString &testo)
 
 void DettagliArticolo::on_prezzoArticolo_textEdited(const QString &prezzo)
 {
-    /*
+    QString prezzoNorm=prezzo;
     QLocale locale;
-    float val=locale.toFloat(prezzo);
-    */
-    float val = prezzo.toFloat();
+    float val=locale.toFloat(prezzoNorm.replace('.',','));
+
     articoloBtn->setPrezzo(val);
     aggiornaArticolo();
 }

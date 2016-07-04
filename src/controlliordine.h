@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPropertyAnimation>
+#include <QTimer>
 #include <QModelIndex>
 namespace Ui
 {
@@ -29,8 +30,6 @@ public:
         index = idx;
     }
 
-public slots:
-
 private slots:
     void on_toolButton_clicked();
     void on_toolButton_2_clicked();
@@ -40,6 +39,8 @@ private:
     QModelIndex index;
     Ui::ControlliOrdine *ui;
     QPropertyAnimation* effetto;
+    QTimer* timer;
+    void avviaTimer();
 };
 
 #endif // CONTROLLIORDINE_H

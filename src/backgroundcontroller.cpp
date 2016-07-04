@@ -1,7 +1,6 @@
 #include "backgroundcontroller.h"
 
 #include <QtSql>
-#include <QTimer>
 
 BackgroundController::BackgroundController()
 {

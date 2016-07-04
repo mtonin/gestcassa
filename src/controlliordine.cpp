@@ -8,39 +8,45 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
     ui(new Ui::ControlliOrdine)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Window|Qt::Popup);
+
     effetto = new QPropertyAnimation(this, "windowOpacity");
     effetto->setStartValue("1");
     effetto->setEndValue("0");
-    effetto->setDuration(3000);
-    effetto->setEasingCurve(QEasingCurve::InCubic);
+    effetto->setDuration(1000);
+    effetto->setEasingCurve(QEasingCurve::Linear);
     connect(effetto, SIGNAL(finished()), this, SIGNAL(effettoTerminato()));
+
+    timer=new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(3000);
+    connect(timer,SIGNAL(timeout()),effetto,SLOT(start()));
 
 }
 
-ControlliOrdine::~ControlliOrdine()
-{
+ControlliOrdine::~ControlliOrdine(){
     delete ui;
     delete effetto;
 }
 
-void ControlliOrdine::show()
-{
+void ControlliOrdine::show(){
     QWidget::show();
-    effetto->stop();
-    effetto->start();
+    avviaTimer();
 }
 
-void ControlliOrdine::on_toolButton_clicked()
-{
+void ControlliOrdine::on_toolButton_clicked(){
     emit incrementa(idArticolo);
-    effetto->stop();
-    effetto->start();
+    avviaTimer();
 }
 
-void ControlliOrdine::on_toolButton_2_clicked()
-{
+void ControlliOrdine::on_toolButton_2_clicked(){
     emit decrementa(idArticolo, index);
+    avviaTimer();
+}
+
+void ControlliOrdine::avviaTimer() {
+    timer->stop();
     effetto->stop();
-    effetto->start();
+    setWindowOpacity(1);
+    timer->start();
 }

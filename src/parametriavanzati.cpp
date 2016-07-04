@@ -9,8 +9,8 @@ ParametriAvanzati::ParametriAvanzati(QMap<QString, QVariant> *conf, QWidget *par
   ampiezzaBox->setValue(configurazione->value("printerWinWidth",300).toInt());
   margineSXBox->setValue(configurazione->value("margineSX",5).toInt());
   margineDXBox->setValue(configurazione->value("margineDX",5).toInt());
-  larghezzaFoglioBox->setValue(configurazione->value("larghezzaFoglio",80).toInt());
-  lunghezzaFoglioBox->setValue(configurazione->value("lunghezzaFoglio",200).toInt());
+  larghezzaFoglioBox->setValue(configurazione->value("larghezzaFoglio",0).toInt());
+  lunghezzaFoglioBox->setValue(configurazione->value("lunghezzaFoglio",0).toInt());
   QFont fontScontrino;
   fontScontrino.fromString(configurazione->value("printerFont","lucida console,5").toString());
   fontBtn->setFont(fontScontrino);
