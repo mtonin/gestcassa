@@ -1,4 +1,5 @@
 #include "storicoordinimodel.h"
+#include <QLocale>
 #include <QBrush>
 storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
     QSqlTableModel(parent)
@@ -39,8 +40,14 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
         break;
     case 5:
         if (Qt::DisplayRole == role || Qt::EditRole==role) {
-            float importo = rigaArticolo.toFloat();
-            return QString("%1 %L2").arg(QChar(0x20AC)).arg(importo, 4, 'f', 2);
+            if(rigaArticolo.type()==QMetaType::QString) {
+                qDebug("importo=%s",rigaArticolo.toString().toStdString().c_str());
+                return rigaArticolo.toString();
+            } else {
+                float importo = rigaArticolo.toFloat();
+                qDebug("importo=%f",importo);
+                return QString("%1 %L2").arg(QChar(0x20AC)).arg(importo, 4, 'f', 2);
+            }
         }
         if (Qt::TextAlignmentRole == role) return (QVariant)(Qt::AlignRight | Qt::AlignVCenter);
         break;
