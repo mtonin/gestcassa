@@ -364,6 +364,7 @@ void DettagliArticolo::on_eliminaBtn_clicked()
         articoloBtn->setId(0);
         setCurrentArticolo(articoloBtn);
         //emit eliminaPulsanteCorrente(articoloBtn);
+        emit articoloAggiornato();
 
     }
 }
@@ -391,6 +392,7 @@ void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
 void DettagliArticolo::on_prezzoArticolo_editingFinished()
 {
     prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
+    aggiornaArticolo();
 }
 
 void DettagliArticolo::on_disattivaFlag_clicked(bool checked)

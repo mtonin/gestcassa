@@ -58,9 +58,8 @@ void DettagliReparto::on_sfondoBtn_clicked()
         colore = dlg.currentColor();
         repartoBtn->setColore(colore);
         sfondoBtn->SetButtonColorNormal(colore);
+        aggiornaReparto();
     }
-    aggiornaReparto();
-
 }
 
 void DettagliReparto::on_carattereBtn_clicked()
@@ -72,9 +71,8 @@ void DettagliReparto::on_carattereBtn_clicked()
         colore = dlg.currentColor();
         repartoBtn->setColoreText(colore);
         carattereBtn->SetButtonColorNormal(colore);
+        aggiornaReparto();
     }
-    aggiornaReparto();
-
 }
 
 void DettagliReparto::on_fontBtn_clicked()
@@ -85,8 +83,8 @@ void DettagliReparto::on_fontBtn_clicked()
         QFont currentFont = dlg.currentFont();
         //fontBtn->setFont(currentFont);
         repartoBtn->setButtonFont(currentFont);
+        aggiornaReparto();
     }
-    aggiornaReparto();
 }
 
 void DettagliReparto::on_testoReparto_textEdited(const QString &arg1)
