@@ -237,7 +237,7 @@ void QPictureButton::PaintText()
                (boundingRect.height()>Height) ||
                (boundingRect.width()>Width)) &&
               pointSize > 4) {
-            textFont.setPointSize(--pointSize);
+            textFont.setPointSize(pointSize-=2);
             painter.setFont(textFont);
             boundingRect=painter.boundingRect(FontRect, Align, this->text());
         }
