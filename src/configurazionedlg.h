@@ -88,6 +88,8 @@ private slots:
 
     void on_serieRitiroTxt_currentIndexChanged(int index);
 
+    void on_descrManifestazioneTxt_textEdited(const QString &arg1);
+
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);

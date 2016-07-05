@@ -274,7 +274,6 @@ void ConfigurazioneDlg::on_durataRestoTxt_editingFinished()
 void ConfigurazioneDlg::on_descrManifestazioneTxt_editingFinished()
 {
     nuovaConfigurazione->insert("descrManifestazione", descrManifestazioneTxt->text());
-    setCaratteriRimanenti();
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
@@ -995,4 +994,9 @@ void ConfigurazioneDlg::on_adminPasswordTxt_editingFinished()
 void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index)
 {
     nuovaConfigurazione->insert("serieRitiro", QChar('A' + index));
+}
+
+void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
+{
+    setCaratteriRimanenti();
 }
