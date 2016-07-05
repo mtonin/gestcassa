@@ -1,4 +1,5 @@
 #include "dettaglireparto.h"
+#include "messaggiodlg.h"
 
 #include <QColorDialog>
 #include <QtSql>
@@ -18,7 +19,7 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn)
     sfondoBtn->SetButtonColorNormal(colore);
     colore = repartoBtn->getColoreText();
     carattereBtn->SetButtonColorNormal(colore);
-    fontBtn->setFont(repartoBtn->getFont());
+    //fontBtn->setFont(repartoBtn->getFont());
     disattivaFlag->setChecked(!repartoBtn->getAbilitato());
     adattaFontFlag->setChecked(repartoBtn->getAdattaFont());
 
@@ -40,8 +41,8 @@ void DettagliReparto::aggiornaReparto()
     query.addBindValue(repartoBtn->getAdattaFont());
     query.exec();
     if (!query.isActive()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              query.lastError().text());
+        MessaggioDlg msgBox("Database Error", query.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
 
@@ -82,7 +83,7 @@ void DettagliReparto::on_fontBtn_clicked()
     dlg.setCurrentFont(repartoBtn->getFont());
     if (dlg.exec()) {
         QFont currentFont = dlg.currentFont();
-        fontBtn->setFont(currentFont);
+        //fontBtn->setFont(currentFont);
         repartoBtn->setButtonFont(currentFont);
     }
     aggiornaReparto();

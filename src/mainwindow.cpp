@@ -20,7 +20,6 @@
 #include "messaggiodlg.h"
 
 #include <QtWidgets>
-#include <QMessageBox>
 #include <QHBoxLayout>
 #include <QtSql>
 #include <QTime>
@@ -441,7 +440,6 @@ void MainWindow::execGestione()
         */
         MessaggioDlg msgBox("ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa",this);
         msgBox.visualizza();
-        //QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
         return;
     }
     //qApp->restoreOverrideCursor();
@@ -468,7 +466,6 @@ bool MainWindow::isPasswordOK(const QString pwd) {
     } else {
         MessaggioDlg msgBox("Accesso", "Password errata",this);
         msgBox.visualizza();
-        //QMessageBox::critical(this, "Accesso", "Password errata");
         return false;
     }
 }
@@ -513,7 +510,6 @@ void MainWindow::execTest()
     if (ordineBox->isInComposizione()) {
         MessaggioDlg msgBox("ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa",this);
         msgBox.visualizza();
-        //QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
         return;
     }
     gestioneModalita(TEST);
@@ -609,7 +605,6 @@ void MainWindow::caricaArticoli()
     if (!stmt.exec(sql)) {
         MessaggioDlg msgBox("Database Error",stmt.lastError().text(),this);
         msgBox.visualizza();
-        //QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         return;
     }
     if (stmt.next()) {
@@ -622,7 +617,6 @@ void MainWindow::caricaArticoli()
     if (!stmt.exec(sql)) {
         MessaggioDlg msgBox("Database Error",stmt.lastError().text(),this);
         msgBox.visualizza();
-        //QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
     int numColReparto = stmt.record().indexOf("idreparto");
@@ -665,7 +659,6 @@ void MainWindow::ricaricaArchivio()
   if (ordineBox->isInComposizione()) {
       MessaggioDlg msgBox( "ATTENZIONE", "Completare o annullare l'ordine corrente prima di ricaricare l'archivio",this);
       msgBox.visualizza();
-      //QMessageBox::information(this, "ATTENZIONE", "Completare o annullare l'ordine corrente prima di ricaricare l'archivio");
       return;
   }
 
@@ -690,7 +683,6 @@ void MainWindow::ricaricaArchivio()
 
   MessaggioDlg msgBox("AGGIORNAMENTO", "Archivio ricaricato correttamente.",this);
   msgBox.visualizza();
-  //QMessageBox::information(this, "AGGIORNAMENTO", "Archivio ricaricato correttamente.");
   return;
 
 }
@@ -703,7 +695,6 @@ void MainWindow::impostaUltimoAggiornamentoDB(){
     if (!stmt.exec(sql)) {
         MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
         msgBox.visualizza();
-        //QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         return;
     }
     if (stmt.next()) {
@@ -726,14 +717,12 @@ bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
     QSqlError err=stmt.lastError();
     MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
     msgBox.visualizza();
-    //QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
     return false;
   }
   stmt.addBindValue(nomePar);
   if (!stmt.exec()) {
       MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
       msgBox.visualizza();
-      //QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
       return false;
   }
 

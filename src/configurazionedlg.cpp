@@ -3,13 +3,13 @@
 #include "confermadlg.h"
 #include "dbmanager.h"
 #include "parametriavanzati.h"
+#include "messaggiodlg.h"
 
 #include <QPageSetupDialog>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QPrinterInfo>
 #include <QtSql>
-#include <QMessageBox>
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
@@ -169,7 +169,8 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-              QMessageBox::critical(this,"Errore",msg);
+              MessaggioDlg msgBox("Database Error", msg,this);
+              msgBox.visualizza();
               return;
             }
             configurazioneAttuale->insert(key,nuovoValore.toByteArray());
@@ -182,7 +183,8 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             if(!stmt.prepare("update postazioni set nome=? where id=?")) {
                 QSqlError errore=stmt.lastError();
                 QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                QMessageBox::critical(this,"Errore",msg);
+                MessaggioDlg msgBox("Database Error", msg,this);
+                msgBox.visualizza();
                 return;
             }
             stmt.addBindValue(nuovoValore.toString());
@@ -194,14 +196,16 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-              QMessageBox::critical(this,"Errore",msg);
+              MessaggioDlg msgBox("Database Error", msg,this);
+              msgBox.visualizza();
               return;
             }
             stmt.addBindValue(key);
             stmt.addBindValue(nuovoValore.toString());
         }
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+            MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+            msgBox.visualizza();
         }
         isChanged=true;
     }
@@ -300,7 +304,8 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     QSqlQuery stmt;
     if (!stmt.exec("delete from ordinirighe") &&
         !stmt.exec("delete from ordini")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -311,13 +316,15 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-      QMessageBox::critical(this,"Errore",msg);
+      MessaggioDlg msgBox("Database Error", msg,this);
+      msgBox.visualizza();
       return;
     }
     stmt.addBindValue(idSessioneCorrente);
 
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -342,7 +349,8 @@ void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
 
     QSqlQuery stmt("select nomecassa,numeroordine, tsstampa, importo, descrizione, quantita, destinazione, prezzo, tipoArticolo from storicoordini");
     if (!stmt.isActive()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -379,7 +387,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     QSqlQuery stmt;
 
     if (!stmt.exec("select nome,coalesce(intestazione,'NULL'),stampaflag,stampanumeroritiroflag from destinazionistampa")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -396,7 +405,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     }
 
     if (!stmt.exec("select idreparto,descrizione,coalesce(font,'NULL'),coalesce(coloresfondo,'NULL'),coalesce(colorecarattere,'NULL'),abilitato,adattafont from reparti")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -419,7 +429,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     }
 
     if (!stmt.exec("select idarticolo,descrizione,prezzo,coalesce(destinazione,'NULL'),gestioneMenu from articoli")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -438,7 +449,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     }
 
     if (!stmt.exec("select idarticolo,idarticolomenu from articolimenu")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -451,7 +463,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     }
 
     if (!stmt.exec("select idreparto,riga,colonna,idarticolo,abilitato from pulsanti")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -505,7 +518,8 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
     exportLista.append(riga);
 
     if (!stmt.exec("select id,oggetto from risorse")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         return;
     }
     while (stmt.next()) {
@@ -598,7 +612,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         !stmt.exec("delete from reparti") ||
         !stmt.exec("delete from risorse")
     ) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -606,7 +621,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     QString inputText =QString::fromLatin1(importFile.readAll());
     QString separatoreRighe = "#§EOL#§";
     if (-1 == inputText.indexOf(separatoreRighe)) {
-        QMessageBox::critical(0, QObject::tr("Import Error"), "Il formato del file è obsoleto.\nImpossibile eseguire l'importazione");
+        MessaggioDlg msgBox("Import Error", "Il formato del file è obsoleto.\nImpossibile eseguire l'importazione",this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -626,7 +642,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -647,7 +664,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -662,7 +680,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -685,7 +704,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -700,7 +720,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -712,7 +733,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -724,7 +746,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                 if(!stmt.prepare(sql)) {
                   QSqlError errore=stmt.lastError();
                   QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-                  QMessageBox::critical(this,"Errore",msg);
+                  MessaggioDlg msgBox("Database Error", msg,this);
+                  msgBox.visualizza();
                   db.rollback();
                   return;
                 }
@@ -734,7 +757,8 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
 
             qDebug(campiInput.join("#").toStdString().c_str());
             if (!stmt.exec()) {
-                QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+                MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+                msgBox.visualizza();
                 db.rollback();
                 return;
             }
@@ -744,14 +768,16 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
     }
 
     if (!stmt.exec("select max(idarticolo) from articoli")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
     if (stmt.next()) {
         int maxIdArticolo = stmt.value(0).toInt();
         if (!stmt.exec(QString("alter sequence seqarticoli restart with %1").arg(maxIdArticolo))) {
-            QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+            MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+            msgBox.visualizza();
             db.rollback();
             return;
         }
@@ -786,7 +812,8 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         !stmt.exec("delete from articoli") ||
         !stmt.exec("delete from destinazionistampa") ||
         !stmt.exec("delete from risorse")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -797,14 +824,16 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
-      QMessageBox::critical(this,"Errore",msg);
+      MessaggioDlg msgBox("Database Error", msg,this);
+      msgBox.visualizza();
       db.rollback();
       return;
     }
     stmt.addBindValue(idSessioneCorrente);
 
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -847,7 +876,8 @@ void ConfigurazioneDlg::on_resetBuoniBtn_clicked()
 
     QSqlQuery stmt;
     if (!stmt.exec("delete from buoni")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+        msgBox.visualizza();
         db.rollback();
         return;
     }
@@ -885,12 +915,14 @@ bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
   }
   QSqlQuery stmt;
   if (!stmt.prepare(sql)) {
-      QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+      msgBox.visualizza();
       return false;
   }
   stmt.addBindValue(nomePar);
   if (!stmt.exec()) {
-    QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+      MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
+      msgBox.visualizza();
     return false;
   }
 
