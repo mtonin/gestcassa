@@ -26,9 +26,8 @@ private slots:
     void on_carattereBtn_clicked();
     void on_fontBtn_clicked();
     void on_testoReparto_textEdited(const QString &arg1);
-    void on_disattivaFlag_stateChanged(int checked);
-
-    void on_adattaFontFlag_stateChanged(int checked);
+    void on_adattaFontFlag_clicked(bool checked);
+    void on_disattivaFlag_clicked(bool checked);
 
 private:
     RepartoBtnWidget* repartoBtn;

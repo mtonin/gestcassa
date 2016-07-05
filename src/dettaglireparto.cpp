@@ -94,14 +94,14 @@ void DettagliReparto::on_testoReparto_textEdited(const QString &arg1)
     aggiornaReparto();
 }
 
-void DettagliReparto::on_disattivaFlag_stateChanged(int checked)
+void DettagliReparto::on_adattaFontFlag_clicked(bool checked)
 {
-    repartoBtn->setAbilitato(!checked);
+    repartoBtn->setAdattaFont(checked);
     aggiornaReparto();
 }
 
-void DettagliReparto::on_adattaFontFlag_stateChanged(int checked)
+void DettagliReparto::on_disattivaFlag_clicked(bool checked)
 {
-    repartoBtn->setAdattaFont(checked);
+    repartoBtn->setAbilitato(!checked);
     aggiornaReparto();
 }

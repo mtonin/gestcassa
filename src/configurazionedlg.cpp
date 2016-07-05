@@ -164,7 +164,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         stmt.clear();
         if (0 == QString::compare(key,"logoPixmap", Qt::CaseInsensitive) ||
             0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
-            if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
+            if(nuovoValore.toByteArray()==configurazioneAttuale->value(key).toByteArray())
                 continue;
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
               QSqlError errore=stmt.lastError();

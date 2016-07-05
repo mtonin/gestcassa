@@ -23,8 +23,6 @@ private slots:
 
     void on_prezzoArticolo_textEdited(const QString &arg1);
 
-    void on_disattivaFlag_stateChanged(int checked);
-
     void on_destinazioneBox_activated(const QString &arg1);
 
     void on_menuBox_clicked(bool checked);
@@ -37,6 +35,8 @@ private slots:
     void rimuoveArticolo();
 
     void on_prezzoArticolo_editingFinished();
+
+    void on_disattivaFlag_clicked(bool checked);
 
 private:
     void aggiornaArticolo();

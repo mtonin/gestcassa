@@ -32,8 +32,6 @@ DettagliArticolo::~DettagliArticolo()
 void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArticoloBtn)
 {
 
-    disattivaFlag->disconnect();
-
     reset();
     articoloBtn = (ArticoloBtnWidget*)currentArticoloBtn;
     testoArticolo->setText(articoloBtn->getNomeArticolo());
@@ -57,21 +55,12 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
         testoArticolo->setToolTip("");
     }
 
-
-    /*
-    QLocale locale;
-    QString str=locale.toCurrencyString(articoloBtn->getPrezzo(),QString(" "));
-    prezzoArticolo->setText(str);
-    //prezzoArticolo->setText(QString::number(articoloBtn->getPrezzo(),'g',2));
-    */
-
     prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
     disattivaFlag->setChecked(!articoloBtn->getAbilitato());
 
     destinazioneBox->clear();
     if (!stmt.exec("select nome from destinazioniStampa order by lower(nome)")) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         return;
     }
     int i = 0;
@@ -99,8 +88,7 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
     }
     stmt.addBindValue(articoloBtn->getId());
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         return;
     }
     int numRighe = 0;
@@ -119,8 +107,6 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 
     testoArticolo->selectAll();
     testoArticolo->setFocus();
-
-    connect(disattivaFlag, SIGNAL(stateChanged(int)), this, SLOT(on_disattivaFlag_stateChanged(int)));
 }
 
 void DettagliArticolo::aggiornaArticolo()
@@ -240,12 +226,6 @@ void DettagliArticolo::on_prezzoArticolo_textEdited(const QString &prezzo)
     float val=locale.toFloat(prezzoNorm.replace('.',','));
 
     articoloBtn->setPrezzo(val);
-    aggiornaArticolo();
-}
-
-void DettagliArticolo::on_disattivaFlag_stateChanged(int checked)
-{
-    articoloBtn->setAbilitato(!checked);
     aggiornaArticolo();
 }
 
@@ -397,4 +377,10 @@ void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
 void DettagliArticolo::on_prezzoArticolo_editingFinished()
 {
     prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
+}
+
+void DettagliArticolo::on_disattivaFlag_clicked(bool checked)
+{
+    articoloBtn->setAbilitato(!checked);
+    aggiornaArticolo();
 }
