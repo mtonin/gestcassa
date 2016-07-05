@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     }
 
     QTranslator translator;
-    if (translator.load(QString("qt_it"))) {
+    if (translator.load(QString("qtbase_it"))) {
         QtSingleApplication::installTranslator(&translator);
     }
 
