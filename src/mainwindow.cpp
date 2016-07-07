@@ -102,15 +102,15 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
     if (GESTIONE == nuovaModalita) {
 
-      if(GESTIONE != modalitaCorrente) {
-        ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
-        while (true) {
-            if (QDialog::Accepted != dlg.visualizza()) return;
-            if(isPasswordOK(dlg.getValore())) {
-                break;
+        if(GESTIONE != modalitaCorrente) {
+            ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
+            while (true) {
+                if (QDialog::Accepted != dlg.visualizza()) return;
+                if(isPasswordOK(dlg.getValore())) {
+                    break;
+                }
             }
         }
-      }
 
         if (TEST == modalitaCorrente) {
             idSessione = confMap->value("sessioneSalvata").toInt();
@@ -141,7 +141,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         ui->articoliStackedWidget->setAcceptDrops(true);
         ui->messaggiArea->setText("MODALITA' GESTIONE");
         if(isHiddenCursor) {
-          qApp->setOverrideCursor(Qt::ArrowCursor);
+          QGuiApplication::restoreOverrideCursor();
           isHiddenCursor=false;
         }
 
@@ -200,8 +200,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             enterTest();
         }
         if(confMap->value("nascondeCursore").toBool()) {
-          qApp->setOverrideCursor(Qt::BlankCursor);
-          isHiddenCursor=true;
+            if(!isHiddenCursor)
+                QGuiApplication::setOverrideCursor(Qt::BlankCursor);
+            isHiddenCursor=true;
         }
 
     }
@@ -223,12 +224,12 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
             showMaximized();
           }
           */
-          isHiddenCursor=!isHiddenCursor;
           if(isHiddenCursor) {
-            qApp->setOverrideCursor(Qt::BlankCursor);
+            QGuiApplication::restoreOverrideCursor();
           } else {
-            qApp->setOverrideCursor(Qt::ArrowCursor);
+            QGuiApplication::setOverrideCursor(Qt::BlankCursor);
           }
+          isHiddenCursor=!isHiddenCursor;
         }
       case Qt::Key_X: {
           if(evt->modifiers() & Qt::ControlModifier) {
@@ -426,23 +427,16 @@ void MainWindow::on_statsBtn_clicked()
 
 void MainWindow::execCassa()
 {
-    //qApp->setOverrideCursor(Qt::BlankCursor);
     gestioneModalita(CASSA);
 }
 
 void MainWindow::execGestione()
 {
     if (ordineBox->isInComposizione()) {
-        /*
-        BaseMsgBox* messaggio=new BaseMsgBox;
-        messaggio->setTesto("Completare o annullare l'ordine corrente prima di cambiare modalità operativa");
-        messaggio->show();
-        */
         MessaggioDlg msgBox("ATTENZIONE", "Completare o annullare l'ordine corrente prima di cambiare modalità operativa",this);
         msgBox.visualizza();
         return;
     }
-    //qApp->restoreOverrideCursor();
     gestioneModalita(GESTIONE);
 }
 
@@ -513,7 +507,6 @@ void MainWindow::execTest()
         return;
     }
     gestioneModalita(TEST);
-    qApp->restoreOverrideCursor();
 }
 
 void MainWindow::lampeggia()
@@ -662,12 +655,12 @@ void MainWindow::ricaricaArchivio()
       return;
   }
 
-  qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+  //qApp->setOverrideCursor(Qt::WaitCursor);
 
   const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
-        qApp->restoreOverrideCursor();
+        //qApp->restoreOverrideCursor();
         return;
     }
   }
@@ -679,7 +672,7 @@ void MainWindow::ricaricaArchivio()
   int idSessione = confMap->value("sessioneCorrente").toInt();
   ordineBox->nuovoOrdine(idSessione);
 
-  qApp->restoreOverrideCursor();
+  //qApp->restoreOverrideCursor();
 
   MessaggioDlg msgBox("AGGIORNAMENTO", "Archivio ricaricato correttamente.",this);
   msgBox.visualizza();

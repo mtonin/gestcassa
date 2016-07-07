@@ -266,8 +266,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     int margineSX=configurazione->value("margineSX",5).toInt();
     int margineDX=configurazione->value("margineDX",5).toInt();
     int pageWidth = configurazione->value("printerWinWidth",300).toInt();
-    int larghezzaFoglio=configurazione->value("larghezzaFoglio",80).toInt();
-    int lunghezzaFoglio=configurazione->value("lunghezzaFoglio",200).toInt();
+    int larghezzaFoglio=configurazione->value("larghezzaFoglio",0).toInt();
+    int lunghezzaFoglio=configurazione->value("lunghezzaFoglio",0).toInt();
     QString nomeFontNormale=configurazione->value("printerFont","lucida console,5").toString();
 
     printer.setResolution(risoluzione);
