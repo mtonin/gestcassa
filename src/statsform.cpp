@@ -179,8 +179,8 @@ void StatsForm::caricaStats()
 
     calcolaTotali();
 
-    maxXAxis = maxValore + 10;
-    maxYAxis = counter + 1;
+    maxXAxis = maxValore + 20;
+    maxYAxis = counter + 2;
 
     QFont font = graficoPlot->yAxis->tickLabelFont();
     font.setPointSize(8);
