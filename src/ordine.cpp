@@ -63,13 +63,20 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     pagPrevBtn->SetButtonColorNormal(Qt::yellow);
     pagNextBtn->SetButtonColorNormal(Qt::yellow);
     ristampaBtn->SetButtonColorNormal(Qt::yellow);
-    stampaBtn->SetButtonColorHot(Qt::magenta);
-    annullaBtn->SetButtonColorHot(Qt::magenta);
-    duplicaBtn->SetButtonColorHot(Qt::magenta);
-    ultimoRestoBtn->SetButtonColorHot(Qt::magenta);
-    pagPrevBtn->SetButtonColorHot(Qt::magenta);
-    pagNextBtn->SetButtonColorHot(Qt::magenta);
-    ristampaBtn->SetButtonColorHot(Qt::magenta);
+    stampaBtn->SetButtonColorHot(Qt::green);
+    annullaBtn->SetButtonColorHot(Qt::yellow);
+    duplicaBtn->SetButtonColorHot(Qt::yellow);
+    ultimoRestoBtn->SetButtonColorHot(Qt::yellow);
+    pagPrevBtn->SetButtonColorHot(Qt::yellow);
+    pagNextBtn->SetButtonColorHot(Qt::yellow);
+    ristampaBtn->SetButtonColorHot(Qt::yellow);
+    stampaBtn->SetButtonColorPushed(Qt::magenta);
+    annullaBtn->SetButtonColorPushed(Qt::magenta);
+    duplicaBtn->SetButtonColorPushed(Qt::magenta);
+    ultimoRestoBtn->SetButtonColorPushed(Qt::magenta);
+    pagPrevBtn->SetButtonColorPushed(Qt::magenta);
+    pagNextBtn->SetButtonColorPushed(Qt::magenta);
+    ristampaBtn->SetButtonColorPushed(Qt::magenta);
 
 }
 
