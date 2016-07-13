@@ -1,22 +1,21 @@
 #include "backgroundcontroller.h"
 
+#include <QThread>
 #include <QtSql>
 
-BackgroundController::BackgroundController()
-{
-
+DatabaseController::DatabaseController(){
 }
 
-void BackgroundController::run()
-{
+void DatabaseController::esegueControllo(){
     stato=Reset;
-    while(true) {
+    flagTermine=false;
+    while(!flagTermine) {
         controllaDatabase();
         QThread::sleep(2);
     }
 }
 
-void BackgroundController::controllaDatabase(){
+void DatabaseController::controllaDatabase(){
     enum statoDatabase statoCorrente=stato;
     QString sql;
     QString testo;

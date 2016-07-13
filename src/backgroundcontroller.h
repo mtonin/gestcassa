@@ -4,15 +4,13 @@
 #include "commons.h"
 
 #include <QDateTime>
-#include <QThread>
 #include <QtSql>
-class BackgroundController : public QThread
+class DatabaseController : public QObject
 {
     Q_OBJECT
 
 public:
-    BackgroundController();
-    void run();
+    DatabaseController();
     void setUltimaLetturaDB(const QDateTime par) {ultimaLetturaDB=par;}
     enum statoDatabase {
         Reset=0,
@@ -21,6 +19,10 @@ public:
         DaAggiornare
     };
     Q_ENUM(statoDatabase)
+
+public slots:
+    void esegueControllo();
+    void setFlagTermine(bool flag) {flagTermine=flag;}
 
 signals:
     void messaggioDB(int codice, QString testo);
@@ -31,6 +33,7 @@ private slots:
 private:
     QDateTime ultimaLetturaDB;
     enum statoDatabase stato;
+    bool flagTermine;
 };
 
 #endif // BACKGROUNDCONTROLLER_H

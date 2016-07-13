@@ -76,7 +76,12 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     infoLayout->addWidget(info);
     ui->infoFrame->setLayout(infoLayout);
 
-    dbCheck=new BackgroundController;
+    backgroundThread=new QThread;
+    dbCheck=new DatabaseController;
+    dbCheck->moveToThread(backgroundThread);
+    connect(backgroundThread,SIGNAL(started()),dbCheck,SLOT(esegueControllo()));
+    connect(dbCheck,SIGNAL(messaggioDB(int,QString)),this,SLOT(setStato(int,QString)));
+    backgroundThread->start();
 
     creaRepartiButtons();
     gestioneModalita(CASSA);
@@ -86,14 +91,17 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
 
     richiestaChiusura=false;
 
-    connect(dbCheck,SIGNAL(messaggioDB(int,QString)),this,SLOT(setStato(int,QString)));
-    dbCheck->start();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete cifratore;
+    dbCheck->setFlagTermine(true);
+    backgroundThread->quit();
+    backgroundThread->wait(5000);
+    delete backgroundThread;
+    delete dbCheck;
 }
 
 void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
@@ -733,10 +741,10 @@ bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
 void MainWindow::setStato(int stato, QString testo) {
 
     switch (stato) {
-    case BackgroundController::Disconnesso:
+    case DatabaseController::Disconnesso:
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/cancella"));
         break;
-    case BackgroundController::DaAggiornare:
+    case DatabaseController::DaAggiornare:
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
         break;
     default:

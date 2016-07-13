@@ -15,6 +15,7 @@
 #include <QTimer>
 #include <QHash>
 #include <QSplashScreen>
+#include <QThread>
 
 namespace Ui
 {
@@ -73,7 +74,8 @@ private:
     QSplashScreen& splash;
     bool isHiddenCursor;
     bool richiestaChiusura;
-    BackgroundController* dbCheck;
+    DatabaseController* dbCheck;
+    QThread* backgroundThread;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;
