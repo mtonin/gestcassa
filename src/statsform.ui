@@ -30,7 +30,7 @@
     <number>3</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1,0">
      <item>
       <widget class="QGroupBox" name="groupBox">
        <property name="sizePolicy">
@@ -228,15 +228,25 @@
              <string>Applica
 filtri</string>
             </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
            </widget>
           </item>
          </layout>
         </item>
        </layout>
       </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -246,19 +256,6 @@ filtri</string>
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item>
         <widget class="QPushButton" name="stampaBtn">
          <property name="sizePolicy">
@@ -413,19 +410,6 @@ Statistiche</string>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QLabel" name="label_4">
         <property name="font">
          <font>
@@ -484,6 +468,19 @@ Statistiche</string>
          <set>Qt::NoTextInteraction</set>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_7">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -605,8 +602,8 @@ Statistiche</string>
      <y>89</y>
     </hint>
     <hint type="destinationlabel">
-     <x>90</x>
-     <y>89</y>
+     <x>144</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -617,12 +614,12 @@ Statistiche</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>34</x>
-     <y>96</y>
+     <x>51</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
-     <x>118</x>
-     <y>100</y>
+     <x>231</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -633,12 +630,12 @@ Statistiche</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>23</x>
-     <y>98</y>
+     <x>40</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
-     <x>206</x>
-     <y>94</y>
+     <x>290</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -653,8 +650,8 @@ Statistiche</string>
      <y>92</y>
     </hint>
     <hint type="destinationlabel">
-     <x>289</x>
-     <y>91</y>
+     <x>322</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -669,8 +666,8 @@ Statistiche</string>
      <y>94</y>
     </hint>
     <hint type="destinationlabel">
-     <x>309</x>
-     <y>93</y>
+     <x>409</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -685,8 +682,8 @@ Statistiche</string>
      <y>93</y>
     </hint>
     <hint type="destinationlabel">
-     <x>403</x>
-     <y>91</y>
+     <x>468</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -697,8 +694,8 @@ Statistiche</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>699</x>
-     <y>73</y>
+     <x>1178</x>
+     <y>78</y>
     </hint>
     <hint type="destinationlabel">
      <x>859</x>
