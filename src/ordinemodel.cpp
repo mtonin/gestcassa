@@ -254,7 +254,7 @@ QVariant OrdineModel::headerData(int section, Qt::Orientation orientation, int r
             return "Q.TA'";
             break;
         case 3:
-            return "PARZIALE";
+            return "PARZ. €";
             break;
         default:
             break;

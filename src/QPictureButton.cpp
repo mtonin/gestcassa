@@ -123,7 +123,8 @@ void QPictureButton::PaintButton()
         }
         QBrush Brush(CurrentButtonColor, Qt::SolidPattern);
         painter.setBrush(Brush);
-        painter.drawRect(Rect);
+        //painter.drawRect(Rect);
+        painter.drawRoundedRect(Rect,15,15,Qt::RelativeSize);
     } else {
         painter.drawPixmap(Rect, CurrentPixmap);
 
