@@ -29,17 +29,21 @@ void DettagliReparto::setCurrentReparto(RepartoBtnWidget *currentRepartoBtn)
 
 void DettagliReparto::aggiornaReparto()
 {
-    QSqlQuery query("update or insert into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato) values(?,?,?,?,?,?)");
+
+
+    QSqlQuery query;
+    if(!query.prepare("update or insert into reparti (idreparto,descrizione,font,coloresfondo,colorecarattere,abilitato) values(?,?,?,?,?,?)")) {
+      QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
+      return;
+    }
     query.addBindValue(repartoBtn->getId());
     query.addBindValue(testoReparto->text());
-    query.addBindValue(repartoBtn->getFont());
-    query.addBindValue(repartoBtn->getColore().toRgb());
-    query.addBindValue(repartoBtn->getColoreText().toRgb());
+    query.addBindValue(repartoBtn->getFont().toString());
+    query.addBindValue(repartoBtn->getColore().toRgb().name());
+    query.addBindValue(repartoBtn->getColoreText().toRgb().name());
     query.addBindValue(repartoBtn->getAbilitato());
-    query.exec();
-    if (!query.isActive()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              query.lastError().text());
+    if (!query.exec()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
         return;
     }
 }
