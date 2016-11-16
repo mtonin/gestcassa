@@ -419,7 +419,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         painter.drawText(x, y, pageWidth, 100, Qt::AlignHCenter, tsOrdine.toString("dd-MM-yyyy   hh:mm:ss"), &textRect);
         y += textRect.height() + 10;
         painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
-        painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
+        //painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
         painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
         y += 10;
 
@@ -540,7 +540,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     y += textRect.height() + 10;
 
     painter.drawText(x, y, 200, 100, Qt::AlignLeft, QString("CASSA %1").arg(nomeCassa), &textRect);
-    painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
+    //painter.drawText(x + pageWidth / 2, y, pageWidth / 2, 100, Qt::AlignRight, QString("ORDINE N. %L1").arg(numeroOrdine), &textRect);
     painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
     y += 10;
 
