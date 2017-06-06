@@ -511,9 +511,9 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     if(logoAbilitato) {
         float rapporto=(float)logoPixmap.width()/pageWidth;
         float logoHeight=logoPixmap.height()/rapporto;
-      // stampa il logo grafico
-      painter.drawPixmap(x,y,pageWidth,logoHeight,logoPixmap);
-      y+=logoHeight+10;
+        // stampa il logo grafico
+        painter.drawPixmap(x,y,pageWidth,logoHeight,logoPixmap);
+        y+=logoHeight+10;
     };
 
       if(0==y)

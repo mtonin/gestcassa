@@ -334,6 +334,7 @@ bool DBManager::createConnection(const QString &nomeFile,const QString& modello,
     }
     db.setUserName(utente);
     db.setPassword(password);
+    db.setConnectOptions("ISC_DPB_LC_CTYPE=UTF8");
     //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
     if (!db.open()) {
@@ -368,6 +369,7 @@ void DBManager::creaDb(const QString user, const QString password, const QString
     db.setDatabaseName(dbFilePath);
     db.setUserName(user);
     db.setPassword(password);
+    db.setConnectOptions("ISC_DPB_LC_CTYPE=UTF8");
     //db.setConnectOptions("ISC_DPB_SQL_ROLE_NAME=gcas_user");
 
     if (!db.open()) {
