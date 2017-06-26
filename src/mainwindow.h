@@ -76,6 +76,7 @@ private:
     bool richiestaChiusura;
     DatabaseController* dbCheck;
     QThread* backgroundThread;
+    QProcess* externalProcess;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;

@@ -410,7 +410,7 @@ void DBManager::leggeConfigurazioneLocale(const QString &nomeFile)
         iniSettings.beginGroup("CONFIGURAZIONE");
         QStringList chiavi=iniSettings.childKeys();
         foreach (QString chiave,chiavi) {
-           conf->insert(chiave,iniSettings.value(chiave).toString());
+           conf->insert(chiave.toUpper(),iniSettings.value(chiave).toString());
         }
 }
 

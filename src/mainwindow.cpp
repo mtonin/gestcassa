@@ -90,6 +90,7 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
     connect(blinkTimer, SIGNAL(timeout()), this, SLOT(lampeggia()));
 
     richiestaChiusura=false;
+    externalProcess=NULL;
 
 }
 
@@ -97,6 +98,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete cifratore;
+    if(externalProcess)
+        delete externalProcess;
     dbCheck->setFlagTermine(true);
     backgroundThread->quit();
     backgroundThread->wait(5000);
@@ -585,8 +588,21 @@ void MainWindow::on_stornoBtn_clicked()
 
 void MainWindow::execBuoni()
 {
+    if(nullptr==externalProcess)
+        externalProcess=new QProcess(this);
+
+    if(QProcess::Running!=externalProcess->state()) {
+        QString comando=confMap->value("EXTERNALPROGRAM").toString();
+        if(!comando.isEmpty())
+            externalProcess->start(comando);
+    }
+
+    externalProcess->thread();
+
+    /*
     BuoniDlg dlg(confMap,this);
     dlg.exec();
+    */
     return;
 }
 
