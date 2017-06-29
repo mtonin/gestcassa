@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     aboutdlg.cpp \
     dbparamdlg.cpp \
     backgroundcontroller.cpp \
-    messaggiodlg.cpp
+    messaggiodlg.cpp \
+    singleprocess.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -83,7 +84,8 @@ HEADERS  += mainwindow.h \
     aboutdlg.h \
     dbparamdlg.h \
     backgroundcontroller.h \
-    messaggiodlg.h
+    messaggiodlg.h \
+    singleprocess.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \

@@ -8,6 +8,7 @@
 #include "infowidget.h"
 #include "simplecrypt.h"
 #include "backgroundcontroller.h"
+#include "singleprocess.h"
 
 #include <QMainWindow>
 #include <QList>
@@ -76,7 +77,7 @@ private:
     bool richiestaChiusura;
     DatabaseController* dbCheck;
     QThread* backgroundThread;
-    QProcess* externalProcess;
+    SingleProcess* externalProcess;
 
     //QList<ArticoloBtnWidget*> articoliBtnList;
     QList<RepartoBtnWidget*> repartiList;

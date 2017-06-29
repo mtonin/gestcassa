@@ -588,16 +588,13 @@ void MainWindow::on_stornoBtn_clicked()
 
 void MainWindow::execBuoni()
 {
-    if(nullptr==externalProcess)
-        externalProcess=new QProcess(this);
-
-    if(QProcess::Running!=externalProcess->state()) {
-        QString comando=confMap->value("EXTERNALPROGRAM").toString();
-        if(!comando.isEmpty())
-            externalProcess->start(comando);
+    if(nullptr==externalProcess) {
+        externalProcess=new SingleProcess(this);
     }
 
-    externalProcess->thread();
+    QString comando=confMap->value("EXTERNALPROGRAM").toString();
+    if(!comando.isEmpty())
+    externalProcess->esegue(comando);
 
     /*
     BuoniDlg dlg(confMap,this);
