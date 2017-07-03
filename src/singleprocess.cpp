@@ -34,12 +34,21 @@ SingleProcess::~SingleProcess(){
 
 void SingleProcess::esegue(QString comando) {
 
+    if(QProcess::Running==state()) {
+        kill();
+        waitForFinished(1000);
+    }
+    QStringList tokens=comando.split(" ");
+    QString cmd=tokens[0];
+    tokens.removeFirst();
+    start(cmd,tokens);
+    /*
+
     if(QProcess::Running!=state()) {
         QStringList tokens=comando.split(" ");
         QString cmd=tokens[0];
         tokens.removeFirst();
         start(cmd,tokens);
-        /*
         processo->waitForFinished();
         QProcess::ExitStatus stato=processo->exitStatus();
         //if(QProcess::ExitStatus::NormalExit!=stato) {
@@ -47,9 +56,9 @@ void SingleProcess::esegue(QString comando) {
             QMessageBox::critical(this,"Errore",errore);
         //}
         processo=nullptr;
-        */
     } else {
         EnumWindows(&EnumWindowsProc,pid()->dwProcessId);
     }
+        */
 
 }
