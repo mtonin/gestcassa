@@ -370,6 +370,10 @@ void MainWindow::creaInfoMessaggi()
         messaggi.insert(0, descrizione);
     }
     info->setListaTesto(messaggi);
+
+    QString nomeCassa=QString("CASSA: %1").arg(confMap->value("nomeCassa").toString());
+    ui->nomaCassaText->setText(nomeCassa);
+
 }
 
 void MainWindow::repartoSelezionato()
