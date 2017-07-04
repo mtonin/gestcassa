@@ -14,7 +14,7 @@ RestoDlg::RestoDlg(float valore, int durata, QWidget *parent) : QDialog(parent)
     _durata = 1000 * durata;
 
     if(durata>0) {
-        effetto = new QPropertyAnimation(this, "windowOpacity");
+        effetto = new QPropertyAnimation(this, "windowOpacity",this);
         connect(effetto, SIGNAL(finished()), this, SLOT(close()));
         effetto->setStartValue("1");
         effetto->setEndValue("0");
@@ -33,8 +33,7 @@ RestoDlg::RestoDlg(float valore, int durata, QWidget *parent) : QDialog(parent)
     ricalcolaResto();
 }
 
-RestoDlg::~RestoDlg()
-{
+RestoDlg::~RestoDlg(){
 }
 
 void RestoDlg::on_tasto0Btn_clicked()

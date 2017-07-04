@@ -435,7 +435,9 @@ void MainWindow::on_statsBtn_clicked()
   if (ID_SESSIONE_TEST == idSessione) {
       idSessione = confMap->value("SESSIONESALVATA").toInt();
   }
-  StatsForm form(idSessione, confMap, this);
+  QString nomeCassa=confMap->value("NOMECASSA").toString();
+  QString descrizione = confMap->value("DESCRMANIFESTAZIONE").toString();
+  StatsForm form(idSessione, nomeCassa,descrizione, this);
   //form.setWindowState(Qt::WindowMaximized);
   form.exec();
 

@@ -750,7 +750,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                   db.rollback();
                   return;
                 }
-                stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                stmt.addBindValue(valutaStringa(campiInput.at(++idx)).toString().toUpper());
                 stmt.addBindValue(QByteArray::fromBase64(valutaStringa(campiInput.at(++idx)).toByteArray()));
             }
 

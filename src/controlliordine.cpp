@@ -10,7 +10,7 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint | Qt::Window|Qt::Popup);
 
-    effetto = new QPropertyAnimation(this, "windowOpacity");
+    effetto = new QPropertyAnimation(this, "windowOpacity",this);
     effetto->setStartValue("1");
     effetto->setEndValue("0");
     effetto->setDuration(1000);
@@ -26,7 +26,6 @@ ControlliOrdine::ControlliOrdine(QWidget *parent) :
 
 ControlliOrdine::~ControlliOrdine(){
     delete ui;
-    delete effetto;
 }
 
 void ControlliOrdine::show(){

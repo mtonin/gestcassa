@@ -11,7 +11,7 @@ class StatsForm : public QDialog, private Ui::StatsForm
     Q_OBJECT
 
 public:
-    explicit StatsForm(int idSessione, QMap<QString, QVariant>* par, QWidget *parent = 0);
+    explicit StatsForm(int idSessione, QString nomeCassaPar, QString nomeManifestazionePar, QWidget *parent = 0);
     ~StatsForm();
 
     void stampa(const QTextDocument *doc, const QString descrReport, bool preview);
@@ -39,7 +39,8 @@ private:
     void caricaSessioni();
 
     int idSessioneCorrente;
-    QMap<QString, QVariant>* configurazione;
+    QString nomeCassa;
+    QString nomeManifestazione;
     QString tsInizio;
     QString tsFine;
     int totOrdini;

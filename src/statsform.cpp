@@ -10,7 +10,7 @@
 #include <QTextDocumentFragment>
 #include <QTextDocumentWriter>
 
-StatsForm::StatsForm(int idSessione, QMap<QString, QVariant> *par, QWidget *parent) : idSessioneCorrente(idSessione), configurazione(par), QDialog(parent)
+StatsForm::StatsForm(int idSessione, QString nomeCassaPar, QString nomeManifestazionePar, QWidget *parent) : idSessioneCorrente(idSessione), nomeCassa(nomeCassaPar), nomeManifestazione(nomeManifestazionePar), QDialog(parent)
 {
     setupUi(this);
     //graficoVScrollBar->setVisible(false);
@@ -320,7 +320,7 @@ void StatsForm::on_stampaBtn_clicked()
 
     cursoreDoc.setBlockFormat(centerAlignFormat);
     cursoreDoc.insertHtml("<center><h2><u>CONDIZIONI</u></h2></center><br>");
-    testo = QString("Nome cassa: %1\n").arg(configurazione->value("nomeCassa").toString());
+    testo = QString("Nome cassa: %1\n").arg(nomeCassa);
     cursoreDoc.insertText(testo);
     testo = QString("Primo scontrino: %1\n").arg(tsInizio);
     cursoreDoc.insertText(testo);
@@ -333,7 +333,7 @@ void StatsForm::on_stampaBtn_clicked()
 
     cursoreDoc.setBlockFormat(centerAlignFormat);
     cursoreDoc.insertHtml("<center><h2><u>TOTALIZZATORI</u></h2></center><br>");
-    testo = QString("Nome cassa: %1\n").arg(configurazione->value("nomeCassa").toString());
+    testo = QString("Nome cassa: %1\n").arg(nomeCassa);
 
     QTextDocument tableDocument;
     QTextCursor cursore(&tableDocument);
@@ -356,7 +356,7 @@ void StatsForm::on_stampaBtn_clicked()
     }
 
     cursoreDoc.insertFragment(QTextDocumentFragment(&tableDocument));
-    //QString descrReport=QString("Totali di cassa -- CASSA %1 -- &date;").arg(configurazione->value("nomeCassa").toString());
+    //QString descrReport=QString("Totali di cassa -- CASSA %1 -- &date;").arg(nomeCassa);
     QString descrReport = QString("Totali di cassa - &date;");
     stampa(documento, descrReport, false);
 
@@ -366,7 +366,7 @@ void StatsForm::stampa(const QTextDocument *doc, const QString descrReport, bool
 {
 
     TextPrinter* tprinter = new TextPrinter(this);
-    QString header = QString("<center><b>%1<br>%2</b></center>").arg(configurazione->value("descrManifestazione").toString()).arg(descrReport);
+    QString header = QString("<center><b>%1<br>%2</b></center>").arg(nomeManifestazione).arg(descrReport);
     tprinter->setHeaderText(header);
     tprinter->setFooterText("<center><b>GESTIONE CASSA</b><br>Pag. &page;</center>");
     tprinter->setHeaderSize(5);

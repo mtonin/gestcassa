@@ -28,7 +28,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
 
     importoUltimoOrdine = 0;
     importoOrdineCorrente = 0;
-    idSessioneCorrente = configurazione->value("sessioneCorrente").toInt();
+    idSessioneCorrente = configurazione->value("SESSIONECORRENTE").toInt();
     idCassa = configurazione->value("IDCASSA").toString();
 
     nuovoOrdine(idSessioneCorrente);
@@ -167,13 +167,13 @@ void Ordine::on_stampaBtn_clicked()
         return;
     }
 
-    nomeCassa = configurazione->value("nomeCassa", "000").toString();
+    nomeCassa = configurazione->value("NOMECASSA", "000").toString();
     if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa)) {
 
         stampaScontrino(numOrdineCorrente);
 
-        if (configurazione->value("abilitaResto").toBool()) {
-            int durataSecondi = configurazione->value("durataResto", 5).toInt();
+        if (configurazione->value("ABILITARESTO").toBool()) {
+            int durataSecondi = configurazione->value("DURATARESTO", 5).toInt();
             RestoDlg restoDlg(importoOrdineCorrente, durataSecondi, this);
             restoDlg.exec();
         }
@@ -222,15 +222,15 @@ void Ordine::clearSelezione()
 
 void Ordine::stampaScontrino(const int numeroOrdine)
 {
-    QString intest = configurazione->value("intestazione").toString();
-    QString fondo = configurazione->value("fondo").toString();
-    QString descrManifestazione = configurazione->value("descrManifestazione", "NOME MANIFESTAZIONE").toString();
+    QString intest = configurazione->value("INTESTAZIONE").toString();
+    QString fondo = configurazione->value("FONDO").toString();
+    QString descrManifestazione = configurazione->value("DESCRMANIFESTAZIONE", "NOME MANIFESTAZIONE").toString();
     bool flagStampaNumeroRitiro = false;
-    QChar serieRitiro = configurazione->value("serieRitiro", "A").toString().at(0);
-    bool logoAbilitato=configurazione->value("printLogo",false).toBool();
-    bool logoFondoAbilitato=configurazione->value("printLogoFondo",false).toBool();
-    bool intestazioneAbilitata=configurazione->value("printIntestazione",false).toBool();
-    bool footerAbilitata=configurazione->value("printFondo",false).toBool();
+    QChar serieRitiro = configurazione->value("SERIERITIRO", "A").toString().at(0);
+    bool logoAbilitato=configurazione->value("PRINTLOGO",false).toBool();
+    bool logoFondoAbilitato=configurazione->value("PRINTLOGOFONDO",false).toBool();
+    bool intestazioneAbilitata=configurazione->value("PRINTINTESTAZIONE",false).toBool();
+    bool footerAbilitata=configurazione->value("PRINTFONDO",false).toBool();
 
     QString intestazione;
     intestazione.append(descrManifestazione); //.append("\n");
@@ -241,20 +241,20 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     QPixmap logoPixmap;
     if(logoAbilitato) {
-      logoPixmap.loadFromData(configurazione->value("logoPixmap").toByteArray());
+      logoPixmap.loadFromData(configurazione->value("LOGOPIXMAP").toByteArray());
       if(logoPixmap.isNull()) logoAbilitato=false;
     }
     QPixmap logoFondoPixmap;
     if(logoFondoAbilitato) {
-      logoFondoPixmap.loadFromData(configurazione->value("logoFondoPixmap").toByteArray());
+      logoFondoPixmap.loadFromData(configurazione->value("LOGOFONDOPIXMAP").toByteArray());
       if(logoFondoPixmap.isNull()) logoFondoAbilitato=false;
     }
 
     QPrinter printer;
-    bool stampantePdf = configurazione->value("stampantePdf", true).toBool();
-    QString stampanteSelezionata = configurazione->value("stampante", "PDF").toString();
+    bool stampantePdf = configurazione->value("STAMPANTEPDF", true).toBool();
+    QString stampanteSelezionata = configurazione->value("STAMPANTE", "PDF").toString();
     if (stampantePdf) {
-        QDir cartellaPdf(configurazione->value("cartellaPdf", "ticket").toString());
+        QDir cartellaPdf(configurazione->value("CARTELLAPDF", "ticket").toString());
         cartellaPdf.mkpath(cartellaPdf.absolutePath());
         if (ID_SESSIONE_TEST == idSessioneCorrente)
             printer.setOutputFileName(QString("%1/TEST%2.pdf").arg(cartellaPdf.absolutePath()).arg(numeroOrdine, 5, 10, QChar('0')));
@@ -269,13 +269,13 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QPageSize pageSizeOriginale=pageLayout.pageSize();
     qDebug("pagina originale - width=%f,height=%f",pageSizeOriginale.size(QPageSize::Millimeter).width(),pageSizeOriginale.size(QPageSize::Millimeter).height());
 
-    int risoluzione = configurazione->value("printerResolution",200).toInt();
-    int margineSX=configurazione->value("margineSX",5).toInt();
-    int margineDX=configurazione->value("margineDX",5).toInt();
-    int pageWidth = configurazione->value("printerWinWidth",300).toInt();
-    int larghezzaFoglio=configurazione->value("larghezzaFoglio",0).toInt();
-    int lunghezzaFoglio=configurazione->value("lunghezzaFoglio",0).toInt();
-    QString nomeFontNormale=configurazione->value("printerFont","lucida console,5").toString();
+    int risoluzione = configurazione->value("PRINTERRESOLUTION",200).toInt();
+    int margineSX=configurazione->value("MARGINESX",5).toInt();
+    int margineDX=configurazione->value("MARGINEDX",5).toInt();
+    int pageWidth = configurazione->value("PRINTERWINWIDTH",300).toInt();
+    int larghezzaFoglio=configurazione->value("LARGHEZZAFOGLIO",0).toInt();
+    int lunghezzaFoglio=configurazione->value("LUNGHEZZAFOGLIO",0).toInt();
+    QString nomeFontNormale=configurazione->value("PRINTERFONT","lucida console,5").toString();
 
     printer.setResolution(risoluzione);
     QSizeF foglioSize=pageSizeOriginale.size(QPageSize::Millimeter);
