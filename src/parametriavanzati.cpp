@@ -5,14 +5,14 @@ ParametriAvanzati::ParametriAvanzati(QMap<QString, QVariant> *conf, QWidget *par
 {
   setupUi(this);
   configurazione=conf;
-  risoluzioneBox->setValue(configurazione->value("printerResolution",200).toInt());
-  ampiezzaBox->setValue(configurazione->value("printerWinWidth",300).toInt());
-  margineSXBox->setValue(configurazione->value("margineSX",5).toInt());
-  margineDXBox->setValue(configurazione->value("margineDX",5).toInt());
-  larghezzaFoglioBox->setValue(configurazione->value("larghezzaFoglio",0).toInt());
-  lunghezzaFoglioBox->setValue(configurazione->value("lunghezzaFoglio",0).toInt());
+  risoluzioneBox->setValue(configurazione->value("PRINTERRESOLUTION",200).toInt());
+  ampiezzaBox->setValue(configurazione->value("PRINTERWINWIDTH",300).toInt());
+  margineSXBox->setValue(configurazione->value("MARGINESX",5).toInt());
+  margineDXBox->setValue(configurazione->value("MARGINEDX",5).toInt());
+  larghezzaFoglioBox->setValue(configurazione->value("LARGHEZZAFOGLIO",0).toInt());
+  lunghezzaFoglioBox->setValue(configurazione->value("LUNGHEZZAFOGLIO",0).toInt());
   QFont fontScontrino;
-  fontScontrino.fromString(configurazione->value("printerFont","lucida console,5").toString());
+  fontScontrino.fromString(configurazione->value("PRINTERFONT","lucida console,5").toString());
   fontBtn->setFont(fontScontrino);
 }
 
@@ -27,13 +27,13 @@ void ParametriAvanzati::on_fontBtn_clicked(){
 
 void ParametriAvanzati::accept()
 {
-    configurazione->insert("printerResolution",risoluzioneBox->value());
-    configurazione->insert("printerWinWidth",ampiezzaBox->value());
-    configurazione->insert("margineSX",margineSXBox->value());
-    configurazione->insert("margineDX",margineDXBox->value());
-    configurazione->insert("larghezzaFoglio",larghezzaFoglioBox->value());
-    configurazione->insert("lunghezzaFoglio",lunghezzaFoglioBox->value());
-    configurazione->insert("printerFont",fontBtn->font().toString());
+    configurazione->insert("PRINTERRESOLUTION",risoluzioneBox->value());
+    configurazione->insert("PRINTERWINWIDTH",ampiezzaBox->value());
+    configurazione->insert("MARGINESX",margineSXBox->value());
+    configurazione->insert("MARGINEDX",margineDXBox->value());
+    configurazione->insert("LARGHEZZAFOGLIO",larghezzaFoglioBox->value());
+    configurazione->insert("LUNGHEZZAFOGLIO",lunghezzaFoglioBox->value());
+    configurazione->insert("PRINTERFONT",fontBtn->font().toString());
 
     QDialog::accept();
 }

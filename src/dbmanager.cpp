@@ -29,7 +29,7 @@ bool DBManager::init(const QString percorso)
   dbFilePath=QString("%1/GCAS.fdb").arg(percorso);
   QString dbFileModelloName=QString("%1/model.fdb").arg(percorso);
   QString iniFileName=QString("%1/GCAS.ini").arg(percorso);
-  conf->insert("iniFile",iniFileName);
+  conf->insert("INIFILE",iniFileName);
 
   QString ipAddress;
   DBParamDlg dlg;
@@ -60,7 +60,7 @@ bool DBManager::leggeConfigurazione()
     while (stmt.next()) {
         QString key = stmt.value(0).toString();
         QVariant valore = stmt.value(1).toString();
-        conf->insert(key, valore);
+        conf->insert(key.toUpper(), valore);
     }
 
     if (!stmt.exec("select max(idsessione) from sessione")) {
@@ -79,10 +79,10 @@ bool DBManager::leggeConfigurazione()
         }
     }
 
-    conf->insert("sessioneCorrente", sessioneCorrente);
-    conf->insert("dbFilePath", dbFilePath);
+    conf->insert("SESSIONECORRENTE", sessioneCorrente);
+    conf->insert("DBFILEPATH", dbFilePath);
 
-    int versioneDB = conf->value("versione", 1).toInt();
+    int versioneDB = conf->value("VERSIONE", 1).toInt();
     int nuovaVersioneDB = versioneDB;
 
     if(versioneDB > 9) {
@@ -271,7 +271,7 @@ bool DBManager::leggeConfigurazione()
 
     if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
-        conf->insert("versione", versioneDB);
+        conf->insert("VERSIONE", versioneDB);
         if(!stmt.prepare("update or insert into configurazione (chiave,valore) values('versione',?)")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
@@ -405,7 +405,7 @@ void DBManager::creaDb(const QString user, const QString password, const QString
 
 void DBManager::leggeConfigurazioneLocale(const QString &nomeFile)
 {
-        conf->insert("iniFile",nomeFile);
+        conf->insert("INIFILE",nomeFile);
         QSettings iniSettings(nomeFile,QSettings::IniFormat);
         iniSettings.beginGroup("CONFIGURAZIONE");
         QStringList chiavi=iniSettings.childKeys();
@@ -430,7 +430,7 @@ void DBManager::aggiornaPostazione(const QString& ipAddress) {
     }
     if(stmt.next()) {
         QString nomeCassa=stmt.value(0).toString();
-        conf->insert("nomeCassa",nomeCassa);
+        conf->insert("NOMECASSA",nomeCassa);
     }
 
 }

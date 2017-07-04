@@ -124,9 +124,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         }
 
         if (TEST == modalitaCorrente) {
-            idSessione = confMap->value("sessioneSalvata").toInt();
-            confMap->insert("sessioneCorrente", idSessione);
-            confMap->remove("sessioneSalvata");
+            idSessione = confMap->value("SESSIONESALVATA").toInt();
+            confMap->insert("SESSIONECORRENTE", idSessione);
+            confMap->remove("SESSIONESALVATA");
             ordineBox->nuovoOrdine(idSessione);
             exitTest();
         }
@@ -193,9 +193,9 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
 
         if (CASSA == nuovaModalita) {
             if (TEST == modalitaCorrente) {
-                idSessione = confMap->value("sessioneSalvata").toInt();
-                confMap->insert("sessioneCorrente", idSessione);
-                confMap->remove("sessioneSalvata");
+                idSessione = confMap->value("SESSIONESALVATA").toInt();
+                confMap->insert("SESSIONECORRENTE", idSessione);
+                confMap->remove("SESSIONESALVATA");
                 ordineBox->nuovoOrdine(idSessione);
                 exitTest();
             }
@@ -204,13 +204,13 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         }
         if (TEST == nuovaModalita) {
             ui->adminFunctBox->setVisible(false);
-            idSessione = confMap->value("sessioneCorrente").toInt();
-            confMap->insert("sessioneCorrente", ID_SESSIONE_TEST);
-            confMap->insert("sessioneSalvata", idSessione);
+            idSessione = confMap->value("SESSIONECORRENTE").toInt();
+            confMap->insert("SESSIONECORRENTE", ID_SESSIONE_TEST);
+            confMap->insert("SESSIONESALVATA", idSessione);
             ordineBox->nuovoOrdine(ID_SESSIONE_TEST);
             enterTest();
         }
-        if(confMap->value("nascondeCursore").toBool()) {
+        if(confMap->value("NASCONDECURSORE").toBool()) {
             if(!isHiddenCursor)
                 QGuiApplication::setOverrideCursor(Qt::BlankCursor);
             isHiddenCursor=true;
@@ -328,7 +328,7 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
     ui->articoliStackedWidget->addWidget(pagina);
     pagina->setLayout(griglia);
 
-    bool visualizzaPrezzo = confMap->value("visualizzazionePrezzo").toBool();
+    bool visualizzaPrezzo = confMap->value("VISUALIZZAZIONEPREZZO").toBool();
     for (int riga = 0; riga < NUM_RIGHE_ART; riga++) {
         for (int col = 0; col < NUM_COLONNE_ART; col++) {
 
@@ -365,13 +365,13 @@ void MainWindow::creaArticoliPerRepartoButtons(int numReparto, RepartoBtnWidget*
 void MainWindow::creaInfoMessaggi()
 {
     QStringList messaggi = QString("GESTIONE\nCASSA,versione\n%1").arg(VERSIONE).split(",");
-    QString descrizione = confMap->value("descrManifestazione").toString();
+    QString descrizione = confMap->value("DESCRMANIFESTAZIONE").toString();
     if (!descrizione.isEmpty()) {
         messaggi.insert(0, descrizione);
     }
     info->setListaTesto(messaggi);
 
-    QString nomeCassa=QString("CASSA: %1").arg(confMap->value("nomeCassa").toString());
+    QString nomeCassa=QString("CASSA: %1").arg(confMap->value("NOMECASSA").toString());
     ui->nomaCassaText->setText(nomeCassa);
 
 }
@@ -424,15 +424,16 @@ void MainWindow::on_funzioniBtn_clicked()
 
 void MainWindow::on_reportBtn_clicked()
 {
-    ReportForm form(confMap);
+    QString descrizione = confMap->value("DESCRMANIFESTAZIONE").toString();
+    ReportForm form(descrizione);
     form.exec();
 }
 
 void MainWindow::on_statsBtn_clicked()
 {
-  int idSessione = confMap->value("sessioneCorrente").toInt();
+  int idSessione = confMap->value("SESSIONECORRENTE").toInt();
   if (ID_SESSIONE_TEST == idSessione) {
-      idSessione = confMap->value("sessioneSalvata").toInt();
+      idSessione = confMap->value("SESSIONESALVATA").toInt();
   }
   StatsForm form(idSessione, confMap, this);
   //form.setWindowState(Qt::WindowMaximized);
@@ -462,9 +463,9 @@ bool MainWindow::isPasswordOK(const QString pwd) {
     if(0==pwd.compare(emergencyPwd)) {
       return true;
     }
-    if(!aggiornaConfigurazioneDaDB("adminPassword"))
+    if(!aggiornaConfigurazioneDaDB("ADMINPASSWORD"))
       return false;
-    QString adminPassword = confMap->value("adminPassword").toString();
+    QString adminPassword = confMap->value("ADMINPASSWORD").toString();
     if (adminPassword.isEmpty()) {
         adminPassword = "12345";
     } else {
@@ -581,9 +582,9 @@ void MainWindow::exitTest()
 
 void MainWindow::on_stornoBtn_clicked()
 {
-    int idSessione = confMap->value("sessioneCorrente").toInt();
+    int idSessione = confMap->value("SESSIONECORRENTE").toInt();
     if (ID_SESSIONE_TEST == idSessione) {
-        idSessione = confMap->value("sessioneSalvata").toInt();
+        idSessione = confMap->value("SESSIONESALVATA").toInt();
     }
     StoricoOrdini dlg(idSessione);
     dlg.exec();
@@ -682,7 +683,7 @@ void MainWindow::ricaricaArchivio()
 
   //qApp->setOverrideCursor(Qt::WaitCursor);
 
-  const QString chiaviConfRemote="descrManifestazione,printIntestazione,intestazione,printFondo,fondo,printLogo,logoPixmap,printLogoFondo,logoFondoPixmap,sessioneCorrente";
+  const QString chiaviConfRemote="DESCRMANIFESTAZIONE,PRINTINTESTAZIONE,INTESTAZIONE,PRINTFONDO,FONDO,PRINTLOGO,LOGOPIXMAP,PRINTLOGOFONDO,LOGOFONDOPIXMAP,SESSIONECORRENTE";
   foreach (QString nomePar,chiaviConfRemote.split(',')) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
         //qApp->restoreOverrideCursor();
@@ -694,7 +695,7 @@ void MainWindow::ricaricaArchivio()
   gestioneModalita(CASSA);
 
   creaInfoMessaggi();
-  int idSessione = confMap->value("sessioneCorrente").toInt();
+  int idSessione = confMap->value("SESSIONECORRENTE").toInt();
   ordineBox->nuovoOrdine(idSessione);
 
   //qApp->restoreOverrideCursor();
@@ -725,7 +726,7 @@ void MainWindow::impostaUltimoAggiornamentoDB(){
 bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
 
   QString sql;
-  if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+  if(nomePar.contains("PIXMAP",Qt::CaseInsensitive)) {
     sql="select oggetto from risorse where id=?";
   } else {
     sql="select valore from configurazione where chiave=?";
@@ -745,7 +746,7 @@ bool MainWindow::aggiornaConfigurazioneDaDB(const QString nomePar) {
   }
 
   if(stmt.next()) {
-    if(nomePar.contains("pixmap",Qt::CaseInsensitive)) {
+    if(nomePar.contains("PIXMAP",Qt::CaseInsensitive)) {
       confMap->insert(nomePar, stmt.value(0).toByteArray());
     } else {
       confMap->insert(nomePar, stmt.value(0).toString());

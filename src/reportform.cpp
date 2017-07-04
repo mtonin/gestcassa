@@ -10,7 +10,7 @@
 #include <QTextDocumentWriter>
 #include <QMessageBox>
 
-ReportForm::ReportForm(QMap<QString, QVariant>* par, QWidget *parent) : configurazione(par), QDialog(parent)
+ReportForm::ReportForm(QString par, QWidget *parent) : descrManifestazione(par), QDialog(parent)
 {
     setupUi(this);
     setWindowFlags(Qt::Tool);
@@ -433,7 +433,7 @@ void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, boo
 {
 
     TextPrinter* tprinter = new TextPrinter(this);
-    QString header = QString("<center><b>%1<br>%2</b></center>").arg(configurazione->value("descrManifestazione").toString()).arg(descrReport);
+    QString header = QString("<center><b>%1<br>%2</b></center>").arg(descrManifestazione).arg(descrReport);
     tprinter->setHeaderText(header);
     tprinter->setFooterText("<center><b>GESTIONE CASSA</b><br>Pag. &page;</center>");
     tprinter->setHeaderSize(5);
@@ -600,4 +600,3 @@ QTextDocument *ReportForm::creaFoglioPrenotazioni()
 
     return documento;
 }
-

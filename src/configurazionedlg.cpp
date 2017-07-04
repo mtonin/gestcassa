@@ -16,34 +16,34 @@
 #include <QSettings>
 
 const QStringList chiaviConfLocale=QStringList()
-                                    << "visualizzazionePrezzo"
-                                    << "abilitaResto"
-                                    << "durataResto"
-                                    << "stampantePdf"
-                                    << "stampante"
-                                    << "idCassa"
-                                    << "inifile"
-                                    << "dbFilePath"
-                                    << "serieRitiro"
-                                    << "nascondeCursore"
-                                    << "larghezzaFoglio"
-                                    << "lunghezzaFoglio"
-                                    << "margineDX"
-                                    << "margineSX"
-                                    << "printerFont"
-                                    << "printerResolution"
-                                    << "printerWinWidth";
+                                    << "VISUALIZZAZIONEPREZZO"
+                                    << "ABILITARESTO"
+                                    << "DURATARESTO"
+                                    << "STAMPANTEPDF"
+                                    << "STAMPANTE"
+                                    << "IDCASSA"
+                                    << "INIFILE"
+                                    << "DBFILEPATH"
+                                    << "SERIERITIRO"
+                                    << "NASCONDECURSORE"
+                                    << "LARGHEZZAFOGLIO"
+                                    << "LUNGHEZZAFOGLIO"
+                                    << "MARGINEDX"
+                                    << "MARGINESX"
+                                    << "PRINTERFONT"
+                                    << "PRINTERRESOLUTION"
+                                    << "PRINTERWINWIDTH";
 
 const QStringList chiaviConfRemote=QStringList()
-                                    << "descrManifestazione"
-                                    << "printIntestazione"
-                                    << "intestazione"
-                                    << "printFondo"
-                                    << "fondo"
-                                    << "printLogo"
-                                    << "logoPixmap"
-                                    << "printLogoFondo"
-                                    << "logoFondoPixmap";
+                                    << "DESCRMANIFESTAZIONE"
+                                    << "PRINTINTESTAZIONE"
+                                    << "INTESTAZIONE"
+                                    << "PRINTFONDO"
+                                    << "FONDO"
+                                    << "PRINTLOGO"
+                                    << "LOGOPIXMAP"
+                                    << "PRINTLOGOFONDO"
+                                    << "LOGOFONDOPIXMAP";
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazioneAttuale(par), QDialog(parent)
 {
@@ -61,14 +61,14 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     cifratore = new SimpleCrypt(Q_UINT64_C(0x529c2c1779964f9d));
 
-    cartellaPdfTxt->setText(nuovaConfigurazione->value("cartellaPdf", "").toString());
-    if (nuovaConfigurazione->value("stampantePdf", true).toBool()) {
+    cartellaPdfTxt->setText(nuovaConfigurazione->value("CARTELLAPDF", "").toString());
+    if (nuovaConfigurazione->value("STAMPANTEPDF", true).toBool()) {
         pdfChk->setChecked(true);
     } else {
         stampanteChk->setChecked(true);
     }
 
-    QString stampanteSelezionata = nuovaConfigurazione->value("stampante").toString();
+    QString stampanteSelezionata = nuovaConfigurazione->value("STAMPANTE").toString();
     QList<QPrinterInfo> listaStampanti = QPrinterInfo::availablePrinters();
     int idx = 0;
     foreach(QPrinterInfo stampante, listaStampanti) {
@@ -78,40 +78,40 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
         }
         idx++;
     }
-    intestazioneScontrinoTxt->setPlainText(nuovaConfigurazione->value("intestazione").toString());
-    fondoScontrinoTxt->setPlainText(nuovaConfigurazione->value("fondo").toString());
-    durataRestoTxt->setText(nuovaConfigurazione->value("durataResto", 5).toString());
-    attivaRestoCheck->setChecked(nuovaConfigurazione->value("abilitaResto", false).toBool());
-    nomeCassaTxt->setText(nuovaConfigurazione->value("nomeCassa").toString());
-    descrManifestazioneTxt->setText(nuovaConfigurazione->value("descrManifestazione").toString());
-    visualizzaPrezzoBox->setChecked(nuovaConfigurazione->value("visualizzazionePrezzo",false).toBool());
-    nascondeCursoreBox->setChecked(nuovaConfigurazione->value("nascondeCursore",false).toBool());
+    intestazioneScontrinoTxt->setPlainText(nuovaConfigurazione->value("INTESTAZIONE").toString());
+    fondoScontrinoTxt->setPlainText(nuovaConfigurazione->value("FONDO").toString());
+    durataRestoTxt->setText(nuovaConfigurazione->value("DURATARESTO", 5).toString());
+    attivaRestoCheck->setChecked(nuovaConfigurazione->value("ABILITARESTO", false).toBool());
+    nomeCassaTxt->setText(nuovaConfigurazione->value("NOMECASSA").toString());
+    descrManifestazioneTxt->setText(nuovaConfigurazione->value("DESCRMANIFESTAZIONE").toString());
+    visualizzaPrezzoBox->setChecked(nuovaConfigurazione->value("VISUALIZZAZIONEPREZZO",false).toBool());
+    nascondeCursoreBox->setChecked(nuovaConfigurazione->value("NASCONDECURSORE",false).toBool());
 
-    QString pwdCifrata = nuovaConfigurazione->value("adminPassword").toString();
+    QString pwdCifrata = nuovaConfigurazione->value("ADMINPASSWORD").toString();
     pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
     adminPasswordTxt->setText(pwdInChiaro);
 
-    dbPathTxt->setPlainText(nuovaConfigurazione->value("dbFilePath").toString());
-    //QString ser=configurazione->value("serieRitiro","Z").toString();
+    dbPathTxt->setPlainText(nuovaConfigurazione->value("DBFILEPATH").toString());
+    //QString ser=configurazione->value("SERIERITIRO","Z").toString();
     //int num=ser.at(0).unicode();
-    serieRitiroTxt->setCurrentIndex(nuovaConfigurazione->value("serieRitiro", "A").toString().at(0).unicode() - QChar('A').unicode());
+    serieRitiroTxt->setCurrentIndex(nuovaConfigurazione->value("SERIERITIRO", "A").toString().at(0).unicode() - QChar('A').unicode());
 
-    logoCheckBox->setChecked(nuovaConfigurazione->value("printLogo", false).toBool());
+    logoCheckBox->setChecked(nuovaConfigurazione->value("PRINTLOGO", false).toBool());
     logoIntestazioneBtn->setEnabled(logoCheckBox->isChecked());
     cancellaLogoBtn->setEnabled(logoCheckBox->isChecked());
-    logoFondoCheckBox->setChecked(nuovaConfigurazione->value("printLogoFondo", false).toBool());
+    logoFondoCheckBox->setChecked(nuovaConfigurazione->value("PRINTLOGOFONDO", false).toBool());
     logoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     cancellaLogoFondoBtn->setEnabled(logoFondoCheckBox->isChecked());
     QPixmap logo;
-    logo.loadFromData(nuovaConfigurazione->value("logoPixmap").toByteArray());
+    logo.loadFromData(nuovaConfigurazione->value("LOGOPIXMAP").toByteArray());
     logoPreview->setPixmap(logo);
     QPixmap logoFondo;
-    logoFondo.loadFromData(nuovaConfigurazione->value("logoFondoPixmap").toByteArray());
+    logoFondo.loadFromData(nuovaConfigurazione->value("LOGOFONDOPIXMAP").toByteArray());
     logoFondoPreview->setPixmap(logoFondo);
 
-    intestazioneCheckBox->setChecked(nuovaConfigurazione->value("printIntestazione", false).toBool());
+    intestazioneCheckBox->setChecked(nuovaConfigurazione->value("PRINTINTESTAZIONE", false).toBool());
     intestazioneScontrinoTxt->setEnabled(intestazioneCheckBox->isChecked());
-    fondoCheckBox->setChecked(nuovaConfigurazione->value("printFondo", false).toBool());
+    fondoCheckBox->setChecked(nuovaConfigurazione->value("PRINTFONDO", false).toBool());
     fondoScontrinoTxt->setEnabled(fondoCheckBox->isChecked());
 
     tabWidget->setCurrentIndex(0);
@@ -143,13 +143,13 @@ void ConfigurazioneDlg::on_printerSelectBtn_clicked()
     if (QDialog::Accepted == pageSetupDlg.exec()) {
     }
 
-    //nuovaConfigurazione->insert("stampante",printer.printerName());
+    //nuovaConfigurazione->insert("STAMPANTE",printer.printerName());
 
 }
 
 void ConfigurazioneDlg::on_buttonBox_accepted()
 {
-    QSettings confLocale(configurazioneAttuale->value("iniFile").toString(),QSettings::IniFormat);
+    QSettings confLocale(configurazioneAttuale->value("INIFILE").toString(),QSettings::IniFormat);
     confLocale.beginGroup("CONFIGURAZIONE");
     QSqlQuery stmt;
     foreach(QString key, nuovaConfigurazione->keys()) {
@@ -162,8 +162,8 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             continue;
         }
         stmt.clear();
-        if (0 == QString::compare(key,"logoPixmap", Qt::CaseInsensitive) ||
-            0 == QString::compare(key,"logoFondoPixmap",Qt::CaseInsensitive)) {
+        if (0 == QString::compare(key,"LOGOPIXMAP", Qt::CaseInsensitive) ||
+            0 == QString::compare(key,"LOGOFONDOPIXMAP",Qt::CaseInsensitive)) {
             if(nuovoValore.toByteArray()==configurazioneAttuale->value(key).toByteArray())
                 continue;
             if(!stmt.prepare("update or insert into risorse (id,oggetto) values (?,?)")) {
@@ -176,7 +176,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             configurazioneAttuale->insert(key,nuovoValore.toByteArray());
             stmt.addBindValue(key);
             stmt.addBindValue(nuovoValore.toByteArray());
-        } else if(0==QString::compare(key,"nomeCassa",Qt::CaseInsensitive)) {
+        } else if(0==QString::compare(key,"NOMECASSA",Qt::CaseInsensitive)) {
             if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
                 continue;
             configurazioneAttuale->insert(key,nuovoValore.toString());
@@ -228,21 +228,21 @@ void ConfigurazioneDlg::on_attivaRestoCheck_toggled(bool checked)
 {
     durataRestoLbl->setEnabled(checked);
     durataRestoTxt->setEnabled(checked);
-    nuovaConfigurazione->insert("abilitaResto", checked);
+    nuovaConfigurazione->insert("ABILITARESTO", checked);
 }
 
 void ConfigurazioneDlg::on_stampanteChk_toggled(bool checked)
 {
     stampanteBox->setEnabled(checked);
     printerSelectBtn->setEnabled(checked);
-    nuovaConfigurazione->insert("stampantePdf", !checked);
+    nuovaConfigurazione->insert("STAMPANTEPDF", !checked);
 }
 
 void ConfigurazioneDlg::on_pdfChk_toggled(bool checked)
 {
     cartellaPdfBtn->setEnabled(checked);
     cartellaPdfTxt->setEnabled(checked);
-    nuovaConfigurazione->insert("stampantePdf", checked);
+    nuovaConfigurazione->insert("STAMPANTEPDF", checked);
 }
 
 void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
@@ -252,43 +252,43 @@ void ConfigurazioneDlg::on_cartellaPdfBtn_clicked()
     if (!cartella.isEmpty()) {
         cartellaPdfTxt->setText(cartella);
     }
-    nuovaConfigurazione->insert("cartellaPdf", cartella);
+    nuovaConfigurazione->insert("CARTELLAPDF", cartella);
 
 }
 
 void ConfigurazioneDlg::on_cartellaPdfTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("cartellaPdf", cartellaPdfTxt->text());
+    nuovaConfigurazione->insert("CARTELLAPDF", cartellaPdfTxt->text());
 }
 
 void ConfigurazioneDlg::on_nomeCassaTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("nomeCassa", nomeCassaTxt->text());
+    nuovaConfigurazione->insert("NOMECASSA", nomeCassaTxt->text());
 }
 
 void ConfigurazioneDlg::on_durataRestoTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("durataResto", durataRestoTxt->text());
+    nuovaConfigurazione->insert("DURATARESTO", durataRestoTxt->text());
 }
 
 void ConfigurazioneDlg::on_descrManifestazioneTxt_editingFinished()
 {
-    nuovaConfigurazione->insert("descrManifestazione", descrManifestazioneTxt->text());
+    nuovaConfigurazione->insert("DESCRMANIFESTAZIONE", descrManifestazioneTxt->text());
 }
 
 void ConfigurazioneDlg::on_intestazioneScontrinoTxt_textChanged()
 {
-    nuovaConfigurazione->insert("intestazione", intestazioneScontrinoTxt->toPlainText());
+    nuovaConfigurazione->insert("INTESTAZIONE", intestazioneScontrinoTxt->toPlainText());
 }
 
 void ConfigurazioneDlg::on_fondoScontrinoTxt_textChanged()
 {
-    nuovaConfigurazione->insert("fondo", fondoScontrinoTxt->toPlainText());
+    nuovaConfigurazione->insert("FONDO", fondoScontrinoTxt->toPlainText());
 }
 
 void ConfigurazioneDlg::on_visualizzaPrezzoBox_clicked(bool checked)
 {
-    nuovaConfigurazione->insert("visualizzazionePrezzo", checked);
+    nuovaConfigurazione->insert("VISUALIZZAZIONEPREZZO", checked);
     emit cambiaVisualizzaPrezzo(checked);
 }
 
@@ -309,7 +309,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
         return;
     }
 
-    int idSessioneCorrente = nuovaConfigurazione->value("sessioneCorrente").toInt();
+    int idSessioneCorrente = nuovaConfigurazione->value("SESSIONECORRENTE").toInt();
     idSessioneCorrente++;
 
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
@@ -328,7 +328,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
         return;
     }
 
-    nuovaConfigurazione->insert("sessioneCorrente", idSessioneCorrente);
+    nuovaConfigurazione->insert("SESSIONECORRENTE", idSessioneCorrente);
 
     db.commit();
     emit resetOrdini(idSessioneCorrente);
@@ -337,7 +337,7 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
 
 void ConfigurazioneDlg::on_stampanteBox_activated(const QString &arg1)
 {
-    nuovaConfigurazione->insert("stampante", arg1);
+    nuovaConfigurazione->insert("STAMPANTE", arg1);
 }
 
 void ConfigurazioneDlg::on_exportOrdiniBtn_clicked()
@@ -481,38 +481,38 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
-    QString str = nuovaConfigurazione->value("descrManifestazione").toString();
-    QString riga = QString("CONFIGURAZIONE#§descrManifestazione#§%1")
+    QString str = nuovaConfigurazione->value("DESCRMANIFESTAZIONE").toString();
+    QString riga = QString("CONFIGURAZIONE#§DESCRMANIFESTAZIONE#§%1")
                    .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("printIntestazione").toString();
-    riga = QString("CONFIGURAZIONE#§printIntestazione#§%1")
+    str = nuovaConfigurazione->value("PRINTINTESTAZIONE").toString();
+    riga = QString("CONFIGURAZIONE#§PRINTINTESTAZIONE#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("intestazione").toString();
-    riga = QString("CONFIGURAZIONE#§intestazione#§%1")
+    str = nuovaConfigurazione->value("INTESTAZIONE").toString();
+    riga = QString("CONFIGURAZIONE#§INTESTAZIONE#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("printFondo").toString();
-    riga = QString("CONFIGURAZIONE#§printFondo#§%1")
+    str = nuovaConfigurazione->value("PRINTFONDO").toString();
+    riga = QString("CONFIGURAZIONE#§PRINTFONDO#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("fondo").toString();
-    riga = QString("CONFIGURAZIONE#§fondo#§%1")
+    str = nuovaConfigurazione->value("FONDO").toString();
+    riga = QString("CONFIGURAZIONE#§FONDO#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("printLogo").toString();
-    riga = QString("CONFIGURAZIONE#§printLogo#§%1")
+    str = nuovaConfigurazione->value("PRINTLOGO").toString();
+    riga = QString("CONFIGURAZIONE#§PRINTLOGO#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
-    str = nuovaConfigurazione->value("printLogoFondo").toString();
-    riga = QString("CONFIGURAZIONE#§printLogoFondo#§%1")
+    str = nuovaConfigurazione->value("PRINTLOGOFONDO").toString();
+    riga = QString("CONFIGURAZIONE#§PRINTLOGOFONDO#§%1")
            .arg(str.isEmpty() ? "NULL" : str);
     exportLista.append(riga);
 
@@ -737,7 +737,7 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
                   db.rollback();
                   return;
                 }
-                stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
+                stmt.addBindValue(valutaStringa(campiInput.at(++idx)).toString().toUpper());
                 stmt.addBindValue(valutaStringa(campiInput.at(++idx)));
             }
             if (0 == tabella.compare("risorse", Qt::CaseInsensitive)) {
@@ -817,7 +817,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         return;
     }
 
-    int idSessioneCorrente = nuovaConfigurazione->value("sessioneCorrente").toInt();
+    int idSessioneCorrente = nuovaConfigurazione->value("SESSIONECORRENTE").toInt();
     idSessioneCorrente++;
 
     if(!stmt.prepare("insert into sessione (idsessione,tsinizio) values (?,'now')")) {
@@ -837,30 +837,30 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
         return;
     }
 
-    nuovaConfigurazione->insert("sessioneCorrente", idSessioneCorrente);
+    nuovaConfigurazione->insert("SESSIONECORRENTE", idSessioneCorrente);
 
     db.commit();
     emit resetOrdini(idSessioneCorrente);
     emit resetArticoli();
 
-    nuovaConfigurazione->insert("intestazione", "");
-    nuovaConfigurazione->insert("fondo", "");
-    nuovaConfigurazione->insert("durataResto", "5");
-    nuovaConfigurazione->insert("abilitaResto", "");
-    nuovaConfigurazione->insert("stampante", "");
-    nuovaConfigurazione->insert("cartellaPdf", "");
-    nuovaConfigurazione->insert("stampantePdf", "");
-    nuovaConfigurazione->insert("nomeCassa", "");
-    nuovaConfigurazione->insert("descrManifestazione", "");
-    nuovaConfigurazione->insert("visualizzazionePrezzo", "");
-    nuovaConfigurazione->insert("nascondeCursore", "");
-    nuovaConfigurazione->insert("serieRitiro", "A");
-    nuovaConfigurazione->insert("printLogo", "");
-    nuovaConfigurazione->insert("printIntestazione", "");
-    nuovaConfigurazione->insert("logoPixmap", "");
-    nuovaConfigurazione->insert("printLogoFondo", "");
-    nuovaConfigurazione->insert("printFondo", "");
-    nuovaConfigurazione->insert("logoFondoPixmap", "");
+    nuovaConfigurazione->insert("INTESTAZIONE", "");
+    nuovaConfigurazione->insert("FONDO", "");
+    nuovaConfigurazione->insert("DURATARESTO", "5");
+    nuovaConfigurazione->insert("ABILITARESTO", "");
+    nuovaConfigurazione->insert("STAMPANTE", "");
+    nuovaConfigurazione->insert("CARTELLAPDF", "");
+    nuovaConfigurazione->insert("STAMPANTEPDF", "");
+    nuovaConfigurazione->insert("NOMECASSA", "");
+    nuovaConfigurazione->insert("DESCRMANIFESTAZIONE", "");
+    nuovaConfigurazione->insert("VISUALIZZAZIONEPREZZO", "");
+    nuovaConfigurazione->insert("NASCONDECURSORE", "");
+    nuovaConfigurazione->insert("SERIERITIRO", "A");
+    nuovaConfigurazione->insert("PRINTLOGO", "");
+    nuovaConfigurazione->insert("PRINTINTESTAZIONE", "");
+    nuovaConfigurazione->insert("LOGOPIXMAP", "");
+    nuovaConfigurazione->insert("PRINTLOGOFONDO", "");
+    nuovaConfigurazione->insert("PRINTFONDO", "");
+    nuovaConfigurazione->insert("LOGOFONDOPIXMAP", "");
 
     on_buttonBox_accepted();
 }
@@ -893,9 +893,9 @@ void ConfigurazioneDlg::selezionaLogo(const QString nomePar) {
 
   QPixmap logo;
   logo.load(logoFileName);
-  if(nomePar.compare("logoPixmap")==0)
+  if(nomePar.compare("LOGOPIXMAP")==0)
     logoPreview->setPixmap(logo);
-  if(nomePar.compare("logoFondoPixmap")==0)
+  if(nomePar.compare("LOGOFONDOPIXMAP")==0)
     logoFondoPreview->setPixmap(logo);
   QByteArray logoData;
   QBuffer logoBuffer(&logoData);
@@ -939,61 +939,61 @@ bool ConfigurazioneDlg::aggiornaConfigurazioneDaDB(const QString nomePar) {
 }
 
 void ConfigurazioneDlg::on_logoIntestazioneBtn_clicked(){
-  selezionaLogo("logoPixmap");
+  selezionaLogo("LOGOPIXMAP");
 }
 
 void ConfigurazioneDlg::on_logoFondoBtn_clicked(){
-  selezionaLogo("logoFondoPixmap");
+  selezionaLogo("LOGOFONDOPIXMAP");
 }
 
 void ConfigurazioneDlg::on_logoCheckBox_clicked(bool checked)
 {
-    nuovaConfigurazione->insert("printLogo", checked);
+    nuovaConfigurazione->insert("PRINTLOGO", checked);
 }
 
 void ConfigurazioneDlg::on_logoFondoCheckBox_clicked(bool checked)
 {
-    nuovaConfigurazione->insert("printLogoFondo", checked);
+    nuovaConfigurazione->insert("PRINTLOGOFONDO", checked);
 }
 
 void ConfigurazioneDlg::on_intestazioneCheckBox_clicked(bool checked)
 {
-    nuovaConfigurazione->insert("printIntestazione", checked);
+    nuovaConfigurazione->insert("PRINTINTESTAZIONE", checked);
 }
 
 void ConfigurazioneDlg::on_fondoCheckBox_clicked(bool checked)
 {
-    nuovaConfigurazione->insert("printFondo", checked);
+    nuovaConfigurazione->insert("PRINTFONDO", checked);
 }
 
 void ConfigurazioneDlg::on_cancellaLogoBtn_clicked()
 {
     logoPreview->setPixmap(QPixmap());
-    nuovaConfigurazione->insert("logoPixmap",NULL);
+    nuovaConfigurazione->insert("LOGOPIXMAP",NULL);
 }
 
 void ConfigurazioneDlg::on_cancellaLogoFondoBtn_clicked()
 {
   logoFondoPreview->setPixmap(QPixmap());
-  nuovaConfigurazione->insert("logoFondoPixmap",NULL);
+  nuovaConfigurazione->insert("LOGOFONDOPIXMAP",NULL);
 }
 
 void ConfigurazioneDlg::on_nascondeCursoreBox_clicked(bool checked)
 {
-  nuovaConfigurazione->insert("nascondeCursore", checked);
+  nuovaConfigurazione->insert("NASCONDECURSORE", checked);
 }
 
 void ConfigurazioneDlg::on_adminPasswordTxt_editingFinished()
 {
     if (pwdInChiaro != adminPasswordTxt->text()) {
         QString pwdCifrata = cifratore->encryptToString(adminPasswordTxt->text());
-        nuovaConfigurazione->insert("adminPassword", pwdCifrata);
+        nuovaConfigurazione->insert("ADMINPASSWORD", pwdCifrata);
     }
 }
 
 void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index)
 {
-    nuovaConfigurazione->insert("serieRitiro", QChar('A' + index));
+    nuovaConfigurazione->insert("SERIERITIRO", QChar('A' + index));
 }
 
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)

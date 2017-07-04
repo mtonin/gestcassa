@@ -9,7 +9,7 @@ class ReportForm : public QDialog, private Ui::ReportForm
     Q_OBJECT
 
 public:
-    explicit ReportForm(QMap<QString, QVariant>* par, QWidget *parent = 0);
+    explicit ReportForm(QString par, QWidget *parent = 0);
 private slots:
     void stampa(bool preview);
 
@@ -29,7 +29,7 @@ private:
     void putHeader(QTextCursor cursore, const QString testo);
     void formattaTabella(QTextTable*, QVector<QString> colWidth);
 
-    QMap<QString, QVariant>* configurazione;
+    QString descrManifestazione;
 
 };
 
