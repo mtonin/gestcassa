@@ -34,6 +34,10 @@ void DettagliArticolo::setCurrentArticolo(const ArticoloBtnWidget *currentArtico
 {
 
     reset();
+    if(NULL==currentArticoloBtn) {
+        articoloBtn=NULL;
+        return;
+    }
     articoloBtn = (ArticoloBtnWidget*)currentArticoloBtn;
     testoArticolo->setText(articoloBtn->getNomeArticolo());
     QSqlQuery stmt;
@@ -391,8 +395,11 @@ void DettagliArticolo::on_articoliList_clicked(const QModelIndex &index)
 
 void DettagliArticolo::on_prezzoArticolo_editingFinished()
 {
-    prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
-    aggiornaArticolo();
+    // testa se articoloBtn è valido, in quanto la potrebbe essere stato cancellato
+    // da un'operazione di ricarica archivio
+    if(articoloBtn) {
+        prezzoArticolo->setText(QString("%L1").arg(articoloBtn->getPrezzo(), 4, 'f', 2));
+    }
 }
 
 void DettagliArticolo::on_disattivaFlag_clicked(bool checked)
