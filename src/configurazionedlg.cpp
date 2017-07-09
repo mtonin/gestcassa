@@ -43,7 +43,10 @@ const QStringList chiaviConfRemote=QStringList()
                                     << "PRINTLOGO"
                                     << "LOGOPIXMAP"
                                     << "PRINTLOGOFONDO"
-                                    << "LOGOFONDOPIXMAP";
+                                    << "LOGOFONDOPIXMAP"
+                                    << "SCONTO"
+                                    << "PERCENTUALESCONTO"
+                                    << "SCONTOMULTIPLO";
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazioneAttuale(par), QDialog(parent)
 {
@@ -86,6 +89,9 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
     descrManifestazioneTxt->setText(nuovaConfigurazione->value("DESCRMANIFESTAZIONE").toString());
     visualizzaPrezzoBox->setChecked(nuovaConfigurazione->value("VISUALIZZAZIONEPREZZO",false).toBool());
     nascondeCursoreBox->setChecked(nuovaConfigurazione->value("NASCONDECURSORE",false).toBool());
+    attivaScontoBox->setChecked(nuovaConfigurazione->value("SCONTO",false).toBool());
+    percentualeScontoTxt->setValue(nuovaConfigurazione->value("PERCENTUALESCONTO",0).toDouble());
+    scontiMultipliBox->setChecked(nuovaConfigurazione->value("SCONTOMULTIPLO",false).toBool());
 
     QString pwdCifrata = nuovaConfigurazione->value("ADMINPASSWORD").toString();
     pwdInChiaro = pwdCifrata.isEmpty()?"12345":cifratore->decryptToString(pwdCifrata);
@@ -999,4 +1005,22 @@ void ConfigurazioneDlg::on_serieRitiroTxt_currentIndexChanged(int index)
 void ConfigurazioneDlg::on_descrManifestazioneTxt_textEdited(const QString &arg1)
 {
     setCaratteriRimanenti();
+}
+
+void ConfigurazioneDlg::on_attivaScontoBox_toggled(bool checked)
+{
+    percentualeScontoTxt->setEnabled(checked);
+    scontiMultipliBox->setEnabled(checked);
+    nuovaConfigurazione->insert("SCONTO",checked);
+    emit(cambiaStatoSconto(checked));
+}
+
+void ConfigurazioneDlg::on_percentualeScontoTxt_editingFinished()
+{
+    nuovaConfigurazione->insert("PERCENTUALESCONTO",percentualeScontoTxt->text());
+}
+
+void ConfigurazioneDlg::on_scontiMultipliBox_toggled(bool checked)
+{
+    nuovaConfigurazione->insert("SCONTOMULTIPLO",checked);
 }

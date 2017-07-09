@@ -22,6 +22,7 @@ public slots:
     }
     void nuovoOrdine(const int);
     void clearSelezione();
+    void setStatoSconto(bool flag);
 
 private slots:
     void seleziona(const QModelIndex &indexNew);

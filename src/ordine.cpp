@@ -30,6 +30,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     importoOrdineCorrente = 0;
     idSessioneCorrente = configurazione->value("SESSIONECORRENTE").toInt();
     idCassa = configurazione->value("IDCASSA").toString();
+    setStatoSconto(configurazione->value("SCONTO",false).toBool());
 
     nuovoOrdine(idSessioneCorrente);
 
@@ -218,6 +219,11 @@ void Ordine::clearSelezione()
 {
     articoliTab->selectionModel()->select(QModelIndex(), QItemSelectionModel::Clear);
     controlli->close();
+}
+
+void Ordine::setStatoSconto(bool flag)
+{
+    scontoBtn->setVisible(flag);
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)

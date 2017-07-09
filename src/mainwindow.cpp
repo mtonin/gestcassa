@@ -406,7 +406,8 @@ void MainWindow::on_configurazioneBtn_clicked()
     connect(dlg, SIGNAL(resetOrdini(int)), ordineBox, SLOT(nuovoOrdine(int)));
     connect(dlg, SIGNAL(resetArticoli()), this, SLOT(creaRepartiButtons()));
     connect(dlg, SIGNAL(cambiaVisualizzaPrezzo(bool)), this, SLOT(visualizzaPrezzo(bool)));
-    connect(dlg,SIGNAL(configurazioneCambiata()),this,SLOT(impostaUltimoAggiornamentoDB()));
+    connect(dlg, SIGNAL(configurazioneCambiata()),this,SLOT(impostaUltimoAggiornamentoDB()));
+    connect(dlg, SIGNAL(cambiaStatoSconto(bool)),ordineBox,SLOT(setStatoSconto(bool)));
     dlg->exec();
 
     creaInfoMessaggi();

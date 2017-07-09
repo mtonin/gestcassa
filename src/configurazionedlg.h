@@ -15,6 +15,7 @@ signals:
     void resetArticoli();
     void configurazioneCambiata();
     void cambiaVisualizzaPrezzo(bool);
+    void cambiaStatoSconto(bool);
 
 public:
     explicit ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent = 0);
@@ -89,6 +90,12 @@ private slots:
     void on_serieRitiroTxt_currentIndexChanged(int index);
 
     void on_descrManifestazioneTxt_textEdited(const QString &arg1);
+
+    void on_attivaScontoBox_toggled(bool checked);
+
+    void on_percentualeScontoTxt_editingFinished();
+
+    void on_scontiMultipliBox_toggled(bool checked);
 
 private:
     void esportaInFile(const QString&);
