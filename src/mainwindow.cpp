@@ -267,6 +267,9 @@ void MainWindow::creaRepartiButtons()
     // ricarica la cache
     caricaArticoli();
 
+    // resetta l'articolo corrente del form dettagliArticolo
+    dettagliArticoloBox->setCurrentArticolo(NULL);
+
     // cancella i pulsanti degli articoli
     QListIterator<QStackedWidget*> itArticoli(articoliList);
     while (itArticoli.hasNext()) {
@@ -721,7 +724,7 @@ void MainWindow::impostaUltimoAggiornamentoDB(){
     }
     if (stmt.next()) {
         QString ultimoAggiornamento=stmt.value(0).toDateTime().toString();
-        qDebug(ultimoAggiornamento.toStdString().c_str());
+        //qDebug(ultimoAggiornamento.toStdString().c_str());
     }
 
 }
