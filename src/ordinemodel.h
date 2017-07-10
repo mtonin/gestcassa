@@ -23,7 +23,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     bool incrementa(const int id, const QString& descrizione, const float prezzo);
     void clear();
-    bool completaOrdine(const int, const float, const int, const QString, const QString nomeCassa);
+    bool completaOrdine(const int, const float, const int, const QString, const QString nomeCassa, const float percentualeSconto);
 
 private:
     class rigaArticoloClass

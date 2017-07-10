@@ -78,6 +78,9 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     pagPrevBtn->SetButtonColorPushed(Qt::magenta);
     pagNextBtn->SetButtonColorPushed(Qt::magenta);
     ristampaBtn->SetButtonColorPushed(Qt::magenta);
+    scontoBtn->SetButtonColorNormal(Qt::cyan);
+    scontoBtn->SetButtonColorHot(Qt::cyan);
+    scontoBtn->SetButtonColorPushed(Qt::magenta);
 
 }
 
@@ -126,18 +129,27 @@ void Ordine::seleziona(const QModelIndex &indexNew)
 void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 {
     importoOrdineCorrente = 0;
+    float percentualeSconto=0;
     for (int i = 0; i < modello.rowCount(QModelIndex()); i++) {
         importoOrdineCorrente += modello.index(i, 3).data(Qt::UserRole).toFloat();
     }
+
+    percentualeSconto=scontoTxt->text().toFloat();
+    float importoSconto=(importoOrdineCorrente/100)*percentualeSconto;
+    importoSconto=roundf(importoSconto*10)/10;
+    importoOrdineCorrente-=importoSconto;
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
 }
 
 void Ordine::on_annullaBtn_clicked()
 {
     if (!isInComposizione()) return;
-    ConfermaDlg* dlg = new ConfermaDlg("Confermi l'annullamento dell'ordine corrente?", "", false);
-    if (QDialog::Accepted != dlg->visualizza()) return;
+    ConfermaDlg dlg("Confermi l'annullamento dell'ordine corrente?", "", false);
+    if (QDialog::Accepted != dlg.visualizza()) return;
     modello.clear();
+    scontoLbl->setEnabled(false);
+    scontoTxt->setEnabled(false);
+    scontoTxt->setText("0");
 }
 
 void Ordine::on_ristampaBtn_clicked()
@@ -169,7 +181,7 @@ void Ordine::on_stampaBtn_clicked()
     }
 
     nomeCassa = configurazione->value("NOMECASSA", "000").toString();
-    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa)) {
+    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,scontoTxt->text().toFloat())) {
 
         stampaScontrino(numOrdineCorrente);
 
@@ -197,8 +209,7 @@ void Ordine::nuovoOrdine(const int idSessione)
     query.addBindValue(idSessioneCorrente);
     query.addBindValue(idCassa);
     if (!query.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              query.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
         return;
     }
     numOrdineCorrente = 0;
@@ -213,6 +224,10 @@ void Ordine::nuovoOrdine(const int idSessione)
     } else {
         importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine, 4, 'f', 2));
     }
+
+    scontoLbl->setEnabled(false);
+    scontoTxt->setEnabled(false);
+    scontoTxt->setText("0");
 }
 
 void Ordine::clearSelezione()
@@ -224,6 +239,8 @@ void Ordine::clearSelezione()
 void Ordine::setStatoSconto(bool flag)
 {
     scontoBtn->setVisible(flag);
+    scontoLbl->setVisible(flag);
+    scontoTxt->setVisible(flag);
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
@@ -349,8 +366,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
 
     // stampa scontrini per destinazione
 
-    //stmt.prepare("select distinct(destinazione) from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'M'");
-    if(!stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo <> 'M' and idcassa=?")) {
+    if(!stmt.prepare("select distinct(destinazione) from dettagliordine where tipoArticolo not in('M','X') and idcassa=?")) {
       QSqlError errore=stmt.lastError();
       QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
       QMessageBox::critical(this,"Errore",msg);
@@ -361,8 +377,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     stmt.addBindValue(idCassa);
 
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;
     }
     QStringList repartiStampaList;
@@ -379,8 +394,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         }
         stmt.addBindValue(destinazioneStampa);
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
             return;
         }
 
@@ -426,14 +440,6 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
         y += 10;
 
-        /*
-        stmt.prepare("SELECT descrizione,sum(quantita) \
-                     FROM storicoordini \
-                     where idsessione=? \
-                     and numeroordine=? \
-                     and coalesce(destinazione,'')=? \
-                     group by numeroordine,descrizione");
-        */
         if(!stmt.prepare("SELECT descrizione,sum(quantita) \
                  FROM dettagliordine \
                  where numeroordine=? \
@@ -451,8 +457,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         stmt.addBindValue(idCassa);
 
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
             return;
         }
         int numArticoli = 0;
@@ -543,8 +548,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     painter.drawLine(x, y + textRect.height() + 5, pageWidth, y + textRect.height() + 5);
     y += 10;
 
-    //stmt.prepare("select descrizione,quantita,prezzo*quantita from storicoordini where idsessione=? and numeroordine=? and tipoArticolo <> 'C'");
-    if(!stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo <> 'C' and idcassa=?")) {
+    if(!stmt.prepare("select descrizione,quantita,prezzo*quantita from dettagliordine where tipoArticolo not in ('C','X') and idcassa=?")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(this,"Errore",msg);
@@ -555,8 +559,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     stmt.addBindValue(idCassa);
 
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         return;
     }
     float totale = 0;
@@ -575,6 +578,38 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         painter.drawText(x + (pageWidth / 10) * 1+5, y, (pageWidth / 10) * 5 - 5, 1000, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descrizione, &textRect);
         painter.drawText(x + (pageWidth / 10) * 6, y, (pageWidth / 10) * 4, 100, Qt::AlignRight | Qt::AlignTop, prezzoString, &tmpRect);
     }
+
+    // stampa eventuale sconto
+    if(!stmt.prepare("select quantita from dettagliordine where tipoArticolo = 'X' and idcassa=?")) {
+        QSqlError errore=stmt.lastError();
+        QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+        QMessageBox::critical(this,"Errore",msg);
+        return;
+    }
+    stmt.addBindValue(idCassa);
+
+    if (!stmt.exec()) {
+       QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+       return;
+    }
+    while (stmt.next()) {
+        y += textRect.height() + 5;
+        painter.drawLine(x, y, pageWidth, y);
+        QString totaleString = QString("TOTALE PARZIALE:  %1 %L2").arg(QChar(0x20AC)).arg(totale, 6, 'f', 2);
+        y += 5;
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
+
+        QString descrSconto=configurazione->value("DESCRIZIONESCONTO","SCONTO E ARROT.").toString();
+        float percentualeSconto = 0;
+        percentualeSconto=stmt.value(0).toFloat();
+        float importoSconto=(totale/100)*percentualeSconto;
+        importoSconto=roundf(importoSconto*10)/10;
+        totale-=importoSconto;
+        QString scontoString=QString("%1: -%2 %L3").arg(descrSconto).arg(QChar(0x20AC)).arg(importoSconto,6,'f',2);
+        y += textRect.height();
+        painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, scontoString, &textRect);
+    }
+
     y += textRect.height() + 5;
     painter.drawLine(x, y, pageWidth, y);
 
@@ -582,6 +617,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     QString totaleString = QString("TOTALE: %1 %L2").arg(QChar(0x20AC)).arg(totale, 6, 'f', 2);
     painter.setFont(fontGrassetto);
     painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
+
+
     y += textRect.height() + 20;
 
     if(footerAbilitata && !fondo.isEmpty()) {
@@ -629,7 +666,6 @@ void Ordine::on_ultimoRestoBtn_clicked()
         RestoDlg restoDlg(importoUltimoOrdine, 0, this);
         restoDlg.exec();
     }
-
 }
 
 void Ordine::on_pagPrevBtn_clicked()
@@ -673,4 +709,18 @@ void Ordine::on_duplicaBtn_clicked()
         while (quantita-- > 0)
             nuovoArticolo(idArticolo, descrizione, prezzo);
     }
+}
+
+void Ordine::on_scontoBtn_clicked() {
+    if (!isInComposizione()) return;
+    bool flagSconto=!scontoLbl->isEnabled();
+    scontoLbl->setEnabled(flagSconto);
+    scontoTxt->setEnabled(flagSconto);
+    if(flagSconto) {
+        scontoTxt->setText(configurazione->value("PERCENTUALESCONTO").toString());
+    } else {
+        scontoTxt->setText("0");
+    }
+
+    ricalcolaTotale(QModelIndex(),QModelIndex());
 }

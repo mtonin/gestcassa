@@ -91,11 +91,13 @@ private slots:
 
     void on_descrManifestazioneTxt_textEdited(const QString &arg1);
 
-    void on_attivaScontoBox_toggled(bool checked);
-
     void on_percentualeScontoTxt_editingFinished();
 
     void on_scontiMultipliBox_toggled(bool checked);
+
+    void on_scontoBox_toggled(bool arg1);
+
+    void on_scontoDescrizioneTxt_editingFinished();
 
 private:
     void esportaInFile(const QString&);

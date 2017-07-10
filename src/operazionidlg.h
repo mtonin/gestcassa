@@ -1,7 +1,7 @@
 #ifndef OPERAZIONIDLG_H
 #define OPERAZIONIDLG_H
 
-#include <QDialog>
+#include "popupdialog.h"
 
 #include "commons.h"
 
@@ -10,7 +10,7 @@ namespace Ui
 class OperazioniDlg;
 }
 
-class OperazioniDlg : public QDialog
+class OperazioniDlg : public PopupDialog
 {
     Q_OBJECT
 
@@ -20,9 +20,6 @@ public:
 
 signals:
     void operazioneSelezionata(int);
-
-protected:
-    void paintEvent(QPaintEvent *);
 
 private slots:
     void pulsanteClicked(int idx);

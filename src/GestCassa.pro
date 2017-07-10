@@ -48,7 +48,9 @@ SOURCES += main.cpp\
     dbparamdlg.cpp \
     backgroundcontroller.cpp \
     messaggiodlg.cpp \
-    singleprocess.cpp
+    singleprocess.cpp \
+    popupdialog.cpp \
+    alerttesseredlg.cpp
 
 HEADERS  += mainwindow.h \
     ordine.h \
@@ -85,7 +87,9 @@ HEADERS  += mainwindow.h \
     dbparamdlg.h \
     backgroundcontroller.h \
     messaggiodlg.h \
-    singleprocess.h
+    singleprocess.h \
+    popupdialog.h \
+    alerttesseredlg.h
 
 FORMS    += mainwindow.ui \
     ordine.ui \
@@ -105,7 +109,8 @@ FORMS    += mainwindow.ui \
     buonidlg.ui \
     aboutdlg.ui \
     dbparamdlg.ui \
-    messaggiodlg.ui
+    messaggiodlg.ui \
+    alerttesseredlg.ui
 
 #include(version.txt)
 

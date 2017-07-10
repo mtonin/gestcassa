@@ -42,6 +42,8 @@ private slots:
 
     void on_duplicaBtn_clicked();
 
+    void on_scontoBtn_clicked();
+
 private:
     float importoUltimoOrdine;
     QMap<QString, QVariant>* configurazione;

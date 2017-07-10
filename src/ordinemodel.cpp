@@ -79,7 +79,7 @@ void OrdineModel::clear()
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa, const float percentualeSconto)
 {
     QSqlDatabase db=QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     if(!db.transaction()) {
@@ -128,14 +128,12 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
     stmt.addBindValue(numeroOrdine);
     stmt.addBindValue(importo);
     if (!stmt.exec()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         db.rollback();
         return false;
     }
     if (!stmt.next()) {
-        QMessageBox::critical(0, QObject::tr("Database Error"),
-                              stmt.lastError().text());
+        QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
         db.rollback();
         return false;
     }
@@ -154,8 +152,25 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         stmt.addBindValue(rigaArticolo.id);
         stmt.addBindValue(rigaArticolo.quantita);
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
+            db.rollback();
+            return false;
+        }
+    }
+    if(percentualeSconto>0) {
+        if(!stmt.prepare("insert into ordinirighe(idcassa,numeroordine,idarticolo,quantita) values(?,?,?,?)")) {
+              QSqlError errore=stmt.lastError();
+              QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
+              QMessageBox::critical(0,"Errore",msg);
+              db.rollback();
+              return false;
+        }
+        stmt.addBindValue(idCassa);
+        stmt.addBindValue(numeroOrdine);
+        stmt.addBindValue(999999);
+        stmt.addBindValue(percentualeSconto);
+        if (!stmt.exec()) {
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
             db.rollback();
             return false;
         }
@@ -176,8 +191,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         stmt.addBindValue(tsOrdine.toString("yyyy-MM-dd hh:mm:ss"));
         stmt.addBindValue(importo);
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
             db.rollback();
             return false;
         }
@@ -194,8 +208,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         stmt.addBindValue(numeroOrdine);
         stmt.addBindValue(idCassa);
         if (!stmt.exec()) {
-            QMessageBox::critical(0, QObject::tr("Database Error"),
-                                  stmt.lastError().text());
+            QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
             db.rollback();
             return false;
         }
@@ -230,7 +243,7 @@ QVariant OrdineModel::data(const QModelIndex &index, int role) const
             return QString("%L1").arg(totRiga, 4, 'f', 2);
         }
         if (Qt::UserRole == role) {
-            return totRiga = rigaArticolo.quantita * rigaArticolo.prezzo;
+            return rigaArticolo.quantita * rigaArticolo.prezzo;
         }
         if (Qt::TextAlignmentRole == role) return Qt::AlignRight | Qt::AlignVCenter;
         break;

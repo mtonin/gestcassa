@@ -269,6 +269,35 @@ bool DBManager::leggeConfigurazione()
        nuovaVersioneDB = 12;
     }
 
+    if (versioneDB < 13) {
+        if (!stmt.exec("DROP VIEW dettagliordine") ||
+            !stmt.exec("CREATE VIEW DETTAGLIORDINE \
+                          (IDCASSA, NUMEROORDINE, QUANTITA, DESCRIZIONE, DESTINAZIONE, PREZZO, TIPOARTICOLO) AS \
+       SELECT ordinirighe.idcassa, ordinirighe.numeroordine, ordinirighe.quantita, articoli.descrizione, articoli.destinazione, 0 AS prezzo, 'C' AS tipoArticolo \
+        FROM ordinirighe, articoli, articolimenu  \
+        WHERE ordinirighe.idarticolo = articolimenu.idarticolo  \
+              AND articolimenu.idarticolomenu = articoli.idarticolo  \
+       UNION ALL  \
+       SELECT ordinirighe.idcassa, ordinirighe.numeroordine, ordinirighe.quantita, articoli.descrizione, articoli.destinazione, articoli.prezzo, 'S' \
+       FROM ordinirighe, articoli  \
+       WHERE ordinirighe.idarticolo = articoli.idarticolo  \
+              AND articoli.gestioneMenu = 0  \
+       UNION ALL  \
+       SELECT ordinirighe.idcassa, ordinirighe.numeroordine, ordinirighe.quantita, articoli.descrizione, articoli.destinazione, articoli.prezzo, 'M'  \
+         FROM ordinirighe, articoli  \
+        WHERE ordinirighe.idarticolo = articoli.idarticolo  \
+              AND articoli.gestioneMenu = 1   \
+       UNION ALL  \
+       SELECT ordinirighe.idcassa, ordinirighe.numeroordine, ordinirighe.quantita, 'SCONTO', '', 0, 'X'  \
+         FROM ordinirighe   \
+        WHERE ordinirighe.IDARTICOLO=999999")) {
+            QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+            db.rollback();
+            return false;
+        }
+        nuovaVersioneDB = 13;
+    }
+
     if (versioneDB != nuovaVersioneDB) {
         versioneDB = nuovaVersioneDB;
         conf->insert("VERSIONE", versioneDB);
@@ -288,7 +317,11 @@ bool DBManager::leggeConfigurazione()
 
     }
 
-    db.commit();
+    if(!db.commit()) {
+        QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
+        db.rollback();
+        return false;
+    }
     return true;
 }
 
