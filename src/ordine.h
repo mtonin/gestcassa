@@ -4,6 +4,7 @@
 #include "ui_ordine.h"
 #include "ordinemodel.h"
 #include "controlliordine.h"
+#include "alerttesseredlg.h"
 #include <QStandardItemModel>
 #include <QMap>
 
@@ -13,6 +14,7 @@ class Ordine : public QWidget, private Ui::Ordine
 
 public:
     explicit Ordine(QMap<QString, QVariant>* par, QWidget *parent = 0);
+    ~Ordine();
 
 public slots:
     void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
@@ -55,6 +57,7 @@ private:
     OrdineModel modello;
     ControlliOrdine* controlli;
     void stampaScontrino(const int);
+    AlertTessereDlg* avvisoTessere;
 };
 
 #endif // ORDINE_H

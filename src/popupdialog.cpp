@@ -6,17 +6,17 @@
 #include <QPainterPathStroker>
 #include <QPainter>
 
-PopupDialog::PopupDialog( QWidget *parent) :
+PopupDialog::PopupDialog(bool isPopup, QWidget *parent) :
     QDialog(parent) {
 
-}
-
-void PopupDialog::avvia(bool isPopup, QPoint startPoint) {
     if(isPopup)
         setWindowFlags(Qt::Popup|Qt::FramelessWindowHint);
     else
         setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
+}
+
+void PopupDialog::avvia(QPoint startPoint) {
     activateWindow();
 
     QPoint pos = startPoint;
@@ -27,7 +27,12 @@ void PopupDialog::avvia(bool isPopup, QPoint startPoint) {
     connect(effetto, SIGNAL(finished()), this, SIGNAL(popupOk()));
 
     effetto->start(QAbstractAnimation::DeleteWhenStopped);
+}
 
+void PopupDialog::visualizza(QPoint pos) {
+    activateWindow();
+    move(pos);
+    show();
 }
 
 void PopupDialog::paintEvent(QPaintEvent *e)

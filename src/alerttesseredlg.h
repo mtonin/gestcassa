@@ -10,7 +10,8 @@ class AlertTessereDlg : public PopupDialog, private Ui::AlertTessereDlg
     Q_OBJECT
 
 public:
-    explicit AlertTessereDlg(QPoint startPoint, QWidget *parent = 0);
+    explicit AlertTessereDlg(QPoint pos, QWidget *parent = 0);
+
 private slots:
     void init();
     void on_chiudeBtn_clicked();

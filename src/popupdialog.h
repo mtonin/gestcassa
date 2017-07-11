@@ -8,9 +8,10 @@ class PopupDialog : public QDialog
     Q_OBJECT
 
 public:
-    PopupDialog(QWidget *parent = 0);
-    void avvia(bool isPopup, QPoint startPoint);
+    PopupDialog(bool isPopup, QWidget *parent = 0);
+    void avvia(QPoint startPoint);
 
+    void visualizza(QPoint pos);
 protected:
     void paintEvent(QPaintEvent *);
 

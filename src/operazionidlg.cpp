@@ -3,7 +3,7 @@
 #include <QSignalMapper>
 
 OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, QWidget *parent) :
-    PopupDialog(parent),
+    PopupDialog(true,parent),
     ui(new Ui::OperazioniDlg)
 {
     ui->setupUi(this);
@@ -23,7 +23,7 @@ OperazioniDlg::OperazioniDlg(modalitaType modalitaCorrente, QPoint startPoint, Q
         break;
     }
 
-    avvia(true,startPoint);
+    avvia(startPoint);
     connect(this,SIGNAL(popupOk()),this,SLOT(init()));
 }
 

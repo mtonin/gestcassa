@@ -1,11 +1,12 @@
 #include "alerttesseredlg.h"
 
-AlertTessereDlg::AlertTessereDlg(QPoint startPoint, QWidget *parent) :
-    PopupDialog(parent)
+AlertTessereDlg::AlertTessereDlg(QPoint pos, QWidget *parent) :
+    PopupDialog(false,parent)
 {
     setupUi(this);
-    avvia(false,startPoint);
-    connect(this,SIGNAL(popupOk()),this,SLOT(init()));
+    //avvia(startPoint);
+    //connect(this,SIGNAL(popupOk()),this,SLOT(init()));
+    visualizza(pos);
 }
 
 void AlertTessereDlg::init()
