@@ -84,6 +84,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     scontoBtn->SetButtonColorPushed(Qt::magenta);
 
     avvisoTessere=NULL;
+    percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
 }
 
 Ordine::~Ordine()
@@ -138,13 +139,11 @@ void Ordine::seleziona(const QModelIndex &indexNew)
 void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
 {
     importoOrdineCorrente = 0;
-    float percentualeSconto=0;
     for (int i = 0; i < modello.rowCount(QModelIndex()); i++) {
         importoOrdineCorrente += modello.index(i, 3).data(Qt::UserRole).toFloat();
     }
 
-    percentualeSconto=scontoTxt->text().toFloat();
-    float importoSconto=(importoOrdineCorrente/100)*percentualeSconto;
+    importoSconto=(importoOrdineCorrente/100)*percentualeSconto;
     importoSconto=((float)qRound(importoSconto*10))/10;
     importoOrdineCorrente-=importoSconto;
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
@@ -190,7 +189,7 @@ void Ordine::on_stampaBtn_clicked()
     }
 
     nomeCassa = configurazione->value("NOMECASSA", "000").toString();
-    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,scontoTxt->text().toFloat())) {
+    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,percentualeSconto,importoSconto)) {
 
         stampaScontrino(numOrdineCorrente);
 
@@ -247,7 +246,7 @@ void Ordine::nuovoOrdine(const int idSessione)
 
     scontoLbl->setEnabled(false);
     scontoTxt->setEnabled(false);
-    scontoTxt->setText("0");
+    scontoTxt->setText("0%");
 }
 
 void Ordine::clearSelezione()
@@ -733,13 +732,15 @@ void Ordine::on_duplicaBtn_clicked()
 
 void Ordine::on_scontoBtn_clicked() {
     if (!isInComposizione()) return;
+
+    percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
     bool flagSconto=!scontoLbl->isEnabled();
     scontoLbl->setEnabled(flagSconto);
     scontoTxt->setEnabled(flagSconto);
     if(flagSconto) {
-        scontoTxt->setText(configurazione->value("PERCENTUALESCONTO").toString());
+        scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
     } else {
-        scontoTxt->setText("0");
+        scontoTxt->setText("0%");
     }
 
     ricalcolaTotale(QModelIndex(),QModelIndex());

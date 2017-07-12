@@ -65,12 +65,20 @@ void StatsForm::ordinaByColumn(int column)
 void StatsForm::caricaStats()
 {
     QString sql("SELECT descrizione,sum(quantita),max(tsstampa) \
-              FROM storicoordini \
-              where \
-              %1 \
-              and lower(descrizione) like ? \
-              and tipoArticolo <> ? \
-              group by descrizione \
+                FROM storicoordini \
+                where \
+                %1 \
+                and lower(descrizione) like ? \
+                and tipoArticolo <> ? \
+                and tipoArticolo <> 'X' \
+                group by descrizione \
+              union all  \
+              SELECT 'SCONTO',count(*),max(tsstampa) \
+                     FROM storicoordini \
+                     where \
+                     %1 \
+                     and lower(descrizione) like ? \
+                     and tipoArticolo ='X' \
               order by 2 asc");
     QString condizione;
     if (sessioneBox->isChecked()) {
@@ -79,6 +87,7 @@ void StatsForm::caricaStats()
         condizione = "tsstampa between ? and ?";
     }
     sql = sql.arg(condizione);
+    qDebug(sql.toLatin1());
     QString tipoArticolo;
     if (expMenuBox->isChecked()) {
         tipoArticolo = "M";
@@ -103,8 +112,18 @@ void StatsForm::caricaStats()
 
     QString filtroNome=QString("%%%1%%").arg(filtroArticoloLbl->text().toLower());
     stmt.addBindValue(filtroNome);
-
     stmt.addBindValue(tipoArticolo);
+
+    if (sessioneBox->isChecked()) {
+        int sessioneSelezionata=sessioneCombo->model()->index(sessioneCombo->currentIndex(),1).data().toInt();
+        stmt.addBindValue(sessioneSelezionata);
+    } else {
+        QString from = QString("%1 %2").arg(fromData->date().toString("yyyy-MM-dd")).arg(fromOra->time().toString("hh:mm:ss"));
+        QString to = QString("%1 %2").arg(toData->date().toString("yyyy-MM-dd")).arg(toOra->time().toString("hh:mm:ss"));
+        stmt.addBindValue(from);
+        stmt.addBindValue(to);
+    }
+    stmt.addBindValue(filtroNome);
     if (!stmt.exec()) {
         QMessageBox::critical(0, QObject::tr("Database Error"), stmt.lastError().text());
         return;

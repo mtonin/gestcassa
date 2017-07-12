@@ -79,7 +79,7 @@ void OrdineModel::clear()
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa, const float percentualeSconto)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa, const float percentualeSconto, const float importoSconto)
 {
     QSqlDatabase db=QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     if(!db.transaction()) {
@@ -196,7 +196,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
             return false;
         }
 
-        if(!stmt.prepare("insert into storicoordinidett select ?,?,numeroordine,descrizione,quantita,destinazione,prezzo,tipoArticolo from dettagliordine where numeroordine=? and idcassa=?")) {
+        if(!stmt.prepare("insert into storicoordinidett select ?,?,numeroordine,descrizione,quantita,destinazione,iif(tipoArticolo='X',?,prezzo),tipoArticolo from dettagliordine where numeroordine=? and idcassa=?")) {
               QSqlError errore=stmt.lastError();
               QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
               QMessageBox::critical(0,"Errore",msg);
@@ -205,6 +205,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
         }
         stmt.addBindValue(idSessione);
         stmt.addBindValue(idCassa);
+        stmt.addBindValue(importoSconto);
         stmt.addBindValue(numeroOrdine);
         stmt.addBindValue(idCassa);
         if (!stmt.exec()) {

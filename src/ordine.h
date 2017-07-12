@@ -48,6 +48,8 @@ private slots:
 
 private:
     float importoUltimoOrdine;
+    float percentualeSconto;
+    float importoSconto;
     QMap<QString, QVariant>* configurazione;
     int idSessioneCorrente;
     QString idCassa;
