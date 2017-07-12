@@ -301,7 +301,7 @@
             <item>
              <widget class="QLineEdit" name="scontoDescrizioneTxt">
               <property name="maxLength">
-               <number>20</number>
+               <number>25</number>
               </property>
              </widget>
             </item>
