@@ -155,9 +155,7 @@ void Ordine::on_annullaBtn_clicked()
     ConfermaDlg dlg("Confermi l'annullamento dell'ordine corrente?", "", false);
     if (QDialog::Accepted != dlg.visualizza()) return;
     modello.clear();
-    scontoLbl->setEnabled(false);
-    scontoTxt->setEnabled(false);
-    scontoTxt->setText("0");
+    setSconto(false);
 }
 
 void Ordine::on_ristampaBtn_clicked()
@@ -244,10 +242,7 @@ void Ordine::nuovoOrdine(const int idSessione)
         importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine, 4, 'f', 2));
     }
 
-    scontoLbl->setEnabled(false);
-    scontoTxt->setEnabled(false);
-    percentualeSconto=0;
-    scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
+    setSconto(false);
 }
 
 void Ordine::clearSelezione()
@@ -261,6 +256,18 @@ void Ordine::setStatoSconto(bool flag)
     scontoBtn->setVisible(flag);
     scontoLbl->setVisible(flag);
     scontoTxt->setVisible(flag);
+}
+
+void Ordine::setSconto(bool flag)
+{
+    scontoLbl->setEnabled(flag);
+    scontoTxt->setEnabled(flag);
+    if(flag) {
+        percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
+    } else {
+        percentualeSconto=0;
+    }
+    scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
 }
 
 void Ordine::stampaScontrino(const int numeroOrdine)
@@ -728,20 +735,15 @@ void Ordine::on_duplicaBtn_clicked()
         while (quantita-- > 0)
             nuovoArticolo(idArticolo, descrizione, prezzo);
     }
+
+    setSconto(false);
+    ricalcolaTotale(QModelIndex(),QModelIndex());
 }
 
 void Ordine::on_scontoBtn_clicked() {
     if (!isInComposizione()) return;
 
     bool flagSconto=!scontoLbl->isEnabled();
-    scontoLbl->setEnabled(flagSconto);
-    scontoTxt->setEnabled(flagSconto);
-    if(flagSconto) {
-        percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
-    } else {
-        percentualeSconto=0;
-    }
-    scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
-
+    setSconto((flagSconto));
     ricalcolaTotale(QModelIndex(),QModelIndex());
 }
