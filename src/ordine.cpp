@@ -84,7 +84,7 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     scontoBtn->SetButtonColorPushed(Qt::magenta);
 
     avvisoTessere=NULL;
-    percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
+    percentualeSconto=0;
 }
 
 Ordine::~Ordine()
@@ -246,7 +246,8 @@ void Ordine::nuovoOrdine(const int idSessione)
 
     scontoLbl->setEnabled(false);
     scontoTxt->setEnabled(false);
-    scontoTxt->setText("0%");
+    percentualeSconto=0;
+    scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
 }
 
 void Ordine::clearSelezione()
@@ -619,7 +620,6 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         painter.drawText(x, y, pageWidth, 100, Qt::AlignRight, totaleString, &textRect);
 
         QString descrSconto=configurazione->value("DESCRIZIONESCONTO","SCONTO E ARROT.").toString();
-        float percentualeSconto = 0;
         percentualeSconto=stmt.value(0).toFloat();
         float importoSconto=(totale/100)*percentualeSconto;
         importoSconto=((float)qRound(importoSconto*10))/10;
@@ -733,15 +733,15 @@ void Ordine::on_duplicaBtn_clicked()
 void Ordine::on_scontoBtn_clicked() {
     if (!isInComposizione()) return;
 
-    percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
     bool flagSconto=!scontoLbl->isEnabled();
     scontoLbl->setEnabled(flagSconto);
     scontoTxt->setEnabled(flagSconto);
     if(flagSconto) {
-        scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
+        percentualeSconto=configurazione->value("PERCENTUALESCONTO").toFloat();
     } else {
-        scontoTxt->setText("0%");
+        percentualeSconto=0;
     }
+    scontoTxt->setText(QString("%1%").arg(percentualeSconto,2,'f',0));
 
     ricalcolaTotale(QModelIndex(),QModelIndex());
 }
