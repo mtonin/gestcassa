@@ -226,6 +226,7 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
 {
     switch (evt->key()) {
       case Qt::Key_F11: {
+        if(evt->modifiers() & Qt::ControlModifier) {
           /*
           if (isMaximized()) {
             //setWindowFlags(Qt::Window);
@@ -241,14 +242,26 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
             QGuiApplication::setOverrideCursor(Qt::BlankCursor);
           }
           isHiddenCursor=!isHiddenCursor;
+          return;
         }
+      }
       case Qt::Key_X: {
           if(evt->modifiers() & Qt::ControlModifier) {
             qDebug("CTRL+X pressed");
             on_closeBtn_clicked();
+            return;
+          }
+      }
+      case Qt::Key_F10: {
+          if(evt->modifiers() & Qt::ControlModifier) {
+              qDebug("CTRL+F10 pressed (mainwindow)");
+              ordineBox->impostaCarattere();
+              return;
           }
       }
     }
+    QWidget::keyPressEvent(evt);
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *evt)

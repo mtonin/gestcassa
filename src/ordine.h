@@ -15,6 +15,7 @@ class Ordine : public QWidget, private Ui::Ordine
 public:
     explicit Ordine(QMap<QString, QVariant>* par, QWidget *parent = 0);
     ~Ordine();
+    void impostaCarattere() {articoliTab->setFont(QFontDialog::getFont(0,articoliTab->font(),0,"Selezionare il carattere per l'ordine")); }
 
 public slots:
     void nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo);
