@@ -1,6 +1,8 @@
 #include "storicoordinimodel.h"
 #include <QLocale>
 #include <QBrush>
+#include <QDateTime>
+
 storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
     QSqlTableModel(parent)
 {
@@ -37,6 +39,9 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
         if (Qt::TextAlignmentRole == role) return (QVariant)(Qt::AlignRight | Qt::AlignVCenter);
         break;
     case 4:
+        if (Qt::DisplayRole == role || Qt::EditRole==role) {
+            return rigaArticolo.toDateTime().toString("dd/MM/yyyy hh:mm:ss");
+        }
         break;
     case 5:
         if (Qt::DisplayRole == role || Qt::EditRole==role) {

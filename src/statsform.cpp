@@ -87,7 +87,6 @@ void StatsForm::caricaStats()
         condizione = "tsstampa between ? and ?";
     }
     sql = sql.arg(condizione);
-    qDebug(sql.toLatin1());
     QString tipoArticolo;
     if (expMenuBox->isChecked()) {
         tipoArticolo = "M";
@@ -150,6 +149,10 @@ void StatsForm::caricaStats()
     while (stmt.next()) {
         QString nomeArticolo = stmt.value(0).toString().simplified();
         int quantita = stmt.value(1).toInt();
+        if(0==quantita) {
+            // esclude gli articolo con quantità = 0 (SCONTI)
+            continue;
+        }
         if (quantita > maxValore)
             maxValore = quantita;
         QList<QStandardItem*> riga;

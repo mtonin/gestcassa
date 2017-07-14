@@ -144,7 +144,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
     }
 
     importoSconto=(importoOrdineCorrente/100)*percentualeSconto;
-    importoSconto=((float)qRound(importoSconto*10))/10;
+    importoSconto=((float)qFloor(importoSconto*10))/10;
     importoOrdineCorrente-=importoSconto;
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
 }
@@ -629,7 +629,7 @@ void Ordine::stampaScontrino(const int numeroOrdine)
         QString descrSconto=configurazione->value("DESCRIZIONESCONTO","SCONTO E ARROT.").toString();
         percentualeSconto=stmt.value(0).toFloat();
         float importoSconto=(totale/100)*percentualeSconto;
-        importoSconto=((float)qRound(importoSconto*10))/10;
+        importoSconto=((float)qFloor(importoSconto*10))/10;
         totale-=importoSconto;
         QString scontoString=QString("%1: -%2 %L3").arg(descrSconto).arg(QChar(0x20AC)).arg(importoSconto,6,'f',2);
         y += textRect.height();

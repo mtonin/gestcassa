@@ -19,7 +19,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setTable("storicoordinitot");
     condizione = QString("idsessione=%1").arg(idSessione);
     ordiniModel->setFilter(condizione);
-    ordiniModel->setSort(4, Qt::AscendingOrder);
+    //ordiniModel->setSort(4, Qt::AscendingOrder);
     ordiniModel->select();
     while(ordiniModel->canFetchMore())
       ordiniModel->fetchMore();
@@ -44,6 +44,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), mapper, SLOT(setCurrentModelIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(caricaArticoliOrdine()));
     ordiniTable->selectRow(0);
+    ordiniTable->sortByColumn(4,Qt::SortOrder::AscendingOrder);
 
     idCassaOrdineTxt->setVisible(false);
 }
