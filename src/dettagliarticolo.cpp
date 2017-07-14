@@ -1,4 +1,5 @@
 #include "dettagliarticolo.h"
+#include "confermadlg.h"
 #include <QtSql>
 #include <QLocale>
 #include <QInputDialog>
@@ -311,6 +312,9 @@ void DettagliArticolo::creaSelezioneArticoloBox()
 
 void DettagliArticolo::on_eliminaBtn_clicked()
 {
+    ConfermaDlg dlg("Confermi la cancellazione?");
+    if (QDialog::Accepted != dlg.visualizza()) return;
+
     QSqlDatabase db =QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
