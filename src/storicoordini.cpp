@@ -19,7 +19,6 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniModel->setTable("storicoordinitot");
     condizione = QString("idsessione=%1").arg(idSessione);
     ordiniModel->setFilter(condizione);
-    //ordiniModel->setSort(4, Qt::AscendingOrder);
     ordiniModel->select();
     while(ordiniModel->canFetchMore())
       ordiniModel->fetchMore();
@@ -28,6 +27,7 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     ordiniTable->horizontalHeader()->setSectionResizeMode(4, QHeaderView::Stretch);
     ordiniTable->verticalHeader()->setVisible(false);
     ordiniTable->hideColumn(1);
+    ordiniTable->hideColumn(6);
 
     articoliOrdineModel = new storicoArticoliOrdiniModel(this);
     articoliOrdineTbl->setModel(articoliOrdineModel);
@@ -39,14 +39,17 @@ StoricoOrdini::StoricoOrdini(const int idSessione, QWidget *parent) : QDialog(pa
     mapper->addMapping(cassaOrdineTxt, 2);
     mapper->addMapping(numeroOrdineTxt, 3);
     mapper->addMapping(importoOrdineTxt, 5);
+    mapper->addMapping(stornoBox,6,"checked");
 
     connect(ordiniModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), ordiniTable, SLOT(setCurrentIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), mapper, SLOT(setCurrentModelIndex(QModelIndex)));
     connect(ordiniTable->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(caricaArticoliOrdine()));
-    ordiniTable->selectRow(0);
-    ordiniTable->sortByColumn(4,Qt::SortOrder::AscendingOrder);
+    connect(stornoBox,SIGNAL(clicked(bool)),articoliOrdineTbl,SLOT(setFocus()));
 
     idCassaOrdineTxt->setVisible(false);
+
+    //ordiniTable->selectRow(0);
+    ordiniTable->sortByColumn(4,Qt::SortOrder::AscendingOrder);
 }
 
 void StoricoOrdini::caricaArticoliOrdine()
@@ -91,7 +94,7 @@ void StoricoOrdini::on_filtraBtn_5_clicked()
     importoOrdineTxt->clear();
     cassaOrdineTxt->clear();
 
-    ordiniTable->selectRow(0);
+    //ordiniTable->selectRow(0);
 }
 
 void StoricoOrdini::on_filtroDateBox_toggled(bool checked)

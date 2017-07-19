@@ -2,6 +2,7 @@
 #include <QLocale>
 #include <QBrush>
 #include <QDateTime>
+#include <QFont>
 
 storicoOrdiniModel::storicoOrdiniModel(QObject *parent) :
     QSqlTableModel(parent)
@@ -26,6 +27,12 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
             QBrush brush(Qt::Dense3Pattern);
             brush.setColor(Qt::lightGray);
             return QVariant(brush);
+        }
+        if(Qt::FontRole==role) {
+            QFont fontAttuale(QSqlTableModel::data(index,Qt::FontRole).toString());
+            fontAttuale.setStrikeOut(true);
+            fontAttuale.setItalic(true);
+            return QVariant(fontAttuale);
         }
     }
     switch (index.column()) {
@@ -55,13 +62,10 @@ QVariant storicoOrdiniModel::data(const QModelIndex &index, int role) const
         if (Qt::TextAlignmentRole == role) return (QVariant)(Qt::AlignRight | Qt::AlignVCenter);
         break;
     case 6:
-        if (Qt::DisplayRole == role) {
-            return QVariant();
+        if (Qt::DisplayRole == role || Qt::EditRole==role) {
+            return flagStorno;
         }
-        if (Qt::CheckStateRole == role) {
-            return flagStorno ? Qt::Checked : Qt::Unchecked;
-        }
-
+        break;
     default:
         break;
     }
@@ -98,21 +102,11 @@ QVariant storicoOrdiniModel::headerData(int section, Qt::Orientation orientation
     return QSqlQueryModel::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags storicoOrdiniModel::flags(const QModelIndex &index) const
-{
-    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if (6 == index.column()) {
-        flags |=  Qt::ItemIsUserCheckable |Qt::ItemIsEditable;
-    }
-    return flags;
-}
-
 bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (6 == index.column()) {
-        if (Qt::CheckStateRole == role) {
-            QSqlTableModel::setData(index, Qt::Checked == value.toInt() ? "1" : "0", Qt::EditRole);
-            //emit dataChanged(index, index);
+        if(Qt::EditRole==role) {
+            QSqlTableModel::setData(index,value);
         }
     }
     return true;
