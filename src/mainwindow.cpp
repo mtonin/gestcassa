@@ -245,9 +245,9 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
           return;
         }
       }
-      case Qt::Key_X: {
+      case Qt::Key_Q: {
           if(evt->modifiers() & Qt::ControlModifier) {
-            qDebug("CTRL+X pressed");
+            qDebug("CTRL+Q pressed");
             on_closeBtn_clicked();
             return;
           }
