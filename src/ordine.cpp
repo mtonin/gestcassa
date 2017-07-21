@@ -28,6 +28,8 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     controlli = new ControlliOrdine(this);
 
     importoUltimoOrdine = 0;
+    importoUltimoOrdineText->setText("--");
+
     importoOrdineCorrente = 0;
     idSessioneCorrente = configurazione->value("SESSIONECORRENTE").toInt();
     idCassa = configurazione->value("IDCASSA").toString();
@@ -207,14 +209,22 @@ void Ordine::on_stampaBtn_clicked()
             //restoDlg->setWindowModality(Qt::WindowModal);
             restoDlg->exec();
         }
+
+        importoUltimoOrdine = importoOrdineCorrente;
+        if (0 == importoUltimoOrdine) {
+            importoUltimoOrdineText->setText("--");
+        } else {
+            importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine, 4, 'f', 2));
+        }
+
         nuovoOrdine(idSessioneCorrente);
+
     }
 }
 
 void Ordine::nuovoOrdine(const int idSessione)
 {
     idSessioneCorrente = idSessione;
-    importoUltimoOrdine = importoOrdineCorrente;
     modello.clear();
     QSqlQuery query;
     if(!query.prepare("select max(numeroordine) from storicoordinitot where idsessione=? and idcassa=?")) {
@@ -236,11 +246,6 @@ void Ordine::nuovoOrdine(const int idSessione)
     numOrdineCorrente++;
     numeroOrdineTxt->setText(QString("%L1").arg(numOrdineCorrente));
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
-    if (0 == importoUltimoOrdine) {
-        importoUltimoOrdineText->setText("--");
-    } else {
-        importoUltimoOrdineText->setText(QString("%L1").arg(importoUltimoOrdine, 4, 'f', 2));
-    }
 
     setSconto(false);
 }
