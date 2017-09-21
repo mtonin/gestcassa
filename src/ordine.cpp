@@ -30,7 +30,6 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     importoUltimoOrdine = 0;
     importoUltimoOrdineText->setText("--");
 
-    importoOrdineCorrente = 0;
     idSessioneCorrente = configurazione->value("SESSIONECORRENTE").toInt();
     idCassa = configurazione->value("IDCASSA").toString();
     setStatoSconto(configurazione->value("SCONTO",false).toBool());
@@ -224,6 +223,8 @@ void Ordine::on_stampaBtn_clicked()
 
 void Ordine::nuovoOrdine(const int idSessione)
 {
+    numOrdineCorrente = 0;
+    importoOrdineCorrente=0;
     idSessioneCorrente = idSessione;
     modello.clear();
     QSqlQuery query;
@@ -239,7 +240,6 @@ void Ordine::nuovoOrdine(const int idSessione)
         QMessageBox::critical(0, QObject::tr("Database Error"),query.lastError().text());
         return;
     }
-    numOrdineCorrente = 0;
     if (query.next()) {
         numOrdineCorrente = query.value(0).toInt();
     }

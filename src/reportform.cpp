@@ -445,7 +445,6 @@ void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, boo
     } else {
         tprinter->exportPdf(doc, "Salva con nome");
     }
-
 }
 
 void ReportForm::putHeader(QTextCursor cursore, const QString testo)
