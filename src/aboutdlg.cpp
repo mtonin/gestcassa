@@ -8,9 +8,10 @@ const QString ABOUTMSG("<center><b><i>GESTCASSA</i></b><br>versione $VERSIONE<br
 AboutDlg::AboutDlg(QWidget *parent) :
 QDialog(parent)
 {
-  setWindowFlags(Qt::Tool);
-  activateWindow();
   setupUi(this);
+  //setWindowFlags(Qt::Tool);
+  setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+  activateWindow();
 
   QString msg(ABOUTMSG);
   msg.replace(QString("$VERSIONE"),QString(VERSIONE),Qt::CaseInsensitive);

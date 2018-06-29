@@ -84,15 +84,11 @@ Ordine::Ordine(QMap<QString, QVariant> *par, QWidget *parent) : configurazione(p
     scontoBtn->SetButtonColorHot(Qt::cyan);
     scontoBtn->SetButtonColorPushed(Qt::magenta);
 
-    avvisoTessere=NULL;
     percentualeSconto=0;
 }
 
 Ordine::~Ordine()
 {
-    if(avvisoTessere) {
-        delete avvisoTessere;
-    }
 }
 
 void Ordine::nuovoArticolo(const int idArticolo, const QString descrizione, const float prezzo)
@@ -192,15 +188,10 @@ void Ordine::on_stampaBtn_clicked()
 
         stampaScontrino(numOrdineCorrente);
 
-        /*
         QPoint pos=stampaBtn->pos();
-        if(avvisoTessere) {
-            delete avvisoTessere;
-        }
-        avvisoTessere=new AlertTessereDlg(pos,this);
+        AlertTessereDlg tessereDlg(pos,this);
         pos=QPoint(0,0);
-        avvisoTessere->visualizza(pos);
-        */
+        tessereDlg.exec();
 
         if (configurazione->value("ABILITARESTO").toBool()) {
             int durataSecondi = configurazione->value("DURATARESTO", 5).toInt();

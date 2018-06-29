@@ -5,7 +5,7 @@
 
 #include "ui_alerttesseredlg.h"
 
-class AlertTessereDlg : public PopupDialog, private Ui::AlertTessereDlg
+class AlertTessereDlg : public QDialog, private Ui::AlertTessereDlg
 {
     Q_OBJECT
 
@@ -15,6 +15,8 @@ public:
 private slots:
     void init();
     void on_chiudeBtn_clicked();
+    void on_codiceTesseraTxt_textEdited(const QString &arg1);
+    void on_queryBtn_clicked();
 };
 
 #endif // ALERTTESSEREDLG_H

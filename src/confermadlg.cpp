@@ -21,7 +21,7 @@ ConfermaDlg::ConfermaDlg(const QString &descrizione, const QString &descrizioneC
 
 int ConfermaDlg::visualizza()
 {
-    setWindowFlags(Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
+    setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
     //setWindowFlags(Qt::Tool);
     activateWindow();
     valoreInputTxt->selectAll();

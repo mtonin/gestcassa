@@ -4,7 +4,6 @@
 #include "ui_ordine.h"
 #include "ordinemodel.h"
 #include "controlliordine.h"
-#include "alerttesseredlg.h"
 #include <QStandardItemModel>
 #include <QMap>
 
@@ -61,7 +60,6 @@ private:
     OrdineModel modello;
     ControlliOrdine* controlli;
     void stampaScontrino(const int);
-    AlertTessereDlg* avvisoTessere;
 };
 
 #endif // ORDINE_H

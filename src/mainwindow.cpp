@@ -18,6 +18,7 @@
 #include "dbparamdlg.h"
 #include "backgroundcontroller.h"
 #include "messaggiodlg.h"
+#include "alerttesseredlg.h"
 
 #include <QtWidgets>
 #include <QHBoxLayout>
@@ -267,7 +268,7 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
 void MainWindow::closeEvent(QCloseEvent *evt)
 {
     if(richiestaChiusura) {
-      ConfermaDlg dlg("Confermi l'uscita?");
+      ConfermaDlg dlg("Confermi l'uscita?","",false,this);
       if (QDialog::Accepted != dlg.visualizza()) evt->ignore();
     } else {
       evt->ignore();
@@ -612,6 +613,7 @@ void MainWindow::on_stornoBtn_clicked()
 
 void MainWindow::execBuoni()
 {
+    /*
     if(nullptr==externalProcess) {
         externalProcess=new SingleProcess(this);
     }
@@ -619,11 +621,16 @@ void MainWindow::execBuoni()
     QString comando=confMap->value("EXTERNALPROGRAM").toString();
     if(!comando.isEmpty())
     externalProcess->esegue(comando);
+    */
 
     /*
     BuoniDlg dlg(confMap,this);
     dlg.exec();
     */
+    QPoint pos(0,0);
+    AlertTessereDlg tessereDlg(pos,this);
+    tessereDlg.exec();
+
     return;
 }
 

@@ -31,8 +31,8 @@ void PopupDialog::avvia(QPoint startPoint) {
 
 void PopupDialog::visualizza(QPoint pos) {
     activateWindow();
-    move(pos);
-    show();
+    //move(pos);
+    exec();
 }
 
 void PopupDialog::paintEvent(QPaintEvent *e)
