@@ -43,6 +43,10 @@ private slots:
     void on_codiceTesseraRicercaTxt_textEdited(const QString &arg1);
     void on_queryBtn_clicked();
 
+    void on_attivatBtn_clicked();
+
+    void on_disattivaBtn_clicked();
+
 private:
     QString endpoint;
     QNetworkAccessManager* netManager;
