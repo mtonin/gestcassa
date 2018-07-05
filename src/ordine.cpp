@@ -189,7 +189,7 @@ void Ordine::on_stampaBtn_clicked()
         stampaScontrino(numOrdineCorrente);
 
         QPoint pos=stampaBtn->pos();
-        AlertTessereDlg tessereDlg(pos,this);
+        AlertTessereDlg tessereDlg(configurazione->value("TESSEREADDRESS").toString(),pos,this);
         pos=QPoint(0,0);
         tessereDlg.exec();
 

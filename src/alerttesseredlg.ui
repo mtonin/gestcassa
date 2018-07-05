@@ -6,104 +6,189 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>273</height>
+    <width>417</width>
+    <height>281</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Tessere</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="statoTesseraTxt">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="codiceTesseraTxt"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Stato:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Credito:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="creditoTesseraTxt">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="tipoTesseraTxt">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Tipo:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Tessera corrente</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="creditoTesseraTxt">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="statoTesseraTxt">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="codiceTesseraTxt">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Tipo:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Stato:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="tipoTesseraTxt">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Credito:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Codice tessera:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" rowspan="2">
+       <widget class="QToolButton" name="attivatBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>2</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>70</width>
+          <height>70</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>ATTIVA</string>
+        </property>
+        <property name="icon">
+         <iconset resource="risorse.qrc">
+          <normaloff>:/GestCassa/db_ok</normaloff>:/GestCassa/db_ok</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" rowspan="2">
+       <widget class="QToolButton" name="disattivaBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>70</width>
+          <height>70</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>DISATTIVA</string>
+        </property>
+        <property name="icon">
+         <iconset resource="risorse.qrc">
+          <normaloff>:/GestCassa/divieto</normaloff>:/GestCassa/divieto</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="autoExclusive">
+         <bool>false</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Codice tessera:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+     <item>
+      <widget class="QLineEdit" name="codiceTesseraRicercaTxt"/>
      </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QPlainTextEdit" name="msgTesseraTxt">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QToolButton" name="queryBtn">
        <property name="enabled">
@@ -133,94 +218,6 @@
        <property name="icon">
         <iconset resource="risorse.qrc">
          <normaloff>:/GestCassa/reload</normaloff>:/GestCassa/reload</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>48</width>
-         <height>48</height>
-        </size>
-       </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
-       <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonTextUnderIcon</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="attivatBtn">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>70</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>70</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>ATTIVA</string>
-       </property>
-       <property name="icon">
-        <iconset resource="risorse.qrc">
-         <normaloff>:/GestCassa/db_ok</normaloff>:/GestCassa/db_ok</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>48</width>
-         <height>48</height>
-        </size>
-       </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
-       <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonTextUnderIcon</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="disattivaBtn">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>70</width>
-         <height>70</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>70</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>DISATTIVA</string>
-       </property>
-       <property name="icon">
-        <iconset resource="risorse.qrc">
-         <normaloff>:/GestCassa/divieto</normaloff>:/GestCassa/divieto</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -281,23 +278,34 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>codiceTesseraRicercaTxt</tabstop>
+  <tabstop>queryBtn</tabstop>
+  <tabstop>chiudeBtn</tabstop>
+  <tabstop>attivatBtn</tabstop>
+  <tabstop>disattivaBtn</tabstop>
+  <tabstop>codiceTesseraTxt</tabstop>
+  <tabstop>tipoTesseraTxt</tabstop>
+  <tabstop>creditoTesseraTxt</tabstop>
+  <tabstop>statoTesseraTxt</tabstop>
+ </tabstops>
  <resources>
   <include location="risorse.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>codiceTesseraTxt</sender>
+   <sender>codiceTesseraRicercaTxt</sender>
    <signal>returnPressed()</signal>
    <receiver>queryBtn</receiver>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>173</x>
-     <y>25</y>
+     <x>176</x>
+     <y>280</y>
     </hint>
     <hint type="destinationlabel">
-     <x>63</x>
-     <y>208</y>
+     <x>251</x>
+     <y>280</y>
     </hint>
    </hints>
   </connection>
