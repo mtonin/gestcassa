@@ -99,6 +99,11 @@ private slots:
 
     void on_scontoDescrizioneTxt_editingFinished();
 
+    void on_tessereServerTxt_editingFinished();
+    void on_tessereServerPortTxt_editingFinished();
+    void on_tessereServerTimeoutTxt_editingFinished();
+
+    void on_tessereAutoOpenChk_clicked(bool checked);
 private:
     void esportaInFile(const QString&);
     QVariant valutaStringa(const QString&);

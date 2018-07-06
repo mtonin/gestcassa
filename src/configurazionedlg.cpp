@@ -47,7 +47,11 @@ const QStringList chiaviConfRemote=QStringList()
                                     << "SCONTO"
                                     << "PERCENTUALESCONTO"
                                     << "SCONTOMULTIPLO"
-                                    << "DESCRIZIONESCONTO";
+                                    << "DESCRIZIONESCONTO"
+                                    << "TESSERESERVER"
+                                    << "TESSERESERVERPORT"
+                                    << "TESSERESERVERTIMEOUT"
+                                    << "TESSEREAUTOOPEN";
 
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazioneAttuale(par), QDialog(parent)
 {
@@ -124,8 +128,13 @@ ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *pare
 
     tabWidget->setCurrentIndex(0);
     descrManifestazioneTxt->setFocus();
-
     setCaratteriRimanenti();
+
+    tessereServerTxt->setText(nuovaConfigurazione->value("TESSERESERVER").toString());
+    tessereServerPortTxt->setValue(nuovaConfigurazione->value("TESSERESERVERPORT",80).toInt());
+    tessereServerTimeoutTxt->setValue(nuovaConfigurazione->value("TESSERESERVERTIMEOUT",5).toInt());
+    tessereAutoOpenChk->setChecked(nuovaConfigurazione->value("TESSEREAUTOOPEN",false).toBool());
+
 }
 
 ConfigurazioneDlg::~ConfigurazioneDlg()
@@ -489,40 +498,15 @@ void ConfigurazioneDlg::on_exportArticoliBtn_clicked()
         exportLista.append(riga);
     }
 
-    QString str = nuovaConfigurazione->value("DESCRMANIFESTAZIONE").toString();
-    QString riga = QString("CONFIGURAZIONE#§DESCRMANIFESTAZIONE#§%1")
-                   .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("PRINTINTESTAZIONE").toString();
-    riga = QString("CONFIGURAZIONE#§PRINTINTESTAZIONE#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("INTESTAZIONE").toString();
-    riga = QString("CONFIGURAZIONE#§INTESTAZIONE#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("PRINTFONDO").toString();
-    riga = QString("CONFIGURAZIONE#§PRINTFONDO#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("FONDO").toString();
-    riga = QString("CONFIGURAZIONE#§FONDO#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("PRINTLOGO").toString();
-    riga = QString("CONFIGURAZIONE#§PRINTLOGO#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
-
-    str = nuovaConfigurazione->value("PRINTLOGOFONDO").toString();
-    riga = QString("CONFIGURAZIONE#§PRINTLOGOFONDO#§%1")
-           .arg(str.isEmpty() ? "NULL" : str);
-    exportLista.append(riga);
+    QString str;
+    QString riga;
+    foreach (QString nomePar,chiaviConfRemote) {
+        str = nuovaConfigurazione->value(nomePar).toString();
+        riga = QString("CONFIGURAZIONE#§%1#§%2")
+                .arg(nomePar)
+                .arg(str.isEmpty() ? "NULL" : str);
+        exportLista.append(riga);
+    }
 
     if (!stmt.exec("select id,oggetto from risorse")) {
         MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
@@ -798,7 +782,6 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         db.rollback();
         return;
       }
-
     }
 
     on_buttonBox_accepted();
@@ -869,6 +852,10 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     nuovaConfigurazione->insert("PRINTLOGOFONDO", "");
     nuovaConfigurazione->insert("PRINTFONDO", "");
     nuovaConfigurazione->insert("LOGOFONDOPIXMAP", "");
+    nuovaConfigurazione->insert("TESSERESERVER", "");
+    nuovaConfigurazione->insert("TESSERESERVERPORT", "80");
+    nuovaConfigurazione->insert("TESSERESERVERTIMEOUT", "5");
+    nuovaConfigurazione->insert("TESSEREAUTOOPEN", "5");
 
     on_buttonBox_accepted();
 }
@@ -1028,4 +1015,24 @@ void ConfigurazioneDlg::on_scontiMultipliBox_toggled(bool checked)
 void ConfigurazioneDlg::on_scontoDescrizioneTxt_editingFinished()
 {
     nuovaConfigurazione->insert("DESCRIZIONESCONTO",scontoDescrizioneTxt->text());
+}
+
+void ConfigurazioneDlg::on_tessereServerTxt_editingFinished()
+{
+    nuovaConfigurazione->insert("TESSERESERVER",tessereServerTxt->text());
+}
+
+void ConfigurazioneDlg::on_tessereServerPortTxt_editingFinished()
+{
+    nuovaConfigurazione->insert("TESSERESERVERPORT",tessereServerPortTxt->value());
+}
+
+void ConfigurazioneDlg::on_tessereServerTimeoutTxt_editingFinished()
+{
+    nuovaConfigurazione->insert("TESSERESERVERTIMEOUT",tessereServerTimeoutTxt->value());
+}
+
+void ConfigurazioneDlg::on_tessereAutoOpenChk_clicked(bool checked)
+{
+    nuovaConfigurazione->insert("TESSEREAUTOOPEN", checked);
 }

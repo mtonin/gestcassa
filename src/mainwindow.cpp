@@ -628,7 +628,10 @@ void MainWindow::execBuoni()
     dlg.exec();
     */
     QPoint pos(0,0);
-    AlertTessereDlg tessereDlg(confMap->value("TESSERESERVER").toString(),pos,this);
+    AlertTessereDlg tessereDlg(confMap->value("TESSERESERVER").toString(),
+                               confMap->value("TESSERESERVERPORT").toInt(),
+                               confMap->value("TESSERESERVERTIMEOUT").toInt(),
+                               this);
     tessereDlg.exec();
 
     return;

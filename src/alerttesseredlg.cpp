@@ -2,8 +2,8 @@
 #include "alerttesseredlg.h"
 #include "messaggiodlg.h"
 
-AlertTessereDlg::AlertTessereDlg(QString address, QPoint pos, QWidget *parent) :
-    endpoint(address),QDialog(parent)
+AlertTessereDlg::AlertTessereDlg(QString address, int porta,int timeout, QWidget *parent) :
+    serverName(address),serverPort(porta),serverTimeout(timeout*1000),QDialog(parent)
 {
     setupUi(this);
     setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
@@ -37,7 +37,7 @@ void AlertTessereDlg::on_codiceTesseraRicercaTxt_textEdited(const QString &arg1)
 
 void AlertTessereDlg::on_queryBtn_clicked()
 {
-    QString url=QString("http://%1/msf.php?cmd=balance&id=%2").arg(endpoint).arg(codiceTesseraRicercaTxt->text());
+    QString url=QString("http://%1:%2/msf.php?cmd=balance&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraRicercaTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
         QJsonDocument jsonDoc=QJsonDocument::fromJson(ba);
@@ -74,7 +74,7 @@ QByteArray AlertTessereDlg::esegueRichiestaHttp(QUrl url ){
     req.setUrl( url );
     req.setHeader(QNetworkRequest::UserAgentHeader,"CASSA");
     reply = netManager->get( req );
-    ReplyTimeout::set(reply,5000);
+    ReplyTimeout::set(reply,serverTimeout);
     connection_loop.exec();
     if(reply->error()!=QNetworkReply::NoError) {
         QString msg=QString("ERRORE: %1").arg(reply->errorString());
@@ -88,7 +88,7 @@ QByteArray AlertTessereDlg::esegueRichiestaHttp(QUrl url ){
 }
 
 void AlertTessereDlg::on_attivatBtn_clicked(){
-    QString url=QString("http://%1/msf.php?cmd=activate&id=%2").arg(endpoint).arg(codiceTesseraTxt->text());
+    QString url=QString("http://%1:%2/msf.php?cmd=activate&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
         QJsonDocument jsonDoc=QJsonDocument::fromJson(ba);
@@ -107,7 +107,7 @@ void AlertTessereDlg::on_attivatBtn_clicked(){
 }
 
 void AlertTessereDlg::on_disattivaBtn_clicked(){
-    QString url=QString("http://%1/msf.php?cmd=deactivate&id=%2").arg(endpoint).arg(codiceTesseraTxt->text());
+    QString url=QString("http://%1:%2/msf.php?cmd=deactivate&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
         QJsonDocument jsonDoc=QJsonDocument::fromJson(ba);

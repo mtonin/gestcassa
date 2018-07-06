@@ -35,7 +35,7 @@ class AlertTessereDlg : public QDialog, private Ui::AlertTessereDlg
     Q_OBJECT
 
 public:
-    explicit AlertTessereDlg(QString address,QPoint pos, QWidget *parent = 0);
+    explicit AlertTessereDlg(QString address, int porta, int timeout, QWidget *parent = 0);
 
 private slots:
     void init();
@@ -48,7 +48,9 @@ private slots:
     void on_disattivaBtn_clicked();
 
 private:
-    QString endpoint;
+    QString serverName;
+    int serverPort;
+    int serverTimeout;
     QNetworkAccessManager* netManager;
     QByteArray esegueRichiestaHttp(QUrl url);
 };
