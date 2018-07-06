@@ -6,6 +6,44 @@
 #include <QMap>
 #include <QPrinter>
 
+const QStringList chiaviConfLocale=QStringList()
+                                    << "VISUALIZZAZIONEPREZZO"
+                                    << "ABILITARESTO"
+                                    << "DURATARESTO"
+                                    << "STAMPANTEPDF"
+                                    << "STAMPANTE"
+                                    << "IDCASSA"
+                                    << "INIFILE"
+                                    << "DBFILEPATH"
+                                    << "SERIERITIRO"
+                                    << "NASCONDECURSORE"
+                                    << "LARGHEZZAFOGLIO"
+                                    << "LUNGHEZZAFOGLIO"
+                                    << "MARGINEDX"
+                                    << "MARGINESX"
+                                    << "PRINTERFONT"
+                                    << "PRINTERRESOLUTION"
+                                    << "PRINTERWINWIDTH";
+
+const QStringList chiaviConfRemote=QStringList()
+                                    << "DESCRMANIFESTAZIONE"
+                                    << "PRINTINTESTAZIONE"
+                                    << "INTESTAZIONE"
+                                    << "PRINTFONDO"
+                                    << "FONDO"
+                                    << "PRINTLOGO"
+                                    << "LOGOPIXMAP"
+                                    << "PRINTLOGOFONDO"
+                                    << "LOGOFONDOPIXMAP"
+                                    << "SCONTO"
+                                    << "PERCENTUALESCONTO"
+                                    << "SCONTOMULTIPLO"
+                                    << "DESCRIZIONESCONTO"
+                                    << "TESSERESERVER"
+                                    << "TESSERESERVERPORT"
+                                    << "TESSERESERVERTIMEOUT"
+                                    << "TESSEREAUTOOPEN";
+
 class ConfigurazioneDlg : public QDialog, private Ui::ConfigurazioneDlg
 {
     Q_OBJECT

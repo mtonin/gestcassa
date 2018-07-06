@@ -712,22 +712,6 @@ void MainWindow::ricaricaArchivio()
 
   //qApp->setOverrideCursor(Qt::WaitCursor);
 
-  const QStringList chiaviConfRemote=QStringList()
-                                      << "DESCRMANIFESTAZIONE"
-                                      << "PRINTINTESTAZIONE"
-                                      << "INTESTAZIONE"
-                                      << "PRINTFONDO"
-                                      << "FONDO"
-                                      << "PRINTLOGO"
-                                      << "LOGOPIXMAP"
-                                      << "PRINTLOGOFONDO"
-                                      << "LOGOFONDOPIXMAP"
-                                      << "SESSIONECORRENTE"
-                                      << "SCONTO"
-                                      << "PERCENTUALESCONTO"
-                                      << "SCONTOMULTIPLO"
-                                      << "DESCRIZIONESCONTO";
-
   foreach (QString nomePar,chiaviConfRemote) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
         //qApp->restoreOverrideCursor();

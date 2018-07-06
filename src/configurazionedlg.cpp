@@ -15,44 +15,6 @@
 #include <QTextStream>
 #include <QSettings>
 
-const QStringList chiaviConfLocale=QStringList()
-                                    << "VISUALIZZAZIONEPREZZO"
-                                    << "ABILITARESTO"
-                                    << "DURATARESTO"
-                                    << "STAMPANTEPDF"
-                                    << "STAMPANTE"
-                                    << "IDCASSA"
-                                    << "INIFILE"
-                                    << "DBFILEPATH"
-                                    << "SERIERITIRO"
-                                    << "NASCONDECURSORE"
-                                    << "LARGHEZZAFOGLIO"
-                                    << "LUNGHEZZAFOGLIO"
-                                    << "MARGINEDX"
-                                    << "MARGINESX"
-                                    << "PRINTERFONT"
-                                    << "PRINTERRESOLUTION"
-                                    << "PRINTERWINWIDTH";
-
-const QStringList chiaviConfRemote=QStringList()
-                                    << "DESCRMANIFESTAZIONE"
-                                    << "PRINTINTESTAZIONE"
-                                    << "INTESTAZIONE"
-                                    << "PRINTFONDO"
-                                    << "FONDO"
-                                    << "PRINTLOGO"
-                                    << "LOGOPIXMAP"
-                                    << "PRINTLOGOFONDO"
-                                    << "LOGOFONDOPIXMAP"
-                                    << "SCONTO"
-                                    << "PERCENTUALESCONTO"
-                                    << "SCONTOMULTIPLO"
-                                    << "DESCRIZIONESCONTO"
-                                    << "TESSERESERVER"
-                                    << "TESSERESERVERPORT"
-                                    << "TESSERESERVERTIMEOUT"
-                                    << "TESSEREAUTOOPEN";
-
 ConfigurazioneDlg::ConfigurazioneDlg(QMap<QString, QVariant>* par, QWidget *parent) : configurazioneAttuale(par), QDialog(parent)
 {
     setupUi(this);
