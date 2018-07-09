@@ -736,15 +736,16 @@ void ConfigurazioneDlg::on_importArticoliBtn_clicked()
         }
     }
 
-    db.commit();
-    emit resetArticoli();
-
     foreach (QString nomePar,chiaviConfRemote) {
       if(!aggiornaConfigurazioneDaDB(nomePar)) {
         db.rollback();
         return;
       }
     }
+
+    db.commit();
+    emit resetArticoli();
+    emit cambiaStatoSconto(nuovaConfigurazione->value("SCONTO",false).toBool());
 
     on_buttonBox_accepted();
 }

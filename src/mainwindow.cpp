@@ -631,6 +631,7 @@ void MainWindow::execBuoni()
     AlertTessereDlg tessereDlg(confMap->value("TESSERESERVER").toString(),
                                confMap->value("TESSERESERVERPORT").toInt(),
                                confMap->value("TESSERESERVERTIMEOUT").toInt(),
+                               -1,
                                this);
     tessereDlg.exec();
 

@@ -35,7 +35,7 @@ class AlertTessereDlg : public QDialog, private Ui::AlertTessereDlg
     Q_OBJECT
 
 public:
-    explicit AlertTessereDlg(QString address, int porta, int timeout, QWidget *parent = 0);
+    explicit AlertTessereDlg(QString address, int porta, int timeout, int tessereOrdine=-1,QWidget *parent = 0);
 
 private slots:
     void init();
@@ -53,6 +53,7 @@ private:
     int serverTimeout;
     QNetworkAccessManager* netManager;
     QByteArray esegueRichiestaHttp(QUrl url);
+    int tessereDaAttivare;
 };
 
 #endif // ALERTTESSEREDLG_H

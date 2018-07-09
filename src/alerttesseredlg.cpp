@@ -2,12 +2,19 @@
 #include "alerttesseredlg.h"
 #include "messaggiodlg.h"
 
-AlertTessereDlg::AlertTessereDlg(QString address, int porta,int timeout, QWidget *parent) :
-    serverName(address),serverPort(porta),serverTimeout(timeout*1000),QDialog(parent)
+AlertTessereDlg::AlertTessereDlg(QString address, int porta, int timeout, int tessereOrdine, QWidget *parent) :
+    serverName(address),serverPort(porta),serverTimeout(timeout*1000),tessereDaAttivare(tessereOrdine),QDialog(parent)
 {
     setupUi(this);
     setWindowFlags(Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint|Qt::CustomizeWindowHint|Qt::WindowTitleHint);
     activateWindow();
+
+    if(tessereDaAttivare>0) {
+        tessereOrdineFrame->setVisible(true);
+    } else {
+        tessereOrdineFrame->setVisible(false);
+    }
+    tessereDaAttivareTxt->setText(QString(tessereDaAttivare));
 
     netManager=new QNetworkAccessManager(this);
     //netManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy,"10.30.102.202",8080));
@@ -48,10 +55,16 @@ void AlertTessereDlg::on_queryBtn_clicked()
             creditoTesseraTxt->setText(jsonObj.value("current_balance").toString());
             if("0"==jsonObj.value("active").toString()) {
                 statoTesseraTxt->setText("NON ATTIVATA");
+                QPalette palette = statoTesseraTxt->palette();
+                palette.setColor(QPalette::Base, Qt::red);
+                statoTesseraTxt->setPalette(palette);
                 attivatBtn->setEnabled(true);
                 disattivaBtn->setEnabled(false);
             } else {
                 statoTesseraTxt->setText("ATTIVATA");
+                QPalette palette = statoTesseraTxt->palette();
+                palette.setColor(QPalette::Base, Qt::green);
+                statoTesseraTxt->setPalette(palette);
                 attivatBtn->setEnabled(false);
                 disattivaBtn->setEnabled(true);
             }
@@ -95,8 +108,12 @@ void AlertTessereDlg::on_attivatBtn_clicked(){
         QJsonObject jsonObj=jsonDoc.object();
         if("OK"==jsonObj.value("code").toString()) {
             statoTesseraTxt->setText("ATTIVATA");
+            QPalette palette = statoTesseraTxt->palette();
+            palette.setColor(QPalette::Base, Qt::green);
+            statoTesseraTxt->setPalette(palette);
             attivatBtn->setEnabled(false);
             disattivaBtn->setEnabled(true);
+            tessereDaAttivareTxt->setText(QString(--tessereDaAttivare));
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
             qDebug(msg.toStdString().c_str());
@@ -114,8 +131,12 @@ void AlertTessereDlg::on_disattivaBtn_clicked(){
         QJsonObject jsonObj=jsonDoc.object();
         if("OK"==jsonObj.value("code").toString()) {
             statoTesseraTxt->setText("NON ATTIVATA");
+            QPalette palette = statoTesseraTxt->palette();
+            palette.setColor(QPalette::Base, Qt::red);
+            statoTesseraTxt->setPalette(palette);
             attivatBtn->setEnabled(true);
             disattivaBtn->setEnabled(false);
+            tessereDaAttivareTxt->setText(QString(++tessereDaAttivare));
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
             qDebug(msg.toStdString().c_str());
