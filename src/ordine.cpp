@@ -189,12 +189,14 @@ void Ordine::on_stampaBtn_clicked()
 
         stampaScontrino(numOrdineCorrente);
 
-		/*
         QPoint pos=stampaBtn->pos();
-        AlertTessereDlg tessereDlg(configurazione->value("TESSERESERVER").toString(),pos,this);
+        AlertTessereDlg tessereDlg(configurazione->value("TESSERESERVER").toString(),
+                                   configurazione->value("TESSERESERVERPORT").toInt(),
+                                   configurazione->value("TESSERESERVERTIMEOUT").toInt(),
+                                   2,
+                                   this);
         pos=QPoint(0,0);
         tessereDlg.exec();
-		*/
 
         if (configurazione->value("ABILITARESTO").toBool()) {
             int durataSecondi = configurazione->value("DURATARESTO", 5).toInt();

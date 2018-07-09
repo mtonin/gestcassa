@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>314</height>
+    <height>330</height>
    </rect>
   </property>
   <property name="font">
@@ -21,7 +21,7 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QFrame" name="tessereOrdineFrame">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,1">
       <item>
        <widget class="QLabel" name="label_6">
         <property name="text">
@@ -31,8 +31,20 @@
       </item>
       <item>
        <widget class="QLineEdit" name="tessereDaAttivareTxt">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="maxLength">
-         <number>3</number>
+         <number>2</number>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -46,7 +58,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>80</width>
           <height>20</height>
          </size>
         </property>
