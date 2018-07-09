@@ -140,8 +140,9 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
         importoOrdineCorrente += modello.index(i, 3).data(Qt::UserRole).toFloat();
     }
 
-    importoSconto=(importoOrdineCorrente/100)*percentualeSconto;
-    importoSconto=((float)qFloor(importoSconto*10))/10;
+    importoSconto=(importoOrdineCorrente*percentualeSconto/100);
+    //importoSconto=((float)qFloor(importoSconto*10))/10;
+    importoSconto=((float)qRound(importoSconto*10))/10;
     importoOrdineCorrente-=importoSconto;
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
 }
