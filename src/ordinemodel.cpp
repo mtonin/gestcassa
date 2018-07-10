@@ -79,7 +79,7 @@ void OrdineModel::clear()
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa, const float percentualeSconto, const float importoSconto)
+bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, const int idSessione, const QString idCassa, const QString nomeCassa, const float percentualeSconto, const float importoSconto, int &numTessere)
 {
     QSqlDatabase db=QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     if(!db.transaction()) {
@@ -139,6 +139,7 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
     }
     QDateTime tsOrdine = stmt.record().value(0).toDateTime();
 
+    numTessere=0;
     foreach(rigaArticoloClass rigaArticolo, articoloList) {
         if(!stmt.prepare("insert into ordinirighe(idcassa,numeroordine,idarticolo,quantita) values(?,?,?,?)")) {
               QSqlError errore=stmt.lastError();
@@ -155,6 +156,9 @@ bool OrdineModel::completaOrdine(const int numeroOrdine, const float importo, co
             QMessageBox::critical(0, QObject::tr("Database Error"),stmt.lastError().text());
             db.rollback();
             return false;
+        }
+        if(rigaArticolo.descrizione.contains("tesser",Qt::CaseInsensitive)) {
+            numTessere+=rigaArticolo.quantita;
         }
     }
     if(percentualeSconto>0) {

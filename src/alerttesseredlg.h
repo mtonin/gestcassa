@@ -54,6 +54,7 @@ private:
     QNetworkAccessManager* netManager;
     QByteArray esegueRichiestaHttp(QUrl url);
     int tessereDaAttivare;
+    int tessereAttivate;
 };
 
 #endif // ALERTTESSEREDLG_H

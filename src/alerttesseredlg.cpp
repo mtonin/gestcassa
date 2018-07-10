@@ -15,6 +15,7 @@ AlertTessereDlg::AlertTessereDlg(QString address, int porta, int timeout, int te
         tessereOrdineFrame->setVisible(false);
     }
     tessereDaAttivareTxt->setText(QString("%1").arg(tessereDaAttivare));
+    tessereAttivate=0;
 
     netManager=new QNetworkAccessManager(this);
     //netManager->setProxy(QNetworkProxy(QNetworkProxy::HttpProxy,"10.30.102.202",8080));
@@ -113,7 +114,10 @@ void AlertTessereDlg::on_attivatBtn_clicked(){
             statoTesseraTxt->setPalette(palette);
             attivatBtn->setEnabled(false);
             disattivaBtn->setEnabled(true);
-            tessereDaAttivareTxt->setText(QString("%1").arg(--tessereDaAttivare));
+            if(tessereAttivate<tessereDaAttivare) {
+                ++tessereAttivate;
+                tessereDaAttivareTxt->setText(QString("%1").arg(tessereDaAttivare-tessereAttivate));
+            }
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
             qDebug(msg.toStdString().c_str());
@@ -136,7 +140,10 @@ void AlertTessereDlg::on_disattivaBtn_clicked(){
             statoTesseraTxt->setPalette(palette);
             attivatBtn->setEnabled(true);
             disattivaBtn->setEnabled(false);
-            tessereDaAttivareTxt->setText(QString("%1").arg(++tessereDaAttivare));
+            if(tessereAttivate>0) {
+                --tessereAttivate;
+                tessereDaAttivareTxt->setText(QString("%1").arg(tessereDaAttivare-tessereAttivate));
+            }
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
             qDebug(msg.toStdString().c_str());

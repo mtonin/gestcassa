@@ -141,8 +141,7 @@ void Ordine::ricalcolaTotale(QModelIndex, QModelIndex)
     }
 
     importoSconto=(importoOrdineCorrente*percentualeSconto/100);
-    //importoSconto=((float)qFloor(importoSconto*10))/10;
-    importoSconto=((float)qRound(importoSconto*10))/10;
+    importoSconto=((float)qFloor(importoSconto*10))/10;
     importoOrdineCorrente-=importoSconto;
     totaleLine->setText(QString("%L1").arg(importoOrdineCorrente, 4, 'f', 2));
 }
@@ -185,24 +184,25 @@ void Ordine::on_stampaBtn_clicked()
     }
 
     nomeCassa = configurazione->value("NOMECASSA", "000").toString();
-    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,percentualeSconto,importoSconto)) {
+    int numTessereOrdine=0;
+    if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,percentualeSconto,importoSconto,numTessereOrdine)) {
 
         stampaScontrino(numOrdineCorrente);
-
-        QPoint pos=stampaBtn->pos();
-        AlertTessereDlg tessereDlg(configurazione->value("TESSERESERVER").toString(),
-                                   configurazione->value("TESSERESERVERPORT").toInt(),
-                                   configurazione->value("TESSERESERVERTIMEOUT").toInt(),
-                                   2,
-                                   this);
-        pos=QPoint(0,0);
-        tessereDlg.exec();
 
         if (configurazione->value("ABILITARESTO").toBool()) {
             int durataSecondi = configurazione->value("DURATARESTO", 5).toInt();
             RestoDlg* restoDlg=new RestoDlg(importoOrdineCorrente, durataSecondi, this);
             //restoDlg->setWindowModality(Qt::WindowModal);
             restoDlg->exec();
+        }
+
+        if(configurazione->value("TESSEREAUTOOPEN").toBool() && numTessereOrdine>0) {
+            AlertTessereDlg tessereDlg(configurazione->value("TESSERESERVER").toString(),
+                                       configurazione->value("TESSERESERVERPORT").toInt(),
+                                       configurazione->value("TESSERESERVERTIMEOUT").toInt(),
+                                       numTessereOrdine,
+                                       this);
+            tessereDlg.exec();
         }
 
         importoUltimoOrdine = importoOrdineCorrente;
