@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>302</width>
+    <width>333</width>
     <height>170</height>
    </rect>
   </property>
@@ -113,7 +113,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Esporta PDF</string>
+        <string>Esporta</string>
        </property>
       </widget>
      </item>

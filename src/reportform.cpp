@@ -9,6 +9,7 @@
 #include <QTextDocumentFragment>
 #include <QTextDocumentWriter>
 #include <QMessageBox>
+#include <QFileDialog>
 
 ReportForm::ReportForm(QString par, QWidget *parent) : descrManifestazione(par), QDialog(parent)
 {
@@ -443,7 +444,15 @@ void ReportForm::stampa(const QTextDocument *doc, const QString descrReport, boo
     if (preview) {
         tprinter->preview(doc);
     } else {
-        tprinter->exportPdf(doc, "Salva con nome");
+        //tprinter->exportPdf(doc, "Salva con nome");
+        QString nomeFile = QFileDialog::getSaveFileName(0, "Salva con nome","","*.odf");
+        if (nomeFile.isEmpty()) {
+           return;
+        }
+        QTextDocumentWriter writer;
+        writer.setFileName(nomeFile);
+        writer.setFormat("ODF");
+        writer.write(doc);
     }
 }
 
