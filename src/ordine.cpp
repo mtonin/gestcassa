@@ -187,6 +187,8 @@ void Ordine::on_stampaBtn_clicked()
     int numTessereOrdine=0;
     if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,percentualeSconto,importoSconto,numTessereOrdine)) {
 
+        QLOG_INFO() << "Emissione ordine n." << numOrdineCorrente;
+
         stampaScontrino(numOrdineCorrente);
 
         if (configurazione->value("ABILITARESTO").toBool()) {
