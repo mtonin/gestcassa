@@ -187,6 +187,8 @@ void Ordine::on_stampaBtn_clicked()
     int numTessereOrdine=0;
     if (modello.completaOrdine(numOrdineCorrente, importoOrdineCorrente, idSessioneCorrente, idCassa,nomeCassa,percentualeSconto,importoSconto,numTessereOrdine)) {
 
+        LOG_INFO("Emissione ordine n. %04d - importo € %04.2f",numOrdineCorrente,importoOrdineCorrente);
+
         stampaScontrino(numOrdineCorrente);
 
         if (configurazione->value("ABILITARESTO").toBool()) {

@@ -1,3 +1,4 @@
+#include "commons.h"
 #include "configurazionedlg.h"
 #include "destinazionidlg.h"
 #include "confermadlg.h"
@@ -152,12 +153,14 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
               msgBox.visualizza();
               return;
             }
+            LOG_INFO() << "Aggiornamento configurazione:" << key;
             configurazioneAttuale->insert(key,nuovoValore.toByteArray());
             stmt.addBindValue(key);
             stmt.addBindValue(nuovoValore.toByteArray());
         } else if(0==QString::compare(key,"NOMECASSA",Qt::CaseInsensitive)) {
             if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
                 continue;
+            LOG_INFO() << "Aggiornamento configurazione:" << key << "=" << nuovoValore.toString();
             configurazioneAttuale->insert(key,nuovoValore.toString());
             if(!stmt.prepare("update postazioni set nome=? where id=?")) {
                 QSqlError errore=stmt.lastError();
@@ -171,6 +174,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
         } else {
             if(0==nuovoValore.toString().compare(configurazioneAttuale->value(key).toString()))
                 continue;
+            LOG_INFO() << "Aggiornamento configurazione:" << key << "=" << nuovoValore.toString();
             configurazioneAttuale->insert(key,nuovoValore.toString());
             if(!stmt.prepare("update or insert into configurazione (chiave,valore) values (?,?)")) {
               QSqlError errore=stmt.lastError();
@@ -183,6 +187,7 @@ void ConfigurazioneDlg::on_buttonBox_accepted()
             stmt.addBindValue(nuovoValore.toString());
         }
         if (!stmt.exec()) {
+            LOG_ERROR() << "Errore aggiornamento configurazione:" << stmt.lastError().text();
             MessaggioDlg msgBox("Database Error", stmt.lastError().text(),this);
             msgBox.visualizza();
         }

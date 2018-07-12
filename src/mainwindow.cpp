@@ -30,6 +30,7 @@ MainWindow::MainWindow(QMap<QString, QVariant>* configurazione, QSplashScreen &s
 {
     ui->setupUi(this);
 
+    LOG_INFO() << "Inizializzazione MainWindow";
     connect(this,SIGNAL(avanzaStato(QString)),&splash,SLOT(showMessage(QString)));
 
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
@@ -115,15 +116,18 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
     if (GESTIONE == nuovaModalita) {
 
         if(GESTIONE != modalitaCorrente) {
+            LOG_INFO() << "Richiesta modalità GESTIONE";
             ConfermaDlg dlg("Inserire la password per accedere alla modalità amministrativa.", "Password", true);
             while (true) {
                 if (QDialog::Accepted != dlg.visualizza()) return;
                 if(isPasswordOK(dlg.getValore())) {
                     break;
                 }
+                LOG_ERROR() << "Password errata";
             }
         }
 
+        LOG_INFO() << "Entra in modalità GESTIONE";
         if (TEST == modalitaCorrente) {
             idSessione = confMap->value("SESSIONESALVATA").toInt();
             confMap->insert("SESSIONECORRENTE", idSessione);
@@ -193,6 +197,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
         }
 
         if (CASSA == nuovaModalita) {
+            LOG_INFO() << "Entra in modalità CASSA";
             if (TEST == modalitaCorrente) {
                 idSessione = confMap->value("SESSIONESALVATA").toInt();
                 confMap->insert("SESSIONECORRENTE", idSessione);
@@ -204,6 +209,7 @@ void MainWindow::gestioneModalita(const modalitaType nuovaModalita)
             ui->messaggiArea->setText("MODALITA' CASSA");
         }
         if (TEST == nuovaModalita) {
+            LOG_INFO() << "Entra in modalità TEST";
             ui->adminFunctBox->setVisible(false);
             idSessione = confMap->value("SESSIONECORRENTE").toInt();
             confMap->insert("SESSIONECORRENTE", ID_SESSIONE_TEST);
@@ -278,6 +284,8 @@ void MainWindow::closeEvent(QCloseEvent *evt)
 void MainWindow::creaRepartiButtons()
 {
 
+    LOG_INFO() << "Crea reparti";
+
     // ricarica la cache
     caricaArticoli();
 
@@ -313,6 +321,7 @@ void MainWindow::creaRepartiButtons()
         ui->articoliStackedWidget->removeWidget(w);
     }
 
+    LOG_INFO() << "Crea articoli";
     for (int i = 0; i < NUM_REPARTI; i++) {
 
         RepartoBtnWidget* reparto01Btn = new RepartoBtnWidget(i, ui->repartiBox);

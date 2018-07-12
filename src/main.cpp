@@ -9,9 +9,11 @@
 #include <QFileDialog>
 #include <QVariant>
 
+#include "commons.h"
 #include "mainwindow.h"
 #include "dbmanager.h"
-#include "commons.h"
+#include "RollingFileAppender.h"
+#include "ConsoleAppender.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +24,22 @@ int main(int argc, char *argv[])
     if(a.sendMessage("activate")) {
       return 0;
     }
+
+    QDir logDir(a.applicationDirPath().append("/LOG"));
+    logDir.mkpath(logDir.path());
+    const QString logPath(logDir.filePath("GestCassa.log"));
+    RollingFileAppender* logfileAppender=new RollingFileAppender(logPath);
+    logfileAppender->setDetailsLevel("INFO");
+    logfileAppender->setLogFilesLimit(3);
+    logfileAppender->setDatePattern("'-'yyyy-MM-dd-hh'.log'");
+    cuteLogger->registerAppender(logfileAppender);
+
+    ConsoleAppender* consoleAppender=new ConsoleAppender();
+    consoleAppender->setDetailsLevel("TRACE");
+    cuteLogger->registerAppender(consoleAppender);
+
+    LOG_INFO() << "Avvio applicazione";
+    LOG_INFO() << "Inizializzazione";
 
     QPixmap splashPixmap(":/GestCassa/splash");
     QSplashScreen splash(splashPixmap);
@@ -52,6 +70,7 @@ int main(int argc, char *argv[])
     //currentFont.setFamily("adventix");
     QApplication::setFont(currentFont);
 
+    LOG_INFO() << "Caricamento configurazione";
     QMap<QString, QVariant>* configurazione = new QMap<QString, QVariant>;
     DBManager dbman(configurazione);
 
@@ -68,12 +87,14 @@ int main(int argc, char *argv[])
     /*
     nomeFile=QFileDialog::getOpenFileName(0,"Scegliere il database");
     */
+    LOG_INFO() << "Collegamento al database";
     splash.showMessage("Collegamento al database...");
     QCoreApplication::processEvents();
     if (dbman.init(QCoreApplication::applicationDirPath())) {
        splash.showMessage("Caricamento articoli...");
        QCoreApplication::processEvents();
 
+       LOG_INFO() << "Creazione Main Window";
        MainWindow w(configurazione,splash);
        a.setActivationWindow(&w);
        w.show();
@@ -82,11 +103,13 @@ int main(int argc, char *argv[])
     //a.setStartDragDistance(50);
     //a.setStartDragTime(1000);
 
+       LOG_INFO() << "Avvio message loop";
        QApplication::exec();
     }
 
     delete configurazione;
 
     //ExitWindowsEx(EWX_LOGOFF,0);
+    LOG_INFO() << "Uscita applicazione";
 
 }

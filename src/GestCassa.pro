@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 include(qtsingleapplication/qtsingleapplication.pri)
+include(CuteLogger/CuteLogger.pri)
 system(prebuild.cmd)
 
 QT       += widgets sql network printsupport

@@ -1,4 +1,5 @@
 #include <QJsonDocument>
+#include "commons.h"
 #include "alerttesseredlg.h"
 #include "messaggiodlg.h"
 
@@ -45,6 +46,7 @@ void AlertTessereDlg::on_codiceTesseraRicercaTxt_textEdited(const QString &arg1)
 
 void AlertTessereDlg::on_queryBtn_clicked()
 {
+    LOG_INFO() << "Richiesta stato tessera:" << qPrintable(codiceTesseraRicercaTxt->text());
     QString url=QString("http://%1:%2/msf.php?cmd=balance&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraRicercaTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
@@ -71,6 +73,7 @@ void AlertTessereDlg::on_queryBtn_clicked()
             }
         } else {
             QString msg=QString("Codice tessera %1 non valido").arg(codiceTesseraRicercaTxt->text());
+            LOG_ERROR() << qPrintable(msg);
             qDebug(msg.toStdString().c_str());
             MessaggioDlg msgBox("ATTENZIONE", msg,this);
             msgBox.visualizza();
@@ -81,6 +84,7 @@ void AlertTessereDlg::on_queryBtn_clicked()
 }
 
 QByteArray AlertTessereDlg::esegueRichiestaHttp(QUrl url ){
+    QApplication::setOverrideCursor(Qt::BusyCursor);
     QNetworkRequest req;
     QNetworkReply* reply;
     QEventLoop connection_loop;
@@ -90,9 +94,10 @@ QByteArray AlertTessereDlg::esegueRichiestaHttp(QUrl url ){
     reply = netManager->get( req );
     ReplyTimeout::set(reply,serverTimeout);
     connection_loop.exec();
+    QApplication::restoreOverrideCursor();
     if(reply->error()!=QNetworkReply::NoError) {
         QString msg=QString("ERRORE: %1").arg(reply->errorString());
-        qDebug(msg.toStdString().c_str());
+        LOG_ERROR() << qPrintable(msg);
         MessaggioDlg msgBox("ATTENZIONE", msg,this);
         msgBox.visualizza();
         return "";
@@ -102,6 +107,7 @@ QByteArray AlertTessereDlg::esegueRichiestaHttp(QUrl url ){
 }
 
 void AlertTessereDlg::on_attivatBtn_clicked(){
+    LOG_INFO() << "Richiesta attivazione tessera:" << qPrintable(codiceTesseraTxt->text());
     QString url=QString("http://%1:%2/msf.php?cmd=activate&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
@@ -120,7 +126,7 @@ void AlertTessereDlg::on_attivatBtn_clicked(){
             }
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
-            qDebug(msg.toStdString().c_str());
+            LOG_ERROR() << qPrintable(msg);
             MessaggioDlg msgBox("ATTENZIONE", msg,this);
             msgBox.visualizza();
         }
@@ -128,6 +134,7 @@ void AlertTessereDlg::on_attivatBtn_clicked(){
 }
 
 void AlertTessereDlg::on_disattivaBtn_clicked(){
+    LOG_INFO() << "Richiesta disattivazione tessera:" << qPrintable(codiceTesseraTxt->text());
     QString url=QString("http://%1:%2/msf.php?cmd=deactivate&id=%3").arg(serverName).arg(serverPort).arg(codiceTesseraTxt->text());
     QByteArray ba=esegueRichiestaHttp(url);
     if(!ba.isEmpty()) {
@@ -146,7 +153,7 @@ void AlertTessereDlg::on_disattivaBtn_clicked(){
             }
         } else {
             QString msg=QString("Errore %1").arg(jsonObj.value("error").toString());
-            qDebug(msg.toStdString().c_str());
+            LOG_ERROR() << qPrintable(msg);
             MessaggioDlg msgBox("ATTENZIONE", msg,this);
             msgBox.visualizza();
         }

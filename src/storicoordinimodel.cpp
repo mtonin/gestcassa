@@ -1,3 +1,4 @@
+#include "commons.h"
 #include "storicoordinimodel.h"
 #include <QLocale>
 #include <QBrush>
@@ -104,8 +105,15 @@ QVariant storicoOrdiniModel::headerData(int section, Qt::Orientation orientation
 
 bool storicoOrdiniModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    QModelIndex tmpIdx = QSqlTableModel::index(index.row(), 0);
+    int sessione = QSqlTableModel::data(tmpIdx).toInt();
+    tmpIdx = QSqlTableModel::index(index.row(), 2);
+    QString cassa = QSqlTableModel::data(tmpIdx).toString();
+    tmpIdx = QSqlTableModel::index(index.row(), 3);
+    int numOrdine = QSqlTableModel::data(tmpIdx).toInt();
     if (6 == index.column()) {
         if(Qt::EditRole==role) {
+            LOG_INFO("Storno ordine [%d/%s/%04d]: %s",sessione,cassa.toStdString().c_str(),numOrdine,value.toBool()?"STORNATO":"STORNO ANNULLATO");
             QSqlTableModel::setData(index,value);
         }
     }
