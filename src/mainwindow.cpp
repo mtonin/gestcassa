@@ -798,12 +798,15 @@ void MainWindow::setStato(int stato, QString testo) {
 
     switch (stato) {
     case DatabaseController::Disconnesso:
+        LOG_ERROR() << "Connessione con il DB persa";
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/cancella"));
         break;
     case DatabaseController::DaAggiornare:
+        LOG_INFO() << "DB da sincronizzare";
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/warning"));
         break;
     default:
+        LOG_INFO() << "Connessione con il DB funzionante";
         ui->statoDBLbl->setPixmap(QPixmap(":/GestCassa/db_ok"));
         break;
     }
