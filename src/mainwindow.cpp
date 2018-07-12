@@ -722,6 +722,8 @@ void MainWindow::ricaricaArchivio()
 
   //qApp->setOverrideCursor(Qt::WaitCursor);
 
+  LOG_INFO() << "Aggiornamento archivio";
+
   foreach (QString nomePar,chiaviConfRemote) {
     if(!aggiornaConfigurazioneDaDB(nomePar)) {
         //qApp->restoreOverrideCursor();

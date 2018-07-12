@@ -315,6 +315,8 @@ void ConfigurazioneDlg::on_cancellaOrdiniBtn_clicked()
     nuovaConfigurazione->insert("SESSIONECORRENTE", idSessioneCorrente);
 
     db.commit();
+    LOG_INFO() << "Inizializza sessione" << idSessioneCorrente;
+
     emit resetOrdini(idSessioneCorrente);
 
 }
@@ -760,6 +762,7 @@ void ConfigurazioneDlg::on_resetDbBtn_clicked()
     ConfermaDlg* dlg = new ConfermaDlg("Questa operazione cancella tutti i reparti e gli articoli censiti.\nProseguire?", "", false);
     if (QDialog::Accepted != dlg->visualizza()) return;
 
+    LOG_INFO() << "Inizializzazione dell'archivio";
     QSqlDatabase db = QSqlDatabase::database(QSqlDatabase::defaultConnection,false);
     db.transaction();
 
