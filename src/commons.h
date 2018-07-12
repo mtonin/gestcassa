@@ -1,7 +1,6 @@
 #ifndef COMMONS_H
 #define COMMONS_H
 #include <QString>
-#include "QsLog.h"
 
 enum modalitaType {
     CASSA,
