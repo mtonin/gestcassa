@@ -8,6 +8,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QVariant>
+#include <QCommandLineParser>
 
 #include "commons.h"
 #include "mainwindow.h"
@@ -25,18 +26,45 @@ int main(int argc, char *argv[])
       return 0;
     }
 
-    QDir logDir(a.applicationDirPath().append("/LOG"));
-    logDir.mkpath(logDir.path());
-    const QString logPath(logDir.filePath("GestCassa.log"));
-    RollingFileAppender* logfileAppender=new RollingFileAppender(logPath);
-    logfileAppender->setDetailsLevel("INFO");
-    logfileAppender->setLogFilesLimit(3);
-    logfileAppender->setDatePattern("'-'yyyy-MM-dd-hh'.log'");
-    cuteLogger->registerAppender(logfileAppender);
+    QCommandLineParser argsParser;
+    argsParser.setApplicationDescription("Gestione Cassa");
+    argsParser.addHelpOption();
+    argsParser.addVersionOption();
+    QCommandLineOption noLogOpt("no-log","Disabilita il registro dell'applicazione");
+    argsParser.addOption(noLogOpt);
+    QCommandLineOption logFileNameOpt("logFilename","Filename del registro dell'applicazione","logFilename","GestCassa.log");
+    argsParser.addOption(logFileNameOpt);
+    QCommandLineOption logFolderOpt("logFolder","Cartella del registro dell'applicazione","logFolder",a.applicationDirPath().append("/LOG"));
+    argsParser.addOption(logFolderOpt);
+    QCommandLineOption logLevelOpt("logLevel","Livello di dettaglio del registro dell'applicazione","logLevel","INFO");
+    argsParser.addOption(logLevelOpt);
+    argsParser.process(a);
 
+    if(!argsParser.isSet("NoLog")) {
+        QString logLevel=argsParser.value("logLevel").toUpper();
+        if("TRACE" != logLevel &&
+                "DEBUG" != logLevel &&
+                "INFO" != logLevel &&
+                "WARNING" != logLevel &&
+                "ERROR" != logLevel &&
+                "FATAL" != logLevel) {
+            logLevel="INFO";
+        }
+        QDir logDir(argsParser.value("logFolder"));
+        logDir.mkpath(".");
+        const QString logPath(logDir.filePath(argsParser.value("logFilename")));
+        RollingFileAppender* logfileAppender=new RollingFileAppender(logPath);
+        logfileAppender->setDetailsLevel(logLevel);
+        logfileAppender->setLogFilesLimit(10);
+        logfileAppender->setDatePattern("'-'yyyy-MM-dd'.log'");
+        cuteLogger->registerAppender(logfileAppender);
+    }
+
+#ifdef _DEBUG
     ConsoleAppender* consoleAppender=new ConsoleAppender();
     consoleAppender->setDetailsLevel("TRACE");
     cuteLogger->registerAppender(consoleAppender);
+#endif
 
     LOG_INFO() << "Avvio applicazione";
     LOG_INFO() << "Inizializzazione";
@@ -51,6 +79,7 @@ int main(int argc, char *argv[])
     if (desktop->size().width() < 1024 || desktop->size().height() < 768) {
         if (QMessageBox::No == QMessageBox::question(0,
                 QObject::tr("Risoluzione minima"), "E' consigliabile usare una risoluzione minima di 1024x768. Continuare?", QMessageBox::Ok, QMessageBox::No))
+            LOG_INFO() << "Uscita dall'applicazione per risoluzione video minore del minimo";
             return 0;
     }
 

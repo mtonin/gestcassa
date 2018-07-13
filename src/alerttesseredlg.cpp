@@ -74,7 +74,6 @@ void AlertTessereDlg::on_queryBtn_clicked()
         } else {
             QString msg=QString("Codice tessera %1 non valido").arg(codiceTesseraRicercaTxt->text());
             LOG_ERROR() << qPrintable(msg);
-            qDebug(msg.toStdString().c_str());
             MessaggioDlg msgBox("ATTENZIONE", msg,this);
             msgBox.visualizza();
         }
