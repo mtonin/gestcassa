@@ -416,7 +416,8 @@ void Ordine::stampaScontrino(const int numeroOrdine)
     }
     foreach(QString destinazioneStampa, repartiStampaList) {
 
-        if(!stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag from destinazionistampa where nome=?")) {
+        if(!stmt.prepare("select coalesce(intestazione,nome),stampaflag,stampanumeroritiroflag "
+                         "from destinazionistampa where nome=? and tipoArticolo not in('M','X') ")) {
           QSqlError errore=stmt.lastError();
           QString msg=QString("Errore codice=%1,descrizione=%2").arg(errore.number()).arg(errore.databaseText());
           QMessageBox::critical(this,"Errore",msg);

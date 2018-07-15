@@ -35,6 +35,7 @@ const QStringList chiaviConfRemote=QStringList()
                                     << "LOGOPIXMAP"
                                     << "PRINTLOGOFONDO"
                                     << "LOGOFONDOPIXMAP"
+                                    << "SESSIONECORRENTE"
                                     << "SCONTO"
                                     << "PERCENTUALESCONTO"
                                     << "SCONTOMULTIPLO"
