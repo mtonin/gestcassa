@@ -164,6 +164,7 @@ void ArticoloBtnWidget::PaintAttenzione(int posX)
 void ArticoloBtnWidget::paintEvent(QPaintEvent *evt)
 {
     QPictureButton::paintEvent(evt);
+
     if (idArticolo > 0 && visualizzaPrezzo) {
         PaintPrezzo();
     }

@@ -252,6 +252,7 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
           return;
         }
       }
+      break;
       case Qt::Key_Q: {
           if(evt->modifiers() & Qt::ControlModifier) {
             qDebug("CTRL+Q pressed");
@@ -259,6 +260,7 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
             return;
           }
       }
+      break;
       case Qt::Key_F10: {
           if(evt->modifiers() & Qt::ControlModifier) {
               qDebug("CTRL+F10 pressed (mainwindow)");
@@ -266,7 +268,9 @@ void MainWindow::keyPressEvent(QKeyEvent *evt)
               return;
           }
       }
+      break;
     }
+
     QWidget::keyPressEvent(evt);
 
 }
