@@ -64,6 +64,8 @@ void StatsForm::ordinaByColumn(int column)
 
 void StatsForm::caricaStats()
 {
+    int totaleArticoli=0;
+
     QString sql("SELECT descrizione,sum(quantita),max(tsstampa) \
                 FROM storicoordini \
                 where \
@@ -155,6 +157,7 @@ void StatsForm::caricaStats()
         }
         if (quantita > maxValore)
             maxValore = quantita;
+        totaleArticoli+=quantita;
         QList<QStandardItem*> riga;
         riga.append(new QStandardItem(nomeArticolo));
         QStandardItem* quantitaItem = new QStandardItem;
@@ -200,6 +203,7 @@ void StatsForm::caricaStats()
     }
 
     calcolaTotali();
+    totaleArticoliTxt->setText(QString("%L1").arg(totaleArticoli));
 
     maxXAxis = maxValore + 20;
     maxYAxis = counter + 2;

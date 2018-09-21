@@ -368,6 +368,9 @@ Statistiche</string>
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 0, 0);</string>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -401,6 +404,9 @@ Statistiche</string>
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 0, 0);</string>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -431,6 +437,9 @@ Statistiche</string>
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 0, 0);</string>
         </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>
@@ -460,6 +469,42 @@ Statistiche</string>
         </property>
         <property name="styleSheet">
          <string notr="true">color: rgb(255, 0, 0);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_8">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Totale articoli:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="totaleArticoliTxt">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 0, 0);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
         </property>
         <property name="text">
          <string>TextLabel</string>
